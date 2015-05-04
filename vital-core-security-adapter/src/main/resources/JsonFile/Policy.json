@@ -1,0 +1,26 @@
+{
+    "name": "VitalPolicy",
+    "active": true,
+    "description": "Vital Policy",
+    "applicationName": "iPlanetAMWebAgentService",
+    "actionValues": {
+        "POST": true,
+        "PATCH": true,
+        "GET": true,
+        "DELETE": true,
+        "OPTIONS": true,
+        "PUT": true,
+        "HEAD": true
+    },
+    "resources": [
+        "*://*:*/*?*",
+        "*://*:*/*"
+    ],
+    "subject": {
+        "type": "AuthenticatedUsers"
+    },
+    "lastModifiedBy": "id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+    "lastModifiedDate": "2014-12-22T17:09:29.979Z",
+    "createdBy": "id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+    "creationDate": "2014-12-22T17:09:29.979Z"
+}

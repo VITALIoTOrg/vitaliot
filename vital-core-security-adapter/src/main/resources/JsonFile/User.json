@@ -1,0 +1,59 @@
+{
+    "username": "user0",
+    "realm": "/",
+    "uid": [
+        "user0"
+    ],
+    "userPassword": [
+        "{SSHA}dcXjUjjZtWgNt12k5j0VOI2Sz5OclDT2cykVkg=="
+    ],
+    "sn": [
+        "user0"
+    ],
+    "createTimestamp": [
+        "20141110102915Z"
+    ],
+    "cn": [
+        "user0"
+    ],
+    "modifyTimestamp": [
+        "20150324093509Z"
+    ],
+    "givenName": [
+        "user0"
+    ],
+    "inetUserStatus": [
+        "Active"
+    ],
+    "dn": [
+        "uid=user0,ou=people,dc=reply,dc=vital,dc=eu"
+    ],
+    "sun-fm-saml2-nameid-info": [
+        "https://vitalgateway.replycloud.prv:8443/openam|https://vitalgateway.replycloud.prv/shibboleth|bcTX7DgVE+JBM25Pv8+ilXQhRGQV|https://vitalgateway.replycloud.prv:8443/openam|urn:oasis:names:tc:SAML:2.0:nameid-format:persistent|null|null|IDPRole|false",
+        "https://vitalauth.cloud.reply.eu:8443/openam|https://vitalgateway.cloud.reply.eu/shibboleth|eQTSCk6ohXlXSInP5AZWYb36FmWg|https://vitalauth.cloud.reply.eu:8443/openam|urn:oasis:names:tc:SAML:2.0:nameid-format:persistent|null|null|IDPRole|false"
+    ],
+    "objectClass": [
+        "devicePrintProfilesContainer",
+        "person",
+        "sunIdentityServerLibertyPPService",
+        "inetorgperson",
+        "sunFederationManagerDataStore",
+        "iPlanetPreferences",
+        "iplanet-am-auth-configuration-service",
+        "organizationalperson",
+        "sunFMSAML2NameIdentifier",
+        "inetuser",
+        "forgerock-am-dashboard-service",
+        "iplanet-am-managed-person",
+        "iplanet-am-user-service",
+        "sunAMAuthAccountLockout",
+        "top"
+    ],
+    "universalid": [
+        "id=user0,ou=user,dc=openam,dc=forgerock,dc=org"
+    ],
+    "sun-fm-saml2-nameid-infokey": [
+        "https://vitalgateway.replycloud.prv:8443/openam|https://vitalgateway.replycloud.prv/shibboleth|bcTX7DgVE+JBM25Pv8+ilXQhRGQV",
+        "https://vitalauth.cloud.reply.eu:8443/openam|https://vitalgateway.cloud.reply.eu/shibboleth|eQTSCk6ohXlXSInP5AZWYb36FmWg"
+    ]
+}

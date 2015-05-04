@@ -1,0 +1,7 @@
+{
+    "username": "test3",
+    "uniqueMember": [
+        "uid=user0,ou=people,dc=reply,dc=vital,dc=eu",
+      	"uid=user0,ou=people,dc=reply,dc=vital,dc=eu"
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "username": "test",
+    "realm": "/",
+    "uniqueMember": [
+        "uid=user0,ou=people,dc=reply,dc=vital,dc=eu"
+    ],
+    "cn": [
+        "test"
+    ],
+    "dn": [
+        "cn=test,ou=groups,dc=reply,dc=vital,dc=eu"
+    ],
+    "objectclass": [
+        "groupofuniquenames",
+        "top"
+    ],
+    "universalid": [
+        "id=test,ou=group,dc=openam,dc=forgerock,dc=org"
+    ]
+}

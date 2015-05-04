@@ -1,0 +1,21 @@
+{
+    "name": "RestPolicyAuth",
+    "active": true,
+    "description": "policy created from rest",
+    "resources": [
+        "*://*:*/*?*",
+        "*://*:*/*"
+    ],
+    "actionValues": {
+        "POST": false,
+        "GET": true,
+		"PATCH": true,
+		"DELETE": true,
+		"OPTIONS": false,
+		"PUT": true,
+		"HEAD": false
+    },
+    "subject": {
+        "type": "AuthenticatedUsers"
+    }
+}
