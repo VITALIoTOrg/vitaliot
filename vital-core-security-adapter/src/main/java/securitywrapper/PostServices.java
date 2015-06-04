@@ -1,9 +1,19 @@
 package securitywrapper;
 
+import java.io.IOException;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.FormParam;
+
+import utils.JsonUtils;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import clients.OpenAMClient;
 
@@ -20,8 +30,27 @@ public class PostServices {
 	@Path("/user/create")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String createUser() {
-		return null;
+	public Response createUser(
+			@FormParam("name") String username,
+			@FormParam("password") String password,
+			@FormParam("mail") String mail) {
+		String answer;
+		
+		answer = null;
+		
+		if(client.createUser(username, password, mail)) {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	@Path("/user/delete")
