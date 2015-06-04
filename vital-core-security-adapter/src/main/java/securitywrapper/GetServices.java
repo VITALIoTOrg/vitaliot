@@ -87,11 +87,27 @@ public class GetServices {
 	@Path("/groups")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getGroups() {
+	public Response getGroups() {
 		
-		client.getGroups();
+		String answer;
 		
-		return null;
+		answer = null;
+		
+		try {
+			answer = JsonUtils.serializeJson(client.getGroups());
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
 	}
 	
 	@Path("/policies")
