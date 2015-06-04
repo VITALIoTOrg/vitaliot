@@ -1,11 +1,20 @@
 package securitywrapper;
 
+import java.io.IOException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import jsonpojos.User;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
+import utils.JsonUtils;
 import clients.OpenAMClient;
 
 
@@ -52,11 +61,27 @@ public class GetServices {
 	@Path("/users")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUsers() {
+	public Response getUsers() {
 		
-		client.getUsers();
+		String answer;
 		
-		return null;
+		answer = null;
+		
+		try {
+			answer = JsonUtils.serializeJson(client.getUsers());
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
 	}
 	
 	@Path("/groups")
