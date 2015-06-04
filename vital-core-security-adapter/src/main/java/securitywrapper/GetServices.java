@@ -30,12 +30,27 @@ public class GetServices {
 	@Path("/user/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUser(@PathParam("id") String userId){
+	public Response getUser(@PathParam("id") String userId){
 		
-		client.getUser(userId);
+		String answer;
 		
+		answer = null;
 		
-		return null;
+		try {
+			answer = JsonUtils.serializeJson(client.getUser(userId));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
 	}
 	
 	@Path("/group/{id}")
