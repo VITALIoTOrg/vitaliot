@@ -39,15 +39,35 @@ public class PostServices {
 		answer = null;
 		
 		if(client.createUser(username, password, mail)) {
+			try {
+				answer = JsonUtils.serializeJson(client.getUser(username));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return Response.ok()
 					.entity(answer)
 					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		} else {
-			return Response.status(Status.INTERNAL_SERVER_ERROR)
+			try {
+				answer = JsonUtils.serializeJson(client.getUser(username));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.status(Status.BAD_REQUEST)
 					.entity(answer)
 					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
