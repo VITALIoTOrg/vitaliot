@@ -33,7 +33,7 @@ public class GetServices {
 	@Path("/user/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@PathParam("id") String userId){
+	public Response getUser(@PathParam("id") String userId) {
 		
 		String answer;
 		
@@ -59,7 +59,7 @@ public class GetServices {
 	@Path("/user/{id}/groups")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUserGroups(@PathParam("id") String userId){
+	public Response getUserGroups(@PathParam("id") String userId) {
 		
 		String answer;
 		
@@ -96,11 +96,27 @@ public class GetServices {
 	@Path("/group/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getGroup(@PathParam("id") String groupId) {
+	public Response getGroup(@PathParam("id") String groupId)  {
 		
-		client.getGroup(groupId);
+		String answer;
 		
-		return null;
+		answer = null;
+		
+		try {
+			answer = JsonUtils.serializeJson(client.getGroup(groupId));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
 	}
 	
 	@Path("/policy/{id}")
