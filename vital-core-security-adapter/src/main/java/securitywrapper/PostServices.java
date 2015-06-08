@@ -120,15 +120,89 @@ public class PostServices {
 	@Path("/group/create")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String createGroup() {
-		return null;
+	public Response createGroup(
+			@FormParam("name") String username) {
+		String answer;
+		
+		answer = null;
+		
+		if(client.createGroup(username)) {
+			try {
+				answer = JsonUtils.serializeJson(client.getGroup(username));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			try {
+				answer = JsonUtils.serializeJson(client.getGroup(username));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	@Path("/group/delete")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deleteGroup() {
-		return null;
+	public Response deleteGroup(
+			@FormParam("name") String username) {
+		String answer;
+		
+		answer = null;
+		
+		if(client.deleteGroup(username)) {
+			try {
+				answer = JsonUtils.serializeJson(client.getGroup(username));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			try {
+				answer = JsonUtils.serializeJson(client.getGroup(username));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	@Path("/group/addUser")
