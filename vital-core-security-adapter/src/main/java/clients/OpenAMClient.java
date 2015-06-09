@@ -1542,7 +1542,8 @@ public class OpenAMClient {
 			}
 		}
 		
-		//cancello il gruppo, aggiungo i nuovi utenti e lo re-inserisco in openam con la nuova lista 
+		//cancello il gruppo, aggiungo i nuovi utenti e lo re-inserisco in openam con la nuova lista
+		// Why not use the RESTful service from OpenAM to update identities??
 		deleteGroup(groupId);
 		
 		for(int i=0; i<usersId.size(); i++) {
@@ -1585,7 +1586,8 @@ public class OpenAMClient {
 			return true;
 		}
 		
-		//cancello il gruppo, aggiorno gli utenti e lo re-inserisco in openam 
+		//cancello il gruppo, aggiorno gli utenti e lo re-inserisco in openam
+		// Why not use the RESTful service from OpenAM to update identities??
 		deleteGroup(groupId);
 		
 		currentGroup.setUniqueMember(currentUsers);
