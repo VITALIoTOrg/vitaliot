@@ -1629,6 +1629,7 @@ public class OpenAMClient {
 			String group = iter.next();
 			if(!userIsInGroup(userId, group)) {
 				iter.remove();
+				groups.setResultCount(groups.getResultCount()-1);
 			}
 		}
 		groups.setResult(list);
