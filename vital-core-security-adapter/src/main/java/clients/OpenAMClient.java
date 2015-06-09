@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import jsonpojos.ActionValues__;
@@ -1615,6 +1616,22 @@ public class OpenAMClient {
 		}
 		
 		return false;
+	}
+	
+	public Groups listUserGroups(String userId) {
+		
+		Groups groups = getGroups();
+		List<String> list = groups.getResult();
+		Iterator<String> iter = list.listIterator();
+		while (iter.hasNext()) {
+			String group = iter.next();
+			if(!userIsInGroup(userId, group)) {
+				iter.remove();
+			}
+		}
+		groups.setResult(list);
+		
+		return groups;
 	}
 	
 }

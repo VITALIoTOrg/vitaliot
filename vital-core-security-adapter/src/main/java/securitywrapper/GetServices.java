@@ -65,16 +65,7 @@ public class GetServices {
 		
 		answer = null;
 		
-		Groups groups = client.getGroups();
-		List<String> list = groups.getResult();
-		Iterator<String> iter = list.listIterator();
-		while (iter.hasNext()) {
-			String group = iter.next();
-			if(!client.userIsInGroup(userId, group)) {
-				iter.remove();
-			}
-		}
-		groups.setResult(list);
+		Groups groups = client.listUserGroups(userId);
 		
 		try {
 			answer = JsonUtils.serializeJson(groups);
