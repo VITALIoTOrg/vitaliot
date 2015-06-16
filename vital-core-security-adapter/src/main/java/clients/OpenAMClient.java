@@ -665,7 +665,7 @@ public class OpenAMClient {
 		return policy;
 	}
 	
-	public boolean createUser(String username, String password, String mail) {
+	public boolean createUser(String givenName, String surname, String username, String password, String mail) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -685,6 +685,8 @@ public class OpenAMClient {
 		userModel.setUsername(username);
 		userModel.setUserpassword(password);
 		userModel.setMail(mail);
+		userModel.setAdditionalProperty("givenName", givenName);
+		userModel.setAdditionalProperty("sn", surname);
 		
 		String newUser = "";
 		

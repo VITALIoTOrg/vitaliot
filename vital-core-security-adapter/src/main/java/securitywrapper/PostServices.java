@@ -33,6 +33,8 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUser(
+			@FormParam("givenName") String givenName,
+			@FormParam("surname") String surname,
 			@FormParam("name") String username,
 			@FormParam("password") String password,
 			@FormParam("mail") String mail) {
@@ -40,7 +42,7 @@ public class PostServices {
 		
 		answer = null;
 		
-		if(client.createUser(username, password, mail)) {
+		if(client.createUser(givenName, surname, username, password, mail)) {
 			try {
 				answer = JsonUtils.serializeJson(client.getUser(username));
 			} catch (JsonParseException e) {
