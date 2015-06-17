@@ -1589,6 +1589,79 @@ public class OpenAMClient {
 		return false;
 	}
 	
+	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		String newGroup = "";
+		
+		try {
+			newGroup = JsonUtils.serializeJson(groupInfo);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/groups/"+groupId)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newGroup, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPut httpput = new HttpPut(uri);
+		httpput.setHeader("Content-Type", "application/json");
+		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setEntity(strEntity);
+		
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpput);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		return true;
+		
+	}
+	
 	public boolean addUsersToGroup(String groupId, ArrayList<String> users) {
 				
 		Group currentGroup = getGroup(groupId);
@@ -1599,7 +1672,7 @@ public class OpenAMClient {
 		}
 		
 		
-		List<String> currentUsers = getGroup(groupId).getUniqueMember(); //utenti al momento presenti nel gruppo
+		List<String> currentUsers = currentGroup.getUniqueMember(); //utenti al momento presenti nel gruppo
 		ArrayList<String> usersId = new ArrayList<String>(); //uid degli utenti da aggiungere
 		
 		
@@ -1624,17 +1697,16 @@ public class OpenAMClient {
 			}
 		}
 		
-		//cancello il gruppo, aggiungo i nuovi utenti e lo re-inserisco in openam con la nuova lista
-		// Why not use the RESTful service from OpenAM to update identities??
-		deleteGroup(groupId);
-		
 		for(int i=0; i<usersId.size(); i++) {
 			currentUsers.add(usersId.get(i));
 		}
 		
-		currentGroup.setUniqueMember(currentUsers);
-				
-		return createGroup(currentGroup);
+		GroupModelWithUsers newGroupInfo = new GroupModelWithUsers();
+		
+		newGroupInfo.setUniqueMember(currentUsers);
+		
+		return updateGroup(groupId, newGroupInfo);
+		
 	}
 	
 	public boolean deleteUsersFromGroup(String groupId, ArrayList<String> users) {
@@ -1646,7 +1718,7 @@ public class OpenAMClient {
 			return false;
 		}
 		
-		List<String> currentUsers = getGroup(groupId).getUniqueMember(); //utenti al momento presenti nel gruppo
+		List<String> currentUsers = currentGroup.getUniqueMember(); //utenti al momento presenti nel gruppo
 		ArrayList<String> usersId = new ArrayList<String>(); //uid degli utenti da aggiungere
 		
 		
@@ -1668,13 +1740,11 @@ public class OpenAMClient {
 			return true;
 		}
 		
-		//cancello il gruppo, aggiorno gli utenti e lo re-inserisco in openam
-		// Why not use the RESTful service from OpenAM to update identities??
-		deleteGroup(groupId);
+		GroupModelWithUsers newGroupInfo = new GroupModelWithUsers();
 		
-		currentGroup.setUniqueMember(currentUsers);
-				
-		return createGroup(currentGroup);
+		newGroupInfo.setUniqueMember(currentUsers);
+		
+		return updateGroup(groupId, newGroupInfo);
 		
 	}
 	
