@@ -327,12 +327,13 @@ public class PostServices {
 			@PathParam("id") String userId,
 			@FormParam("givenName") String givenName,
 			@FormParam("surname") String surname,
-			@FormParam("mail") String mail) {
+			@FormParam("mail") String mail,
+			@FormParam("status") String status) {
 		String answer;
 		
 		answer = null;
 		
-		if(client.updateUser(userId, givenName, surname, mail)) {
+		if(client.updateUser(userId, givenName, surname, mail, status)) {
 			try {
 				answer = JsonUtils.serializeJson(client.getUser(userId));
 			} catch (JsonParseException e) {

@@ -1108,7 +1108,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updateUser(String username, String givenName, String surname, String mail) {
+	public boolean updateUser(String username, String givenName, String surname, String mail, String status) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1124,6 +1124,7 @@ public class OpenAMClient {
 		userModel.setMail(mail);
 		userModel.setAdditionalProperty("givenName", givenName);
 		userModel.setAdditionalProperty("sn", surname);
+		userModel.setAdditionalProperty("inetUserStatus", status);
 		
 		String newUserInfo = "";
 		
