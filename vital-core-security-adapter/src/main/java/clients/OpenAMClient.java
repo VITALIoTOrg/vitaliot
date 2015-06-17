@@ -1212,7 +1212,7 @@ public class OpenAMClient {
 		
 		policyAuthenticatedModel.setName(policyName);
 		policyAuthenticatedModel.setActive(true);
-		policyAuthenticatedModel.setDescription(policyName+" creted from REST.");
+		policyAuthenticatedModel.setDescription(policyName+" created from REST.");
 		policyAuthenticatedModel.setResources(resources);
 		
 		ActionValues__ actVal = new ActionValues__();

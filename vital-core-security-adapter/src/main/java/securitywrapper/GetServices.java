@@ -113,11 +113,28 @@ public class GetServices {
 	@Path("/policy/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getPolicy(@PathParam("id") String policyId) {
+	public Response getPolicy(@PathParam("id") String policyId) {
 		
-		client.getPolicy(policyId);
+		String answer;
 		
-		return null;
+		answer = null;
+		
+		try {
+			answer = JsonUtils.serializeJson(client.getPolicy(policyId));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		
 	}
 	
 	@Path("/users")

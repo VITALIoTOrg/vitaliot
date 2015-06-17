@@ -125,14 +125,14 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createGroup(
-			@FormParam("name") String username) {
+			@FormParam("name") String name) {
 		String answer;
 		
 		answer = null;
 		
-		if(client.createGroup(username)) {
+		if(client.createGroup(name)) {
 			try {
-				answer = JsonUtils.serializeJson(client.getGroup(username));
+				answer = JsonUtils.serializeJson(client.getGroup(name));
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -148,7 +148,7 @@ public class PostServices {
 					.build();
 		} else {
 			try {
-				answer = JsonUtils.serializeJson(client.getGroup(username));
+				answer = JsonUtils.serializeJson(client.getGroup(name));
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -169,14 +169,14 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteGroup(
-			@FormParam("name") String username) {
+			@FormParam("name") String name) {
 		String answer;
 		
 		answer = null;
 		
-		if(client.deleteGroup(username)) {
+		if(client.deleteGroup(name)) {
 			try {
-				answer = JsonUtils.serializeJson(client.getGroup(username));
+				answer = JsonUtils.serializeJson(client.getGroup(name));
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -192,7 +192,7 @@ public class PostServices {
 					.build();
 		} else {
 			try {
-				answer = JsonUtils.serializeJson(client.getGroup(username));
+				answer = JsonUtils.serializeJson(client.getGroup(name));
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -316,8 +316,45 @@ public class PostServices {
 	@Path("/policy/delete")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String deletePolicy() {
-		return null;
+	public Response deletePolicy(
+			@FormParam("name") String name) {
+		String answer;
+		
+		answer = null;
+		
+		if(client.deletePolicy(name)) {
+			try {
+				answer = JsonUtils.serializeJson(client.getPolicy(name));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			try {
+				answer = JsonUtils.serializeJson(client.getPolicy(name));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	@Path("/user/{id}")
