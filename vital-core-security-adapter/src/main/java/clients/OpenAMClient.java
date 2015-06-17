@@ -33,6 +33,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
@@ -1105,6 +1106,84 @@ public class OpenAMClient {
 		}
 		
 		return false;
+	}
+	
+	public boolean updateUser(String username, String givenName, String surname, String mail) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		UserModel userModel = new UserModel();
+		
+		userModel.setUsername(null); // to be sure it not included in the JSON (username is used in the URL) 
+		userModel.setMail(mail);
+		userModel.setAdditionalProperty("givenName", givenName);
+		userModel.setAdditionalProperty("sn", surname);
+		
+		String newUserInfo = "";
+		
+		try {
+			newUserInfo = JsonUtils.serializeJson(userModel);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/users/"+username)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newUserInfo, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPut httpput = new HttpPut(uri);
+		httpput.setHeader("Content-Type", "application/json");
+		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setEntity(strEntity);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpput);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		return true;
 	}
 	
 	/**

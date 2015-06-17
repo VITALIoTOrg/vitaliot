@@ -320,4 +320,51 @@ public class PostServices {
 		return null;
 	}
 	
+	@Path("/user/{id}")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateUser(
+			@PathParam("id") String userId,
+			@FormParam("givenName") String givenName,
+			@FormParam("surname") String surname,
+			@FormParam("mail") String mail) {
+		String answer;
+		
+		answer = null;
+		
+		if(client.updateUser(userId, givenName, surname, mail)) {
+			try {
+				answer = JsonUtils.serializeJson(client.getUser(userId));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			try {
+				answer = JsonUtils.serializeJson(client.getUser(userId));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+	}
+	
 }
