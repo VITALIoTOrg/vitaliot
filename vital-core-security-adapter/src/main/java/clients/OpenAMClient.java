@@ -1589,6 +1589,86 @@ public class OpenAMClient {
 		return false;
 	}
 	
+	public boolean updatePolicy(String name, String description, Boolean active, StringBuilder goingOn) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		PolicyIdentityModel policyModel = new PolicyIdentityModel();
+		
+		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
+		policyModel.setActive(active);
+		policyModel.setDescription(description);
+		policyModel.setResources(getPolicy(name).getResources());
+				
+		String newPolicyInfo = "";
+		
+		try {
+			newPolicyInfo = JsonUtils.serializeJson(policyModel);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/policies/"+name)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newPolicyInfo, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPut httpput = new HttpPut(uri);
+		httpput.setHeader("Content-Type", "application/json");
+		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setEntity(strEntity);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpput);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		goingOn.append(respString);
+		
+		return true;
+	}
+	
 	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo) {
 		
 		boolean currentSessionIsValid = isTokenValid();

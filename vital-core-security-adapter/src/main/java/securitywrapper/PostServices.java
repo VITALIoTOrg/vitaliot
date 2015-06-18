@@ -446,4 +446,30 @@ public class PostServices {
 		}
 	}
 	
+	@Path("/policy/{id}")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updatePolicy(
+			@PathParam("id") String name,
+			@FormParam("description") String description,
+			@FormParam("active") Boolean active) {
+		StringBuilder answer = new StringBuilder();
+		
+		if(client.updatePolicy(name, description, active, answer)) {
+			return Response.ok()
+					.entity(answer.toString())
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+	}
+	
 }
