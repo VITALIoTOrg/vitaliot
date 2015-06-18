@@ -1600,11 +1600,23 @@ public class OpenAMClient {
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
 		
 		PolicyIdentityModel policyModel = new PolicyIdentityModel();
-		
+		Subject___ sub = new Subject___();
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
 		policyModel.setActive(active);
 		policyModel.setDescription(description);
 		policyModel.setResources(getPolicy(name).getResources());
+		try {
+			policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
+		} catch (JsonParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (JsonMappingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 				
 		String newPolicyInfo = "";
 		
