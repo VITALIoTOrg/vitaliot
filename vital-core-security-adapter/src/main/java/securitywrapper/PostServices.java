@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 
+import utils.Action;
 import utils.JsonUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -308,8 +309,48 @@ public class PostServices {
 	@Path("/policy/create")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String createPolicy() {
-		return null;
+	public Response createPolicy(
+			@FormParam("name") String name,
+			@FormParam("resources[]") ArrayList<String> res,
+			@FormParam("groups[]") ArrayList<String> grs) {
+		String answer;
+		
+		answer = null;
+		ArrayList<Action> actions = new ArrayList<Action>();
+		
+		if(client.createIdentityGroupsPolicy(name, actions, res, grs)) {
+			try {
+				answer = JsonUtils.serializeJson(client.getPolicy(name));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		} else {
+			try {
+				answer = JsonUtils.serializeJson(client.getPolicy(name));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	

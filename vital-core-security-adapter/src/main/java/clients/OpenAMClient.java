@@ -1488,7 +1488,7 @@ public class OpenAMClient {
 		
 		policyIdentityModel.setName(policyName);
 		policyIdentityModel.setActive(true);
-		policyIdentityModel.setDescription(policyName+" creted from REST.");
+		policyIdentityModel.setDescription(policyName+" created from REST.");
 		policyIdentityModel.setResources(resources);
 		
 		ActionValues___ actVal = new ActionValues___();
