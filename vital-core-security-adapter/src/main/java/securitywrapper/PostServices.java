@@ -454,10 +454,12 @@ public class PostServices {
 			@FormParam("description") String description,
 			@FormParam("active") Boolean active,
 			@FormParam("groups[]") ArrayList<String> groups,
-			@FormParam("resources[]") ArrayList<String> resources) {
+			@FormParam("nogr") Boolean nogr,
+			@FormParam("resources[]") ArrayList<String> resources,
+			@FormParam("nores") Boolean nores) {
 		StringBuilder answer = new StringBuilder();
 		
-		if(client.updatePolicy(name, description, active, groups, resources, answer)) {
+		if(client.updatePolicy(name, description, active, groups, nogr, resources, nores, answer)) {
 			return Response.ok()
 					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")

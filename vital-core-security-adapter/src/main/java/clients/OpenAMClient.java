@@ -1589,7 +1589,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updatePolicy(String name, String description, Boolean active, ArrayList<String> groups, ArrayList<String> resources, StringBuilder goingOn) {
+	public boolean updatePolicy(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1604,15 +1604,15 @@ public class OpenAMClient {
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
 		policyModel.setActive(active);
 		policyModel.setDescription(description);
-		if(resources.isEmpty()) {
+		if(resources.isEmpty() && !nores) {
 			policyModel.setResources(getPolicy(name).getResources());
 		}
-		else {
-			policyModel.setDescription("Resources set");
+		else if(!nores) {
+			policyModel.setDescription("Message");
 			policyModel.setResources(resources);
 		}
 		
-		if(groups.isEmpty()) {
+		if(groups.isEmpty() && !nogr) {
 			try {
 				policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
 			} catch (JsonParseException e2) {
@@ -1625,7 +1625,7 @@ public class OpenAMClient {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
-		} else {
+		} else if(!nogr){
 			ArrayList<String> groupsId = new ArrayList<String>();
 			
 			for (int i=0; i<groups.size();i++) {
