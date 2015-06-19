@@ -1589,7 +1589,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updatePolicy(String name, String description, Boolean active, ArrayList<String> groups, StringBuilder goingOn) {
+	public boolean updatePolicy(String name, String description, Boolean active, ArrayList<String> groups, ArrayList<String> resources, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1604,7 +1604,13 @@ public class OpenAMClient {
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
 		policyModel.setActive(active);
 		policyModel.setDescription(description);
-		policyModel.setResources(getPolicy(name).getResources());
+		if(resources.isEmpty()) {
+			policyModel.setResources(getPolicy(name).getResources());
+		}
+		else {
+			policyModel.setDescription("Resources set");
+			policyModel.setResources(resources);
+		}
 		
 		if(groups.isEmpty()) {
 			try {
