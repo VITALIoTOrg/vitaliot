@@ -1589,7 +1589,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updatePolicy(String name, String description, Boolean active, StringBuilder goingOn) {
+	public boolean updatePolicy(String name, String description, Boolean active, ArrayList<String> groups, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1605,17 +1605,37 @@ public class OpenAMClient {
 		policyModel.setActive(active);
 		policyModel.setDescription(description);
 		policyModel.setResources(getPolicy(name).getResources());
-		try {
-			policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
-		} catch (JsonParseException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (JsonMappingException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+		
+		if(groups.isEmpty()) {
+			try {
+				policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
+			} catch (JsonParseException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (JsonMappingException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		} else {
+			ArrayList<String> groupsId = new ArrayList<String>();
+			
+			for (int i=0; i<groups.size();i++) {
+				String currentGroup = groups.get(i);
+				if (getGroup(currentGroup).getUsername() == null) {
+					return false;
+				} else {
+					groupsId.add(getGroup(currentGroup).getUniversalid().get(0)); 
+				}
+			}
+			
+			Subject___ sbj = new Subject___();
+			sbj.setType("Identity");
+			sbj.setSubjectValues(groupsId);
+			
+			policyModel.setSubject(sbj);
 		}
 				
 		String newPolicyInfo = "";
