@@ -529,7 +529,6 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		
 		return user;
 	}
 	
