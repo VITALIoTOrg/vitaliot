@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 
+import jsonpojos.Policy;
+import jsonpojos.User;
 import utils.Action;
 import utils.JsonUtils;
 
@@ -408,17 +410,55 @@ public class PostServices {
 			@FormParam("mail") String mail,
 			@FormParam("status") String status) {
 		
+		int code;
 		StringBuilder answer = new StringBuilder();
+		User user = new User();
+		
+		code = 0;
 		
 		if(client.updateUser(userId, givenName, surname, mail, status, answer)) {
-			return Response.ok()
+			
+			try {
+				user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(user.getAdditionalProperties().containsKey("code")) {
+				if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) user.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
 					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
+			}
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+			else {
+				return Response.ok()
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
 		} else {
-			return Response.status(Status.BAD_REQUEST)
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
@@ -440,17 +480,55 @@ public class PostServices {
 			@FormParam("resources[]") ArrayList<String> resources,
 			@FormParam("nores") Boolean nores) {
 		
+		int code;
 		StringBuilder answer = new StringBuilder();
+		Policy policy = new Policy();
+		
+		code = 0;
 		
 		if(client.updatePolicy(name, description, active, groups, nogr, resources, nores, answer)) {
-			return Response.ok()
+			
+			try {
+				policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(policy.getAdditionalProperties().containsKey("code")) {
+				if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) policy.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
 					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
+			}
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+			else {
+				return Response.ok()
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
 		} else {
-			return Response.status(Status.BAD_REQUEST)
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
