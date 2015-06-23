@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response.Status;
 
 import jsonpojos.Groups;
 import jsonpojos.User;
+import jsonpojos.Users;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -168,12 +169,16 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers() {
 		
+		Users users;
 		String answer;
+		int code;
 		
 		answer = null;
+		code = 0;
+		users = client.getUsers();
 		
 		try {
-			answer = JsonUtils.serializeJson(client.getUsers());
+			answer = JsonUtils.serializeJson(users);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -182,11 +187,32 @@ public class GetServices {
 			e.printStackTrace();
 		}
 		
-		return Response.ok()
+		if(users.getAdditionalProperties().containsKey("code")) {
+			if(users.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) users.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	@Path("/groups")
