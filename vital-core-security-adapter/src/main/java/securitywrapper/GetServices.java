@@ -220,12 +220,16 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroups() {
 		
+		Groups groups;
 		String answer;
+		int code;
 		
 		answer = null;
+		code = 0;
+		groups = client.getGroups();
 		
 		try {
-			answer = JsonUtils.serializeJson(client.getGroups());
+			answer = JsonUtils.serializeJson(groups);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -234,11 +238,32 @@ public class GetServices {
 			e.printStackTrace();
 		}
 		
-		return Response.ok()
+		if(groups.getAdditionalProperties().containsKey("code")) {
+			if(groups.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) groups.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 	}
 	
 	@Path("/policies")
