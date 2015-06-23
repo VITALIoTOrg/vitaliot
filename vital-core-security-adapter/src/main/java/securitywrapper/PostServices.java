@@ -408,38 +408,18 @@ public class PostServices {
 			@FormParam("mail") String mail,
 			@FormParam("status") String status) {
 		
-		String answer;
+		StringBuilder answer = new StringBuilder();
 		
-		answer = null;
-		
-		if(client.updateUser(userId, givenName, surname, mail, status)) {
-			try {
-				answer = JsonUtils.serializeJson(client.getUser(userId));
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if(client.updateUser(userId, givenName, surname, mail, status, answer)) {
 			return Response.ok()
-					.entity(answer)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		} else {
-			try {
-				answer = JsonUtils.serializeJson(client.getUser(userId));
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			return Response.status(Status.BAD_REQUEST)
-					.entity(answer)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")

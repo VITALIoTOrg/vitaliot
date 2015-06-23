@@ -1107,7 +1107,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updateUser(String username, String givenName, String surname, String mail, String status) {
+	public boolean updateUser(String username, String givenName, String surname, String mail, String status, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1182,6 +1182,8 @@ public class OpenAMClient {
 				return false;
 			}    
 		}
+		
+		goingOn.append(respString);
 		
 		return true;
 	}
