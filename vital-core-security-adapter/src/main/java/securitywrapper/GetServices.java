@@ -13,6 +13,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import jsonpojos.Groups;
+import jsonpojos.Policies;
 import jsonpojos.User;
 import jsonpojos.Users;
 
@@ -81,6 +82,7 @@ public class GetServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/user/{id}/groups")
@@ -109,6 +111,7 @@ public class GetServices {
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		
 	}
 	
 	@Path("/group/{id}")
@@ -135,6 +138,7 @@ public class GetServices {
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		
 	}
 	
 	@Path("/policy/{id}")
@@ -213,6 +217,7 @@ public class GetServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/groups")
@@ -264,6 +269,7 @@ public class GetServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/policies")
@@ -271,12 +277,16 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicies() {
 		
+		Policies policies;
 		String answer;
+		int code;
 		
 		answer = null;
+		code = 0;
+		policies = client.getPolicies();
 		
 		try {
-			answer = JsonUtils.serializeJson(client.getPolicies());
+			answer = JsonUtils.serializeJson(policies);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -285,11 +295,33 @@ public class GetServices {
 			e.printStackTrace();
 		}
 		
-		return Response.ok()
+		if(policies.getAdditionalProperties().containsKey("code")) {
+			if(policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) policies.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		
 	}
-	
+		
 }
