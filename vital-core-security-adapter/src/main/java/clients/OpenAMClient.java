@@ -1796,7 +1796,7 @@ public class OpenAMClient {
 		ArrayList<String> usersId = new ArrayList<String>(); //uid degli utenti da aggiungere
 		
 		
-		for (int i=0; i<users.size();i++) {
+		for (int i=0; i < users.size(); i++) {
 			String currentUser = users.get(i);
 			if (getUser(currentUser).getUsername() == null) {
 				//uno degli utenti richiesti non esiste, esci
@@ -1817,7 +1817,7 @@ public class OpenAMClient {
 			}
 		}
 		
-		for(int i=0; i<usersId.size(); i++) {
+		for(int i = 0; i < usersId.size(); i++) {
 			currentUsers.add(usersId.get(i));
 		}
 		
