@@ -407,6 +407,7 @@ public class PostServices {
 			@FormParam("surname") String surname,
 			@FormParam("mail") String mail,
 			@FormParam("status") String status) {
+		
 		String answer;
 		
 		answer = null;
@@ -444,6 +445,7 @@ public class PostServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/policy/{id}")
@@ -457,6 +459,7 @@ public class PostServices {
 			@FormParam("nogr") Boolean nogr,
 			@FormParam("resources[]") ArrayList<String> resources,
 			@FormParam("nores") Boolean nores) {
+		
 		StringBuilder answer = new StringBuilder();
 		
 		if(client.updatePolicy(name, description, active, groups, nogr, resources, nores, answer)) {

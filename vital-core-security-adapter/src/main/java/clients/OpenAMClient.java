@@ -1603,6 +1603,7 @@ public class OpenAMClient {
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
 		policyModel.setActive(active);
 		policyModel.setDescription(description);
+		
 		if(resources.isEmpty() && !nores) {
 			policyModel.setResources(getPolicy(name).getResources());
 		}
