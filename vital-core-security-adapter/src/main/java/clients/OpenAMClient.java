@@ -665,7 +665,7 @@ public class OpenAMClient {
 		return policy;
 	}
 	
-	public boolean createUser(String givenName, String surname, String username, String password, String mail) {
+	public boolean createUser(String givenName, String surname, String username, String password, String mail, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -747,6 +747,8 @@ public class OpenAMClient {
 				return false;
 			}    
 		}
+		
+		goingOn.append(respString);
 		
 		return true;
 	}

@@ -42,13 +42,17 @@ public class PostServices {
 			@FormParam("name") String username,
 			@FormParam("password") String password,
 			@FormParam("mail") String mail) {
-		String answer;
 		
-		answer = null;
+		int code;
+		StringBuilder answer = new StringBuilder();
+		User user = new User();
 		
-		if(client.createUser(givenName, surname, username, password, mail)) {
+		code = 0;
+		
+		if(client.createUser(givenName, surname, username, password, mail, answer)) {
+			
 			try {
-				answer = JsonUtils.serializeJson(client.getUser(username));
+				user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -56,29 +60,45 @@ public class PostServices {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return Response.ok()
-					.entity(answer)
+			
+			if(user.getAdditionalProperties().containsKey("code")) {
+				if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) user.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
-		} else {
-			try {
-				answer = JsonUtils.serializeJson(client.getUser(username));
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-			return Response.status(Status.BAD_REQUEST)
-					.entity(answer)
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+			else {
+				return Response.ok()
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/user/delete")
@@ -246,6 +266,7 @@ public class PostServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/group/{id}/addUser")
