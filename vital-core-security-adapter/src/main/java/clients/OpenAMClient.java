@@ -911,7 +911,7 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean deleteUser(String username) {
+	public boolean deleteUser(String username, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -962,6 +962,7 @@ public class OpenAMClient {
 			try {
 				respString = EntityUtils.toString(entity);
 				if (respString.contains("success")) {
+					goingOn.append(respString);
 					return true;
 				}
 			} catch (ParseException e) {
@@ -973,6 +974,8 @@ public class OpenAMClient {
 			}
 		    
 		}
+		
+		goingOn.append(respString);
 		
 		return false;
 	}
