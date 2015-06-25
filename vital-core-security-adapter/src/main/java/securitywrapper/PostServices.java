@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 
+import jsonpojos.Group;
 import jsonpojos.Policy;
 import jsonpojos.User;
 import utils.Action;
@@ -218,16 +219,20 @@ public class PostServices {
 	public Response addUserToGroup(
 			@PathParam("id") String groupId,
 			@FormParam("user") String username) {
-		String answer;
 		
-		answer = null;
+		int code;
+		StringBuilder answer = new StringBuilder();
+		Group group = new Group();
 		
 		ArrayList<String> usersList = new ArrayList<String>();
 		usersList.add(username);
 		
-		if(client.addUsersToGroup(groupId, usersList)) {
+		code = 0;
+		
+		if(client.addUsersToGroup(groupId, usersList, answer)) {
+			
 			try {
-				answer = JsonUtils.serializeJson(client.getGroup(groupId));
+				group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -235,29 +240,45 @@ public class PostServices {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return Response.ok()
-					.entity(answer)
+			
+			if(group.getAdditionalProperties().containsKey("code")) {
+				if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) group.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
-		} else {
-			try {
-				answer = JsonUtils.serializeJson(client.getGroup(groupId));
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-			return Response.status(Status.BAD_REQUEST)
-					.entity(answer)
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+			else {
+				return Response.ok()
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/group/{id}/delUser")
@@ -266,16 +287,20 @@ public class PostServices {
 	public Response removeUserFromGroup(
 			@PathParam("id") String groupId,
 			@FormParam("user") String username) {
-		String answer;
 		
-		answer = null;
+		int code;
+		StringBuilder answer = new StringBuilder();
+		Group group = new Group();
 		
 		ArrayList<String> usersList = new ArrayList<String>();
 		usersList.add(username);
 		
-		if(client.deleteUsersFromGroup(groupId, usersList)) {
+		code = 0;
+		
+		if(client.deleteUsersFromGroup(groupId, usersList, answer)) {
+			
 			try {
-				answer = JsonUtils.serializeJson(client.getGroup(groupId));
+				group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -283,29 +308,45 @@ public class PostServices {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			return Response.ok()
-					.entity(answer)
+			
+			if(group.getAdditionalProperties().containsKey("code")) {
+				if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) group.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
-		} else {
-			try {
-				answer = JsonUtils.serializeJson(client.getGroup(groupId));
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-			return Response.status(Status.BAD_REQUEST)
-					.entity(answer)
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+			else {
+				return Response.ok()
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer.toString())
 					.header("Access-Control-Allow-Origin", "*")
 					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
 	}
 	
 	@Path("/policy/create")

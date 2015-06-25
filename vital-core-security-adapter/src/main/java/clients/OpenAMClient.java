@@ -1709,7 +1709,7 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo) {
+	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1778,11 +1778,13 @@ public class OpenAMClient {
 			}    
 		}
 		
+		goingOn.append(respString);
+		
 		return true;
 		
 	}
 	
-	public boolean addUsersToGroup(String groupId, ArrayList<String> users) {
+	public boolean addUsersToGroup(String groupId, ArrayList<String> users, StringBuilder goingOn) {
 				
 		Group currentGroup = getGroup(groupId);
 		
@@ -1825,11 +1827,11 @@ public class OpenAMClient {
 		
 		newGroupInfo.setUniqueMember(currentUsers);
 		
-		return updateGroup(groupId, newGroupInfo);
+		return updateGroup(groupId, newGroupInfo, goingOn);
 		
 	}
 	
-	public boolean deleteUsersFromGroup(String groupId, ArrayList<String> users) {
+	public boolean deleteUsersFromGroup(String groupId, ArrayList<String> users, StringBuilder goingOn) {
 		
 		Group currentGroup = getGroup(groupId);
 		
@@ -1864,7 +1866,7 @@ public class OpenAMClient {
 		
 		newGroupInfo.setUniqueMember(currentUsers);
 		
-		return updateGroup(groupId, newGroupInfo);
+		return updateGroup(groupId, newGroupInfo, goingOn);
 		
 	}
 	
