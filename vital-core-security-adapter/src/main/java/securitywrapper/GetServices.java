@@ -323,5 +323,22 @@ public class GetServices {
 		}
 		
 	}
+	
+	@Path("/stats")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSessions() {
+		
+		String answer;
+		
+		answer = client.getStats();
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		
+	}
 		
 }

@@ -39,6 +39,22 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.core.net.SmtpManager;
+import org.snmp4j.CommunityTarget;
+import org.snmp4j.PDU;
+import org.snmp4j.Snmp;
+import org.snmp4j.Target;
+import org.snmp4j.TransportMapping;
+import org.snmp4j.event.ResponseEvent;
+import org.snmp4j.mp.SnmpConstants;
+import org.snmp4j.smi.Address;
+import org.snmp4j.smi.GenericAddress;
+import org.snmp4j.smi.Integer32;
+import org.snmp4j.smi.OID;
+import org.snmp4j.smi.OctetString;
+import org.snmp4j.smi.UdpAddress;
+import org.snmp4j.smi.VariableBinding;
+import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -464,6 +480,88 @@ public class OpenAMClient {
 		}
 		
 		return policies;
+	}
+	
+	public String getStats() {
+		
+		String answer = null;
+
+		String ipAddress = "10.41.5.98";
+		String port = "8080";
+		String oidValue = ".1.3.6.1.4.1.36733.1.2.1.1.1.0";
+		int snmpVersion  = SnmpConstants.version2c;
+		String community = "public";
+
+	    // Create TransportMapping and Listen
+	    TransportMapping transport = null;
+		try {
+			transport = new DefaultUdpTransportMapping();
+			transport.listen();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	    // Create Target Address object
+	    CommunityTarget comtarget = new CommunityTarget();
+	    comtarget.setCommunity(new OctetString(community));
+	    comtarget.setVersion(snmpVersion);
+	    comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
+	    comtarget.setRetries(2);
+	    comtarget.setTimeout(1000);
+
+	    // Create the PDU object
+	    PDU pdu = new PDU();
+	    pdu.add(new VariableBinding(new OID(oidValue)));
+	    pdu.setType(PDU.GET);
+	    pdu.setRequestID(new Integer32(1));
+
+		// Create Snmp object for sending data to Agent
+		Snmp snmp = new Snmp(transport);
+
+		ResponseEvent response = null;
+		try {
+			response = snmp.get(pdu, comtarget);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Process Agent Response
+		if(response != null) {
+			PDU responsePDU = response.getResponse();
+			if(responsePDU != null) {
+				int errorStatus = responsePDU.getErrorStatus();
+		        int errorIndex = responsePDU.getErrorIndex();
+		        String errorStatusText = responsePDU.getErrorStatusText();
+
+		        if(errorStatus == PDU.noError) {
+		        	System.out.println("Snmp Get Response = " + responsePDU.getVariableBindings());
+		        	answer = responsePDU.toString();
+		        }
+		        else {
+		        	System.out.println("Error: Request Failed");
+		        	System.out.println("Error Status = " + errorStatus);
+		        	System.out.println("Error Index = " + errorIndex);
+		        	System.out.println("Error Status Text = " + errorStatusText);
+		        }
+			}
+		    else {
+		    	System.out.println("Error: Response PDU is null");
+		    }
+		}
+		else {
+			System.out.println("Error: Agent Timeout... ");
+		}
+		try {
+			snmp.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return answer;
+		    
 	}
 	
 	public User getUser(String username) {
