@@ -482,13 +482,12 @@ public class OpenAMClient {
 		return policies;
 	}
 	
-	public String getStats() {
+	public String getStatValue(String oidValue) {
 		
 		String answer = null;
 
 		String ipAddress = "10.41.5.98";
 		String port = "8080";
-		String oidValue = ".1.3.6.1.4.1.36733.1.2.1.1.1.0";
 		int snmpVersion  = SnmpConstants.version2c;
 		String community = "public";
 
@@ -537,7 +536,9 @@ public class OpenAMClient {
 
 		        if(errorStatus == PDU.noError) {
 		        	System.out.println("Snmp Get Response = " + responsePDU.getVariableBindings());
-		        	answer = responsePDU.toString();
+		        	answer = responsePDU.getVariableBindings().firstElement().toString();
+		        	String delims = "[=]";
+		        	answer = answer.split(delims)[1].substring(1);
 		        }
 		        else {
 		        	System.out.println("Error: Request Failed");

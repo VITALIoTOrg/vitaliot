@@ -330,8 +330,9 @@ public class GetServices {
 	public Response getSessions() {
 		
 		String answer;
+		String oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
 		
-		answer = client.getStats();
+		answer = client.getStatValue(oidValue);
 		
 		return Response.ok()
 				.entity(answer)
