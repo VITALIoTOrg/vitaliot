@@ -1,6 +1,7 @@
 package securitywrapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -329,10 +330,18 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSessions() {
 		
-		String answer;
-		String oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
+		String answer = null;
+		String oidValue;
 		
-		answer = client.getStatValue(oidValue);
+		answer = "{ \"active\": ";
+		
+		// Active Sessions
+		oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
+		answer = answer + client.getStatValue(oidValue);
+		
+		// Cumulative Policy Evaluations
+		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.1.0";
+		answer = answer + ", \"cumpol\": " + client.getStatValue(oidValue) + " }";
 		
 		return Response.ok()
 				.entity(answer)
