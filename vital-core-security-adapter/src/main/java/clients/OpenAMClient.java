@@ -486,7 +486,7 @@ public class OpenAMClient {
 		
 		String answer = null;
 
-		String ipAddress = "10.41.5.98";
+		String ipAddress = "vitalgateway.cloud.reply.eu";
 		String port = "8080";
 		int snmpVersion  = SnmpConstants.version2c;
 		String community = "public";
