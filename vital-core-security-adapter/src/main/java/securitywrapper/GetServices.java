@@ -17,6 +17,7 @@ import jsonpojos.Groups;
 import jsonpojos.Policies;
 import jsonpojos.User;
 import jsonpojos.Users;
+import jsonpojos.Monitor;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -330,18 +331,46 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSessions() {
 		
+		Monitor values = new Monitor();
 		String answer = null;
 		String oidValue;
 		
-		answer = "{ \"active\": ";
-		
 		// Active Sessions
 		oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
-		answer = answer + client.getStatValue(oidValue);
+		values.setActiveSessions(Long.parseLong(client.getStatValue(oidValue)));
 		
-		// Cumulative Policy Evaluations
+		// Current Internal Sessions
+		oidValue = ".1.3.6.1.4.1.36733.1.2.1.1.1.0";
+		values.setCurrInternalSessions(Long.parseLong(client.getStatValue(oidValue)));
+		
+		// Current Remote Sessions
+		oidValue = ".1.3.6.1.4.1.36733.1.2.1.2.1.0";
+		values.setCurrRemoteSessions(Long.parseLong(client.getStatValue(oidValue)));
+
+		// Cumulative Policy Evaluations (specific resource)
 		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.1.0";
-		answer = answer + ", \"cumpol\": " + client.getStatValue(oidValue) + " }";
+		values.setCumPolicyEval(Long.parseLong(client.getStatValue(oidValue)));
+		
+		// Average rate of policy evaluations for specific resources
+		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.2.0";
+		values.setAvgPolicyEval(Long.parseLong(client.getStatValue(oidValue)));
+		
+		// Average rate of policy evaluations for a tree of resources (subtree)
+		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.2.1.0";
+		values.setAvgPolicyEvalTree(Long.parseLong(client.getStatValue(oidValue)));
+		
+		try {
+			answer = JsonUtils.serializeJson(values);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return Response.ok()
 				.entity(answer)
