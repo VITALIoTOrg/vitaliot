@@ -71,6 +71,7 @@ public class OpenAMClient {
 	
 	private String idpHost;
 	private int idpPort;
+	private String snmpPort;
 	private String userAdmin;
 	private String pwdAdmin;
 	private String authToken;
@@ -81,6 +82,7 @@ public class OpenAMClient {
 		
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
+		snmpPort = configReader.get(ConfigReader.SNMP_PORT);
 		userAdmin = configReader.get(ConfigReader.USER_ADM);
 		pwdAdmin = configReader.get(ConfigReader.PWD_ADM);
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
@@ -486,8 +488,6 @@ public class OpenAMClient {
 		
 		String answer = null;
 
-		String ipAddress = "vitalgateway.cloud.reply.eu";
-		String port = "8080";
 		int snmpVersion  = SnmpConstants.version2c;
 		String community = "public";
 
@@ -505,7 +505,7 @@ public class OpenAMClient {
 	    CommunityTarget comtarget = new CommunityTarget();
 	    comtarget.setCommunity(new OctetString(community));
 	    comtarget.setVersion(snmpVersion);
-	    comtarget.setAddress(new UdpAddress(ipAddress + "/" + port));
+	    comtarget.setAddress(new UdpAddress(idpHost + "/" + snmpPort));
 	    comtarget.setRetries(2);
 	    comtarget.setTimeout(1000);
 
