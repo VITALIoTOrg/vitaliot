@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import utils.JsonUtils;
 import clients.OpenAMClient;
 
-
 @Path("/rest")
 public class GetServices {
 	

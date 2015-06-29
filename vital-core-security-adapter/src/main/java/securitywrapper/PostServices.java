@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import clients.OpenAMClient;
 
-
 @Path("/rest")
 public class PostServices {
 
