@@ -545,14 +545,17 @@ public class OpenAMClient {
 		        	System.out.println("Error Status = " + errorStatus);
 		        	System.out.println("Error Index = " + errorIndex);
 		        	System.out.println("Error Status Text = " + errorStatusText);
+		        	answer = "Error: " + errorStatusText;
 		        }
 			}
 		    else {
 		    	System.out.println("Error: Response PDU is null");
+		    	answer = "Error: Response PDU is null";
 		    }
 		}
 		else {
 			System.out.println("Error: Agent Timeout... ");
+			answer = "Error: Agent Timeout... ";
 		}
 		try {
 			snmp.close();

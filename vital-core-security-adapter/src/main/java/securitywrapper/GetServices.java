@@ -331,51 +331,114 @@ public class GetServices {
 	public Response getSessions() {
 		
 		Monitor values = new Monitor();
-		String answer = null;
+		String answer, value;
 		String oidValue;
+		Boolean ok;
 		
-		// Active Sessions
-		oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
-		values.setActiveSessions(Long.parseLong(client.getStatValue(oidValue)));
+		answer = value = null;
+		ok = true;
 		
-		// Current Internal Sessions
-		oidValue = ".1.3.6.1.4.1.36733.1.2.1.1.1.0";
-		values.setCurrInternalSessions(Long.parseLong(client.getStatValue(oidValue)));
 		
-		// Current Remote Sessions
-		oidValue = ".1.3.6.1.4.1.36733.1.2.1.2.1.0";
-		values.setCurrRemoteSessions(Long.parseLong(client.getStatValue(oidValue)));
-
-		// Cumulative Policy Evaluations (specific resource)
-		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.1.0";
-		values.setCumPolicyEval(Long.parseLong(client.getStatValue(oidValue)));
-		
-		// Average rate of policy evaluations for specific resources
-		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.2.0";
-		values.setAvgPolicyEval(Long.parseLong(client.getStatValue(oidValue)));
-		
-		// Average rate of policy evaluations for a tree of resources (subtree)
-		oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.2.1.0";
-		values.setAvgPolicyEvalTree(Long.parseLong(client.getStatValue(oidValue)));
-		
-		try {
-			answer = JsonUtils.serializeJson(values);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(ok) {
+			// Active Sessions
+			oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
+			value = client.getStatValue(oidValue);
+			if(value.startsWith("Error")) {
+				ok = false;
+			}
+			else {
+				values.setActiveSessions(Long.parseLong(value));
+			}
 		}
 		
-		return Response.ok()
-				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
-				.build();
+		if(ok) {
+			// Current Internal Sessions
+			oidValue = ".1.3.6.1.4.1.36733.1.2.1.1.1.0";
+			value = client.getStatValue(oidValue);
+			if(value.startsWith("Error")) {
+				ok = false;
+			}
+			else {
+				values.setCurrInternalSessions(Long.parseLong(value));
+			}
+		}
+		
+		if(ok) {
+			// Current Remote Sessions
+			oidValue = ".1.3.6.1.4.1.36733.1.2.1.2.1.0";
+			value = client.getStatValue(oidValue);
+			if(value.startsWith("Error")) {
+				ok = false;
+			}
+			else {
+				values.setCurrRemoteSessions(Long.parseLong(value));
+			}
+		}
+
+		if(ok) {
+			// Cumulative Policy Evaluations (specific resource)
+			oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.1.0";
+			value = client.getStatValue(oidValue);
+			if(value.startsWith("Error")) {
+				ok = false;
+			}
+			else {
+				values.setCumPolicyEval(Long.parseLong(value));
+			}
+		}
+		
+		if(ok) {
+			// Average rate of policy evaluations for specific resources
+			oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.2.0";
+			value = client.getStatValue(oidValue);
+			if(value.startsWith("Error")) {
+				ok = false;
+			}
+			else {
+				values.setAvgPolicyEval(Long.parseLong(value));
+			}
+		}
+		
+		if(ok) {
+			// Average rate of policy evaluations for a tree of resources (subtree)
+			oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.2.1.0";
+			value = client.getStatValue(oidValue);
+			if(value.startsWith("Error")) {
+				ok = false;
+			}
+			else {
+				values.setAvgPolicyEvalTree(Long.parseLong(value));
+			}
+		}
+		
+		if(ok) {
+			try {
+				answer = JsonUtils.serializeJson(values);
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			answer = value.substring(7);
+			return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 		
 	}
 		
