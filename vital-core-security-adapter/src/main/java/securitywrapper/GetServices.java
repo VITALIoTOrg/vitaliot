@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
+import jsonpojos.Policy;
 import jsonpojos.User;
 import jsonpojos.Users;
 import jsonpojos.Monitor;
@@ -173,12 +174,16 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicy(@PathParam("id") String policyId) {
 		
+		Policy policy;
 		String answer;
+		int code;
 		
 		answer = null;
+		code = 0;
+		policy = client.getPolicy(policyId);
 		
 		try {
-			answer = JsonUtils.serializeJson(client.getPolicy(policyId));
+			answer = JsonUtils.serializeJson(policy);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -187,11 +192,32 @@ public class GetServices {
 			e.printStackTrace();
 		}
 		
-		return Response.ok()
+		if(policy.getAdditionalProperties().containsKey("code")) {
+			if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) policy.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 		
 	}
 	

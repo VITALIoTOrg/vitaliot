@@ -1154,7 +1154,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean deletePolicy(String policyId) {
+	public boolean deletePolicy(String policyId, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1204,6 +1204,7 @@ public class OpenAMClient {
 			try {
 				respString = EntityUtils.toString(entity);
 				if (respString.equals("{}")) {
+					goingOn.append(respString);
 					return true;
 				}
 			} catch (ParseException e) {
@@ -1215,6 +1216,8 @@ public class OpenAMClient {
 			}
 		    
 		}
+		
+		goingOn.append(respString);
 		
 		return false;
 	}
@@ -1568,7 +1571,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups) {
+	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, StringBuilder goingOn) {
 	
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1688,6 +1691,7 @@ public class OpenAMClient {
 			try {
 				respString = EntityUtils.toString(entity);
 				if (respString.contains(policyName)) {
+					goingOn.append(respString);
 					return true;
 				}
 			} catch (ParseException e) {
@@ -1698,6 +1702,8 @@ public class OpenAMClient {
 				return false;
 			}    
 		}
+		
+		goingOn.append(respString);
 			
 		return false;
 	}
@@ -1722,7 +1728,6 @@ public class OpenAMClient {
 			policyModel.setResources(getPolicy(name).getResources());
 		}
 		else if(!nores) {
-			policyModel.setDescription("Message");
 			policyModel.setResources(resources);
 		}
 		
@@ -1739,7 +1744,7 @@ public class OpenAMClient {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
-		} else if(!nogr){
+		} else {
 			ArrayList<String> groupsId = new ArrayList<String>();
 			
 			for (int i=0; i<groups.size();i++) {
