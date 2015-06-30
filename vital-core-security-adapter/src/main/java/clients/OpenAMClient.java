@@ -934,7 +934,7 @@ public class OpenAMClient {
 	}
 	
 	
-	public boolean createGroup(String groupId) {
+	public boolean createGroup(String groupId, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1011,6 +1011,8 @@ public class OpenAMClient {
 				return false;
 			}    
 		}
+		
+		goingOn.append(respString);
 			
 		return true;
 	}
@@ -1084,7 +1086,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean deleteGroup(String groupId) {
+	public boolean deleteGroup(String groupId, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1134,6 +1136,7 @@ public class OpenAMClient {
 			try {
 				respString = EntityUtils.toString(entity);
 				if (respString.contains("success")) {
+					goingOn.append(respString);
 					return true;
 				}
 			} catch (ParseException e) {
@@ -1145,6 +1148,8 @@ public class OpenAMClient {
 			}
 		    
 		}
+		
+		goingOn.append(respString);
 		
 		return false;
 	}
