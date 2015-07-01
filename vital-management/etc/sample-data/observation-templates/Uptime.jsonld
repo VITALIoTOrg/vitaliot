@@ -1,0 +1,21 @@
+{
+  "@context": "http://vital-iot.org/contexts/measurement.jsonld",
+  "uri": "http://www.example.com/ico/1232/performance/75676/obsvn/8",
+  "type": "ssn:Observation",
+  "ssn:observationProperty": {
+    "type": "Uptime"
+  },
+  "ssn:observationResultTime": {
+    "inXSDDateTime": "2014-08-23T14:03:11+01:00"
+  },
+  "observationSubject": "http://www.example.com/ico/1232/performance/75676",
+  "ssn:observationResult": {
+    "type": "ssn:SensorOutput",
+    "ssn:hasValue": {
+      "type": "ssn:ObservationValue",
+      "value": "2023546",
+      "qudt:unit": "qudt:MilliSecond"
+    }
+  },
+  "ssn:observedBy" : "http://www.example.com/ico/1232/performance/75676"
+}

@@ -1,0 +1,46 @@
+<div class="box box-solid box-primary">
+    <div class="box-header">
+        <h3 class="box-title"><i class="fa fa-wrench"></i> System Configuration</h3>
+    </div>
+    <div class="box-body">
+        <form name="systemConfigurationForm" novalidate autocomplete="off"
+              ng-submit="widgetConfigurationCtrl.actions.save(systemConfigurationForm)">
+
+            <div ng-repeat="param in widgetConfigurationCtrl.config.parameters track by param.name"
+                 class='fx-fade-down fx-easing-bounce fx-speed-800'>
+                <div class="form-group"
+                     ng-class="{'has-error': systemConfigurationForm['parameter' + $index].$invalid}"
+                     ng-switch="param.type">
+                    <label>
+                        <span>{{::param['name']}}</span>
+                    </label>
+
+                    <div class="input-group"
+                         ng-switch-when="http://www.w3.org/2001/XMLSchema#string">
+                        <span class="input-group-addon"><i class="fa fa-gear"></i></span>
+                        <input class="form-control" type="text" class="form-control"
+                               name="{{'parameter' + $index}}"
+                               ng-model="param.value"
+                               ng-disabled="param.permissions === 'r'"
+                               ng-required="true">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="alert alert-danger alert-dismissable" ng-if="widgetConfigurationCtrl.actions.errors.data.length > 0">
+                <button type="button" class="close" ng-click="widgetConfigurationCtrl.actions.errors.clear()">×</button>
+
+                <p ng-repeat="error in widgetConfigurationCtrl.actions.errors.data">
+                    {{::error.status}} {{::error.statusText}} {{error.data | json}}
+                </p>
+            </div>
+
+            <button class="btn btn-success" name="save" type="submit">
+                <i class="fa fa-cloud-upload"></i>
+                <span>Update Configuration</span>
+                <i ng-if="widgetConfigurationCtrl.actions.saving" class="fa fa-spinner"></i>
+            </button>
+        </form>
+    </div>
+</div>

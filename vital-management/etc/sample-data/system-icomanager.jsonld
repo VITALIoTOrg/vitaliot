@@ -1,0 +1,20 @@
+{
+	"@context" : "http://vital-iot.org/contexts/system.jsonld",
+	"uri" : "http://www.example.com/system/1",
+	"name" : "IoT_system_1",
+	"description" : "This is a VITAL compliant IoT system.",
+	"operator" : "http://www.example.com",
+	"serviceArea" : "http://dbpedia.org/page/Camden_Town",
+	"status" : "Running",
+	"providesService" : [{
+			"@context" : "http://vital-iot.org/contexts/service.jsonld",
+			"type" : "ICOManager",
+			"msm:hasOperation" : [{
+					"type" : "GetMetadata",
+					"hrest:hasAddress" : "http://www.example.com/ico/metadata",
+					"hrest:hasMethod" : "hrest:POST"
+				}
+			]
+		}
+	]
+}

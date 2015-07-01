@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Identifier</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="sensor in sensors track by sensor['@id']">
+                    <td>{{sensor['@id']}}</td>
+                    <td width="1px">{{sensor['@type']}}</td>
+                    <td width="1px"><span class="badge bg-green" ng-class="{
+                    'bg-green' : sensor['http://vital-iot.eu/ontology/ns/status']['@id'] === 'http://vital-iot.eu/ontology/ns/Running',
+                    'bg-orange' : sensor['http://vital-iot.eu/ontology/ns/status']['@id'] !== 'http://vital-iot.eu/ontology/ns/Running'}">
+                        {{sensor['http://vital-iot.eu/ontology/ns/status']['@id']}}</span></td>
+
+                    <td width="1px">
+                        <a class="btn btn-sm btn-info" ng-href="#/sensor/view/{{sensor['@id'] | encodeHistoryComponent}}">
+                            <i class="fa fa-eye"></i> <span>More</span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr/>
+    </div>
+</div>

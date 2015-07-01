@@ -1,0 +1,39 @@
+{
+    "@context": "http://vital.iot.org/system.jsonld",
+    "uri": "http://localhost:8080/system/info",
+    "name": "cnc12145-HiReply_1",
+    "description": "Hi Reply virtualizer 1",
+    "operator": "Unknown",
+    "serviceArea": "Istanbul",
+    "status": "Running",
+    "providesService": [
+        {
+            "type": "System",
+            "msm:hasOperation": {
+                "hrest:hasAddress": "http://vital.hireply/system/info",
+                "hrest:hasMethod": "hrest:GET",
+                "type": "SystemInfo"
+            }
+        },
+        {
+            "type": "Service",
+            "msm:hasOperation": [
+                {
+                    "hrest:hasAddress": "http://vital.hireply/service/all",
+                    "hrest:hasMethod": "hrest:GET",
+                    "type": "AllServices"
+                },
+                {
+                    "hrest:hasAddress": "http://vital.hireply/service/{id}/info",
+                    "hrest:hasMethod": "hrest:GET",
+                    "type": "ServiceInfo"
+                },
+                {
+                    "hrest:hasAddress": "http://vital.hireply/service/{id}/property/{name}",
+                    "hrest:hasMethod": "hrest:GET",
+                    "type": "ServicePropertyValue"
+                }
+            ]
+        }
+    ]
+}

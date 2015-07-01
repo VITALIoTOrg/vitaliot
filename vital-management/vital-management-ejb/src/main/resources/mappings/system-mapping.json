@@ -1,0 +1,102 @@
+{
+	"system" : {
+		"dynamic" : "true",
+        "properties" : {
+          "@context" : {
+            "type" : "string",
+			      "index": "not_analyzed"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "type":{
+              "type" : "string",
+              "index" : "not_analyzed"
+            },
+          "operator" : {
+            "type" : "string",
+			"index": "not_analyzed"
+          },
+		  "serviceArea" : {
+            "type" : "string",
+			"index": "not_analyzed"
+          },
+          "status" : {
+            "type" : "string",
+			"index": "not_analyzed"
+          },
+          "uri" : {
+            "type" : "string",
+			"index": "not_analyzed"
+          },
+		  "providesSystem" : {
+		    "type" : "nested",
+            "properties" : {
+              "uri" : {
+                "type" : "string",
+				"index": "not_analyzed"
+              }
+            }
+          },
+          "providesService" : {
+		    "type" : "nested",
+            "properties" : {
+			  "name" : {
+                "type" : "string"
+              },
+              "sawsdl:modelReference" : {
+                "type" : "string",
+				"index": "not_analyzed"
+              },
+              "type" : {
+                "type" : "string",
+				"index": "not_analyzed"
+              },
+              "uri" : {
+                "type" : "string",
+				"index": "not_analyzed"
+              },
+              "msm:hasOperation" : {
+                "properties" : {
+                  "hrest:hasAddress" : {
+                    "type" : "string",
+					         "index": "not_analyzed"
+                  },
+                  "hrest:hasMethod" : {
+                    "type" : "string",
+					         "index": "not_analyzed"
+                  },
+				  "sawsdl:modelReference" : {
+                    "type" : "string",
+					          "index": "not_analyzed"
+                  },
+                  "type" : {
+                    "type" : "string",
+					           "index": "not_analyzed"
+                  },
+                  "msm:hasOutput" : {
+                    "properties" : {
+                      "sawsdl:modelReference" : {
+                        "type" : "string",
+						            "index": "not_analyzed"
+                      },
+                      "type" : {
+                        "type" : "string",
+						            "index": "not_analyzed"
+                      },
+                      "uri" : {
+                        "type" : "string",
+						            "index": "not_analyzed"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+}

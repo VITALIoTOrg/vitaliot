@@ -1,0 +1,1344 @@
+[{
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_2/info",
+		"name" : "vital2-I_TrS_2",
+		"type" : "Traffic",
+		"description" : "TEM KaranfilkÃ¶y",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.09301817",
+			"geo:long" : "29.0270595"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_2/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_2/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_2/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_2/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_3/info",
+		"name" : "vital2-I_TrS_3",
+		"type" : "Traffic",
+		"description" : "KavacÄ±k FSM",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.09226678",
+			"geo:long" : "29.08480696"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_3/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_3/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_3/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_3/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_4/info",
+		"name" : "vital2-I_TrS_4",
+		"type" : "Traffic",
+		"description" : "TEM ï¿½?akmak",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.0071049",
+			"geo:long" : "29.12200286"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_4/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_4/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_4property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_4/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_5/info",
+		"name" : "vital2-I_TrS_5",
+		"type" : "Traffic",
+		"description" : "TEM KÃ¼Ã§Ã¼kbakkalkÃ¶y",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.98542205",
+			"geo:long" : "29.1055834"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_5/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_5/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_5property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_5/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_8/info",
+		"name" : "vital2-I_TrS_8",
+		"type" : "Traffic",
+		"description" : "D100 GÃ¶ztepe",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99035958",
+			"geo:long" : "29.07854085"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_8/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_8/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_8/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_8/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_10/info",
+		"name" : "vital2-I_TrS_10",
+		"type" : "Traffic",
+		"description" : "ï¿½?amlÄ±ca TEM-D100 Baï¿½?l. Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.00579798",
+			"geo:long" : "29.07240639"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_10/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_10/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_10property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_10/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_12/info",
+		"name" : "vital2-I_TrS_12",
+		"type" : "Traffic",
+		"description" : "D100 Beylerbeyi",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.03426083",
+			"geo:long" : "29.04484677"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_12/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_12/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_12/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_12/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_13/info",
+		"name" : "vital2-I_TrS_13",
+		"type" : "Traffic",
+		"description" : "",
+		"status" : "Unavailable",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.09977412",
+			"geo:long" : "29.00628378"
+		},
+		"ssn:observes" : []
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_17/info",
+		"name" : "vital2-I_TrS_17",
+		"type" : "Traffic",
+		"description" : "D100 ï¿½?aï¿½?layan",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.06754624",
+			"geo:long" : "28.98339067"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_17/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_17/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_17/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_17/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_18/info",
+		"name" : "vital2-I_TrS_18",
+		"type" : "Traffic",
+		"description" : "D100 OkmeydanÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05103624",
+			"geo:long" : "28.94968616"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_18/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_18/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_18/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_18/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_19/info",
+		"name" : "vital2-I_TrS_19",
+		"type" : "Traffic",
+		"description" : "TEM Nurtepe Baï¿½?l. Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.07314096",
+			"geo:long" : "28.95753242"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_19/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_19/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_19/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_19/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_20/info",
+		"name" : "vital2-I_TrS_20",
+		"type" : "Traffic",
+		"description" : "TEM ArÄ±cÄ±lar",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.10021035",
+			"geo:long" : "28.98199436"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_20/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_20/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_20/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_20/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_21/info",
+		"name" : "vital2-I_TrS_21",
+		"type" : "Traffic",
+		"description" : "TEM GOP",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.08624251",
+			"geo:long" : "28.87893482"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_21/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_21/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_21/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_21/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_22/info",
+		"name" : "vital2-I_TrS_22",
+		"type" : "Traffic",
+		"description" : "TEM Ä°stoÃ§",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.06340892",
+			"geo:long" : "28.82130282"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_22/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_22/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_22property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_22/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_24/info",
+		"name" : "vital2-I_TrS_24",
+		"type" : "Traffic",
+		"description" : "D100 Florya",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.9900062",
+			"geo:long" : "28.79260559"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_24/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_24/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_24/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_24/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_25/info",
+		"name" : "vital2-I_TrS_25",
+		"type" : "Traffic",
+		"description" : "D100 YÄ±ldÄ±z KatÄ±lÄ±mÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05453657",
+			"geo:long" : "29.01150884"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_25/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_25/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_25property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_25/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_28/info",
+		"name" : "vital2-I_TrS_28",
+		"type" : "Traffic",
+		"description" : "D100 ï¿½?irinevler",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99210206",
+			"geo:long" : "28.85323409"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_28/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_28/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_28/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_28/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_32/info",
+		"name" : "vital2-I_TrS_32",
+		"type" : "Traffic",
+		"description" : "D100 AmbarlÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.00254857",
+			"geo:long" : "28.68792591"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_32/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_32/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_32/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_32/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_33/info",
+		"name" : "vital2-I_TrS_33",
+		"type" : "Traffic",
+		"description" : "D100 KÃ¼Ã§Ã¼kÃ§ekmece",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.98603562",
+			"geo:long" : "28.7671184"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_33/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_33/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_33/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_33/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_34/info",
+		"name" : "vital2-I_TrS_34",
+		"type" : "Traffic",
+		"description" : "Yeï¿½?ilkÃ¶y Sahil Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.96336582",
+			"geo:long" : "28.82341744"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_34/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_34/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_34property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_34/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_36/info",
+		"name" : "vital2-I_TrS_36",
+		"type" : "Traffic",
+		"description" : "YenikapÄ± Sahil Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.00259667",
+			"geo:long" : "28.95207211"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_36/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_36/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_36/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_36/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_38/info",
+		"name" : "vital2-I_TrS_38",
+		"type" : "Traffic",
+		"description" : "GÃ¼neï¿½?li B. Ekspres Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.04859281",
+			"geo:long" : "28.80777032"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_38/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_38/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_38property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_38/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_41/info",
+		"name" : "vital2-I_TrS_41",
+		"type" : "Traffic",
+		"description" : "D100 AmbarlÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99980026",
+			"geo:long" : "28.69091604"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_41/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_41/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_41/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_41/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_42/info",
+		"name" : "vital2-I_TrS_42",
+		"type" : "Traffic",
+		"description" : "D100 Ä°ncirli",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.00014941",
+			"geo:long" : "28.88138153"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_42/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_42/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_42/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_42/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_43/info",
+		"name" : "vital2-I_TrS_43",
+		"type" : "Traffic",
+		"description" : "",
+		"status" : "Unavailable",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.06281341",
+			"geo:long" : "28.82118259"
+		},
+		"ssn:observes" : []
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_45/info",
+		"name" : "vital2-I_TrS_45",
+		"type" : "Traffic",
+		"description" : "AtÄ±ï¿½?alanÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05515979",
+			"geo:long" : "28.85511336"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_45/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_45/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_45/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_45/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_46/info",
+		"name" : "vital2-I_TrS_46",
+		"type" : "Traffic",
+		"description" : "Bayrampaï¿½?a",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.04485985",
+			"geo:long" : "28.89205413"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_46/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_46/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_46/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_46/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_51/info",
+		"name" : "vital2-I_TrS_51",
+		"type" : "Traffic",
+		"description" : "HaliÃ§ KÃ¶prÃ¼ Giriï¿½?i-HalÄ±cÄ±oï¿½?lu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.04817464",
+			"geo:long" : "28.9449503"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_51/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_51/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_51/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_51/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_52/info",
+		"name" : "vital2-I_TrS_52",
+		"type" : "Traffic",
+		"description" : "Vecdi Diker TÃ¼neli",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.02355855",
+			"geo:long" : "29.06065999"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_52/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_52/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_52/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_52/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_54/info",
+		"name" : "vital2-I_TrS_54",
+		"type" : "Traffic",
+		"description" : "Bayrampaï¿½?a",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.04031561",
+			"geo:long" : "28.9083993"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_54/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_54/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_54/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_54/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_56/info",
+		"name" : "vital2-I_TrS_56",
+		"type" : "Traffic",
+		"description" : "TEM D100 OkmeydanÄ± Baï¿½?l. Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.06066228",
+			"geo:long" : "28.95767002"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_56/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_56/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_56property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_56/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_58/info",
+		"name" : "vital2-I_TrS_58",
+		"type" : "Traffic",
+		"description" : "",
+		"status" : "Unavailable",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.09079226",
+			"geo:long" : "28.8931751"
+		},
+		"ssn:observes" : []
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_59/info",
+		"name" : "vital2-I_TrS_59",
+		"type" : "Traffic",
+		"description" : "Beï¿½?iktaï¿½? TEM Baï¿½?l. Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.08592149",
+			"geo:long" : "29.01419233"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_59/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_59/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_59property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_59/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_60/info",
+		"name" : "vital2-I_TrS_60",
+		"type" : "Traffic",
+		"description" : "D100 Boï¿½?aziÃ§i KÃ¶p. Avrupa Giriï¿½?i",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05383259",
+			"geo:long" : "29.02505589"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_60/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_60/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_60/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_60/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_61/info",
+		"name" : "vital2-I_TrS_61",
+		"type" : "Traffic",
+		"description" : "ï¿½?mraniye ElmalÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.06609898",
+			"geo:long" : "29.111094"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_61/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_61/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_61/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_61/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_63/info",
+		"name" : "vital2-I_TrS_63",
+		"type" : "Traffic",
+		"description" : "",
+		"status" : "Unavailable",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05157944",
+			"geo:long" : "29.12106687"
+		},
+		"ssn:observes" : []
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_65/info",
+		"name" : "vital2-I_TrS_65",
+		"type" : "Traffic",
+		"description" : "ï¿½?mraniye ElmalÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.065814",
+			"geo:long" : "29.11033642"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_65/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_65/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_65/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_65/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_66/info",
+		"name" : "vital2-I_TrS_66",
+		"type" : "Traffic",
+		"description" : "D100 Kozyataï¿½?Ä±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.97033446",
+			"geo:long" : "29.10145098"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_66/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_66/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_66/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_66/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_69/info",
+		"name" : "vital2-I_TrS_69",
+		"type" : "Traffic",
+		"description" : "D100 UzunÃ§ayÄ±r",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99718153",
+			"geo:long" : "29.06137923"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_69/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_69/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_69/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_69/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_70/info",
+		"name" : "vital2-I_TrS_70",
+		"type" : "Traffic",
+		"description" : "D100 GÃ¼lsuyu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.92487019",
+			"geo:long" : "29.15252266"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_70/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_70/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_70/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_70/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_72/info",
+		"name" : "vital2-I_TrS_72",
+		"type" : "Traffic",
+		"description" : "KavacÄ±k",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.0919134",
+			"geo:long" : "29.08339553"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_72/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_72/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_72/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_72/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_73/info",
+		"name" : "vital2-I_TrS_73",
+		"type" : "Traffic",
+		"description" : "TEM ï¿½?akmak KÃ¶prÃ¼sÃ¼",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.02380105",
+			"geo:long" : "29.12107964"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_73/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_73/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_73property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_73/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_75/info",
+		"name" : "vital2-I_TrS_75",
+		"type" : "Traffic",
+		"description" : "D100 Maltepe",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.93483926",
+			"geo:long" : "29.14049783"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_75/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_75/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_75/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_75/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_76/info",
+		"name" : "vital2-I_TrS_76",
+		"type" : "Traffic",
+		"description" : "D100 Kartal",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.912342",
+			"geo:long" : "29.19356182"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_76/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_76/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_76/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_76/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_77/info",
+		"name" : "vital2-I_TrS_77",
+		"type" : "Traffic",
+		"description" : "D100 Pendik",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.88685674",
+			"geo:long" : "29.24099962"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_77/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_77/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_77/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_77/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_78/info",
+		"name" : "vital2-I_TrS_78",
+		"type" : "Traffic",
+		"description" : "Yedikule Sahil Yolu",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.98821381",
+			"geo:long" : "28.91669795"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_78/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_78/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_78/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_78/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_80/info",
+		"name" : "vital2-I_TrS_80",
+		"type" : "Traffic",
+		"description" : "D100-Altunizade",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.03144556",
+			"geo:long" : "29.04522041"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_80/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_80/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_80/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_80/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_82/info",
+		"name" : "vital2-I_TrS_82",
+		"type" : "Traffic",
+		"description" : "ï¿½?mraniye",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05200553",
+			"geo:long" : "29.12026425"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_82/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_82/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_82property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_82/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_83/info",
+		"name" : "vital2-I_TrS_83",
+		"type" : "Traffic",
+		"description" : "TEM ï¿½?akmak KÃ¶prÃ¼sÃ¼",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.01768469",
+			"geo:long" : "29.12076863"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_83/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_83/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_83/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_83/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_84/info",
+		"name" : "vital2-I_TrS_84",
+		"type" : "Traffic",
+		"description" : "D100 Boï¿½?aziÃ§i K. Avrupa ï¿½?Ä±kÄ±ï¿½?Ä±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.0541053",
+			"geo:long" : "29.02536114"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_84/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_84/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_84/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_84/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_85/info",
+		"name" : "vital2-I_TrS_85",
+		"type" : "Traffic",
+		"description" : "D100 ï¿½?aï¿½?layan",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.06712719",
+			"geo:long" : "28.98386112"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_85/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_85/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_85/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_85/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_86/info",
+		"name" : "vital2-I_TrS_86",
+		"type" : "Traffic",
+		"description" : "D100 OkmeydanÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.05527669",
+			"geo:long" : "28.95855202"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_86/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_86/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_86/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_86/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_87/info",
+		"name" : "vital2-I_TrS_87",
+		"type" : "Traffic",
+		"description" : "B. Expres Ä°ï¿½? BankasÄ± Karï¿½?Ä±sÄ±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.03205842",
+			"geo:long" : "28.81100576"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_87/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_87/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_87property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_87/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_88/info",
+		"name" : "vital2-I_TrS_88",
+		"type" : "Traffic",
+		"description" : "",
+		"status" : "Unavailable",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.0950291",
+			"geo:long" : "28.92700195"
+		},
+		"ssn:observes" : []
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_89/info",
+		"name" : "vital2-I_TrS_89",
+		"type" : "Traffic",
+		"description" : "TEM Gazi Mah.",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.0944158",
+			"geo:long" : "28.92689291"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_89/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_89/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_89property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_89/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_90/info",
+		"name" : "vital2-I_TrS_90",
+		"type" : "Traffic",
+		"description" : "FSM Avrupa Giriï¿½?i",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.09074836",
+			"geo:long" : "29.04744484"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_90/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_90/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_90/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_90/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_92/info",
+		"name" : "vital2-I_TrS_92",
+		"type" : "Traffic",
+		"description" : "FSM Anadolu Giriï¿½?i",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.09238218",
+			"geo:long" : "29.07894958"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_92/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_92/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_92/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_92/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_93/info",
+		"name" : "vital2-I_TrS_93",
+		"type" : "Traffic",
+		"description" : "KavacÄ±k Hisar Evleri",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.08282728",
+			"geo:long" : "29.09468425"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_93/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_93/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_93/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_93/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_94/info",
+		"name" : "vital2-I_TrS_94",
+		"type" : "Traffic",
+		"description" : "ï¿½?mraniye Kavï¿½?aï¿½?Ä±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.0287858",
+			"geo:long" : "29.12059719"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_94/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_94/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_94/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_94/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_95/info",
+		"name" : "vital2-I_TrS_95",
+		"type" : "Traffic",
+		"description" : "ï¿½?mraniye Kavï¿½?aï¿½?Ä±",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "41.02894267",
+			"geo:long" : "29.1210945"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_95/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_95/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_95/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_95/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_96/info",
+		"name" : "vital2-I_TrS_96",
+		"type" : "Traffic",
+		"description" : "",
+		"status" : "Unavailable",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99643355",
+			"geo:long" : "29.13976953"
+		},
+		"ssn:observes" : []
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_97/info",
+		"name" : "vital2-I_TrS_97",
+		"type" : "Traffic",
+		"description" : "TEM Ataï¿½?ehir",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99679467",
+			"geo:long" : "29.13989557"
+		},
+		"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_97/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_97/property/Color"
+			}, {
+				"type" : "http://reply.eu/ReverseSpeed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_97property/ReverseSpeed"
+			}, {
+				"type" : "http://reply.eu/ReverseColor",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_97/property/ReverseColor"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_98/info",
+		"name" : "vital2-I_TrS_98",
+		"type" : "Traffic",
+		"description" : "ï¿½?amlÄ±ca Giï¿½?eler",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99366069",
+			"geo:long" : "29.16680657"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_98/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_98/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_98/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_98/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_99/info",
+		"name" : "vital2-I_TrS_99",
+		"type" : "Traffic",
+		"description" : "ï¿½?amlÄ±ca Giï¿½?eler",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.99065509",
+			"geo:long" : "29.18089096"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_99/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_99/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_99/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_99/property/Color"
+			}
+		]
+	}, {
+		"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+		"uri" : "http://localhost:8080/service/vital2-I_TrS_100/info",
+		"name" : "vital2-I_TrS_100",
+		"type" : "Traffic",
+		"description" : "TEM Kartal",
+		"status" : "Running",
+		"hasLastKnownLocation" : {
+			"type" : "geo:Point",
+			"geo:lat" : "40.98998151",
+			"geo:long" : "29.18877812"
+		},
+		"ssn:observes" : [{
+				"type" : "http://vital2-I_TrS_100/type.example.Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_100/property/Speed"
+			}, {
+				"type" : "http://vital2-I_TrS_100/type.example.Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_100/property/Color"
+			}
+		]
+	}
+]

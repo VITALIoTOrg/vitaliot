@@ -1,0 +1,35 @@
+{
+	"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+	"uri" : "http://www.example.com/ico/1232/performance/75676",
+	"name" : "Performance_sensor",
+	"type" : "PerformanceSensor",
+	"description" : "The performance monitoring sensor.",
+	"status" : "Running",
+	"ssn:observes" : [{
+			"type" : "http://reply.eu/upTime",
+			"uri" : "http://www.example.com/iot/75676/perf/upTime"
+		}, {
+			"type" : "http://reply.eu/systemLoad",
+			"uri" : "http://www.example.com/ iot/75676/perf/systemLoad"
+		}, {
+			"type" : "http://reply.eu/memUsed",
+			"uri" : "http://www.example.com/iot/75676/perf/memUsed"
+		}, {
+			"type" : "http://reply.eu/memAvailable",
+			"uri" : "http://www.example.com/iot/75676/perf/memAvailable"
+		}, {
+			"type" : "http://reply.eu/servedRequests",
+			"uri" : "http://www.example.com/iot/75676/perf/servedRequests"
+		}, {
+			"type" : "http://reply.eu/pendingRequests",
+			"uri" : "http://www.example.com/iot/75676/perf/pendingRequests"
+		}, {
+			"type" : "http://reply.eu/maxRequests",
+			"uri" : "http://www.example.com/iot/75676/perf/maxRequests"
+		}, {
+			"type" : "http://reply.eu/errors",
+			"uri" : "http://www.example.com/iot/75676/perf/errors"
+		}
+	],
+	"dul:isPartOf" : "http://www.example.com/system/4"
+}

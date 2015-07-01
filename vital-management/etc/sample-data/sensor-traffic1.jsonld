@@ -1,0 +1,53 @@
+{
+	"@context" : "http://vital-iot.org/contexts/sensor.jsonld",
+	"uri" : "http://www.example.com/ico/3",
+	"name" : "Traffic_sensor_1",
+	"type" : "Traffic",
+	"description" : "Traffic sensor",
+	"status" : "Running",
+	"hasLastKnownLocation" : {
+		"type" : "geo:Point",
+		"geo:lat" : 41.09226678,
+		"geo:long" : 29.08480696
+	},
+	"hasMovementPattern" : {
+		"type" : "Stationary"
+	},
+	"hasLocalizer" : {
+		"type" : "GpsService",
+		"msm:hasOperation" : {
+			"type" : "GetLocation",
+			"hrest:hasMethod" : "hrest:GET",
+			"hrest:hasAddress" : "http://www.example.com/ico/3/location/"
+		}
+	},
+	"hasNetworkConnection" : {
+		"hasStability" : {
+			"type" : "Continuous"
+		},
+		"hasNetworkSupport" : {
+			"net:connectedNetworks" : {
+				"type" : "net:WiredNetwork"
+			}
+		}
+	},
+	"deviceHardware" : {
+		"hard:status" : "hard:HardwareStatus_ON",
+		"hard:builtInMemory" : {
+			"size" : 120416
+		},
+		"hard:cpu" : {
+			"type" : "hard:CPU",
+			"maxCpuFrequency" : 6
+		}
+	},
+	"ssn:observes" : [{
+				"type" : "http://reply.eu/Speed",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_1/property/Speed"
+			}, {
+				"type" : "http://reply.eu/Color",
+				"uri" : "http://localhost:8080/service/vital2-I_TrS_1/property/Color"
+			}
+	],
+	"dul:isPartOf" : "http://www.example.com/system/1"
+}

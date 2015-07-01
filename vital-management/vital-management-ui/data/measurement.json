@@ -1,0 +1,31 @@
+{
+    "@context": "http://vital-iot.org/contexts/measurement.jsonld",
+    "uri": " http://localhost:8080/service/cnc12145-I_TrS_2/property/Speed",
+    "type": "ssn:Observation",
+    "ssn:observationProperty": {
+        "type": " http://reply.eu/vital/Speed"
+    },
+    "ssn:observationResultTime": {
+        "inXSDDateTime": "2014-08-20T16:47:32+01:00"
+    },
+    "dul:hasLocation": {
+        "type": "geo:Point",
+        "geo:lat": "55.701",
+        "geo:long": "12.552",
+        "geo:alt": "4.33"
+    },
+    "ssn:observationQuality": {
+        "ssn:hasMeasurementProperty": {
+            "type": "Reliability",
+            "hasValue": "HighReliability"
+        }
+    },
+    "ssn:observationResult": {
+        "type": "ssn:SensorOutput",
+        "ssn:hasValue": {
+            "type": "ssn:ObservationValue",
+            "value": "85.0",
+            "qudt:unit": "qudt:Kmh"
+        }
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "discovery_url": "",
+  "system_urls": [
+    "http://104.131.128.70:8080/istanbul-traffic/ppi",
+    "http://localhost:8080/vital-orchestrator-web/rest/ppi"
+  ]
+}

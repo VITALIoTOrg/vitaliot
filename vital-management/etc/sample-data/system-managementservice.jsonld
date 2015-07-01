@@ -1,0 +1,28 @@
+{
+	"@context" : "http://vital-iot.org/contexts/system.jsonld",
+	"uri" : "http://www.example.com/system/4",
+	"name" : "IoT_system_4",
+	"description" : "This is a VITAL compliant IoT system with a Management service.",
+	"operator" : "http://www.example.com",
+	"serviceArea" : "http://dbpedia.org/resource/Istanbul",
+	"status" : "Running",
+	"providesService" : [{
+			"@context" : "http://vital-iot.org/contexts/service.jsonld",
+			"type" : "ManagementService",
+			"msm:hasOperation" : [{
+					"type" : "GetPerformanceMetrics",
+					"hrest:hasAddress" : "http://www.example.com/performance/monitoring",
+					"hrest:hasMethod" : "hrest:GET"
+				}, {
+					"type" : "GetConfigurationOptions",
+					"hrest:hasAddress" : "http://www.example.com/performance/configuration",
+					"hrest:hasMethod" : "hrest:GET"
+				}, {
+					"type" : "SetConfigurationOptions",
+					"hrest:hasAddress" : "http://www.example.com/performance/configuration",
+					"hrest:hasMethod" : "hrest:POST"
+				}
+			]
+		}
+	]
+}
