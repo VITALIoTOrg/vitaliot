@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- This is an unmanaged datasource. It should be used for proofs of concept
+   or testing only. It uses H2, an in memory database that ships with JBoss 
+   AS. -->
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jboss.org/ironjacamar/schema http://docs.jboss.org/ironjacamar/schema/datasources_1_0.xsd">
+    <!-- The datasource is bound into JNDI at this location. We reference this in META-INF/persistence.xml -->
+    <datasource enabled="true" jndi-name="java:jboss/datasources/vital-orchestratorDS" pool-name="vital"
+        use-java-context="true">
+        <connection-url>
+            jdbc:postgresql://localhost/vitalOrchestratorDB
+        </connection-url>
+        <url-delimiter>|</url-delimiter>
+
+        <driver>postgresql-9.4-1201.jdbc41.jar</driver>
+        <driver-class>org.postgresql.Driver</driver-class>
+
+        <security>
+            <user-name>vital</user-name>
+            <password>vital</password>
+        </security>
+        <validation>
+            <check-valid-connection-sql>select 1</check-valid-connection-sql>
+            <validate-on-match>false</validate-on-match>
+            <background-validation>false</background-validation>
+            <background-validation-millis>1</background-validation-millis>
+        </validation>
+    </datasource>
+</datasources>

@@ -1,0 +1,119 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 ng-if="workflowEditCtrl.workflow.id">
+        Update a workflow
+        <small>{{workflowEditCtrl.workflow.id}}</small>
+    </h1>
+
+    <h1 ng-if="!workflowEditCtrl.workflow.id">
+        Create a new workflow
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box box-default">
+
+        <div class="box-body">
+            <form name="workflowEditForm" novalidate
+                  ng-submit="workflowEditCtrl.actions.save(workflowEditForm)">
+
+                <div class="form-group" ng-class="{
+                        'has-success' : workflowEditCtrl.name.$valid,
+                        'has-error' : workflowEditCtrl.name.$invalid
+                    }">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" id="name"
+                           ng-model="workflowEditCtrl.workflow.name"
+                           ng-required="true">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Workflow Operations</label>
+
+                    <!-- Operations -->
+                    <div class="box box-solid box-primary"
+                         ng-repeat="operation in workflowEditCtrl.workflow.operationList">
+                        <div class="box-header">
+                            <i class="fa fa-gear"> {{$index + 1}}</i>
+
+                            <h3 class="box-title">
+                                <input class="form-control form-inline" ng-model="operation.name"/>
+                            </h3>
+
+                            <div class="box-tools pull-right">
+                                <a class="btn btn-sm bg-blue" data-target="#collapse-input-{{$index}}" data-toggle="tab">Input Data</a>
+                                <a class="btn btn-sm bg-blue" data-target="#collapse-script-{{$index}}" data-toggle="tab">Script</a>
+                                <a class="btn btn-sm bg-red"
+                                   ng-click="workflowEditCtrl.actions.removeOperation(operation)">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="box-body border-radius-none">
+                            <div class="tab-content">
+                                <div class="tab-pane" id="collapse-input-{{$index}}">
+                                    <textarea class="form-control" name="data"
+                                              ui-codemirror="workflowEditCtrl.data.cmOption.inputData"
+                                              ng-model="operation.inputData"
+                                              ng-required="true"
+                                              ng-if="$index === 0"></textarea>
+
+                                    <pre ng-if="$index > 0">{{operation.inputData | jsonString}}</pre>
+                                </div>
+                                <div class="tab-pane active" id="collapse-script-{{$index}}">
+                                     <textarea class="form-control" name="data"
+                                               ui-codemirror="workflowEditCtrl.data.cmOption.script"
+                                               ng-model="operation.script"
+                                               ng-required="true"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="box-footer no-border">
+                        </div>
+                    </div>
+                    <!-- /.Operations -->
+
+                    <div class="input-group input-group-sm">
+
+                        <select name="operation"
+                                class="form-control"
+                                ng-options="operation.name for operation in workflowEditCtrl.data.operationList track by operation.id"
+                                ng-model="workflowEditCtrl.data.operation">
+                            <option value="">--</option>
+                        </select>
+
+                        <div class="input-group-btn">
+                            <a class="btn btn-success"
+                               ng-click="workflowEditCtrl.actions.addOperation(workflowEditCtrl.data.operation)">
+                                <i class="fa fa-plus-circle"></i> Add operation
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                    <a class="btn btn-success"
+                       ng-click="workflowEditCtrl.actions.execute(workflowEditForm)">
+                        <i class="fa fa-play-circle-o"></i> Test
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="box-footer">
+        </div>
+
+    </div>
+
+
+    <div>
+        <operation-output ng-repeat="res in workflowEditCtrl.output" output="res">
+    </div>
+
+</section>

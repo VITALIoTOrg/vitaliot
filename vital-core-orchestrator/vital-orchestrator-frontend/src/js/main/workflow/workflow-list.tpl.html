@@ -1,0 +1,68 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Workflow List
+        <small>User workflows deployed</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box box-primary">
+
+        <div class="box-body">
+            <ul class="products-list product-list-in-box">
+                <li class="item" ng-repeat="workflow in workflowListCtrl.workflowList">
+                    <div class="product-img">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default"><span class="fa fa-gears"></span></button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a ng-click="workflowListCtrl.actions.createMetaservice(workflow)">
+                                        <i class="fa fa-cloud-upload text-success"> Deploy</i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a ng-click="workflowListCtrl.actions.delete(workflow)">
+                                        <i class="fa fa-remove text-danger"> Remove</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-info">
+                            <a ng-href="#/workflow/edit/{{workflow.id}}" class="product-title">
+                                {{workflow.name}}
+                            </a>
+                            <span class="product-description">
+                              <ul class="list-inline">
+                                  <li>
+                                      <i class="fa fa-arrow-circle-o-right"></i>
+                                  </li>
+                                  <li ng-repeat="operation in workflow.operationList">
+                                      {{operation.name}} <i class="fa fa-arrow-circle-o-right"></i>
+                                  </li>
+                              </ul>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <!-- /.item -->
+            </ul>
+        </div>
+
+        <div class="box-footer text-center">
+            <a ng-href="#/workflow/edit" class="uppercase">
+                <span class="fa fa-plus-circle"></span>
+                Create New Workflow
+            </a>
+        </div>
+
+
+    </div>
+</section>

@@ -1,0 +1,79 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 ng-if="operationEditCtrl.operation.id">
+        Update a operation
+        <small>{{operationEditCtrl.operation.id}}</small>
+    </h1>
+
+    <h1 ng-if="!operationEditCtrl.operation.id">
+        Create a new operation
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box box-primary">
+        <div class="box-body">
+            <form name="operationEditForm" novalidate
+                  ng-submit="operationEditCtrl.actions.save(operationEditForm)">
+                <div class="row">
+                    <div class="col-md-4 form-group" ng-class="{
+                        'has-success' : operationEditForm.name.$valid,
+                        'has-error' : operationEditForm.name.$invalid
+                    }">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control input-lg" name="name" id="name"
+                               ng-model="operationEditCtrl.operation.name"
+                               ng-required="true">
+                    </div>
+                    <div class="col-md-8 form-group" ng-class="{
+                        'has-success' : operationEditForm.description.$valid,
+                        'has-error' : operationEditForm.description.$invalid
+                    }">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" name="description" id="description"
+                                  ng-model="operationEditCtrl.operation.description"
+                                  ng-required="true"></textarea>
+                    </div>
+                </div>
+                <div class="form-group" ng-class="{
+                        'has-success' : operationEditForm.workflowScript.$valid,
+                        'has-error' : operationEditForm.workflowScript.$invalid
+                    }">
+                    <label for="script">Operation Code</label>
+                    <textarea class="form-control" name="script" id="script"
+                              ui-codemirror="operationEditCtrl.options.cmOption.script"
+                              ng-model="operationEditCtrl.operation.script"
+                              ng-required="true"></textarea>
+                </div>
+
+                <div class="form-group" ng-class="{
+                        'has-success' : operationEditForm.workflowScript.$valid,
+                        'has-error' : operationEditForm.workflowScript.$invalid
+                    }">
+                    <label>Request Data (example and used for debugging)</label>
+                        <textarea class="form-control" name="inputData"
+                                  ui-codemirror="operationEditCtrl.options.cmOption.inputData"
+                                  ng-model="operationEditCtrl.operation.inputData"
+                                  ng-required="true">
+                        </textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                <a class="btn btn-success"
+                   ng-click="operationEditCtrl.actions.execute(operationTestForm)">
+                    <i class="fa fa-play-circle-o"></i> Test
+                </a>
+            </form>
+        </div>
+
+        <div class="box-footer">
+
+        </div>
+    </div>
+
+
+    <operation-output ng-if="operationEditCtrl.output" output="operationEditCtrl.output"></operation-output>
+
+</section>

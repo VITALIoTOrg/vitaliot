@@ -1,0 +1,20 @@
+{
+    "type": "Service",
+    "msm:hasOperation": [
+        {
+            "hrest:hasAddress": "http://vital.hireply/service/all",
+            "hrest:hasMethod": "hrest:GET",
+            "type": "AllServices"
+        },
+        {
+            "hrest:hasAddress": "http://vital.hireply/service/{id}/info",
+            "hrest:hasMethod": "hrest:GET",
+            "type": "ServiceInfo"
+        },
+        {
+            "hrest:hasAddress": "http://vital.hireply/service/{id}/property/{name}",
+            "hrest:hasMethod": "hrest:GET",
+            "type": "ServicePropertyValue"
+        }
+    ]
+}

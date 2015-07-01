@@ -1,0 +1,54 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Meta Service List
+        <small>Deployed services</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box box-primary">
+
+        <div class="box-body">
+            <ul class="products-list product-list-in-box">
+                <li class="item" ng-repeat="metaservice in metaserviceListCtrl.metaserviceList">
+                    <div class="product-img">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default"><span class="fa fa-gears"></span></button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a ng-click="metaserviceListCtrl.actions.delete(metaservice)">
+                                        <i class="fa fa-cloud-download text-danger"> Undeploy</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-info">
+                            <a ng-href="#/metaservice/view/{{metaservice.id}}" class="product-title">
+                                {{metaservice.workflow.name}}
+                            </a>
+                            <span class="product-description">
+                              <ul class="list-inline">
+                                  <li>
+                                      <i class="fa fa-arrow-circle-o-right"></i>
+                                  </li>
+                                  <li ng-repeat="operation in metaservice.workflow.operationList">
+                                      {{operation.name}} <i class="fa fa-arrow-circle-o-right"></i>
+                                  </li>
+                              </ul>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <!-- /.item -->
+            </ul>
+        </div>
+    </div>
+</section>

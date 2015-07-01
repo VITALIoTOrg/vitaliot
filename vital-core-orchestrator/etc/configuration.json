@@ -1,0 +1,325 @@
+{
+  "context": {
+    "system.jsonld": {
+      "@context": {
+        "@vocab": "http://vital-iot.eu/ontology/ns/",
+        "vital": "http://vital-iot.eu/ontology/ns/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
+        "hrest": "http://www.wsmo.org/ns/hrests#",
+        "id": "@id",
+        "type": "@type",
+        "name": "rdfs:label",
+        "description": "rdfs:comment",
+        "status": {
+          "@type": "@id"
+        },
+        "operator": {
+          "@type": "@id"
+        },
+        "serviceArea": {
+          "@type": "@id"
+        },
+        "services": {
+          "@id": "vital:providesService",
+          "@type": "@id"
+        },
+        "sensors": {
+          "@id": "vital:managesSensor",
+          "@type": "@id"
+        }
+      }
+    },
+    "sensor.jsonld": {
+      "@context": {
+        "@vocab": "http://vital-iot.eu/ontology/ns/",
+        "vital": "http://vital-iot.eu/ontology/ns/",
+        "lsm": "http://lsm.deri.ie/ont/lsm.owl#",
+        "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
+        "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+        "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
+        "hrest": "http://www.wsmo.org/ns/hrests#",
+        "hard": "http://www.w3.org/2007/uwa/context/hardware.owl#",
+        "soft": " http://www.w3.org/2007/uwa/context/software.owl#",
+        "id": "@id",
+        "type": "@type",
+        "name": "rdfs:label",
+        "description": "rdfs:comment",
+        "ssn:madeObservation": {
+          "@type": "@id"
+        },
+        "status": {
+          "@type": "@id"
+        }
+      }
+    },
+    "service.jsonld": {
+      "@context": {
+        "@vocab": "http://vital-iot.eu/ontology/ns/",
+        "vital": "http://vital-iot.eu/ontology/ns/",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
+        "hrest": "http://www.wsmo.org/ns/hrests#",
+        "id": "@id",
+        "type": "@type",
+        "name": "rdfs:label",
+        "description": "rdfs:comment",
+        "hrest:hasAddress": {
+          "@type": "hrest:URITemplate"
+        },
+        "operations": {
+          "@id": "msm:hasOperation",
+          "@type": "@id"
+        }
+      }
+    },
+    "measurement.jsonld": {
+      "@context": {
+        "@vocab": "http://vital-iot.eu/ontology/ns/",
+        "vital": "http://vital-iot.eu/ontology/ns/",
+        "vital": "http://vital-iot.com/ontology#",
+        "lsm": "http://lsm.deri.ie/ont/lsm.owl#",
+        "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
+        "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+        "time": "http://www.w3.org/2006/time#",
+        "qudt": "http://qudt.org/vocab/unit#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "id": "@id",
+        "type": "@type",
+        "time:inXSDDateTime": {
+          "@type": "xsd:dateTime"
+        },
+        "qudt:unit": {
+          "@type": "@id"
+        }
+      }
+    }
+  },
+  "bootstrap": {
+    "discovery_url": "",
+    "system_urls": [
+      "http://104.131.128.70:8080/istanbul-traffic/ppi"
+    ]
+  },
+  "orchestrator": {
+    "url": "http://localhost:8080/vital-orchestrator-web/rest",
+    "status": {
+      "@context": "<orchestrator.url>/contexts/measurement.jsonld",
+      "id": "<orchestrator.url>/sensor/monitoring/observation/status/1434443438930",
+      "type": "ssn:Observation",
+      "ssn:observedBy": "<orchestrator.url>/sensor/monitoring",
+      "ssn:observationProperty": {
+        "type": "vital:OperationalState"
+      },
+      "ssn:observationResultTime": {
+        "time:inXSDDateTime": "2015-06-16T08:30:38Z"
+      },
+      "ssn:featureOfInterest": "<orchestrator.url>/istanbul-traffic",
+      "ssn:observationResult": {
+        "type": "ssn:SensorOutput",
+        "ssn:hasValue": {
+          "type": "ssn:ObservationValue",
+          "value": "vital:Running"
+        }
+      }
+    },
+    "system": {
+      "@context": "<orchestrator.url>/contexts/system.jsonld",
+      "id": "<orchestrator.url>/orchestrator",
+      "type": "vital:IotSystem",
+      "name": "Vital Orchestrator",
+      "description": "This is a VITAL-compliant IoT system that provides live traffic data for Istanbul.",
+      "operator": "orchestrator@dev.null",
+      "status": "vital:Running",
+      "services": [
+        "<orchestrator.url>/service/configuration",
+        "<orchestrator.url>/service/monitoring",
+        "<orchestrator.url>/service/workflow"
+      ],
+      "sensors": [
+        "<orchestrator.url>/sensor/monitoring"
+      ]
+    },
+    "sensor": [
+      {
+        "@context": "<orchestrator.url>/contexts/sensor.jsonld",
+        "id": "<orchestrator.url>/sensor/monitoring",
+        "type": "vital:MonitoringSensor",
+        "name": "Orchestrator monitoring sensor.",
+        "description": "A virtual sensor that monitors the operational state of the system, as well as its services and sensors.",
+        "status": "vital:Running",
+        "ssn:observes": [
+          {
+            "type": "vital:SysLoad",
+            "id": "<orchestrator.url>/sensor/monitoring/sysLoad"
+          },
+          {
+            "type": "vital:SysUptime",
+            "id": "<orchestrator.url>/sensor/monitoring/sysUptime"
+          },
+          {
+            "type": "vital:MaxRequests",
+            "id": "<orchestrator.url>/sensor/monitoring/maxRequests"
+          },
+          {
+            "type": "vital:Errors",
+            "id": "<orchestrator.url>/sensor/monitoring/errors"
+          },
+          {
+            "type": "vital:ServedRequests",
+            "id": "<orchestrator.url>/sensor/monitoring/servedRequests"
+          },
+          {
+            "type": "vital:AvailableMem",
+            "id": "<orchestrator.url>/sensor/monitoring/availableMem"
+          },
+          {
+            "type": "vital:UsedMem",
+            "id": "<orchestrator.url>/sensor/monitoring/usedMem"
+          },
+          {
+            "type": "vital:PendingRequests",
+            "id": "<orchestrator.url>/sensor/monitoring/pendingRequests"
+          },
+          {
+            "type": "vital:OperationalState",
+            "id": "<orchestrator.url>/sensor/monitoring/operationalState"
+          }
+        ]
+      }
+    ],
+    "service": [
+      {
+        "@context": "<orchestrator.url>/contexts/service.jsonld",
+        "id": "<orchestrator.url>/service/configuration",
+        "type": "vital:ConfigurationService",
+        "operations": [
+          {
+            "type": "vital:GetConfiguration",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/service/configuration",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:SetConfiguration",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/service/configuration",
+            "hrest:hasMethod": "hrest:POST"
+          }
+        ]
+      },
+      {
+        "@context": "<orchestrator.url>/contexts/service.jsonld",
+        "id": "<orchestrator.url>/service/monitoring",
+        "type": "vital:MonitoringService",
+        "operations": [
+          {
+            "type": "vital:GetSystemStatus",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/status",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:GetSensorStatus",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/sensor/status",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:GetSupportedPerformanceMetrics",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/performance",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:GetPerformanceMetrics",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/performance",
+            "hrest:hasMethod": "hrest:POST"
+          }
+        ]
+      },
+      {
+        "@context": "<orchestrator.url>/contexts/service.jsonld",
+        "id": "<orchestrator.url>/service/operation",
+        "type": "vital:OrchestratorService",
+        "operations": [
+          {
+            "type": "vital:GetOperationList",
+            "hrest:hasAddress": "<orchestrator.url>/operation",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:GetOperation",
+            "hrest:hasAddress": "<orchestrator.url>/operation/{id}",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:CreateOperation",
+            "hrest:hasAddress": "<orchestrator.url>/operation",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:UpdateOperation",
+            "hrest:hasAddress": "<orchestrator.url>/operation/{id}",
+            "hrest:hasMethod": "hrest:PUT"
+          },
+          {
+            "type": "vital:DeleteOperation",
+            "hrest:hasAddress": "<orchestrator.url>/operation/{id}",
+            "hrest:hasMethod": "hrest:DELETE"
+          },
+          {
+            "type": "vital:ExecuteOperation",
+            "hrest:hasAddress": "<orchestrator.url>/execute/operation/",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:GetWorkflowList",
+            "hrest:hasAddress": "<orchestrator.url>/workflow",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:GetWorkflow",
+            "hrest:hasAddress": "<orchestrator.url>/workflow/{id}",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:CreateWorkflow",
+            "hrest:hasAddress": "<orchestrator.url>/workflow",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:UpdateWorkflow",
+            "hrest:hasAddress": "<orchestrator.url>/workflow/{id}",
+            "hrest:hasMethod": "hrest:PUT"
+          },
+          {
+            "type": "vital:DeleteWorkflow",
+            "hrest:hasAddress": "<orchestrator.url>/workflow/{id}",
+            "hrest:hasMethod": "hrest:DELETE"
+          },
+          {
+            "type": "vital:ExecuteWorkflow",
+            "hrest:hasAddress": "<orchestrator.url>/execute/workflow",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:GetMetaServiceList",
+            "hrest:hasAddress": "<orchestrator.url>/metaservice",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:GetMetaService",
+            "hrest:hasAddress": "<orchestrator.url>/metaservice/{id}",
+            "hrest:hasMethod": "hrest:GET"
+          },
+          {
+            "type": "vital:DeployMetaService",
+            "hrest:hasAddress": "<orchestrator.url>/metaservice",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:UndeployMetaService",
+            "hrest:hasAddress": "<orchestrator.url>/metaservice/{id}",
+            "hrest:hasMethod": "hrest:DELETE"
+          }
+        ]
+      }
+    ]
+  }
+}

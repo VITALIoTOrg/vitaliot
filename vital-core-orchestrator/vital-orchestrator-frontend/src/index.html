@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html ng-app="app.main">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="path" content="<%= path %>"/>
+
+    <title>VITAL ORCHESTRATOR</title>
+
+    <!-- compiled CSS -->
+    <% styles.forEach( function ( file ) { %>
+    <link rel="stylesheet" type="text/css" href="<%= file %>"/>
+    <% }); %>
+
+    <!-- compiled JavaScript -->
+    <% scripts.forEach( function ( file ) { %>
+    <script type="text/javascript" src="<%= file %>?ver=<%=version%>"></script>
+    <% }); %>
+</head>
+
+<body class="skin-black sidebar-mini">
+
+<div class="wrapper">
+
+    <header class="main-header">
+
+        <!-- Logo -->
+        <a href="#/home" class="logo">
+            <!-- mini logo for sidebar mini 50x50 pixels -->
+            <span class="logo-mini"><b>V</b> IoT</span>
+            <!-- logo for regular state and mobile devices -->
+            <span class="logo-lg"><b>Vital-IoT</b> Orchestrator</span>
+        </a>
+
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+            <!-- Sidebar toggle button-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!-- Navbar Right Menu -->
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account: style can be found in dropdown.less -->
+                    <li class="dropdown user user-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="./assets/user-profile.jpg" class="user-image" alt="User Image"/>
+                            <span class="hidden-xs">Orchestrator User</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="./assets/user-profile.jpg" class="img-circle" alt="User Image"/>
+
+                                <p>
+                                    Alexander Pierce - Web Developer
+                                    <small>Member since Nov. 2012</small>
+                                </p>
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Followers</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Sales</a>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                    <a href="#">Friends</a>
+                                </div>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu">
+                <li class="active treeview">
+                    <a>
+                        <i class="fa fa-gear"></i> <span>Operations</span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="#/operation/list"><i class="fa fa-circle-o"></i> Operation List</a></li>
+                        <li><a href="#/operation/edit"><i class="fa fa-plus"></i> Create an operation</a></li>
+                    </ul>
+                </li>
+                <li class="active treeview">
+                    <a>
+                        <i class="fa fa-gears"></i> <span>Workflows</span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="#/workflow/list"><i class="fa fa-circle-o"></i> Worfklow List</a></li>
+                        <li><a href="#/workflow/edit"><i class="fa fa-plus"></i> Create a workflow</a></li>
+                    </ul>
+                </li>
+                <li class="active treeview">
+                    <a>
+                        <i class="fa fa-cloud"></i> <span>Meta Services</span> <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="#/metaservice/list"><i class="fa fa-circle-o"></i> Meta Service List</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div ng-view>Loading....</div>
+    </div>
+    <!-- /.content-wrapper -->
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.0
+        </div>
+        <strong>Copyright &copy; 2014-2015.</strong> All rights reserved.
+    </footer>
+</div>
+<!-- ./wrapper -->
+
+</body>
+</html>

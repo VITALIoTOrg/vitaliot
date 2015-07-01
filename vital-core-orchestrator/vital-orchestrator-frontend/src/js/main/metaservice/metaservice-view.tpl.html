@@ -1,0 +1,37 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Service
+        <small>{{metaserviceViewCtrl.metaservice.workflow.name}}</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box box-default">
+
+        <div class="box-body">
+            <h4>
+                <ul class="list-inline">
+                    <li>
+                        <i class="fa fa-arrow-circle-o-right"></i>
+                    </li>
+                    <li ng-repeat="operation in metaserviceViewCtrl.metaservice.workflow.operationList">
+                        {{operation.name}} <i class="fa fa-arrow-circle-o-right"></i>
+                    </li>
+                </ul>
+            </h4>
+            <p>URL: {{metaserviceViewCtrl.serviceURL}}</p>
+
+            <p>Method: POST</p>
+
+            <p>Input Example:</p>
+            <pre>{{metaserviceViewCtrl.metaservice.workflow.operationList[0].inputData | jsonString}}</pre>
+
+        </div>
+
+        <div class="box-footer">
+        </div>
+
+    </div>
+</section>

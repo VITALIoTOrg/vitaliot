@@ -1,0 +1,15 @@
+Installation:
+
+Need to have npm, bower installed.
+Then you run
+> npm install
+> bower install
+> grunt build
+
+- If all goes well, the build/ folder will contain the application
+
+> grunt dist
+- Will produce the minified version of the application
+
+> grunt server
+- Runs grunt build, starts a web server on localhost:8001 and watches for file changes to dynamically update the application
