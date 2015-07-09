@@ -6,6 +6,7 @@
         "*://*:*/*?*",
         "*://*:*/*"
     ],
+    "applicationName": "iPlanetAMWebAgentService",
     "actionValues": {
         "POST": false,
         "GET": true,

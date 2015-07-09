@@ -426,6 +426,7 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createPolicy(
 			@FormParam("name") String name,
+			@FormParam("appname") String appname,
 			@FormParam("resources[]") ArrayList<String> res,
 			@FormParam("groups[]") ArrayList<String> grs) {
 		
@@ -437,7 +438,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.createIdentityGroupsPolicy(name, actions, res, grs, answer);
+		result = client.createIdentityGroupsPolicy(name, actions, res, grs, appname, answer);
 		
 		try {
 			policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);

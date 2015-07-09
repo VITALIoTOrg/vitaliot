@@ -1571,7 +1571,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, StringBuilder goingOn) {
+	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, String applicationName, StringBuilder goingOn) {
 	
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -1606,6 +1606,7 @@ public class OpenAMClient {
 		policyIdentityModel.setActive(true);
 		policyIdentityModel.setDescription(policyName+" created from REST.");
 		policyIdentityModel.setResources(resources);
+		policyIdentityModel.setApplicationName(applicationName);
 		
 		ActionValues___ actVal = new ActionValues___();
 		

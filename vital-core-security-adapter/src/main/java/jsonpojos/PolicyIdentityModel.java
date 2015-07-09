@@ -23,6 +23,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "active",
     "description",
     "resources",
+    "applicationName",
     "actionValues",
     "subject"
 })
@@ -36,6 +37,8 @@ public class PolicyIdentityModel {
     private String description;
     @JsonProperty("resources")
     private List<String> resources = new ArrayList<String>();
+    @JsonProperty("applicationName")
+    private String applicationName;
     @JsonProperty("actionValues")
     private ActionValues___ actionValues;
     @JsonProperty("subject")
@@ -140,6 +143,31 @@ public class PolicyIdentityModel {
 
     public PolicyIdentityModel withResources(List<String> resources) {
         this.resources = resources;
+        return this;
+    }
+
+    /**
+     * 
+     * @return
+     *     The applicationName
+     */
+    @JsonProperty("applicationName")
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    /**
+     * 
+     * @param applicationName
+     *     The applicationName
+     */
+    @JsonProperty("applicationName")
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
+    public PolicyIdentityModel withApplicationName(String applicationName) {
+        this.applicationName = applicationName;
         return this;
     }
 
