@@ -9,6 +9,7 @@ import java.util.List;
 
 import jsonpojos.ActionValues__;
 import jsonpojos.ActionValues___;
+import jsonpojos.Applications;
 import jsonpojos.Authenticate;
 import jsonpojos.Group;
 import jsonpojos.GroupModel;
@@ -415,6 +416,73 @@ public class OpenAMClient {
 		
 		return groups;
 		
+	}
+	
+	public Applications getApplications() {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applications")
+			.setQuery("_queryFilter=true")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpGet httppost = new HttpGet(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, adminAuthToken);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		    
+		}
+		
+		Applications applications = new Applications();
+		
+		try {
+			applications = (Applications) JsonUtils.deserializeJson(respString, Applications.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return applications;
 	}
 	
 	public Policies getPolicies() {

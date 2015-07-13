@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import jsonpojos.Applications;
 import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
@@ -351,6 +352,58 @@ public class GetServices {
 		if(policies.getAdditionalProperties().containsKey("code")) {
 			if(policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
 				code = (Integer) policies.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		
+	}
+	
+	@Path("/applications")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getApplications() {
+		
+		Applications apps;
+		String answer;
+		int code;
+		
+		answer = null;
+		code = 0;
+		apps = client.getApplications();
+		
+		try {
+			answer = JsonUtils.serializeJson(apps);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(apps.getAdditionalProperties().containsKey("code")) {
+			if(apps.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) apps.getAdditionalProperties().get("code");
 			}
 		}
 		if(code >= 400 && code < 500) {
