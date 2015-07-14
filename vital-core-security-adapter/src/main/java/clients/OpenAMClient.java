@@ -9,6 +9,7 @@ import java.util.List;
 
 import jsonpojos.ActionValues__;
 import jsonpojos.ActionValues___;
+import jsonpojos.Application;
 import jsonpojos.Applications;
 import jsonpojos.Authenticate;
 import jsonpojos.Group;
@@ -835,6 +836,72 @@ public class OpenAMClient {
 		return policy;
 	}
 	
+	public Application getApplication(String applicationId) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applications/"+applicationId)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpGet httppost = new HttpGet(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, adminAuthToken);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		    
+		}
+		
+		Application application = new Application();
+		
+		try {
+			application = (Application) JsonUtils.deserializeJson(respString, Application.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return application;
+	}
+	
 	public boolean createUser(String givenName, String surname, String username, String password, String mail, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
@@ -1300,12 +1367,11 @@ public class OpenAMClient {
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
 		
-		// TO re-enable once we have getApplication
-		//String currentPolicyName = getApplication(applicationId).getName();
+		String currentApplicationName = getApplication(applicationId).getName();
 		
-		//if (currentPolicyName == null) {
-		//	return false;
-		//}
+		if (currentApplicationName == null) {
+			return false;
+		}
 		
 		URI uri = null;
 		try {
