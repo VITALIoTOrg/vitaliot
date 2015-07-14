@@ -27,7 +27,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class Applications {
 
     @JsonProperty("result")
-    private List<Object> result = new ArrayList<Object>(); // generic objects because at the moment we don't need to handle the subfields
+    private List<Application> result = new ArrayList<Application>(); // generic objects because at the moment we don't need to handle the subfields
     @JsonProperty("resultCount")
     private Integer resultCount;
     @JsonProperty("pagedResultsCookie")
@@ -43,7 +43,7 @@ public class Applications {
      *     The result
      */
     @JsonProperty("result")
-    public List<Object> getResult() {
+    public List<Application> getResult() {
         return result;
     }
 
@@ -53,11 +53,11 @@ public class Applications {
      *     The result
      */
     @JsonProperty("result")
-    public void setResult(List<Object> result) {
+    public void setResult(List<Application> result) {
         this.result = result;
     }
 
-    public Applications withResult(List<Object> result) {
+    public Applications withResult(List<Application> result) {
         this.result = result;
         return this;
     }

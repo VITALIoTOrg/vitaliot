@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 
+import jsonpojos.Application;
 import jsonpojos.Group;
 import jsonpojos.Policy;
 import jsonpojos.User;
@@ -555,14 +556,14 @@ public class PostServices {
 		int code;
 		StringBuilder answer = new StringBuilder();
 		// Change policy with application once we have the class
-		Policy policy = new Policy();
+		Application application = new Application();
 		
 		code = 0;
 		
 		result = client.deleteApplication(name, answer);
 		
 		try {
-			policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
+			application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -571,9 +572,9 @@ public class PostServices {
 			e.printStackTrace();
 		}
 		
-		if(policy.getAdditionalProperties().containsKey("code")) {
-			if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
-				code = (Integer) policy.getAdditionalProperties().get("code");
+		if(application.getAdditionalProperties().containsKey("code")) {
+			if(application.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) application.getAdditionalProperties().get("code");
 			}
 		}
 		
