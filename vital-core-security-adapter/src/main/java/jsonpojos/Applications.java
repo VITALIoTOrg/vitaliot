@@ -27,7 +27,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public class Applications {
 
     @JsonProperty("result")
-    private List<Object> result = new ArrayList<Object>();
+    private List<Object> result = new ArrayList<Object>(); // generic objects because at the moment we don't need to handle the subfields
     @JsonProperty("resultCount")
     private Integer resultCount;
     @JsonProperty("pagedResultsCookie")
