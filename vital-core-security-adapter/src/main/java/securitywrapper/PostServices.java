@@ -545,6 +545,68 @@ public class PostServices {
 		
 	}
 	
+	@Path("/application/delete")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteApplication(
+			@FormParam("name") String name) {
+		
+		Boolean result;
+		int code;
+		StringBuilder answer = new StringBuilder();
+		// Change policy with application once we have the class
+		Policy policy = new Policy();
+		
+		code = 0;
+		
+		result = client.deleteApplication(name, answer);
+		
+		try {
+			policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(policy.getAdditionalProperties().containsKey("code")) {
+			if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) policy.getAdditionalProperties().get("code");
+			}
+		}
+		
+		if(result) {
+			
+			return Response.ok()
+				.entity(answer.toString())
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Credentials", "true")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		} else {
+			
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+			}
+			else {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+		}
+		
+	}
+	
 	@Path("/user/{id}")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

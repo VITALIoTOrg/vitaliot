@@ -1290,6 +1290,75 @@ public class OpenAMClient {
 		return false;
 	}
 	
+	public boolean deleteApplication(String applicationId, StringBuilder goingOn) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		// TO re-enable once we have getApplication
+		//String currentPolicyName = getApplication(applicationId).getName();
+		
+		//if (currentPolicyName == null) {
+		//	return false;
+		//}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applications/"+applicationId)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpDelete httpdelete = new HttpDelete(uri);
+		httpdelete.setHeader("Content-Type", "application/json");
+		httpdelete.setHeader(authToken, adminAuthToken);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpdelete);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+				if (respString.equals("{}")) {
+					goingOn.append(respString);
+					return true;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		    
+		}
+		
+		goingOn.append(respString);
+		
+		return false;
+	}
+	
 	public boolean updateUser(String username, String givenName, String surname, String mail, String status, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
