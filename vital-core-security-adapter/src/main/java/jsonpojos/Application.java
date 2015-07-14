@@ -20,17 +20,17 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
     "name",
-    "resources",
-    "description"
+    "description",
+    "resources"
 })
 public class Application {
 
     @JsonProperty("name")
     private String name;
-    @JsonProperty("resources")
-    private List<String> resources = new ArrayList<String>();
     @JsonProperty("description")
     private String description;
+    @JsonProperty("resources")
+    private List<String> resources = new ArrayList<String>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

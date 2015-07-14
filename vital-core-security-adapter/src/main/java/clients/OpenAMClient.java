@@ -1152,6 +1152,94 @@ public class OpenAMClient {
 		return true;
 	}
 	
+	public boolean createApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		if (getPolicy(applicationName).getName() != null) {
+			// application already existing, return false
+			return false;
+		}
+		
+		Application application = new Application();
+		
+		application.setName(applicationName);
+		application.setDescription(description);
+		application.setResources(resources);
+				
+		String newApplication = "";
+		try {
+			newApplication = JsonUtils.serializeJson(application);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applications/")
+			.setQuery("_action=create")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newApplication, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setEntity(strEntity);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+				if (respString.contains(applicationName)) {
+					goingOn.append(respString);
+					return true;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		goingOn.append(respString);
+			
+		return false;
+	}
+	
 	public boolean deleteUser(String username, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();

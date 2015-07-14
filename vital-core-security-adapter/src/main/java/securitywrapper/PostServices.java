@@ -546,6 +546,66 @@ public class PostServices {
 		
 	}
 	
+	@Path("/application/create")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response createApplication(
+			@FormParam("name") String name,
+			@FormParam("description") String description,
+			@FormParam("resources[]") ArrayList<String> res) {
+		
+		int code;
+		StringBuilder answer = new StringBuilder();
+		Application application = new Application();
+		Boolean result;
+		
+		code = 0;
+		
+		result = client.createApplication(name, description, res, answer);
+		
+		try {
+			application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(result) {
+			return Response.ok()
+				.entity(answer.toString())
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Credentials", "true")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		} else {
+			if(application.getAdditionalProperties().containsKey("code")) {
+				if(application.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) application.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+			}
+			else {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+		}
+
+	}
+	
 	@Path("/application/delete")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
