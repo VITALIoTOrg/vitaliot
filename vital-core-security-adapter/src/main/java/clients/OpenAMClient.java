@@ -1172,6 +1172,7 @@ public class OpenAMClient {
 		application.setName(applicationName);
 		application.setDescription(description);
 		application.setResources(resources);
+		application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
 				
 		String newApplication = "";
 		try {
