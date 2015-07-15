@@ -1162,7 +1162,7 @@ public class OpenAMClient {
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
 		
-		if (getPolicy(applicationName).getName() != null) {
+		if (getApplication(applicationName).getName() != null) {
 			// application already existing, return false
 			return false;
 		}
