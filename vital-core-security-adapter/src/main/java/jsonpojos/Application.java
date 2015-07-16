@@ -31,6 +31,10 @@ public class Application {
     private String description;
     @JsonProperty("resources")
     private List<String> resources = new ArrayList<String>();
+    @JsonProperty("subjects")
+    private List<String> subjects = new ArrayList<String>();
+    @JsonProperty("conditions")
+    private List<String> conditions = new ArrayList<String>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -106,6 +110,56 @@ public class Application {
 
     public Application withResources(List<String> resources) {
         this.resources = resources;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The subjects
+     */
+    @JsonProperty("subjects")
+    public List<String> getSubjects() {
+        return subjects;
+    }
+
+    /**
+     * 
+     * @param subjects
+     *     The subjects
+     */
+    @JsonProperty("subjects")
+    public void setSubjects(List<String> subjects) {
+        this.subjects = subjects;
+    }
+
+    public Application withSubjects(List<String> subjects) {
+        this.subjects = subjects;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The conditions
+     */
+    @JsonProperty("conditions")
+    public List<String> getConditions() {
+        return conditions;
+    }
+
+    /**
+     * 
+     * @param conditions
+     *     The conditions
+     */
+    @JsonProperty("conditions")
+    public void setConditions(List<String> conditions) {
+        this.conditions = conditions;
+    }
+
+    public Application withConditions(List<String> conditions) {
+        this.conditions = conditions;
         return this;
     }
 

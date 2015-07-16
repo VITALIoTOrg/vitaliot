@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -1173,6 +1174,30 @@ public class OpenAMClient {
 		application.setDescription(description);
 		application.setResources(resources);
 		application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
+		application.setAdditionalProperty("entitlementCombiner", "DenyOverride");
+		
+		List<String> subjects = Arrays.asList("AND", "OR", "NOT", "AuthenticatedUsers", "Identity", "JwtClaim");
+		List<String> conditions = Arrays.asList(
+				"AND",
+		        "OR",
+		        "NOT",
+		        "AMIdentityMembership",
+		        "AuthLevel",
+		        "AuthScheme",
+		        "AuthenticateToRealm",
+		        "AuthenticateToService",
+		        "IPv4",
+		        "IPv6",
+		        "LDAPFilter",
+		        "LEAuthLevel",
+		        "OAuth2Scope",
+		        "ResourceEnvIP",
+		        "Session",
+		        "SessionProperty",
+		        "SimpleTime");
+		
+		application.setSubjects(subjects);
+		application.setConditions(conditions);
 				
 		String newApplication = "";
 		try {
