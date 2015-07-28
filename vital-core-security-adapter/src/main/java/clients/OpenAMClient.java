@@ -2337,6 +2337,110 @@ public class OpenAMClient {
 		
 	}
 	
+	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		Application application = new Application();
+		
+		application.setName(applicationName);
+		application.setDescription(description);
+		application.setResources(resources);
+		application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
+		application.setAdditionalProperty("entitlementCombiner", "DenyOverride");
+		
+		List<String> subjects = Arrays.asList("AND", "OR", "NOT", "AuthenticatedUsers", "Identity", "JwtClaim");
+		List<String> conditions = Arrays.asList(
+				"AND",
+		        "OR",
+		        "NOT",
+		        "AMIdentityMembership",
+		        "AuthLevel",
+		        "AuthScheme",
+		        "AuthenticateToRealm",
+		        "AuthenticateToService",
+		        "IPv4",
+		        "IPv6",
+		        "LDAPFilter",
+		        "LEAuthLevel",
+		        "OAuth2Scope",
+		        "ResourceEnvIP",
+		        "Session",
+		        "SessionProperty",
+		        "SimpleTime");
+		
+		application.setSubjects(subjects);
+		application.setConditions(conditions);
+				
+		String newApplicationInfo = "";
+		
+		try {
+			newApplicationInfo = JsonUtils.serializeJson(application);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applications/"+applicationName)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newApplicationInfo, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPut httpput = new HttpPut(uri);
+		httpput.setHeader("Content-Type", "application/json");
+		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setEntity(strEntity);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpput);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		goingOn.append(respString);
+		
+		return true;
+	}
+	
 	public boolean addUsersToGroup(String groupId, ArrayList<String> users, StringBuilder goingOn) {
 				
 		Group currentGroup = getGroup(groupId);
