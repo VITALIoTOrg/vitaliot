@@ -751,10 +751,20 @@ public class PostServices {
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Policy policy = new Policy();
+		boolean res;
 		
 		code = 0;
 		
-		if(client.updatePolicy(name, description, active, groups, nogr, resources, nores, answer)) {
+		System.out.println(client.getPolicy(name).getSubject().getType());
+		
+		if(client.getPolicy(name).getSubject().getType().equals("Identity")) {
+			res = client.updatePolicyIdentity(name, description, active, groups, nogr, resources, nores, answer);
+			System.out.println("Updating Identity");
+		} else {
+			res = client.updatePolicyAuthenticated(name, description, active, groups, nogr, resources, nores, answer);
+			System.out.println("Updating Authenticated");
+		}
+		if(res) {
 			
 			try {
 				policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);

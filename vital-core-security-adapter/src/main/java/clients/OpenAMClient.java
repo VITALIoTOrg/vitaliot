@@ -2026,7 +2026,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updatePolicy(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
+	public boolean updatePolicyIdentity(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -2077,6 +2077,123 @@ public class OpenAMClient {
 			Subject___ sbj = new Subject___();
 			sbj.setType("Identity");
 			sbj.setSubjectValues(groupsId);
+			
+			policyModel.setSubject(sbj);
+		}
+				
+		String newPolicyInfo = "";
+		
+		try {
+			newPolicyInfo = JsonUtils.serializeJson(policyModel);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/policies/"+name)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newPolicyInfo, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPut httpput = new HttpPut(uri);
+		httpput.setHeader("Content-Type", "application/json");
+		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setEntity(strEntity);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpput);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		goingOn.append(respString);
+		
+		return true;
+	}
+	
+	public boolean updatePolicyAuthenticated(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate();
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		PolicyAuthenticatedModel policyModel = new PolicyAuthenticatedModel();
+		Subject__ sub = new Subject__();
+		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
+		policyModel.setActive(active);
+		policyModel.setDescription(description);
+		
+		if(resources.isEmpty() && !nores) {
+			policyModel.setResources(getPolicy(name).getResources());
+		}
+		else if(!nores) {
+			policyModel.setResources(resources);
+		}
+		
+		if(groups.isEmpty() && !nogr) {
+			try {
+				policyModel.setSubject((Subject__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
+			} catch (JsonParseException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (JsonMappingException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		} else {
+			ArrayList<String> groupsId = new ArrayList<String>();
+			
+			for (int i=0; i<groups.size();i++) {
+				String currentGroup = groups.get(i);
+				if (getGroup(currentGroup).getUsername() == null) {
+					return false;
+				} else {
+					groupsId.add(getGroup(currentGroup).getUniversalid().get(0)); 
+				}
+			}
+			
+			Subject__ sbj = new Subject__();
+			sbj.setType("AuthenticatedUsers");
 			
 			policyModel.setSubject(sbj);
 		}
