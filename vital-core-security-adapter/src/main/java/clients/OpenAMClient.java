@@ -605,26 +605,26 @@ public class OpenAMClient {
 		        String errorStatusText = responsePDU.getErrorStatusText();
 
 		        if(errorStatus == PDU.noError) {
-		        	System.out.println("Snmp Get Response = " + responsePDU.getVariableBindings());
+		        	//System.out.println("Snmp Get Response = " + responsePDU.getVariableBindings());
 		        	answer = responsePDU.getVariableBindings().firstElement().toString();
 		        	String delims = "[=]";
 		        	answer = answer.split(delims)[1].substring(1);
 		        }
 		        else {
-		        	System.out.println("Error: Request Failed");
-		        	System.out.println("Error Status = " + errorStatus);
-		        	System.out.println("Error Index = " + errorIndex);
-		        	System.out.println("Error Status Text = " + errorStatusText);
+		        	//System.out.println("Error: Request Failed");
+		        	//System.out.println("Error Status = " + errorStatus);
+		        	//System.out.println("Error Index = " + errorIndex);
+		        	//System.out.println("Error Status Text = " + errorStatusText);
 		        	answer = "Error: " + errorStatusText;
 		        }
 			}
 		    else {
-		    	System.out.println("Error: Response PDU is null");
+		    	//System.out.println("Error: Response PDU is null");
 		    	answer = "Error: Response PDU is null";
 		    }
 		}
 		else {
-			System.out.println("Error: Agent Timeout... ");
+			//System.out.println("Error: Agent Timeout... ");
 			answer = "Error: Agent Timeout... ";
 		}
 		try {
