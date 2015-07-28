@@ -2337,7 +2337,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn) {
+	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -2351,7 +2351,12 @@ public class OpenAMClient {
 		
 		application.setName(applicationName);
 		application.setDescription(description);
-		application.setResources(resources);
+		if(resources.isEmpty() && !nores) {
+			application.setResources(getApplication(applicationName).getResources());
+		}
+		else if(!nores) {
+			application.setResources(resources);
+		}
 		application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
 		application.setAdditionalProperty("entitlementCombiner", "DenyOverride");
 		

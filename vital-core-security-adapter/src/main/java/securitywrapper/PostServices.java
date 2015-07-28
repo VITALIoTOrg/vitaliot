@@ -815,9 +815,10 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateApplication(
-			@FormParam("name") String name,
+			@PathParam("id") String name,
 			@FormParam("description") String description,
-			@FormParam("resources[]") ArrayList<String> res) {
+			@FormParam("resources[]") ArrayList<String> res,
+			@FormParam("nores") Boolean nores) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -825,7 +826,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.updateApplication(name, description, res, answer)) {
+		if(client.updateApplication(name, description, res, nores, answer)) {
 			
 			try {
 				application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
