@@ -21,6 +21,7 @@ import jsonpojos.Policies;
 import jsonpojos.Policy;
 import jsonpojos.PolicyAuthenticatedModel;
 import jsonpojos.PolicyIdentityModel;
+import jsonpojos.Result;
 import jsonpojos.Subject__;
 import jsonpojos.Subject___;
 import jsonpojos.User;
@@ -2571,6 +2572,23 @@ public class OpenAMClient {
 		groups.setResult(list);
 		
 		return groups;
+	}
+	
+	public Policies listApplicationPolicies(String appName) {
+		
+		Policies policies = getPolicies();
+		List<Result> list = policies.getResult();
+		Iterator<Result> iter = list.listIterator();
+		while (iter.hasNext()) {
+			Result policy = iter.next();
+			if(!policy.getApplicationName().equals(appName)) {
+				iter.remove();
+				policies.setResultCount(policies.getResultCount()-1);
+			}
+		}
+		policies.setResult(list);
+		
+		return policies;
 	}
 	
 }

@@ -275,6 +275,35 @@ public class GetServices {
 		
 	}
 	
+	@Path("/application/{id}/policies")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getApplicationPolicies(@PathParam("id") String appName) {
+		
+		String answer;
+		
+		answer = null;
+		
+		Policies policies = client.listApplicationPolicies(appName);
+		
+		try {
+			answer = JsonUtils.serializeJson(policies);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		
+	}
+	
 	@Path("/users")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
