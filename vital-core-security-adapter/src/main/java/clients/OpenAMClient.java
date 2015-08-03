@@ -13,6 +13,7 @@ import jsonpojos.ActionValues___;
 import jsonpojos.Application;
 import jsonpojos.Applications;
 import jsonpojos.Authenticate;
+import jsonpojos.DecisionRequest;
 import jsonpojos.Group;
 import jsonpojos.GroupModel;
 import jsonpojos.GroupModelWithUsers;
@@ -22,6 +23,7 @@ import jsonpojos.Policy;
 import jsonpojos.PolicyAuthenticatedModel;
 import jsonpojos.PolicyIdentityModel;
 import jsonpojos.Result;
+import jsonpojos.SubjectAuthenticated;
 import jsonpojos.Subject__;
 import jsonpojos.Subject___;
 import jsonpojos.User;
@@ -221,6 +223,90 @@ public class OpenAMClient {
 		}
 		
 		return auth;
+		
+	}
+	
+	public boolean evaluate(String token, ArrayList<String> resources, StringBuilder goingOn) {
+		
+		
+		boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate(null, null);
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		
+		DecisionRequest req = new DecisionRequest();
+		SubjectAuthenticated sub = new SubjectAuthenticated();
+		sub.setSsoToken(token);
+		
+		req.setSubject(sub);
+		req.setResources(resources);
+		
+		String newReq = "";
+		
+		try {
+			newReq = JsonUtils.serializeJson(req);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/policies/")
+			.setQuery("_action=evaluate")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newReq, HTTP.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setEntity(strEntity);
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return false;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}    
+		}
+		
+		goingOn.append(respString);
+		
+		return true;
 		
 	}
 	

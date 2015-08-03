@@ -15,6 +15,7 @@ import javax.ws.rs.GET;
 
 import jsonpojos.Application;
 import jsonpojos.Authenticate;
+import jsonpojos.DecisionRequest;
 import jsonpojos.Group;
 import jsonpojos.Policy;
 import jsonpojos.User;
@@ -928,6 +929,71 @@ public class PostServices {
 			return Response.ok()
 					.entity(answer)
 					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		
+	}
+	
+	@Path("/evaluate")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response evaluate(
+			@FormParam("token") String token,
+			@FormParam("resources[]") ArrayList<String> res) {
+		
+		int code;
+		StringBuilder answer = new StringBuilder();
+		DecisionRequest resp = new DecisionRequest(); // TODO: make a a class for the response
+		
+		code = 0;
+		
+		if(client.evaluate(token, res, answer)) {
+			
+			try {
+				resp = (DecisionRequest) JsonUtils.deserializeJson(answer.toString(), DecisionRequest.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(resp.getAdditionalProperties().containsKey("code")) {
+				if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) resp.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer.toString())
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+			}
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+			else {
+				return Response.ok()
+						.entity(answer.toString())
+						.header("Access-Control-Allow-Origin", "*")
+						.header("Access-Control-Allow-Credentials", "true")
+						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+						.build();
+			}
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer.toString())
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Credentials", "true")
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
