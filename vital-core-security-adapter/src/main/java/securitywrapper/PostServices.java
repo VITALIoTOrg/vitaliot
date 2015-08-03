@@ -11,11 +11,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 
 import jsonpojos.Application;
+import jsonpojos.Authenticate;
 import jsonpojos.Group;
 import jsonpojos.Policy;
 import jsonpojos.User;
+import jsonpojos.Users;
 import utils.Action;
 import utils.JsonUtils;
 
@@ -875,6 +878,60 @@ public class PostServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+	}
+	
+	@Path("/authenticate")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response authenticate(
+			@FormParam("name") String name,
+			@FormParam("password") String password) {
+		
+		Authenticate auth;
+		String answer;
+		int code;
+		
+		answer = null;
+		code = 0;
+		auth = client.authenticate(name, password);
+		
+		try {
+			answer = JsonUtils.serializeJson(auth);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(auth.getAdditionalProperties().containsKey("code")) {
+			if(auth.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) auth.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		
 	}
 	
 }

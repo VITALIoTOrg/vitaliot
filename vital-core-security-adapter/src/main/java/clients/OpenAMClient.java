@@ -156,7 +156,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	private void authenticate() {
+	public Authenticate authenticate(String name, String password) {
 		
 		URI uri = null;
 		try {
@@ -172,9 +172,13 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader("X-OpenAM-Username", userAdmin);
-		httppost.setHeader("X-OpenAM-Password", pwdAdmin);
-		
+		if(name != null) {
+			httppost.setHeader("X-OpenAM-Username", name);
+			httppost.setHeader("X-OpenAM-Password", password);
+		} else {
+			httppost.setHeader("X-OpenAM-Username", userAdmin);
+			httppost.setHeader("X-OpenAM-Password", pwdAdmin);
+		}		
 
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -212,7 +216,11 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		//this.adminAuthToken = auth.getTokenId();
-		SessionUtils.setAdminAuthToken(auth.getTokenId());
+		if(name == null) {
+			SessionUtils.setAdminAuthToken(auth.getTokenId());
+		}
+		
+		return auth;
 		
 	}
 	
@@ -221,7 +229,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String uid = "";
@@ -291,7 +299,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -358,7 +366,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -426,7 +434,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -493,7 +501,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -644,7 +652,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -710,7 +718,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -777,7 +785,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -843,7 +851,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -909,7 +917,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -998,7 +1006,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1076,7 +1084,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1159,7 +1167,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1272,7 +1280,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1341,7 +1349,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1409,7 +1417,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1477,7 +1485,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1545,7 +1553,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1632,7 +1640,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1760,7 +1768,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -1894,7 +1902,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -2032,7 +2040,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -2151,7 +2159,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -2268,7 +2276,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
@@ -2343,7 +2351,7 @@ public class OpenAMClient {
 		boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
-			authenticate();
+			authenticate(null, null);
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();
