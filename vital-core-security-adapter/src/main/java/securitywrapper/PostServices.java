@@ -2,6 +2,7 @@ package securitywrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -15,7 +16,9 @@ import javax.ws.rs.GET;
 
 import jsonpojos.Application;
 import jsonpojos.Authenticate;
+import jsonpojos.DecisionArray;
 import jsonpojos.DecisionRequest;
+import jsonpojos.DecisionResponse;
 import jsonpojos.Group;
 import jsonpojos.Policy;
 import jsonpojos.User;
@@ -944,14 +947,14 @@ public class PostServices {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
-		DecisionRequest resp = new DecisionRequest(); // TODO: make a a class for the response
+		DecisionArray resp = new DecisionArray();
 		
 		code = 0;
 		
 		if(client.evaluate(token, res, answer)) {
 			
 			try {
-				resp = (DecisionRequest) JsonUtils.deserializeJson(answer.toString(), DecisionRequest.class);
+				resp = (DecisionArray) JsonUtils.deserializeJson(answer.toString(), DecisionArray.class);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {

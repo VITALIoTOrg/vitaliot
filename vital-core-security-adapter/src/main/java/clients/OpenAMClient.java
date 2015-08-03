@@ -256,7 +256,6 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -304,7 +303,7 @@ public class OpenAMClient {
 			}    
 		}
 		
-		goingOn.append(respString);
+		goingOn.append("{ \"responses\" : " + respString + " }");
 		
 		return true;
 		
