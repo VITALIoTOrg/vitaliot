@@ -2120,7 +2120,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updatePolicyIdentity(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
+	public boolean updatePolicyIdentity(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -2174,6 +2174,48 @@ public class OpenAMClient {
 			sbj.setSubjectValues(groupsId);
 			
 			policyModel.setSubject(sbj);
+		}
+		
+		ActionValues___ actVal = new ActionValues___();
+		
+		if(!actions.isEmpty()) {
+			
+			for (int i = 0; i<actions.size(); i++) {
+				Action currentAction = actions.get(i);
+				String strAction = currentAction.getAction();
+				
+				if (strAction.equals("POST")) {
+					actVal.setPOST(currentAction.getState());
+				} else if (strAction.equals("PATCH")) {
+					actVal.setPATCH(currentAction.getState());
+				} else if (strAction.equals("GET")) {
+					actVal.setGET(currentAction.getState());
+				} else if (strAction.equals("DELETE")) {
+					actVal.setDELETE(currentAction.getState());
+				} else if (strAction.equals("OPTIONS")) {
+					actVal.setOPTIONS(currentAction.getState());
+				} else if (strAction.equals("PUT")) {
+					actVal.setPUT(currentAction.getState());
+				} else if (strAction.equals("HEAD")) {
+					actVal.setHEAD(currentAction.getState());
+				}
+					
+			}
+			
+			policyModel.setActionValues(actVal);
+		} else if(!noact) {
+			try {
+				policyModel.setActionValues((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getActionValues()), actVal.getClass()));
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 				
 		String newPolicyInfo = "";
@@ -2239,7 +2281,7 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean updatePolicyAuthenticated(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
+	public boolean updatePolicyAuthenticated(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn) {
 		
 		boolean currentSessionIsValid = isTokenValid();
 		
@@ -2292,7 +2334,49 @@ public class OpenAMClient {
 			
 			policyModel.setSubject(sbj);
 		}
+		
+		ActionValues__ actVal = new ActionValues__();
+		
+		if(!actions.isEmpty()) {
+			
+			for (int i = 0; i<actions.size(); i++) {
+				Action currentAction = actions.get(i);
+				String strAction = currentAction.getAction();
 				
+				if (strAction.equals("POST")) {
+					actVal.setPOST(currentAction.getState());
+				} else if (strAction.equals("PATCH")) {
+					actVal.setPATCH(currentAction.getState());
+				} else if (strAction.equals("GET")) {
+					actVal.setGET(currentAction.getState());
+				} else if (strAction.equals("DELETE")) {
+					actVal.setDELETE(currentAction.getState());
+				} else if (strAction.equals("OPTIONS")) {
+					actVal.setOPTIONS(currentAction.getState());
+				} else if (strAction.equals("PUT")) {
+					actVal.setPUT(currentAction.getState());
+				} else if (strAction.equals("HEAD")) {
+					actVal.setHEAD(currentAction.getState());
+				}
+					
+			}
+			
+			policyModel.setActionValues(actVal);
+		} else  if(!noact) {
+			try {
+				policyModel.setActionValues((ActionValues__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getActionValues()), actVal.getClass()));
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		String newPolicyInfo = "";
 		
 		try {

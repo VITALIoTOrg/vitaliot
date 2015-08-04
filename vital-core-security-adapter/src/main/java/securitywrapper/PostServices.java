@@ -782,19 +782,50 @@ public class PostServices {
 			@FormParam("groups[]") ArrayList<String> groups,
 			@FormParam("nogr") Boolean nogr,
 			@FormParam("resources[]") ArrayList<String> resources,
-			@FormParam("nores") Boolean nores) {
+			@FormParam("nores") Boolean nores,
+			@FormParam("actions[DELETE]") Boolean delete,
+			@FormParam("actions[GET]") Boolean get,
+			@FormParam("actions[HEAD]") Boolean head,
+			@FormParam("actions[OPTIONS]") Boolean options,
+			@FormParam("actions[PATCH]") Boolean patch,
+			@FormParam("actions[POST]") Boolean post,
+			@FormParam("actions[PUT]") Boolean put,
+			@FormParam("noact") Boolean noact) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Policy policy = new Policy();
+		ArrayList<Action> actions = new ArrayList<Action>();
 		boolean res;
+		
+		if(delete != null) {
+			actions.add(new Action("DELETE", delete.booleanValue()));
+		}
+		if(get != null) {
+			actions.add(new Action("GET", get.booleanValue()));
+		}
+		if(head != null) {
+			actions.add(new Action("HEAD", head.booleanValue()));
+		}
+		if(options != null) {
+			actions.add(new Action("OPTIONS", options.booleanValue()));
+		}
+		if(patch != null) {
+			actions.add(new Action("PATCH", patch.booleanValue()));
+		}
+		if(post != null) {
+			actions.add(new Action("POST", post.booleanValue()));
+		}
+		if(put != null) {
+			actions.add(new Action("PUT", put.booleanValue()));
+		}
 		
 		code = 0;
 		
 		if(client.getPolicy(name).getSubject().getType().equals("Identity")) {
-			res = client.updatePolicyIdentity(name, description, active, groups, nogr, resources, nores, answer);
+			res = client.updatePolicyIdentity(name, description, active, groups, nogr, resources, nores, actions, noact, answer);
 		} else {
-			res = client.updatePolicyAuthenticated(name, description, active, groups, nogr, resources, nores, answer);
+			res = client.updatePolicyAuthenticated(name, description, active, groups, nogr, resources, nores, actions, noact, answer);
 		}
 		if(res) {
 			
