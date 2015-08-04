@@ -436,13 +436,42 @@ public class PostServices {
 			@FormParam("name") String name,
 			@FormParam("appname") String appname,
 			@FormParam("resources[]") ArrayList<String> res,
-			@FormParam("groups[]") ArrayList<String> grs) {
+			@FormParam("groups[]") ArrayList<String> grs,
+			@FormParam("actions[DELETE]") Boolean delete,
+			@FormParam("actions[GET]") Boolean get,
+			@FormParam("actions[HEAD]") Boolean head,
+			@FormParam("actions[OPTIONS]") Boolean options,
+			@FormParam("actions[PATCH]") Boolean patch,
+			@FormParam("actions[POST]") Boolean post,
+			@FormParam("actions[PUT]") Boolean put) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Policy policy = new Policy();
 		ArrayList<Action> actions = new ArrayList<Action>();
 		Boolean result;
+		
+		if(delete != null) {
+			actions.add(new Action("DELETE", delete.booleanValue()));
+		}
+		if(get != null) {
+			actions.add(new Action("GET", get.booleanValue()));
+		}
+		if(head != null) {
+			actions.add(new Action("HEAD", head.booleanValue()));
+		}
+		if(options != null) {
+			actions.add(new Action("OPTIONS", options.booleanValue()));
+		}
+		if(patch != null) {
+			actions.add(new Action("PATCH", patch.booleanValue()));
+		}
+		if(post != null) {
+			actions.add(new Action("POST", post.booleanValue()));
+		}
+		if(put != null) {
+			actions.add(new Action("PUT", put.booleanValue()));
+		}
 		
 		code = 0;
 		
