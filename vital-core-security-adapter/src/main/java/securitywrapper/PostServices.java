@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.GET;
 
 import jsonpojos.Application;
@@ -48,7 +49,8 @@ public class PostServices {
 			@FormParam("surname") String surname,
 			@FormParam("name") String username,
 			@FormParam("password") String password,
-			@FormParam("mail") String mail) {
+			@FormParam("mail") String mail,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -56,7 +58,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.createUser(givenName, surname, username, password, mail, answer)) {
+		if(client.createUser(givenName, surname, username, password, mail, answer, token)) {
 			
 			try {
 				user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
@@ -112,7 +114,8 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(
-			@FormParam("name") String username) {
+			@FormParam("name") String username,
+            @HeaderParam("TokenId") String token) {
 		
 		Boolean result;
 		int code;
@@ -121,7 +124,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.deleteUser(username, answer);
+		result = client.deleteUser(username, answer, token);
 		
 		try {
 			user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
@@ -172,7 +175,8 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createGroup(
-			@FormParam("name") String name) {
+			@FormParam("name") String name,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -180,7 +184,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.createGroup(name, answer)) {
+		if(client.createGroup(name, answer, token)) {
 			
 			try {
 				group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
@@ -236,7 +240,8 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteGroup(
-			@FormParam("name") String name) {
+			@FormParam("name") String name,
+            @HeaderParam("TokenId") String token) {
 		
 		Boolean result;
 		int code;
@@ -245,7 +250,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.deleteGroup(name, answer);
+		result = client.deleteGroup(name, answer, token);
 		
 		try {
 			group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
@@ -298,7 +303,8 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response addUserToGroup(
 			@PathParam("id") String groupId,
-			@FormParam("user") String username) {
+			@FormParam("user") String username,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -309,7 +315,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.addUsersToGroup(groupId, usersList, answer)) {
+		if(client.addUsersToGroup(groupId, usersList, answer, token)) {
 			
 			try {
 				group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
@@ -366,7 +372,8 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response removeUserFromGroup(
 			@PathParam("id") String groupId,
-			@FormParam("user") String username) {
+			@FormParam("user") String username,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -377,7 +384,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.deleteUsersFromGroup(groupId, usersList, answer)) {
+		if(client.deleteUsersFromGroup(groupId, usersList, answer, token)) {
 			
 			try {
 				group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
@@ -443,7 +450,8 @@ public class PostServices {
 			@FormParam("actions[OPTIONS]") Boolean options,
 			@FormParam("actions[PATCH]") Boolean patch,
 			@FormParam("actions[POST]") Boolean post,
-			@FormParam("actions[PUT]") Boolean put) {
+			@FormParam("actions[PUT]") Boolean put,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -475,7 +483,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.createIdentityGroupsPolicy(name, actions, res, grs, appname, answer);
+		result = client.createIdentityGroupsPolicy(name, actions, res, grs, appname, answer, token);
 		
 		try {
 			policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
@@ -525,7 +533,8 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePolicy(
-			@FormParam("name") String name) {
+			@FormParam("name") String name,
+            @HeaderParam("TokenId") String token) {
 		
 		Boolean result;
 		int code;
@@ -534,7 +543,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.deletePolicy(name, answer);
+		result = client.deletePolicy(name, answer, token);
 		
 		try {
 			policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
@@ -588,7 +597,8 @@ public class PostServices {
 	public Response createApplication(
 			@FormParam("name") String name,
 			@FormParam("description") String description,
-			@FormParam("resources[]") ArrayList<String> res) {
+			@FormParam("resources[]") ArrayList<String> res,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -597,7 +607,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.createApplication(name, description, res, answer);
+		result = client.createApplication(name, description, res, answer, token);
 		
 		try {
 			application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -646,7 +656,8 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteApplication(
-			@FormParam("name") String name) {
+			@FormParam("name") String name,
+            @HeaderParam("TokenId") String token) {
 		
 		Boolean result;
 		int code;
@@ -656,7 +667,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.deleteApplication(name, answer);
+		result = client.deleteApplication(name, answer, token);
 		
 		try {
 			application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -712,7 +723,8 @@ public class PostServices {
 			@FormParam("givenName") String givenName,
 			@FormParam("surname") String surname,
 			@FormParam("mail") String mail,
-			@FormParam("status") String status) {
+			@FormParam("status") String status,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -720,7 +732,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.updateUser(userId, givenName, surname, mail, status, answer)) {
+		if(client.updateUser(userId, givenName, surname, mail, status, answer, token)) {
 			
 			try {
 				user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
@@ -790,7 +802,8 @@ public class PostServices {
 			@FormParam("actions[PATCH]") Boolean patch,
 			@FormParam("actions[POST]") Boolean post,
 			@FormParam("actions[PUT]") Boolean put,
-			@FormParam("noact") Boolean noact) {
+			@FormParam("noact") Boolean noact,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -822,10 +835,10 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.getPolicy(name).getSubject().getType().equals("Identity")) {
-			res = client.updatePolicyIdentity(name, description, active, groups, nogr, resources, nores, actions, noact, answer);
+		if(client.getPolicy(name, token).getSubject().getType().equals("Identity")) {
+			res = client.updatePolicyIdentity(name, description, active, groups, nogr, resources, nores, actions, noact, answer, token);
 		} else {
-			res = client.updatePolicyAuthenticated(name, description, active, groups, nogr, resources, nores, actions, noact, answer);
+			res = client.updatePolicyAuthenticated(name, description, active, groups, nogr, resources, nores, actions, noact, answer, token);
 		}
 		if(res) {
 			
@@ -885,7 +898,8 @@ public class PostServices {
 			@PathParam("id") String name,
 			@FormParam("description") String description,
 			@FormParam("resources[]") ArrayList<String> res,
-			@FormParam("nores") Boolean nores) {
+			@FormParam("nores") Boolean nores,
+            @HeaderParam("TokenId") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -893,7 +907,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.updateApplication(name, description, res, nores, answer)) {
+		if(client.updateApplication(name, description, res, nores, answer, token)) {
 			
 			try {
 				application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -1003,7 +1017,8 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response evaluate(
 			@FormParam("token") String token,
-			@FormParam("resources[]") ArrayList<String> res) {
+			@FormParam("resources[]") ArrayList<String> res,
+            @HeaderParam("TokenId") String tokenUser) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -1011,7 +1026,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.evaluate(token, res, answer)) {
+		if(client.evaluate(token, res, answer, tokenUser)) {
 			
 			try {
 				resp = (DecisionArray) JsonUtils.deserializeJson(answer.toString(), DecisionArray.class);
@@ -1064,3 +1079,4 @@ public class PostServices {
 	}
 	
 }
+

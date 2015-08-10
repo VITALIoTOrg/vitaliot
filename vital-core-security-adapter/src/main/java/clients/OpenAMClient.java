@@ -226,16 +226,15 @@ public class OpenAMClient {
 		
 	}
 	
-	public boolean evaluate(String token, ArrayList<String> resources, StringBuilder goingOn) {
+	public boolean evaluate(String token, ArrayList<String> resources, StringBuilder goingOn, String tokenUser) {
 		
-		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		DecisionRequest req = new DecisionRequest();
 		SubjectAuthenticated sub = new SubjectAuthenticated();
@@ -274,7 +273,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, tokenUser);
 		httppost.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -379,15 +378,15 @@ public class OpenAMClient {
 		return uid;
 	}
 	
-	public Users getUsers() {
+	public Users getUsers(String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -404,7 +403,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -446,15 +445,15 @@ public class OpenAMClient {
 		return users;
 	}
 	
-	public Groups getGroups() {
+	public Groups getGroups(String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -471,7 +470,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -514,15 +513,15 @@ public class OpenAMClient {
 		
 	}
 	
-	public Applications getApplications() {
+	public Applications getApplications(String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -539,7 +538,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -581,15 +580,15 @@ public class OpenAMClient {
 		return applications;
 	}
 	
-	public Policies getPolicies() {
+	public Policies getPolicies(String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -606,7 +605,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -732,15 +731,15 @@ public class OpenAMClient {
 		    
 	}
 	
-	public User getUser(String username) {
+	public User getUser(String username, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -756,7 +755,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -798,15 +797,15 @@ public class OpenAMClient {
 		return user;
 	}
 	
-	public Group getGroup(String groupId) {
+	public Group getGroup(String groupId, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -822,7 +821,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -865,15 +864,15 @@ public class OpenAMClient {
 		return group;
 	}
 	
-	public Policy getPolicy(String policyId) {
+	public Policy getPolicy(String policyId, String token) {
 			
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -889,7 +888,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -931,15 +930,15 @@ public class OpenAMClient {
 		return policy;
 	}
 	
-	public Application getApplication(String applicationId) {
+	public Application getApplication(String applicationId, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -955,7 +954,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -997,17 +996,17 @@ public class OpenAMClient {
 		return application;
 	}
 	
-	public boolean createUser(String givenName, String surname, String username, String password, String mail, StringBuilder goingOn) {
+	public boolean createUser(String givenName, String surname, String username, String password, String mail, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getUser(username).getUsername()!=null) {
+		if (getUser(username, token).getUsername()!=null) {
 			//utente con stesso nome è già presente
 			return false;
 		}
@@ -1051,7 +1050,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -1164,17 +1163,17 @@ public class OpenAMClient {
 	}
 	
 	
-	public boolean createGroup(String groupId, StringBuilder goingOn) {
+	public boolean createGroup(String groupId, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getGroup(groupId).getUsername()!=null) {
+		if (getGroup(groupId, token).getUsername()!=null) {
 			//un gruppo con lo stesso id è già presente
 			return false;
 		}
@@ -1212,7 +1211,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
 		
@@ -1247,17 +1246,17 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean createApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn) {
+	public boolean createApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getApplication(applicationName).getName() != null) {
+		if (getApplication(applicationName, token).getName() != null) {
 			// application already existing, return false
 			return false;
 		}
@@ -1322,7 +1321,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -1360,17 +1359,17 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean deleteUser(String username, StringBuilder goingOn) {
+	public boolean deleteUser(String username, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		String currentUserName = getUser(username).getUsername();
+		String currentUserName = getUser(username, token).getUsername();
 		
 		if (currentUserName == null) {
 			//utente non presente
@@ -1391,7 +1390,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, adminAuthToken);
+		httpdelete.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -1429,17 +1428,17 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean deleteGroup(String groupId, StringBuilder goingOn) {
+	public boolean deleteGroup(String groupId, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		String currentGroupName = getGroup(groupId).getUsername();
+		String currentGroupName = getGroup(groupId, token).getUsername();
 		
 		if (currentGroupName == null) {
 			return false;
@@ -1459,7 +1458,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, adminAuthToken);
+		httpdelete.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -1497,17 +1496,17 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean deletePolicy(String policyId, StringBuilder goingOn) {
+	public boolean deletePolicy(String policyId, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		String currentPolicyName = getPolicy(policyId).getName();
+		String currentPolicyName = getPolicy(policyId, token).getName();
 		
 		if (currentPolicyName == null) {
 			return false;
@@ -1527,7 +1526,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, adminAuthToken);
+		httpdelete.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -1565,17 +1564,17 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean deleteApplication(String applicationId, StringBuilder goingOn) {
+	public boolean deleteApplication(String applicationId, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		String currentApplicationName = getApplication(applicationId).getName();
+		String currentApplicationName = getApplication(applicationId, token).getName();
 		
 		if (currentApplicationName == null) {
 			return false;
@@ -1595,7 +1594,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, adminAuthToken);
+		httpdelete.setHeader(authToken, token);
 		
 		//Execute and get the response.
 		HttpResponse response = null;
@@ -1633,15 +1632,15 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updateUser(String username, String givenName, String surname, String mail, String status, StringBuilder goingOn) {
+	public boolean updateUser(String username, String givenName, String surname, String mail, String status, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		UserModel userModel = new UserModel();
 		
@@ -1680,7 +1679,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -1720,17 +1719,17 @@ public class OpenAMClient {
 	 * @param actions
 	 * @param resources
 	 */
-	public boolean createAuthenticatedPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources) {
+	public boolean createAuthenticatedPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getPolicy(policyName).getName()!=null) {
+		if (getPolicy(policyName, token).getName()!=null) {
 			//policy con stesso nome già presente, return false
 			return false;
 		}
@@ -1804,7 +1803,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -1848,17 +1847,17 @@ public class OpenAMClient {
 	 * @param users
 	 * @return
 	 */
-	public boolean createIdentityUsersPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> users) {
+	public boolean createIdentityUsersPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> users, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getPolicy(policyName).getName()!=null) {
+		if (getPolicy(policyName, token).getName()!=null) {
 			//policy con stesso nome già presente, return false
 			return false;
 		}
@@ -1870,10 +1869,10 @@ public class OpenAMClient {
 		
 		for (int i=0; i<users.size();i++) {
 			String currentUser = users.get(i);
-			if (getUser(currentUser).getUsername() == null) {
+			if (getUser(currentUser, token).getUsername() == null) {
 				return false;
 			} else {
-				usersId.add(getUser(currentUser).getUniversalid().get(0)); 
+				usersId.add(getUser(currentUser, token).getUniversalid().get(0)); 
 			}
 		}
 		
@@ -1947,7 +1946,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -1982,17 +1981,17 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, String applicationName, StringBuilder goingOn) {
+	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, String applicationName, StringBuilder goingOn, String token) {
 	
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getPolicy(policyName).getName()!=null) {
+		if (getPolicy(policyName, token).getName()!=null) {
 			//policy con stesso nome già presente, return false
 			return false;
 		}
@@ -2004,10 +2003,10 @@ public class OpenAMClient {
 		
 		for (int i=0; i<groups.size();i++) {
 			String currentGroup = groups.get(i);
-			if (getGroup(currentGroup).getUsername() == null) {
+			if (getGroup(currentGroup, token).getUsername() == null) {
 				return false;
 			} else {
-				groupsId.add(getGroup(currentGroup).getUniversalid().get(0)); 
+				groupsId.add(getGroup(currentGroup, token).getUniversalid().get(0)); 
 			}
 		}
 		
@@ -2082,7 +2081,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
+		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -2120,25 +2119,25 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean updatePolicyIdentity(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn) {
+	public boolean updatePolicyIdentity(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		PolicyIdentityModel policyModel = new PolicyIdentityModel();
 		Subject___ sub = new Subject___();
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
 		policyModel.setActive(active);
 		policyModel.setDescription(description);
-		policyModel.setApplicationName(getPolicy(name).getApplicationName());
+		policyModel.setApplicationName(getPolicy(name, token).getApplicationName());
 		
 		if(resources.isEmpty() && !nores) {
-			policyModel.setResources(getPolicy(name).getResources());
+			policyModel.setResources(getPolicy(name, token).getResources());
 		}
 		else if(!nores) {
 			policyModel.setResources(resources);
@@ -2146,7 +2145,7 @@ public class OpenAMClient {
 		
 		if(groups.isEmpty() && !nogr) {
 			try {
-				policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
+				policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getSubject()), sub.getClass()));
 			} catch (JsonParseException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -2162,10 +2161,10 @@ public class OpenAMClient {
 			
 			for (int i=0; i<groups.size();i++) {
 				String currentGroup = groups.get(i);
-				if (getGroup(currentGroup).getUsername() == null) {
+				if (getGroup(currentGroup, token).getUsername() == null) {
 					return false;
 				} else {
-					groupsId.add(getGroup(currentGroup).getUniversalid().get(0)); 
+					groupsId.add(getGroup(currentGroup, token).getUniversalid().get(0)); 
 				}
 			}
 			
@@ -2205,7 +2204,7 @@ public class OpenAMClient {
 			policyModel.setActionValues(actVal);
 		} else if(!noact) {
 			try {
-				policyModel.setActionValues((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getActionValues()), actVal.getClass()));
+				policyModel.setActionValues((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getActionValues()), actVal.getClass()));
 			} catch (JsonParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2247,7 +2246,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -2281,15 +2280,15 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean updatePolicyAuthenticated(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn) {
+	public boolean updatePolicyAuthenticated(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		PolicyAuthenticatedModel policyModel = new PolicyAuthenticatedModel();
 		Subject__ sub = new Subject__();
@@ -2298,7 +2297,7 @@ public class OpenAMClient {
 		policyModel.setDescription(description);
 		
 		if(resources.isEmpty() && !nores) {
-			policyModel.setResources(getPolicy(name).getResources());
+			policyModel.setResources(getPolicy(name, token).getResources());
 		}
 		else if(!nores) {
 			policyModel.setResources(resources);
@@ -2306,7 +2305,7 @@ public class OpenAMClient {
 		
 		if(groups.isEmpty() && !nogr) {
 			try {
-				policyModel.setSubject((Subject__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getSubject()), sub.getClass()));
+				policyModel.setSubject((Subject__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getSubject()), sub.getClass()));
 			} catch (JsonParseException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
@@ -2322,10 +2321,10 @@ public class OpenAMClient {
 			
 			for (int i=0; i<groups.size();i++) {
 				String currentGroup = groups.get(i);
-				if (getGroup(currentGroup).getUsername() == null) {
+				if (getGroup(currentGroup, token).getUsername() == null) {
 					return false;
 				} else {
-					groupsId.add(getGroup(currentGroup).getUniversalid().get(0)); 
+					groupsId.add(getGroup(currentGroup, token).getUniversalid().get(0)); 
 				}
 			}
 			
@@ -2364,7 +2363,7 @@ public class OpenAMClient {
 			policyModel.setActionValues(actVal);
 		} else  if(!noact) {
 			try {
-				policyModel.setActionValues((ActionValues__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name).getActionValues()), actVal.getClass()));
+				policyModel.setActionValues((ActionValues__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getActionValues()), actVal.getClass()));
 			} catch (JsonParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2406,7 +2405,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -2440,15 +2439,15 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo, StringBuilder goingOn) {
+	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		String newGroup = "";
 		
@@ -2479,7 +2478,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
 		
@@ -2515,22 +2514,22 @@ public class OpenAMClient {
 		
 	}
 	
-	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn) {
+	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn, String token) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		Application application = new Application();
 		
 		application.setName(applicationName);
 		application.setDescription(description);
 		if(resources.isEmpty() && !nores) {
-			application.setResources(getApplication(applicationName).getResources());
+			application.setResources(getApplication(applicationName, token).getResources());
 		}
 		else if(!nores) {
 			application.setResources(resources);
@@ -2590,7 +2589,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, adminAuthToken);
+		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
 		//Execute and get the response.
@@ -2624,9 +2623,9 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean addUsersToGroup(String groupId, ArrayList<String> users, StringBuilder goingOn) {
+	public boolean addUsersToGroup(String groupId, ArrayList<String> users, StringBuilder goingOn, String token) {
 				
-		Group currentGroup = getGroup(groupId);
+		Group currentGroup = getGroup(groupId, token);
 		
 		if (currentGroup.getUsername() == null) {
 			//il gruppo non esiste
@@ -2640,11 +2639,11 @@ public class OpenAMClient {
 		
 		for (int i=0; i < users.size(); i++) {
 			String currentUser = users.get(i);
-			if (getUser(currentUser).getUsername() == null) {
+			if (getUser(currentUser, token).getUsername() == null) {
 				//uno degli utenti richiesti non esiste, esci
 				return false;
 			} else {
-				usersId.add(getUser(currentUser).getDn().get(0)); 
+				usersId.add(getUser(currentUser, token).getDn().get(0)); 
 			}
 		}
 		
@@ -2667,13 +2666,13 @@ public class OpenAMClient {
 		
 		newGroupInfo.setUniqueMember(currentUsers);
 		
-		return updateGroup(groupId, newGroupInfo, goingOn);
+		return updateGroup(groupId, newGroupInfo, goingOn, token);
 		
 	}
 	
-	public boolean deleteUsersFromGroup(String groupId, ArrayList<String> users, StringBuilder goingOn) {
+	public boolean deleteUsersFromGroup(String groupId, ArrayList<String> users, StringBuilder goingOn, String token) {
 		
-		Group currentGroup = getGroup(groupId);
+		Group currentGroup = getGroup(groupId, token);
 		
 		if (currentGroup.getUsername() == null) {
 			//il gruppo non esiste
@@ -2686,8 +2685,8 @@ public class OpenAMClient {
 		
 		for (int i=0; i<users.size();i++) {
 			String currentUser = users.get(i);
-			if (getUser(currentUser).getUsername() != null) {
-				usersId.add(getUser(currentUser).getDn().get(0));
+			if (getUser(currentUser, token).getUsername() != null) {
+				usersId.add(getUser(currentUser, token).getDn().get(0));
 			}
 		}
 		
@@ -2706,14 +2705,14 @@ public class OpenAMClient {
 		
 		newGroupInfo.setUniqueMember(currentUsers);
 		
-		return updateGroup(groupId, newGroupInfo, goingOn);
+		return updateGroup(groupId, newGroupInfo, goingOn, token);
 		
 	}
 	
-	public boolean userIsInGroup(String userId, String groupId) {
+	public boolean userIsInGroup(String userId, String groupId, String token) {
 		
-		User currentUser = getUser(userId);
-		Group currentGroup = getGroup(groupId);
+		User currentUser = getUser(userId, token);
+		Group currentGroup = getGroup(groupId, token);
 		
 		if (currentUser.getUsername() == null) {
 			//l'utente non esiste
@@ -2734,14 +2733,14 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public Groups listUserGroups(String userId) {
+	public Groups listUserGroups(String userId, String token) {
 		
-		Groups groups = getGroups();
+		Groups groups = getGroups(token);
 		List<String> list = groups.getResult();
 		Iterator<String> iter = list.listIterator();
 		while (iter.hasNext()) {
 			String group = iter.next();
-			if(!userIsInGroup(userId, group)) {
+			if(!userIsInGroup(userId, group, token)) {
 				iter.remove();
 				groups.setResultCount(groups.getResultCount()-1);
 			}
@@ -2751,9 +2750,9 @@ public class OpenAMClient {
 		return groups;
 	}
 	
-	public Policies listApplicationPolicies(String appName) {
+	public Policies listApplicationPolicies(String appName, String token) {
 		
-		Policies policies = getPolicies();
+		Policies policies = getPolicies(token);
 		List<Result> list = policies.getResult();
 		Iterator<Result> iter = list.listIterator();
 		while (iter.hasNext()) {
@@ -2769,3 +2768,4 @@ public class OpenAMClient {
 	}
 	
 }
+

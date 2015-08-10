@@ -8,6 +8,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -41,7 +42,9 @@ public class GetServices {
 	@Path("/user/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUser(@PathParam("id") String userId) {
+	public Response getUser(
+            @PathParam("id") String userId,
+            @HeaderParam("TokenId") String token) {
 		
 		User user;
 		String answer;
@@ -49,7 +52,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		user = client.getUser(userId);
+		user = client.getUser(userId, token);
 		
 		try {
 			answer = JsonUtils.serializeJson(user);
@@ -93,13 +96,15 @@ public class GetServices {
 	@Path("/user/{id}/groups")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUserGroups(@PathParam("id") String userId) {
+	public Response getUserGroups(
+            @PathParam("id") String userId,
+            @HeaderParam("TokenId") String token) {
 		
 		String answer;
 		
 		answer = null;
 		
-		Groups groups = client.listUserGroups(userId);
+		Groups groups = client.listUserGroups(userId, token);
 		
 		try {
 			answer = JsonUtils.serializeJson(groups);
@@ -122,7 +127,9 @@ public class GetServices {
 	@Path("/group/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getGroup(@PathParam("id") String groupId)  {
+	public Response getGroup(
+            @PathParam("id") String groupId,
+            @HeaderParam("TokenId") String token)  {
 		
 		Group group;
 		String answer;
@@ -130,7 +137,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		group = client.getGroup(groupId);
+		group = client.getGroup(groupId, token);
 		
 		try {
 			answer = JsonUtils.serializeJson(group);
@@ -174,7 +181,9 @@ public class GetServices {
 	@Path("/policy/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPolicy(@PathParam("id") String policyId) {
+	public Response getPolicy(
+            @PathParam("id") String policyId,
+            @HeaderParam("TokenId") String token) {
 		
 		Policy policy;
 		String answer;
@@ -182,7 +191,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		policy = client.getPolicy(policyId);
+		policy = client.getPolicy(policyId, token);
 		
 		try {
 			answer = JsonUtils.serializeJson(policy);
@@ -226,7 +235,9 @@ public class GetServices {
 	@Path("/application/{id}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getApplication(@PathParam("id") String applicationId) {
+	public Response getApplication(
+            @PathParam("id") String applicationId,
+            @HeaderParam("TokenId") String token) {
 		
 		Application application;
 		String answer;
@@ -234,7 +245,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		application = client.getApplication(applicationId);
+		application = client.getApplication(applicationId, token);
 		
 		try {
 			answer = JsonUtils.serializeJson(application);
@@ -278,13 +289,15 @@ public class GetServices {
 	@Path("/application/{id}/policies")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getApplicationPolicies(@PathParam("id") String appName) {
+	public Response getApplicationPolicies(
+            @PathParam("id") String appName,
+            @HeaderParam("TokenId") String token) {
 		
 		String answer;
 		
 		answer = null;
 		
-		Policies policies = client.listApplicationPolicies(appName);
+		Policies policies = client.listApplicationPolicies(appName, token);
 		
 		try {
 			answer = JsonUtils.serializeJson(policies);
@@ -307,7 +320,8 @@ public class GetServices {
 	@Path("/users")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getUsers() {
+	public Response getUsers(
+            @HeaderParam("TokenId") String token) {
 		
 		Users users;
 		String answer;
@@ -315,7 +329,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		users = client.getUsers();
+		users = client.getUsers(token);
 		
 		try {
 			answer = JsonUtils.serializeJson(users);
@@ -359,7 +373,8 @@ public class GetServices {
 	@Path("/groups")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getGroups() {
+	public Response getGroups(
+            @HeaderParam("TokenId") String token) {
 		
 		Groups groups;
 		String answer;
@@ -367,7 +382,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		groups = client.getGroups();
+		groups = client.getGroups(token);
 		
 		try {
 			answer = JsonUtils.serializeJson(groups);
@@ -411,7 +426,8 @@ public class GetServices {
 	@Path("/policies")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getPolicies() {
+	public Response getPolicies(
+            @HeaderParam("TokenId") String token) {
 		
 		Policies policies;
 		String answer;
@@ -419,7 +435,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		policies = client.getPolicies();
+		policies = client.getPolicies(token);
 		
 		try {
 			answer = JsonUtils.serializeJson(policies);
@@ -463,7 +479,8 @@ public class GetServices {
 	@Path("/applications")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getApplications() {
+	public Response getApplications(
+            @HeaderParam("TokenId") String token) {
 		
 		Applications apps;
 		String answer;
@@ -471,7 +488,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		apps = client.getApplications();
+		apps = client.getApplications(token);
 		
 		try {
 			answer = JsonUtils.serializeJson(apps);
@@ -630,3 +647,4 @@ public class GetServices {
 	}
 		
 }
+
