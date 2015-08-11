@@ -301,8 +301,12 @@ public class OpenAMClient {
 				return false;
 			}    
 		}
-		
-		goingOn.append("{ \"responses\" : " + respString + " }");
+
+		if (respString.contains("\"code\":")) {
+			goingOn.append(respString);
+		} else {
+			goingOn.append("{ \"responses\" : " + respString + " }");
+		}
 		
 		return true;
 		
