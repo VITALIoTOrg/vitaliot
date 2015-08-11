@@ -227,13 +227,10 @@ public class OpenAMClient {
 			try {
 				resp = (LogoutResponse) JsonUtils.deserializeJson("{\"result\":\"Successfully logged out\"}", LogoutResponse.class);
 			} catch (JsonParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -2292,13 +2289,10 @@ public class OpenAMClient {
 			try {
 				policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getSubject()), sub.getClass()));
 			} catch (JsonParseException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (JsonMappingException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (IOException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 		} else {
@@ -2351,13 +2345,10 @@ public class OpenAMClient {
 			try {
 				policyModel.setActionValues((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getActionValues()), actVal.getClass()));
 			} catch (JsonParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -2452,13 +2443,10 @@ public class OpenAMClient {
 			try {
 				policyModel.setSubject((Subject__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getSubject()), sub.getClass()));
 			} catch (JsonParseException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (JsonMappingException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			} catch (IOException e2) {
-				// TODO Auto-generated catch block
 				e2.printStackTrace();
 			}
 		} else {
@@ -2510,13 +2498,10 @@ public class OpenAMClient {
 			try {
 				policyModel.setActionValues((ActionValues__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getActionValues()), actVal.getClass()));
 			} catch (JsonParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
