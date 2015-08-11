@@ -46,16 +46,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-import org.apache.logging.log4j.core.net.SmtpManager;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
-import org.snmp4j.Target;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.Address;
-import org.snmp4j.smi.GenericAddress;
 import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
@@ -117,7 +113,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, adminAuthToken);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -177,7 +173,7 @@ public class OpenAMClient {
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -257,7 +253,7 @@ public class OpenAMClient {
 		StringEntity strEntity = new StringEntity("{}", HTTP.UTF_8);
 		httppost.setEntity(strEntity);
 
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -320,7 +316,7 @@ public class OpenAMClient {
 			httppost.setHeader("X-OpenAM-Password", pwdAdmin);
 		}		
 
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -355,7 +351,7 @@ public class OpenAMClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//this.adminAuthToken = auth.getTokenId();
+		
 		if(name == null) {
 			SessionUtils.setAdminAuthToken(auth.getTokenId());
 		}
@@ -414,7 +410,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, tokenUser);
 		httppost.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -479,7 +475,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, adminAuthToken);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -547,7 +543,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -614,7 +610,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -682,7 +678,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -749,7 +745,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -802,7 +798,6 @@ public class OpenAMClient {
 			transport = new DefaultUdpTransportMapping();
 			transport.listen();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -827,7 +822,6 @@ public class OpenAMClient {
 		try {
 			response = snmp.get(pdu, comtarget);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -865,7 +859,6 @@ public class OpenAMClient {
 		try {
 			snmp.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -899,7 +892,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -965,7 +958,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1032,7 +1025,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1098,7 +1091,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1149,7 +1142,7 @@ public class OpenAMClient {
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getUser(username, token).getUsername()!=null) {
-			//utente con stesso nome è già presente
+			// user with the same name already existing
 			return false;
 		}
 		
@@ -1195,7 +1188,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1275,7 +1268,7 @@ public class OpenAMClient {
 		httppost.setEntity(strEntity);
 		
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1316,7 +1309,7 @@ public class OpenAMClient {
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getGroup(groupId, token).getUsername()!=null) {
-			//un gruppo con lo stesso id è già presente
+			// group with the same ID already existing 
 			return false;
 		}
 		
@@ -1357,7 +1350,7 @@ public class OpenAMClient {
 		httppost.setEntity(strEntity);
 		
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1466,7 +1459,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -1514,7 +1507,7 @@ public class OpenAMClient {
 		String currentUserName = getUser(username, token).getUsername();
 		
 		if (currentUserName == null) {
-			//utente non presente
+			// non existing user
 			return false;
 		}
 		
@@ -1534,7 +1527,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpdelete);
@@ -1602,7 +1595,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpdelete);
@@ -1670,7 +1663,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpdelete);
@@ -1738,7 +1731,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpdelete);
@@ -1824,7 +1817,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpput);
@@ -1871,8 +1864,8 @@ public class OpenAMClient {
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getPolicy(policyName, token).getName()!=null) {
-			//policy con stesso nome già presente, return false
+		if (getPolicy(policyName, token).getName() != null) {
+			// existing policy with the same name
 			return false;
 		}
 		
@@ -1925,8 +1918,6 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		//policy creata, procedi con la chiamata REST per inserirla in OpenAM
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -1948,7 +1939,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -2000,16 +1991,16 @@ public class OpenAMClient {
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getPolicy(policyName, token).getName()!=null) {
-			//policy con stesso nome già presente, return false
+			// existing policy with the same name
 			return false;
 		}
 		
-		//controllo che gli utenti da inserire nella policy siano tutti presenti, altrimento return false
-		//altrimenti popolo l'array con gli universalid
+		// Check if whether all the groups exist, otherwise return false
+		// If they are OK construct the array of universal IDs
 		
 		ArrayList<String> usersId = new ArrayList<String>();
 		
-		for (int i=0; i<users.size();i++) {
+		for (int i = 0; i < users.size(); i++) {
 			String currentUser = users.get(i);
 			if (getUser(currentUser, token).getUsername() == null) {
 				return false;
@@ -2068,8 +2059,6 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		//policy creata, procedi con la chiamata REST per inserirla in OpenAM
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -2091,7 +2080,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -2133,17 +2122,17 @@ public class OpenAMClient {
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		if (getPolicy(policyName, token).getName()!=null) {
-			//policy con stesso nome già presente, return false
+		if (getPolicy(policyName, token).getName() != null) {
+			// existing policy with the same name
 			return false;
 		}
 		
-		//controllo che i gruppi da inserire nella policy siano tutti presenti, altrimento return false
-		//altrimenti popolo l'array con gli universalid
+		// Check if whether all the groups exist, otherwise return false
+		// If they are OK construct the array of universal IDs
 		
 		ArrayList<String> groupsId = new ArrayList<String>();
 		
-		for (int i=0; i<groups.size();i++) {
+		for (int i = 0; i < groups.size();i++) {
 			String currentGroup = groups.get(i);
 			if (getGroup(currentGroup, token).getUsername() == null) {
 				return false;
@@ -2203,8 +2192,6 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		//policy creata, procedi con la chiamata REST per inserirla in OpenAM
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -2226,7 +2213,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
@@ -2385,7 +2372,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpput);
@@ -2538,7 +2525,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpput);
@@ -2612,7 +2599,7 @@ public class OpenAMClient {
 		httpput.setEntity(strEntity);
 		
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpput);
@@ -2722,7 +2709,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		
-		//Execute and get the response.
+		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httpput);
@@ -2758,29 +2745,29 @@ public class OpenAMClient {
 		Group currentGroup = getGroup(groupId, token);
 		
 		if (currentGroup.getUsername() == null) {
-			//il gruppo non esiste
+			// the group does not exist
 			return false;
 		}
 		
 		
-		List<String> currentUsers = currentGroup.getUniqueMember(); //utenti al momento presenti nel gruppo
-		ArrayList<String> usersId = new ArrayList<String>(); //uid degli utenti da aggiungere
+		List<String> currentUsers = currentGroup.getUniqueMember(); // users currently in the group
+		ArrayList<String> usersId = new ArrayList<String>(); // IDs of users to add
 		
 		
-		for (int i=0; i < users.size(); i++) {
+		for (int i = 0; i < users.size(); i++) {
 			String currentUser = users.get(i);
 			if (getUser(currentUser, token).getUsername() == null) {
-				//uno degli utenti richiesti non esiste, esci
+				// one of the users does not exist
 				return false;
 			} else {
 				usersId.add(getUser(currentUser, token).getDn().get(0)); 
 			}
 		}
 		
-		//se già ci sono utenti nel gruppo,
-		//controllare possibili duplicati, e nel caso non aggiungerli (li cancello dalla lista passata in input)
+		// If there are already users in the group,
+		// check for duplicates and do not add them (delete them from the input list)
 		if (currentUsers.size() > 0) {
-			for (int i=0; i<usersId.size();i++) {
+			for (int i = 0; i < usersId.size(); i++) {
 				String auxId = usersId.get(i);
 				if (currentUsers.contains(auxId)) {
 					usersId.remove(i);
@@ -2805,15 +2792,15 @@ public class OpenAMClient {
 		Group currentGroup = getGroup(groupId, token);
 		
 		if (currentGroup.getUsername() == null) {
-			//il gruppo non esiste
+			// the group does not exist
 			return false;
 		}
 		
-		List<String> currentUsers = currentGroup.getUniqueMember(); //utenti al momento presenti nel gruppo
-		ArrayList<String> usersId = new ArrayList<String>(); //uid degli utenti da aggiungere
+		List<String> currentUsers = currentGroup.getUniqueMember(); // users currently in the group
+		ArrayList<String> usersId = new ArrayList<String>(); // IDs of users to add
 		
 		
-		for (int i=0; i<users.size();i++) {
+		for (int i = 0; i < users.size(); i++) {
 			String currentUser = users.get(i);
 			if (getUser(currentUser, token).getUsername() != null) {
 				usersId.add(getUser(currentUser, token).getDn().get(0));
@@ -2821,13 +2808,13 @@ public class OpenAMClient {
 		}
 		
 		if (currentUsers.size() > 0) {
-			for (int i=0;i<usersId.size();i++){
+			for (int i = 0; i < usersId.size(); i++){
 				if (currentUsers.contains(usersId.get(i))) {
 					currentUsers.remove(usersId.get(i));
 				}
 			}
 		} else {
-			//non ci sono utenti da eliminare!
+			// no users to remove
 			return true;
 		}
 		
@@ -2845,11 +2832,11 @@ public class OpenAMClient {
 		Group currentGroup = getGroup(groupId, token);
 		
 		if (currentUser.getUsername() == null) {
-			//l'utente non esiste
+			// the user does not exist
 			return false;
 		}
 		if (currentGroup.getUsername() == null) {
-			//il gruppo non esiste
+			// the group does not exist
 			return false;
 		}
 		
@@ -2868,6 +2855,7 @@ public class OpenAMClient {
 		Groups groups = getGroups(token);
 		List<String> list = groups.getResult();
 		Iterator<String> iter = list.listIterator();
+		
 		while (iter.hasNext()) {
 			String group = iter.next();
 			if(!userIsInGroup(userId, group, token)) {
@@ -2885,6 +2873,7 @@ public class OpenAMClient {
 		Policies policies = getPolicies(token);
 		List<Result> list = policies.getResult();
 		Iterator<Result> iter = list.listIterator();
+		
 		while (iter.hasNext()) {
 			Result policy = iter.next();
 			if(!policy.getApplicationName().equals(appName)) {

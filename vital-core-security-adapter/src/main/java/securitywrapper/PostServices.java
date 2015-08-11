@@ -2,8 +2,6 @@ package securitywrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -13,18 +11,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.GET;
-
 import jsonpojos.Application;
 import jsonpojos.Authenticate;
 import jsonpojos.DecisionArray;
-import jsonpojos.DecisionRequest;
-import jsonpojos.DecisionResponse;
 import jsonpojos.Group;
 import jsonpojos.LogoutResponse;
 import jsonpojos.Policy;
 import jsonpojos.User;
-import jsonpojos.Users;
 import utils.Action;
 import utils.JsonUtils;
 
