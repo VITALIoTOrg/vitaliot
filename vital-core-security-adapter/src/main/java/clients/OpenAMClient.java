@@ -159,7 +159,86 @@ public class OpenAMClient {
 		return false;
 	}
 	
+	private boolean isTokenValid(String token) {
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/sessions/"+token)
+			.setQuery("_action=validate")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}    
+		}
+		
+		Validation validation = new Validation();
+		
+		try {
+			validation = (Validation) JsonUtils.deserializeJson(respString, Validation.class);
+			if (validation.getValid()) {
+				return true;
+			}
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	public LogoutResponse logout(String token) {
+		
+		LogoutResponse resp = new LogoutResponse();
+		
+		if(!isTokenValid(token)) {
+			try {
+				resp = (LogoutResponse) JsonUtils.deserializeJson("{\"result\":\"Successfully logged out\"}", LogoutResponse.class);
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return resp;
+		}
 		
 		URI uri = null;
 		try {
@@ -205,8 +284,7 @@ public class OpenAMClient {
 			}
 		    
 		}
-		
-		LogoutResponse resp = new LogoutResponse();
+
 		try {
 			resp = (LogoutResponse) JsonUtils.deserializeJson(respString, LogoutResponse.class);
 		} catch (JsonParseException e) {
