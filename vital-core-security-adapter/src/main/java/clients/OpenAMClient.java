@@ -90,8 +90,8 @@ public class OpenAMClient {
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
 		snmpPort = configReader.get(ConfigReader.SNMP_PORT);
-		userAdmin = configReader.get(ConfigReader.USER_ADM);
-		pwdAdmin = configReader.get(ConfigReader.PWD_ADM);
+		//userAdmin = configReader.get(ConfigReader.USER_ADM);
+		//pwdAdmin = configReader.get(ConfigReader.PWD_ADM);
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
 		
 	}
