@@ -18,6 +18,7 @@ import jsonpojos.Group;
 import jsonpojos.GroupModel;
 import jsonpojos.GroupModelWithUsers;
 import jsonpojos.Groups;
+import jsonpojos.LogoutResponse;
 import jsonpojos.Policies;
 import jsonpojos.Policy;
 import jsonpojos.PolicyAuthenticatedModel;
@@ -156,6 +157,68 @@ public class OpenAMClient {
 		}
 		
 		return false;
+	}
+	
+	public LogoutResponse logout(String token) {
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath("/idp/json/sessions")
+			.setQuery("_action=logout")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, token);
+		
+		StringEntity strEntity = new StringEntity("{}", HTTP.UTF_8);
+		httppost.setEntity(strEntity);
+
+		//Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		    
+		}
+		
+		LogoutResponse resp = new LogoutResponse();
+		try {
+			resp = (LogoutResponse) JsonUtils.deserializeJson(respString, LogoutResponse.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return resp;
+		
 	}
 	
 	public Authenticate authenticate(String name, String password) {
