@@ -446,7 +446,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public String getUserIdFromToken(String token, String userToken) {
+	public Validation getUserIdFromToken(String token, String userToken) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
 		
@@ -502,7 +502,6 @@ public class OpenAMClient {
 		
 		try {
 			validation = (Validation) JsonUtils.deserializeJson(respString, Validation.class);
-			uid = validation.getUid();
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -512,7 +511,7 @@ public class OpenAMClient {
 		}
 	
 		
-		return uid;
+		return validation;
 	}
 	
 	public Users getUsers(String token) {

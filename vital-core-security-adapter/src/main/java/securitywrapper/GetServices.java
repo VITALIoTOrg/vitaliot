@@ -15,12 +15,14 @@ import javax.ws.rs.core.Response.Status;
 
 import jsonpojos.Application;
 import jsonpojos.Applications;
+import jsonpojos.Authenticate;
 import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
 import jsonpojos.Policy;
 import jsonpojos.User;
 import jsonpojos.Users;
+import jsonpojos.Validation;
 import jsonpojos.Monitor;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -649,17 +651,50 @@ public class GetServices {
 			@QueryParam("token") String userToken,
             @HeaderParam("TokenId") String token) {
 		
+		Validation val;
 		String answer;
+		int code;
 		
 		answer = null;
-		answer = client.getUserIdFromToken(token, userToken);
-		answer = "{ \"uid\": \""+answer+"\"}";
+		code = 0;
+		val = client.getUserIdFromToken(token, userToken);
 		
-		return Response.ok()
+		try {
+			answer = JsonUtils.serializeJson(val);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(val.getAdditionalProperties().containsKey("code")) {
+			if(val.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) val.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
 				.header("Access-Control-Allow-Origin", "*")
 				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.header("Access-Control-Allow-Origin", "*")
+					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+					.build();
+		}
 		
 	}
 		
