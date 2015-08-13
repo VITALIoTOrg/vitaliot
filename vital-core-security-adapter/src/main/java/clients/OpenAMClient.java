@@ -446,17 +446,17 @@ public class OpenAMClient {
 		
 	}
 	
-	public String getUserIdFromToken(String userToken) {
+	public String getUserIdFromToken(String token, String userToken) {
 		
-		boolean currentSessionIsValid = isTokenValid();
+		/*boolean currentSessionIsValid = isTokenValid();
 		
 		if (!currentSessionIsValid) {
 			authenticate(null, null);
 		}
 		
-		String uid = "";
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
+		String uid = "";
 		
 		URI uri = null;
 		try {
@@ -473,7 +473,6 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
 		
 		// Execute and get the response.
 		HttpResponse response = null;

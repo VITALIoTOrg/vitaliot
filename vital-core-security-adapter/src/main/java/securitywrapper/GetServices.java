@@ -1,11 +1,14 @@
 package securitywrapper;
 
 import java.io.IOException;
+
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -636,6 +639,27 @@ public class GetServices {
 					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
+		
+	}
+	
+	@Path("/user")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getUserFromToken(
+			@QueryParam("token") String userToken,
+            @HeaderParam("TokenId") String token) {
+		
+		String answer;
+		
+		answer = null;
+		answer = client.getUserIdFromToken(token, userToken);
+		answer = "{ \"uid\": \""+answer+"\"}";
+		
+		return Response.ok()
+				.entity(answer)
+				.header("Access-Control-Allow-Origin", "*")
+				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
+				.build();
 		
 	}
 		
