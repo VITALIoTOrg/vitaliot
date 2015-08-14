@@ -3,6 +3,7 @@ package clients;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -13,6 +14,8 @@ import jsonpojos.ActionValues___;
 import jsonpojos.Application;
 import jsonpojos.Applications;
 import jsonpojos.Authenticate;
+import jsonpojos.ChangePasswordRequest;
+import jsonpojos.ChangePasswordResponse;
 import jsonpojos.DecisionRequest;
 import jsonpojos.Group;
 import jsonpojos.GroupModel;
@@ -360,6 +363,94 @@ public class OpenAMClient {
 		
 	}
 	
+	public ChangePasswordResponse changePassword(String token, String userPass, String currPass) {
+		
+		/*boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate(null, null);
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
+		
+		ChangePasswordRequest req = new ChangePasswordRequest();
+		
+		req.setCurrentpassword(currPass);
+		req.setUserpassword(userPass);
+		
+		String newReq = "";
+		
+		try {
+			newReq = JsonUtils.serializeJson(req);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/users/"+getUserIdFromToken(token).getUid())
+			.setCustomQuery("_action=changePassword")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
+		strEntity.setContentType("application/json");
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, token);
+		httppost.setEntity(strEntity);
+		
+		// Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}    
+		}
+
+		ChangePasswordResponse resp = new ChangePasswordResponse();
+		
+		try {
+			resp = (ChangePasswordResponse) JsonUtils.deserializeJson(respString, ChangePasswordResponse.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		return resp;
+		
+	}
+	
 	public boolean evaluate(String token, ArrayList<String> resources, StringBuilder goingOn, String tokenUser) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
@@ -446,7 +537,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public Validation getUserIdFromToken(String token, String userToken) {
+	public Validation getUserIdFromToken(String userToken) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
 		
@@ -455,8 +546,6 @@ public class OpenAMClient {
 		}
 		
 		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
-		String uid = "";
 		
 		URI uri = null;
 		try {

@@ -648,8 +648,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(
-			@QueryParam("token") String userToken,
-            @HeaderParam("TokenId") String token) {
+			@QueryParam("token") String userToken) {
 		
 		Validation val;
 		String answer;
@@ -657,7 +656,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		val = client.getUserIdFromToken(token, userToken);
+		val = client.getUserIdFromToken(userToken);
 		
 		try {
 			answer = JsonUtils.serializeJson(val);
