@@ -2,7 +2,6 @@ package securitywrapper;
 
 import java.io.IOException;
 
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,7 +14,6 @@ import javax.ws.rs.core.Response.Status;
 
 import jsonpojos.Application;
 import jsonpojos.Applications;
-import jsonpojos.Authenticate;
 import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
@@ -698,4 +696,3 @@ public class GetServices {
 	}
 		
 }
-

@@ -47,7 +47,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
@@ -95,69 +94,6 @@ public class OpenAMClient {
 		
 	}
 	
-	private boolean isTokenValid() {
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("http")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/"+adminAuthToken)
-			.setQuery("_action=validate")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
-		
-		// Execute and get the response.
-		HttpResponse response = null;
-		try {
-			response = httpclient.execute(httppost);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		HttpEntity entity = response.getEntity();
-
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}    
-		}
-		
-		Validation validation = new Validation();
-		
-		try {
-			validation = (Validation) JsonUtils.deserializeJson(respString, Validation.class);
-			if (validation.getValid()) {
-				return true;
-			}
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
 	private boolean isTokenValid(String token) {
 		
 		URI uri = null;
@@ -167,7 +103,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/sessions/"+token)
-			.setQuery("_action=validate")
+			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -243,7 +179,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath("/idp/json/sessions")
-			.setQuery("_action=logout")
+			.setCustomQuery("_action=logout")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -253,7 +189,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		
-		StringEntity strEntity = new StringEntity("{}", HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity("{}", StandardCharsets.UTF_8);
 		httppost.setEntity(strEntity);
 
 		// Execute and get the response.
@@ -487,13 +423,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
-			.setQuery("_action=evaluate")
+			.setCustomQuery("_action=evaluate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newReq, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -554,7 +490,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/sessions/"+userToken)
-			.setQuery("_action=validate")
+			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -620,7 +556,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users")
-			.setQuery("_queryID=*")
+			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -687,7 +623,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups")
-			.setQuery("_queryID=*")
+			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -755,7 +691,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications")
-			.setQuery("_queryFilter=true")
+			.setCustomQuery("_queryFilter=true")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -822,7 +758,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies")
-			.setQuery("_queryID=*")
+			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -917,7 +853,6 @@ public class OpenAMClient {
 			PDU responsePDU = response.getResponse();
 			if(responsePDU != null) {
 				int errorStatus = responsePDU.getErrorStatus();
-		        int errorIndex = responsePDU.getErrorIndex();
 		        String errorStatusText = responsePDU.getErrorStatusText();
 
 		        if(errorStatus == PDU.noError) {
@@ -1261,13 +1196,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users/")
-			.setQuery("_action=create")
+			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newUser, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newUser, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -1306,85 +1241,6 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	
-	public boolean createGroup(Group group) {
-		
-		boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();
-		
-		GroupModelWithUsers groupModelWithUsers = new GroupModelWithUsers();
-		groupModelWithUsers.setUsername(group.getUsername());
-		groupModelWithUsers.setUniqueMember(group.getUniqueMember());
-		
-		String newGroup = "";
-		
-		try {
-			newGroup = JsonUtils.serializeJson(groupModelWithUsers);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("http")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/groups/")
-			.setQuery("_action=create")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		StringEntity strEntity = new StringEntity(newGroup, HTTP.UTF_8);
-		strEntity.setContentType("application/json");
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, adminAuthToken);
-		httppost.setEntity(strEntity);
-		
-		
-		// Execute and get the response.
-		HttpResponse response = null;
-		try {
-			response = httpclient.execute(httppost);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		HttpEntity entity = response.getEntity();
-
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
-		
-		return true;
-	}
-	
-	
 	public boolean createGroup(String groupId, StringBuilder goingOn, String token) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
@@ -1422,13 +1278,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups/")
-			.setQuery("_action=create")
+			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newGroup, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newGroup, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -1532,13 +1388,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications/")
-			.setQuery("_action=create")
+			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newApplication, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newApplication, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -1896,7 +1752,7 @@ public class OpenAMClient {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newUserInfo, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newUserInfo, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPut httpput = new HttpPut(uri);
@@ -2012,13 +1868,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
-			.setQuery("_action=create")
+			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newPolicy, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newPolicy, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -2153,13 +2009,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
-			.setQuery("_action=create")
+			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newPolicy, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newPolicy, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -2286,13 +2142,13 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
-			.setQuery("_action=create")
+			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newPolicy, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newPolicy, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPost httppost = new HttpPost(uri);
@@ -2451,7 +2307,7 @@ public class OpenAMClient {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newPolicyInfo, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newPolicyInfo, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPut httpput = new HttpPut(uri);
@@ -2604,7 +2460,7 @@ public class OpenAMClient {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newPolicyInfo, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newPolicyInfo, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPut httpput = new HttpPut(uri);
@@ -2677,7 +2533,7 @@ public class OpenAMClient {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newGroup, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newGroup, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPut httpput = new HttpPut(uri);
@@ -2788,7 +2644,7 @@ public class OpenAMClient {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newApplicationInfo, HTTP.UTF_8);
+		StringEntity strEntity = new StringEntity(newApplicationInfo, StandardCharsets.UTF_8);
 		strEntity.setContentType("application/json");
 		
 		HttpPut httpput = new HttpPut(uri);
@@ -2974,4 +2830,3 @@ public class OpenAMClient {
 	}
 	
 }
-
