@@ -966,6 +966,19 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
+		List<String> gn = null;
+		gn = user.getGivenName();
+		if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+			if(gn.get(0).equals(" "))
+				user.setGivenName(null);
+		}
+		
+		gn = user.getGivenname();
+		if((gn != null) && (!gn.isEmpty())) {
+			if(gn.get(0).equals(" "))
+				user.setGivenName(null);
+		}
+		
 		return user;
 	}
 	
@@ -1188,8 +1201,12 @@ public class OpenAMClient {
 		userModel.setUsername(username);
 		userModel.setUserpassword(password);
 		userModel.setMail(mail);
-		userModel.setAdditionalProperty("givenName", givenName);
-		userModel.setAdditionalProperty("sn", surname);
+		if(givenName != null && !givenName.isEmpty()) {
+			userModel.setAdditionalProperty("givenName", givenName);
+		}
+		if(surname != null && !surname.isEmpty()) {
+			userModel.setAdditionalProperty("sn", surname);
+		}
 		
 		String newUser = "";
 		
@@ -1739,8 +1756,14 @@ public class OpenAMClient {
 		
 		userModel.setUsername(null); // to be sure it not included in the JSON (username is used in the URL) 
 		userModel.setMail(mail);
-		userModel.setAdditionalProperty("givenName", givenName);
-		userModel.setAdditionalProperty("sn", surname);
+		if(givenName != null && !givenName.isEmpty()) {
+			userModel.setAdditionalProperty("givenName", givenName);
+		} else {
+			userModel.setAdditionalProperty("givenName", " ");
+		}
+		if(surname != null && !surname.isEmpty()) {
+			userModel.setAdditionalProperty("sn", surname);
+		}
 		userModel.setAdditionalProperty("inetUserStatus", status);
 		
 		String newUserInfo = "";
