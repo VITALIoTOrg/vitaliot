@@ -16,6 +16,8 @@ public class ConfigReader {
 	//public static final String USER_ADM = "USER_ADM";
 	//public static final String PWD_ADM = "PWD_ADM";
 	public static final String AUTH_TOKEN = "AUTH_TOKEN";
+	public static final String MAN_TOKEN = "MAN_TOKEN";
+	public static final String MAN_NAME = "MAN_NAME";
 	
 	
 	private ConfigReader() {

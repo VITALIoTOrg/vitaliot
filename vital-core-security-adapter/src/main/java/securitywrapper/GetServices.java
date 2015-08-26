@@ -2,10 +2,10 @@ package securitywrapper;
 
 import java.io.IOException;
 
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -43,7 +43,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(
             @PathParam("id") String userId,
-            @HeaderParam("TokenId") String token) {
+            @CookieParam("vitalManToken") String token) {
 		
 		User user;
 		String answer;
@@ -97,7 +97,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserGroups(
             @PathParam("id") String userId,
-            @HeaderParam("TokenId") String token) {
+            @CookieParam("vitalManToken") String token) {
 		
 		String answer;
 		
@@ -128,7 +128,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroup(
             @PathParam("id") String groupId,
-            @HeaderParam("TokenId") String token)  {
+            @CookieParam("vitalManToken") String token)  {
 		
 		Group group;
 		String answer;
@@ -182,7 +182,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicy(
             @PathParam("id") String policyId,
-            @HeaderParam("TokenId") String token) {
+            @CookieParam("vitalManToken") String token) {
 		
 		Policy policy;
 		String answer;
@@ -236,7 +236,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplication(
             @PathParam("id") String applicationId,
-            @HeaderParam("TokenId") String token) {
+            @CookieParam("vitalManToken") String token) {
 		
 		Application application;
 		String answer;
@@ -290,7 +290,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationPolicies(
             @PathParam("id") String appName,
-            @HeaderParam("TokenId") String token) {
+            @CookieParam("vitalManToken") String token) {
 		
 		String answer;
 		
@@ -320,7 +320,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(
-            @HeaderParam("TokenId") String token) {
+            @CookieParam("vitalManToken") String token) {
 		
 		Users users;
 		String answer;
@@ -373,7 +373,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroups(
-            @HeaderParam("TokenId") String token) {
+			@CookieParam("vitalManToken") String token) {
 		
 		Groups groups;
 		String answer;
@@ -426,7 +426,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicies(
-            @HeaderParam("TokenId") String token) {
+			@CookieParam("vitalManToken") String token) {
 		
 		Policies policies;
 		String answer;
@@ -479,7 +479,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplications(
-            @HeaderParam("TokenId") String token) {
+			@CookieParam("vitalManToken") String token) {
 		
 		Applications apps;
 		String answer;
@@ -646,7 +646,9 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(
-			@QueryParam("token") String userToken) {
+			@CookieParam("vitalManToken") String token,
+			@CookieParam("vitalAccessToken") String vitalToken,
+			@QueryParam("altCookie") boolean altCookie) {
 		
 		Validation val;
 		String answer;
@@ -654,7 +656,11 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		val = client.getUserIdFromToken(userToken);
+		if(altCookie) {
+			val = client.getUserIdFromToken(token);
+		} else {
+			val = client.getUserIdFromToken(vitalToken);
+		}
 		
 		try {
 			answer = JsonUtils.serializeJson(val);

@@ -80,6 +80,8 @@ public class OpenAMClient {
 	private String userAdmin;
 	private String pwdAdmin;
 	private String authToken;
+	private String manToken;
+	private String manName;
 	
 	public OpenAMClient() {
 		httpclient = HttpClients.createDefault();
@@ -91,7 +93,21 @@ public class OpenAMClient {
 		//userAdmin = configReader.get(ConfigReader.USER_ADM);
 		//pwdAdmin = configReader.get(ConfigReader.PWD_ADM);
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
+		manToken = configReader.get(ConfigReader.MAN_TOKEN);
+		manName = configReader.get(ConfigReader.MAN_NAME);
 		
+	}
+	
+	public String getSSOcookieName() {
+		return authToken;
+	}
+	
+	public String getManTokenCookieName() {
+		return manToken;
+	}
+	
+	public String getManNameCookieName() {
+		return manName;
 	}
 	
 	private boolean isTokenValid(String token) {
@@ -535,7 +551,6 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 	
-		
 		return validation;
 	}
 	
