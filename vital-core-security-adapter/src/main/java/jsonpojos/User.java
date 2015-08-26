@@ -28,6 +28,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "cn",
     "modifyTimestamp",
     "givenName",
+    "givenname",
     "inetUserStatus",
     "dn",
     "sun-fm-saml2-nameid-info",
@@ -55,6 +56,8 @@ public class User {
     private List<String> modifyTimestamp = new ArrayList<String>();
     @JsonProperty("givenName")
     private List<String> givenName = new ArrayList<String>();
+    @JsonProperty("givenname")
+    private List<String> givenname = new ArrayList<String>();
     @JsonProperty("inetUserStatus")
     private List<String> inetUserStatus = new ArrayList<String>();
     @JsonProperty("dn")
@@ -292,6 +295,31 @@ public class User {
 
     public User withGivenName(List<String> givenName) {
         this.givenName = givenName;
+        return this;
+    }
+
+    /**
+     * 
+     * @return
+     *     The givenname
+     */
+    @JsonProperty("givenname")
+    public List<String> getGivenname() {
+        return givenname;
+    }
+
+    /**
+     * 
+     * @param givenname
+     *     The givenname
+     */
+    @JsonProperty("givenname")
+    public void setGivenname(List<String> givenname) {
+        this.givenname = givenname;
+    }
+
+    public User withGivenname(List<String> givenname) {
+        this.givenname = givenname;
         return this;
     }
 

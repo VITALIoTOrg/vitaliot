@@ -22,6 +22,9 @@
     "givenName": [
         "user0"
     ],
+        "givenname": [
+        "user0"
+    ],
     "inetUserStatus": [
         "Active"
     ],

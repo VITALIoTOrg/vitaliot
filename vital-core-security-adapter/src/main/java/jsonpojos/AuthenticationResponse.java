@@ -17,51 +17,20 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "valid",
     "uid",
-    "realm",
     "name",
     "fullname"
 })
-public class Validation {
+public class AuthenticationResponse {
 
-    @JsonProperty("valid")
-    private Boolean valid;
     @JsonProperty("uid")
     private String uid;
-    @JsonProperty("realm")
-    private String realm;
     @JsonProperty("name")
     private String name;
     @JsonProperty("fullname")
     private String fullname;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    /**
-     * 
-     * @return
-     *     The valid
-     */
-    @JsonProperty("valid")
-    public Boolean getValid() {
-        return valid;
-    }
-
-    /**
-     * 
-     * @param valid
-     *     The valid
-     */
-    @JsonProperty("valid")
-    public void setValid(Boolean valid) {
-        this.valid = valid;
-    }
-
-    public Validation withValid(Boolean valid) {
-        this.valid = valid;
-        return this;
-    }
 
     /**
      * 
@@ -83,33 +52,8 @@ public class Validation {
         this.uid = uid;
     }
 
-    public Validation withUid(String uid) {
+    public AuthenticationResponse withUid(String uid) {
         this.uid = uid;
-        return this;
-    }
-
-    /**
-     * 
-     * @return
-     *     The realm
-     */
-    @JsonProperty("realm")
-    public String getRealm() {
-        return realm;
-    }
-
-    /**
-     * 
-     * @param realm
-     *     The realm
-     */
-    @JsonProperty("realm")
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
-
-    public Validation withRealm(String realm) {
-        this.realm = realm;
         return this;
     }
 
@@ -133,11 +77,11 @@ public class Validation {
         this.name = name;
     }
 
-    public Validation withName(String name) {
+    public AuthenticationResponse withName(String name) {
         this.name = name;
         return this;
     }
-
+    
     /**
      * 
      * @return
@@ -158,7 +102,7 @@ public class Validation {
         this.fullname = fullname;
     }
 
-    public Validation withFullname(String fullname) {
+    public AuthenticationResponse withFullname(String fullname) {
         this.fullname = fullname;
         return this;
     }
@@ -188,7 +132,7 @@ public class Validation {
         this.additionalProperties.put(name, value);
     }
 
-    public Validation withAdditionalProperty(String name, Object value) {
+    public AuthenticationResponse withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }

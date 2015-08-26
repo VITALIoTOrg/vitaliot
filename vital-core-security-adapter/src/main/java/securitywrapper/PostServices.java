@@ -2,6 +2,8 @@ package securitywrapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -14,6 +16,7 @@ import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import jsonpojos.Application;
 import jsonpojos.Authenticate;
+import jsonpojos.AuthenticationResponse;
 import jsonpojos.ChangePasswordResponse;
 import jsonpojos.DecisionArray;
 import jsonpojos.Group;
@@ -1025,8 +1028,6 @@ public class PostServices {
 		code = 0;
 		auth = client.authenticate(name, password);
 		
-		// TODO: form parameter name is username (id); try and see if you can get first name or something
-		
 		try {
 			answer = JsonUtils.serializeJson(auth);
 		} catch (JsonParseException e) {
@@ -1058,11 +1059,49 @@ public class PostServices {
 		}
 		else {
 			Cookie ck;
+			
+			// Let's give back some info about the user
+			User user = client.getUser(name, auth.getTokenId()); // get the info
+			AuthenticationResponse resp = new AuthenticationResponse();
+			resp.setUid(name); // always give back the login username
+			List<String> gn = null;
+			gn = user.getGivenName();
+			if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+				resp.setName(gn.get(0));
+			} else {
+				gn = user.getGivenname();
+				if((gn != null) && (!gn.isEmpty())) {
+					resp.setName(gn.get(0));
+				}
+			}
+			List<String> ln = null;
+			ln = user.getSn();
+			if((gn != null) && (!gn.isEmpty()) && (ln != null) && (!ln.isEmpty())) { // send back the full name if available
+				resp.setFullname(gn.get(0) + " " + ln.get(0)); // composed by first name + last name
+			} else { // otherwise use common name, but it is not the full name for sure
+				List<String> cn = null;
+				cn = user.getCn();
+				if((cn != null) && (!cn.isEmpty())) { 
+					resp.setFullname(cn.get(0));
+				}
+			}
+			
+			try {
+				answer = JsonUtils.serializeJson(resp);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 			// Will all services be over HTTPS? Will any client side script need to access the cookies?
 			// If the answer is (Yes, No) then we can keep secure and HttpOnly flags
 			if(!altCookie) {
 				ck = new Cookie(client.getSSOcookieName(), auth.getTokenId(), "/", ".cloud.reply.eu");
 				return Response.ok()
+						.entity(answer)
 						.header("Access-Control-Allow-Origin", "*")
 						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
@@ -1071,6 +1110,7 @@ public class PostServices {
 				ck = new Cookie(client.getManTokenCookieName(), auth.getTokenId(), "/", ".cloud.reply.eu");
 				//Cookie cka = new Cookie(client.getManNameCookieName(), name, "/", ".cloud.reply.eu");;
 				return Response.ok()
+						.entity(answer)
 						.header("Access-Control-Allow-Origin", "*")
 						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")

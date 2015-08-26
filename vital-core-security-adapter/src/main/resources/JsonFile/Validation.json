@@ -1,5 +1,7 @@
 {
     "valid": true,
     "uid": "amAdmin",
-    "realm": "/"
+    "realm": "/",
+    "name": "amAdmin",
+    "fullname": "amAdmin"
 }

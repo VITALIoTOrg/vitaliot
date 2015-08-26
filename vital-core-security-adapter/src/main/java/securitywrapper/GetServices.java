@@ -1,6 +1,7 @@
 package securitywrapper;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
@@ -660,6 +661,30 @@ public class GetServices {
 			val = client.getUserIdFromToken(token);
 		} else {
 			val = client.getUserIdFromToken(vitalToken);
+		}
+		
+		// Let's give back some additional info about the user
+		User user = client.getUser(val.getUid(), token); // get the info
+		List<String> gn = null;
+		gn = user.getGivenName();
+		if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+			val.setName(gn.get(0));
+		} else {
+			gn = user.getGivenname();
+			if((gn != null) && (!gn.isEmpty())) {
+				val.setName(gn.get(0));
+			}
+		}
+		List<String> ln = null;
+		ln = user.getSn();
+		if((gn != null) && (!gn.isEmpty()) && (ln != null) && (!ln.isEmpty())) { // send back the full name if available
+			val.setFullname(gn.get(0) + " " + ln.get(0)); // composed by first name + last name
+		} else { // otherwise use common name, but it is not the full name for sure
+			List<String> cn = null;
+			cn = user.getCn();
+			if((cn != null) && (!cn.isEmpty())) { 
+				val.setFullname(cn.get(0));
+			}
 		}
 		
 		try {
