@@ -19,7 +19,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @JsonPropertyOrder({
     "uid",
     "name",
-    "fullname"
+    "fullname",
+    "mailhashhash"
 })
 public class AuthenticationResponse {
 
@@ -29,6 +30,8 @@ public class AuthenticationResponse {
     private String name;
     @JsonProperty("fullname")
     private String fullname;
+    @JsonProperty("mailhash")
+    private String mailhash;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -104,6 +107,31 @@ public class AuthenticationResponse {
 
     public AuthenticationResponse withFullname(String fullname) {
         this.fullname = fullname;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The mailhash
+     */
+    @JsonProperty("mailhash")
+    public String getMailhash() {
+        return mailhash;
+    }
+
+    /**
+     * 
+     * @param mailhash
+     *     The mailhash
+     */
+    @JsonProperty("mailhash")
+    public void setMailhash(String mailhash) {
+        this.mailhash = mailhash;
+    }
+
+    public AuthenticationResponse withMailhash(String mailhash) {
+        this.mailhash = mailhash;
         return this;
     }
 

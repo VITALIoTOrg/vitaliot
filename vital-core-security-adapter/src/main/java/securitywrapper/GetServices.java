@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import utils.JsonUtils;
+import utils.MD5Util;
 import clients.OpenAMClient;
 
 @Path("/rest")
@@ -682,9 +683,15 @@ public class GetServices {
 		} else { // otherwise use common name, but it is not the full name for sure
 			List<String> cn = null;
 			cn = user.getCn();
-			if((cn != null) && (!cn.isEmpty())) { 
+			if((cn != null) && (!cn.isEmpty())) {
 				val.setFullname(cn.get(0));
 			}
+		}
+		
+		List<String> mail = null;
+		mail = user.getMail();
+		if((mail != null) && (!mail.isEmpty())) {
+			val.setMailhash(MD5Util.md5Hex(mail.get(0)));
 		}
 		
 		try {

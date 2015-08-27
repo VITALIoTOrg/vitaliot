@@ -22,6 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "username",
     "realm",
     "uid",
+    "mail",
     "userPassword",
     "sn",
     "createTimestamp",
@@ -44,6 +45,8 @@ public class User {
     private String realm;
     @JsonProperty("uid")
     private List<String> uid = new ArrayList<String>();
+    @JsonProperty("mail")
+    private List<String> mail = new ArrayList<String>();
     @JsonProperty("userPassword")
     private List<String> userPassword = new ArrayList<String>();
     @JsonProperty("sn")
@@ -145,6 +148,31 @@ public class User {
 
     public User withUid(List<String> uid) {
         this.uid = uid;
+        return this;
+    }
+
+    /**
+     * 
+     * @return
+     *     The mail
+     */
+    @JsonProperty("mail")
+    public List<String> getMail() {
+        return mail;
+    }
+
+    /**
+     * 
+     * @param mail
+     *     The mail
+     */
+    @JsonProperty("mail")
+    public void setMail(List<String> mail) {
+        this.mail = mail;
+    }
+
+    public User withMail(List<String> mail) {
+        this.mail = mail;
         return this;
     }
 

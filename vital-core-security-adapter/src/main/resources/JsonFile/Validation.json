@@ -3,5 +3,6 @@
     "uid": "amAdmin",
     "realm": "/",
     "name": "amAdmin",
-    "fullname": "amAdmin"
+    "fullname": "amAdmin",
+    "mailhash": "whatever"
 }

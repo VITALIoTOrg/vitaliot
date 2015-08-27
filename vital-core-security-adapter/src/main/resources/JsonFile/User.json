@@ -4,6 +4,9 @@
     "uid": [
         "user0"
     ],
+    "mail": [
+    	"test@domain.com"
+    ],
     "userPassword": [
         "{SSHA}dcXjUjjZtWgNt12k5j0VOI2Sz5OclDT2cykVkg=="
     ],

@@ -25,6 +25,7 @@ import jsonpojos.Policy;
 import jsonpojos.User;
 import utils.Action;
 import utils.JsonUtils;
+import utils.MD5Util;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -1081,9 +1082,15 @@ public class PostServices {
 			} else { // otherwise use common name, but it is not the full name for sure
 				List<String> cn = null;
 				cn = user.getCn();
-				if((cn != null) && (!cn.isEmpty())) { 
+				if((cn != null) && (!cn.isEmpty())) {
 					resp.setFullname(cn.get(0));
 				}
+			}
+			
+			List<String> mail = null;
+			mail = user.getMail();
+			if((mail != null) && (!mail.isEmpty())) {
+				resp.setMailhash(MD5Util.md5Hex(mail.get(0)));
 			}
 			
 			try {
