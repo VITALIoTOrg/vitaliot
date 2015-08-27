@@ -728,6 +728,7 @@ public class PostServices {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
+		String userJson = null;
 		User user = new User();
 		
 		code = 0;
@@ -766,8 +767,29 @@ public class PostServices {
 						.build();
 			}
 			else {
+				List<String> gn = null;
+				gn = user.getGivenName();
+				if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+					if(gn.get(0).equals(" "))
+						user.setGivenName(null);
+				}
+				
+				gn = user.getGivenname();
+				if((gn != null) && (!gn.isEmpty())) {
+					if(gn.get(0).equals(" "))
+						user.setGivenName(null);
+				}
+				try {
+					userJson = JsonUtils.serializeJson(user);
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				return Response.ok()
-						.entity(answer.toString())
+						.entity(userJson)
 						.header("Access-Control-Allow-Origin", "*")
 						.header("Access-Control-Allow-Credentials", "true")
 						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
