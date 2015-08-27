@@ -22,7 +22,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "realm",
     "name",
     "fullname",
-    "mailhash"
+    "mailhash",
+    "creation"
 })
 public class Validation {
 
@@ -38,6 +39,8 @@ public class Validation {
     private String fullname;
     @JsonProperty("mailhash")
     private String mailhash;
+    @JsonProperty("creation")
+    private SimpleDate creation;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -188,6 +191,31 @@ public class Validation {
 
     public Validation withMailhash(String mailhash) {
         this.mailhash = mailhash;
+        return this;
+    }
+
+    /**
+     * 
+     * @return
+     *     The creation
+     */
+    @JsonProperty("creation")
+    public SimpleDate getCreation() {
+        return creation;
+    }
+
+    /**
+     * 
+     * @param creation
+     *     The creation
+     */
+    @JsonProperty("creation")
+    public void setCreation(SimpleDate creation) {
+        this.creation = creation;
+    }
+
+    public Validation withCreation(SimpleDate creation) {
+        this.creation = creation;
         return this;
     }
 

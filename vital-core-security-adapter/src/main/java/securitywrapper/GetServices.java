@@ -1,6 +1,7 @@
 package securitywrapper;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.util.List;
 
 import javax.ws.rs.CookieParam;
@@ -19,6 +20,7 @@ import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
 import jsonpojos.Policy;
+import jsonpojos.SimpleDate;
 import jsonpojos.User;
 import jsonpojos.Users;
 import jsonpojos.Validation;
@@ -692,6 +694,16 @@ public class GetServices {
 		mail = user.getMail();
 		if((mail != null) && (!mail.isEmpty())) {
 			val.setMailhash(MD5Util.md5Hex(mail.get(0)));
+		}
+		
+		List<String> time = user.getCreateTimestamp();
+		SimpleDate date = new SimpleDate();
+		if((time != null) && (!time.isEmpty())) {
+			date.setYear(time.get(0).substring(0, 4));
+			int m = Integer.parseInt(time.get(0).substring(4, 6));
+			date.setMonth(new DateFormatSymbols().getMonths()[m]);
+			date.setDay(time.get(0).substring(6, 8));
+			val.setCreation(date);
 		}
 		
 		try {

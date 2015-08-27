@@ -1,6 +1,7 @@
 package securitywrapper;
 
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import jsonpojos.DecisionArray;
 import jsonpojos.Group;
 import jsonpojos.LogoutResponse;
 import jsonpojos.Policy;
+import jsonpojos.SimpleDate;
 import jsonpojos.User;
 import utils.Action;
 import utils.JsonUtils;
@@ -1115,6 +1117,16 @@ public class PostServices {
 				resp.setMailhash(MD5Util.md5Hex(mail.get(0)));
 			}
 			
+			List<String> time = user.getCreateTimestamp();
+			SimpleDate date = new SimpleDate();
+			if((time != null) && (!time.isEmpty())) {
+				date.setYear(time.get(0).substring(0, 4));
+				int m = Integer.parseInt(time.get(0).substring(4, 6));
+				date.setMonth(new DateFormatSymbols().getMonths()[m]);
+				date.setDay(time.get(0).substring(6, 8));
+				resp.setCreation(date);
+			}
+
 			try {
 				answer = JsonUtils.serializeJson(resp);
 			} catch (JsonParseException e) {

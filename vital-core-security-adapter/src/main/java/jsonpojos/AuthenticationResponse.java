@@ -20,7 +20,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "uid",
     "name",
     "fullname",
-    "mailhashhash"
+    "mailhashhash",
+    "creation"
 })
 public class AuthenticationResponse {
 
@@ -32,6 +33,8 @@ public class AuthenticationResponse {
     private String fullname;
     @JsonProperty("mailhash")
     private String mailhash;
+    @JsonProperty("creation")
+    private SimpleDate creation;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -132,6 +135,31 @@ public class AuthenticationResponse {
 
     public AuthenticationResponse withMailhash(String mailhash) {
         this.mailhash = mailhash;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The creation
+     */
+    @JsonProperty("creation")
+    public SimpleDate getCreation() {
+        return creation;
+    }
+
+    /**
+     * 
+     * @param creation
+     *     The creation
+     */
+    @JsonProperty("creation")
+    public void setCreation(SimpleDate creation) {
+        this.creation = creation;
+    }
+
+    public AuthenticationResponse withCreation(SimpleDate creation) {
+        this.creation = creation;
         return this;
     }
 
