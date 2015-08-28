@@ -1149,13 +1149,11 @@ public class PostServices {
 						.build();
 			} else {
 				ck = new Cookie(client.getManTokenCookieName(), auth.getTokenId(), "/", ".cloud.reply.eu");
-				//Cookie cka = new Cookie(client.getManNameCookieName(), name, "/", ".cloud.reply.eu");;
 				return Response.ok()
 						.entity(answer)
 						.header("Access-Control-Allow-Origin", "*")
 						.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
-						//.header("SET-COOKIE", cka.toString() + "; secure" + "; HttpOnly")
 						.build();
 			}
 		}

@@ -5,7 +5,6 @@ import java.util.Properties;
 
 
 public class ConfigReader {
-
 	
 	private static ConfigReader instance;
 	private Properties config;
@@ -17,8 +16,6 @@ public class ConfigReader {
 	//public static final String PWD_ADM = "PWD_ADM";
 	public static final String AUTH_TOKEN = "AUTH_TOKEN";
 	public static final String MAN_TOKEN = "MAN_TOKEN";
-	public static final String MAN_NAME = "MAN_NAME";
-	
 	
 	private ConfigReader() {
 		config = new Properties();
