@@ -1748,7 +1748,6 @@ public class OpenAMClient {
 		
 		UserModel userModel = new UserModel();
 		
-		userModel.setUsername(null); // to be sure it not included in the JSON (username is used in the URL) 
 		userModel.setMail(mail);
 		if(givenName != null && !givenName.isEmpty()) {
 			userModel.setAdditionalProperty("givenName", givenName);
@@ -1758,7 +1757,10 @@ public class OpenAMClient {
 		if(surname != null && !surname.isEmpty()) {
 			userModel.setAdditionalProperty("sn", surname);
 		}
-		userModel.setAdditionalProperty("inetUserStatus", status);
+		
+		if(getUserIdFromToken(token).getUid().equals("amAdmin")) {
+			userModel.setAdditionalProperty("inetUserStatus", status);
+		}
 		
 		String newUserInfo = "";
 		
