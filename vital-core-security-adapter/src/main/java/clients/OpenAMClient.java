@@ -1758,7 +1758,8 @@ public class OpenAMClient {
 			userModel.setAdditionalProperty("sn", surname);
 		}
 		
-		if(!getUserIdFromToken(token).getUid().equals(username)) {
+		String uid = getUserIdFromToken(token).getUid();
+		if(!uid.equals(username) || uid.equals("amAdmin")) {
 			userModel.setAdditionalProperty("inetUserStatus", status);
 		}
 		
