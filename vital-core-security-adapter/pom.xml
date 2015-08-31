@@ -226,28 +226,6 @@
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <version>${version.wildfly.maven.plugin}</version>
             </plugin>            
-            
-            <!-- jsonschema2pojo plugin, to generate pojo from json file in /src/main/resources/JsonFile -->
-            <plugin>
-                <groupId>org.jsonschema2pojo</groupId>
-                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-                <version>0.4.14</version>
-                <configuration>
-                    <sourceDirectory>${basedir}/src/main/resources/JsonFile</sourceDirectory>
-                    <generateBuilders>true</generateBuilders>
-                    <includeHashcodeAndEquals>true</includeHashcodeAndEquals>
-                    <outputDirectory>${basedir}/src/main/java</outputDirectory>
-                    <sourceType>json</sourceType>
-                    <targetPackage>jsonpojos</targetPackage>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
