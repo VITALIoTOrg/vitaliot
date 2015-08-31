@@ -86,16 +86,6 @@ public class Subject___ {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -109,6 +99,23 @@ public class Subject___ {
     public Subject___ withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(type).append(subjectValues).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof Subject___) == false) {
+            return false;
+        }
+        Subject___ rhs = ((Subject___) other);
+        return new EqualsBuilder().append(type, rhs.type).append(subjectValues, rhs.subjectValues).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

@@ -112,16 +112,6 @@ public class UserModel {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -135,6 +125,23 @@ public class UserModel {
     public UserModel withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(username).append(userpassword).append(mail).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof UserModel) == false) {
+            return false;
+        }
+        UserModel rhs = ((UserModel) other);
+        return new EqualsBuilder().append(username, rhs.username).append(userpassword, rhs.userpassword).append(mail, rhs.mail).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

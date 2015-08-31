@@ -224,16 +224,6 @@ public class ActionValues__ {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -247,6 +237,23 @@ public class ActionValues__ {
     public ActionValues__ withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(POST).append(GET).append(PATCH).append(DELETE).append(OPTIONS).append(PUT).append(HEAD).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof ActionValues__) == false) {
+            return false;
+        }
+        ActionValues__ rhs = ((ActionValues__) other);
+        return new EqualsBuilder().append(POST, rhs.POST).append(GET, rhs.GET).append(PATCH, rhs.PATCH).append(DELETE, rhs.DELETE).append(OPTIONS, rhs.OPTIONS).append(PUT, rhs.PUT).append(HEAD, rhs.HEAD).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

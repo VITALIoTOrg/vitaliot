@@ -506,16 +506,6 @@ public class User {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -529,6 +519,23 @@ public class User {
     public User withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(username).append(realm).append(uid).append(mail).append(userPassword).append(sn).append(createTimestamp).append(cn).append(modifyTimestamp).append(givenName).append(givenname).append(inetUserStatus).append(dn).append(sunFmSaml2NameidInfo).append(objectClass).append(universalid).append(sunFmSaml2NameidInfokey).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof User) == false) {
+            return false;
+        }
+        User rhs = ((User) other);
+        return new EqualsBuilder().append(username, rhs.username).append(realm, rhs.realm).append(uid, rhs.uid).append(mail, rhs.mail).append(userPassword, rhs.userPassword).append(sn, rhs.sn).append(createTimestamp, rhs.createTimestamp).append(cn, rhs.cn).append(modifyTimestamp, rhs.modifyTimestamp).append(givenName, rhs.givenName).append(givenname, rhs.givenname).append(inetUserStatus, rhs.inetUserStatus).append(dn, rhs.dn).append(sunFmSaml2NameidInfo, rhs.sunFmSaml2NameidInfo).append(objectClass, rhs.objectClass).append(universalid, rhs.universalid).append(sunFmSaml2NameidInfokey, rhs.sunFmSaml2NameidInfokey).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

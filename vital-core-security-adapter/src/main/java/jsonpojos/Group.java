@@ -226,16 +226,6 @@ public class Group {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
-    }
-
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -249,6 +239,23 @@ public class Group {
     public Group withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(username).append(realm).append(uniqueMember).append(cn).append(dn).append(objectclass).append(universalid).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof Group) == false) {
+            return false;
+        }
+        Group rhs = ((Group) other);
+        return new EqualsBuilder().append(username, rhs.username).append(realm, rhs.realm).append(uniqueMember, rhs.uniqueMember).append(cn, rhs.cn).append(dn, rhs.dn).append(objectclass, rhs.objectclass).append(universalid, rhs.universalid).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }
