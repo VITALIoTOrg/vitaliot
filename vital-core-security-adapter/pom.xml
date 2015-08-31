@@ -63,11 +63,25 @@
 
     <dependencies>
 		
-		 <dependency>
+		<dependency>
 			<groupId>org.snmp4j</groupId>
 			<artifactId>snmp4j</artifactId>
 			<version>1.10.1</version>
-		 </dependency>
+		</dependency>
+
+        <!-- fasterxmljackson per le annotazioni dei pojo json -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        
+        <!-- common lang per pojo json -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
 		
 		<!-- Apache HTTP components for GET, POST operations -->
 		<dependency>
