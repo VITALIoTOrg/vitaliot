@@ -44,3 +44,14 @@ You may also want to take a look at the Vital Deployer project, featuring a
 script to automatically build and deploy this application plus the Security
 Management UI, another component of the Vital security system.
 
+## Usage
+
+While reading the code may still be the best way to understand the adapter
+working details, this section will try and describe the RESTful services exposed
+by the module in a simple and more accessible way.
+
+### GET endpoints
+
+ * **/rest/user/{id}**: returns info about the user "id" (expects the
+   "vitalManToken" session cookie)
+
