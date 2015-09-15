@@ -120,3 +120,15 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/user/{id}/groups**: expects the "vitalManToken" session cookie to be included in the request and returns the list of groups having the user identified by "id" as member. Response example:
+
+    ```
+    {
+        "result":[
+            "Advanced_Users"
+        ],
+        "resultCount":1,
+        "remainingPagedResults":-1
+    }
+    ```
+
