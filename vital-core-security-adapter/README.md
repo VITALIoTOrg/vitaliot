@@ -252,3 +252,62 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/application/{id}/policies** expects the "vitalManToken" session cookie to be included in the request and returns some info about the policies part of the application identified by "id". Response example:
+
+    ```json
+    {
+        "result":[
+            {
+                "name":"Resource B",
+                "active":true,
+                "description":"Resource B",
+                "applicationName":"iPlanetAMWebAgentService",
+                "actionValues":{
+                    "GET":true
+                },
+                "resources":[
+                    "http://vitalsp.cloud.reply.eu:80/resB",
+                    "http://vitalsp.cloud.reply.eu:80/resB/*"
+                ],
+                "subject":{
+                    "type":"Identity",
+                    "subjectValues":[
+                        "id=Advanced_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+                    ]
+                },
+                "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "lastModifiedDate":"2015-08-31T08:14:18.282Z",
+                "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "creationDate":"2015-08-07T09:18:42.369Z"
+            },
+            {
+                "name":"Resource A",
+                "active":true,
+                "description":"Resource A",
+                "applicationName":"iPlanetAMWebAgentService",
+                "actionValues":{
+                    "GET":true
+                },
+                "resources":[
+                    "http://vitalsp.cloud.reply.eu:80/resA",
+                    "https://vitalsp.cloud.reply.eu:443/resA/*",
+                    "https://vitalsp.cloud.reply.eu:443/resA",
+                    "http://vitalsp.cloud.reply.eu:80/resA/*"
+                ],
+                "subject":{
+                    "type":"Identity",
+                    "subjectValues":[
+                        "id=Base_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+                    ]
+                },
+                "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "lastModifiedDate":"2015-09-01T12:55:23.181Z",
+                "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "creationDate":"2015-08-07T09:15:04.115Z"
+            }
+        ],
+        "resultCount":2,
+        "remainingPagedResults":0
+    }
+    ```
+
