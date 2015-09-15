@@ -56,127 +56,127 @@ by the module in a simple and more accessible way.
    "vitalManToken" session cookie); response example:
 
    ```
-   {
+    {
 
-    "username":"jconnor",
+        "username":"jconnor",
 
-    "realm":"/",
+        "realm":"/",
 
-    "uid":[
+        "uid":[
 
-        "jconnor"
+            "jconnor"
 
-    ],
+        ],
 
-    "mail":[
+        "mail":[
 
-        "john.connor@sky.net"
+            "john.connor@sky.net"
 
-    ],
+        ],
 
-    "userPassword":[
+        "userPassword":[
 
-        "{SSHA}adPfkc6+UG0gIsFXfxw4eH50SlWyWGqLqj8/Ng=="
+            "{SSHA}adPfkc6+UG0gIsFXfxw4eH50SlWyWGqLqj8/Ng=="
 
-    ],
+        ],
 
-    "sn":[
+        "sn":[
 
-        "Connor"
+            "Connor"
 
-    ],
+        ],
 
-    "createTimestamp":[
+        "createTimestamp":[
 
-        "20150630124922Z"
+            "20150630124922Z"
 
-    ],
+        ],
 
-    "cn":[
+        "cn":[
 
-        "jconnor"
+            "jconnor"
 
-    ],
+        ],
 
-    "modifyTimestamp":[
+        "modifyTimestamp":[
 
-        "20150826152345Z"
+            "20150826152345Z"
 
-    ],
+        ],
 
-    "givenName":[
+        "givenName":[
 
-        "John"
+            "John"
 
-    ],
+        ],
 
-    "givenname":[
-
-
-    ],
-
-    "inetUserStatus":[
-
-        "Active"
-
-    ],
-
-    "dn":[
-
-        "uid=jconnor,ou=people,dc=reply,dc=vital,dc=eu"
-
-    ],
-
-    "sun-fm-saml2-nameid-info":[
+        "givenname":[
 
 
-    ],
+        ],
 
-    "objectClass":[
+        "inetUserStatus":[
 
-        "devicePrintProfilesContainer",
+            "Active"
 
-        "person",
+        ],
 
-        "sunIdentityServerLibertyPPService",
+        "dn":[
 
-        "inetorgperson",
+            "uid=jconnor,ou=people,dc=reply,dc=vital,dc=eu"
 
-        "sunFederationManagerDataStore",
+        ],
 
-        "iPlanetPreferences",
-
-        "iplanet-am-auth-configuration-service",
-
-        "organizationalperson",
-
-        "sunFMSAML2NameIdentifier",
-
-        "inetuser",
-
-        "forgerock-am-dashboard-service",
-
-        "iplanet-am-managed-person",
-
-        "iplanet-am-user-service",
-
-        "sunAMAuthAccountLockout",
-
-        "top"
-
-    ],
-
-    "universalid":[
-
-        "id=jconnor,ou=user,dc=openam,dc=forgerock,dc=org"
-
-    ],
-
-    "sun-fm-saml2-nameid-infokey":[
+        "sun-fm-saml2-nameid-info":[
 
 
-    ]
+        ],
 
-}
+        "objectClass":[
+
+            "devicePrintProfilesContainer",
+
+            "person",
+
+            "sunIdentityServerLibertyPPService",
+
+            "inetorgperson",
+
+            "sunFederationManagerDataStore",
+
+            "iPlanetPreferences",
+
+            "iplanet-am-auth-configuration-service",
+
+            "organizationalperson",
+
+            "sunFMSAML2NameIdentifier",
+
+            "inetuser",
+
+            "forgerock-am-dashboard-service",
+
+            "iplanet-am-managed-person",
+
+            "iplanet-am-user-service",
+
+            "sunAMAuthAccountLockout",
+
+            "top"
+
+        ],
+
+        "universalid":[
+
+            "id=jconnor,ou=user,dc=openam,dc=forgerock,dc=org"
+
+        ],
+
+        "sun-fm-saml2-nameid-infokey":[
+
+
+        ]
+
+    }
    ```
 
