@@ -52,8 +52,7 @@ by the module in a simple and more accessible way.
 
 ### GET endpoints
 
- * **/rest/user/{id}**: returns info about the user identified by "id" (expects the
-   "vitalManToken" session cookie); response example:
+ * **/rest/user/{id}**: expects the "vitalManToken" session cookie to be included in the request and returns some info about the user identified by "id". Response example:
 
     ```
     {
