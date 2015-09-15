@@ -599,3 +599,31 @@ by the module in a simple and more accessible way.
  * **/user/delete** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
     * "name", the user to delete
 
+ * **/group/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "name", the name of the group to create
+
+   It returns some info about the created group. Response example:
+
+    ```json
+    {
+        "username":"test",
+        "realm":"/",
+        "cn":[
+            "test"
+        ],
+        "dn":[
+            "cn=test,ou=groups,dc=reply,dc=vital,dc=eu"
+        ],
+        "objectclass":[
+            "groupofuniquenames",
+            "top"
+        ],
+        "universalid":[
+            "id=test,ou=group,dc=openam,dc=forgerock,dc=org"
+        ]
+    }
+    ```
+
+ * **/group/delete** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "name", the group to delete
+
