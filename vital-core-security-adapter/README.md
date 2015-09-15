@@ -575,7 +575,7 @@ the "vitalAccessToken" cookie. Response example:
 ### POST endpoints
 
 * **/user/create** expects the "vitalManToken" session cookie and the following
-form parameters to be included in the request:
+  form parameters to be included in the request:
 
   * "givenName", the optional user first name
 
