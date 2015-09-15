@@ -311,3 +311,20 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/users** expects the "vitalManToken" session cookie to be included in the request and returns the list of users. Response example:
+
+    ```json
+    {
+        "result":[
+            "amAdmin",
+            "devtry",
+            "jsmith",
+            "mrossi",
+            "jconnor",
+            "user0"
+        ],
+        "resultCount":6,
+        "remainingPagedResults":-1
+    }
+    ```
+
