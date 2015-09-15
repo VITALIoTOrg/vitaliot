@@ -786,5 +786,5 @@ by the module in a simple and more accessible way.
     * "actions[ACTION]", updated boolean values specifying if the ACTION (GET, POST, PUT, etc.) is allowed or denied
     * "nores", a boolean which set to false allows to update without including the previous parameter (a.k.a. actions are not updated), while set to true means that if no action is specified then all actions are removed from the policy (the policy is then ineffective)
 
-   It returns some info about the user identified by "id" with the updated fields (please refer to user info get or creation for response format).
+   It returns some info about the policy identified by "id" with the updated fields (please refer to policy info get or creation for response format).
 
