@@ -139,7 +139,9 @@ example:
     }
     ```
 
- * **/user/{id}/groups** expects the "vitalManToken" session cookie to be included in the request and returns the list of groups having the user identified by "id" as member. Response example:
+ * **/user/{id}/groups** expects the "vitalManToken" session cookie to be
+included in the request and returns the list of groups having the user
+identified by "id" as member. Response example:
 
     ```json
     {
@@ -151,7 +153,9 @@ example:
     }
     ```
 
- * **/group/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the group identified by "id". Response example:
+ * **/group/{id}** expects the "vitalManToken" session cookie to be included in
+the request and returns some info about the group identified by "id". Response
+example:
 
     ```json
     {
@@ -178,7 +182,9 @@ example:
     }
     ```
 
- * **/policy/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the policy identified by "id". Response example:
+ * **/policy/{id}** expects the "vitalManToken" session cookie to be included in
+the request and returns some info about the policy identified by "id". Response
+example:
 
     ```json
     {
@@ -208,7 +214,9 @@ example:
     }
     ```
 
- * **/application/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the application identified by "id". Response example:
+ * **/application/{id}** expects the "vitalManToken" session cookie to be
+included in the request and returns some info about the application identified
+by "id". Response example:
 
     ```json
     {
@@ -271,7 +279,9 @@ example:
     }
     ```
 
- * **/application/{id}/policies** expects the "vitalManToken" session cookie to be included in the request and returns some info about the policies part of the application identified by "id". Response example:
+ * **/application/{id}/policies** expects the "vitalManToken" session cookie to
+be included in the request and returns some info about the policies part of the
+application identified by "id". Response example:
 
     ```json
     {
@@ -330,7 +340,8 @@ example:
     }
     ```
 
- * **/users** expects the "vitalManToken" session cookie to be included in the request and returns the list of users. Response example:
+ * **/users** expects the "vitalManToken" session cookie to be included in the
+request and returns the list of users. Response example:
 
     ```json
     {
@@ -347,7 +358,8 @@ example:
     }
     ```
 
- * **/groups** expects the "vitalManToken" session cookie to be included in the request and returns the list of groups. Response example:
+ * **/groups** expects the "vitalManToken" session cookie to be included in the
+request and returns the list of groups. Response example:
 
     ```json
     {
@@ -361,7 +373,8 @@ example:
     }
     ```
 
- * **/policies** expects the "vitalManToken" session cookie to be included in the request and returns some info about the policies. Response example:
+ * **/policies** expects the "vitalManToken" session cookie to be included in
+the request and returns some info about the policies. Response example:
 
     ```json
     {
@@ -420,7 +433,8 @@ example:
     }
     ```
 
- * **/applications** expects the "vitalManToken" session cookie to be included in the request and returns some info about the applications. Response example:
+ * **/applications** expects the "vitalManToken" session cookie to be included
+in the request and returns some info about the applications. Response example:
 
     ```json
     {
@@ -519,7 +533,8 @@ example:
     }
     ```
 
- * **/stats** returns some statistics about the status of the OpenAM server. Response example:
+ * **/stats** returns some statistics about the status of the OpenAM server.
+Response example:
 
     ```json
     {
@@ -532,7 +547,12 @@ example:
     }
     ```
 
- * **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is optional) session cookies to be included in the request and returns some info useful for session management (whether the user session is still valid or not and some info about the user); if the query parameter "altCookie" is set to true the info is related to the session of the "vitalManToken" cookie, otherwise of the "vitalAccessToken" cookie. Response example:
+ * **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is
+optional) session cookies to be included in the request and returns some info
+useful for session management (whether the user session is still valid or not
+and some info about the user); if the query parameter "altCookie" is set to true
+the info is related to the session of the "vitalManToken" cookie, otherwise of
+the "vitalAccessToken" cookie. Response example:
 
     ```json
     {
