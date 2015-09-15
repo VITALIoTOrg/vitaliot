@@ -572,11 +572,17 @@ the "vitalAccessToken" cookie. Response example:
 
 ### POST endpoints
 
- * **/user/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+ * **/user/create** expects the "vitalManToken" session cookie and the following
+form parameters to be included in the request:
+
     * "givenName", the optional user first name
+
     * "surname", the optional user last name
+
     * "name", the mandatory username
+
     * "password", the mandatory (8 characters or more) user password
+
     * "mail", the optional user e-mail address
 
    It returns some info about the created user. Response example:
@@ -635,9 +641,11 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
- * **/user/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the user to delete) to be included in the request.
+ * **/user/delete** expects the "vitalManToken" session cookie and the "name"
+form parameter (the user to delete) to be included in the request.
 
- * **/group/create** expects the "vitalManToken" session cookie and the "name" form parameter (the name of the group to create) to be included in the request.
+ * **/group/create** expects the "vitalManToken" session cookie and the "name"
+form parameter (the name of the group to create) to be included in the request.
 
    It returns some info about the created group. Response example:
 
@@ -661,11 +669,15 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
- * **/group/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the group to delete) to be included in the request.
+ * **/group/delete** expects the "vitalManToken" session cookie and the "name"
+form parameter (the group to delete) to be included in the request.
 
- * **/group/{id}/addUser** expects the "vitalManToken" session cookie and the "user" form parameter (the user to add to the group "id") to be included in the request.
+ * **/group/{id}/addUser** expects the "vitalManToken" session cookie and the
+"user" form parameter (the user to add to the group "id") to be included in the
+request.
 
-   It returns some info about the group updated with the added user. Response example:
+   It returns some info about the group updated with the added user. Response
+example:
 
     ```json
     {
@@ -690,16 +702,26 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
- * **/group/{id}/delUser** expects the "vitalManToken" session cookie and the "user" form parameter (the user to remove from the group "id") to be included in the request.
+ * **/group/{id}/delUser** expects the "vitalManToken" session cookie and the
+"user" form parameter (the user to remove from the group "id") to be included in
+the request.
 
-   It returns some info about the group updated without the removed user.
+   It returns some info about the group updated without the removed user (see
+above for the format).
 
- * **/policy/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+ * **/policy/create** expects the "vitalManToken" session cookie and the
+following form parameters to be included in the request:
+
     * "name", the name of the policy to create
+
     * "appname", the application name
+
     * "resources[]", the array of resources the policy will affect
+
     * "groups[]", the array of user groups the policy will affect
-    * "actions[ACTION]", boolean values specifying if the ACTION (GET, POST, PUT, etc.) is allowed or denied
+
+    * "actions[ACTION]", boolean values specifying if the ACTION (GET, POST,
+      PUT, etc.) is allowed or denied
 
    It returns some info about the created policy. Response example:
 
@@ -731,11 +753,16 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
- * **/policy/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the policy to delete) to be included in the request.
+ * **/policy/delete** expects the "vitalManToken" session cookie and the "name"
+form parameter (the policy to delete) to be included in the request.
 
- * **/application/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+ * **/application/create** expects the "vitalManToken" session cookie and the
+following form parameters to be included in the request:
+
     * "name", the name of the application to create
+
     * "description", some free text describing the application
+
     * "resources[]", the array of patterns for allowed resources in policies
 
    It returns some info about the created application. Response example:
@@ -799,45 +826,91 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
- * **/application/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the application to delete) to be included in the request.
+ * **/application/delete** expects the "vitalManToken" session cookie and the
+"name" form parameter (the application to delete) to be included in the request.
 
- * **/user/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+ * **/user/{id}** expects the "vitalManToken" session cookie and the following
+form parameters to be included in the request:
+
     * "givenName", the updated user first name
+
     * "surname", the updated user last name
+
     * "mail", the updated user e-mail address
+
     * "status", "Active" or "Inactive"
 
-   It returns some info about the user identified by "id" with the updated fields (please refer to user info get or creation for response format).
+   It returns some info about the user identified by "id" with the updated
+fields (please refer to user info GET or creation for response format).
 
- * **/user/changePassword** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+ * **/user/changePassword** expects the "vitalManToken" session cookie and the
+following form parameters to be included in the request:
+
     * "userpass", the new password
+
     * "currpass", the old password
 
-   It changes the sets the new password "currpass" for the user corresponding to the session of the "vitalManToken" cookie.
+   It sets the new password "currpass" for the user corresponding to the session
+of the "vitalManToken" cookie.
 
- * **/policy/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
-    * "description", the updated policy descriptionINTERNAL_SERVER_ERROR
+ * **/policy/{id}** expects the "vitalManToken" session cookie and the following
+form parameters to be included in the request:
+
+    * "description", the updated policy description
+
     * "active", new policy status (false/true)
-    * "groups[]", the updated list of groups to be affected by the policy
-    * "nogr", a boolean value which set to false allows to update without including the previous parameter (a.k.a. groups are not updated), while set to true means that if no group is specified then all groups are removed from the policy
-    * "resources[]", the updated list of resources to be affected by the policy
-    * "nores", a boolean value which set to false allows to update without including the previous parameter (a.k.a. resources are not updated), while set to true means that if no resource is specified then all resources are removed from the policy
-    * "actions[ACTION]", updated boolean values specifying if the ACTION (GET, POST, PUT, etc.) is allowed or denied
-    * "noact", a boolean which set to false allows to update without including the previous parameter (a.k.a. actions are not updated), while set to true means that if no action is specified then all actions are removed from the policy (the policy is then ineffective)
 
-   It returns some info about the policy identified by "id" with the updated fields (please refer to policy info get or creation for response format).
+    * "groups[]", the updated list of groups to be affected by the policy
+
+    * "nogr", a boolean value which set to false allows to update without
+      including the previous parameter (a.k.a. groups are not updated), while
+      set to true means that if no group is specified then all groups are
+      removed from the policy
+
+    * "resources[]", the updated list of resources to be affected by the policy
+
+    * "nores", a boolean value which set to false allows to update without
+      including the previous parameter (a.k.a. resources are not updated), while
+      set to true means that if no resource is specified then all resources are
+      removed from the policy
+
+    * "actions[ACTION]", updated boolean values specifying if the ACTION (GET,
+      POST, PUT, etc.) is allowed or denied
+
+    * "noact", a boolean which set to false allows to update without including
+      the previous parameter (a.k.a. actions are not updated), while set to true
+      means that if no action is specified then all actions are removed from the
+      policy (the policy then has not effect)
+
+   It returns some info about the policy identified by "id" with the updated
+fields (please refer to policy info GET or creation for response format).
 
  * **/application/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+
     * "description", the updated application description
-    * "resources[]", the updated list of patterns for resources allowed in policies
-    * "nores", a boolean value which set to false allows to update without including the previous parameter (a.k.a. patterns are not updated), while set to true means that if no pattern is specified then all patterns are removed from the application
 
-   It returns some info about the application identified by "id" with the updated fields (please refer to application info get or creation for response format).
+    * "resources[]", the updated list of patterns for resources allowed in
+      policies
 
- * **/authenticate** expects the following form parameters to be included in the request:
+    * "nores", a boolean value which set to false allows to update without
+      including the previous parameter (a.k.a. patterns are not updated), while
+      set to true means that if no pattern is specified then all patterns are
+      removed from the application
+
+   It returns some info about the application identified by "id" with the
+updated fields (please refer to application info GET or creation for response
+format).
+
+ * **/authenticate** expects the following form parameters to be included in the
+request:
+
     * "name", username
+
     * "password", user password
-    * "altCookie", if false the SSO "vitalAccessToken" cookie is returned, otherwise the alternative "vitalManToken" cookie is included in the response.
+
+    * "altCookie", if false the SSO "vitalAccessToken" cookie is returned,
+    * otherwise the alternative "vitalManToken" cookie is included in the
+    * response.
 
     It returns some info useful for session management. Response example:
 
@@ -855,11 +928,20 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
- * **/logout** expects either the "vitalManToken" or the "vitalAccessToken" session cookie to be included in the request and performs logout (destroys the session identified by the cookie); if the form parameter "altCookie" is set to true the adapter will use the "vitalManToken" cookie, otherwise the "vitalAccessToken" cookie.
+ * **/logout** expects either the "vitalManToken" or the "vitalAccessToken"
+session cookie to be included in the request and performs logout (destroys the
+session identified by the cookie); if the form parameter "altCookie" is set to
+true the adapter will use the "vitalManToken" cookie, otherwise the
+"vitalAccessToken" cookie.
 
- * **/evaluate** expects both the "vitalManToken" (user session with the rights to request a policy evaluation) and the "vitalAccessToken" (session corresponding to the user for whom the policy is evaluated) session cookie and the form parameter "resources[]" (resources for which user permissions are requested) to be included in the request.
+ * **/evaluate** expects both the "vitalManToken" (user session with the rights
+to request a policy evaluation) and the "vitalAccessToken" (session
+corresponding to the user for whom the policy is evaluated) session cookies and
+the form parameter "resources[]" (resources for which user permissions are
+requested) to be included in the request.
 
-    It returns for each resource the list of permitted or denied actions. Response example:
+    It returns for each resource the list of permitted or denied actions.
+Response example:
 
     ```json
     {
