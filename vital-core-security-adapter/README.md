@@ -577,17 +577,17 @@ the "vitalAccessToken" cookie. Response example:
 * **/user/create** expects the "vitalManToken" session cookie and the following
   form parameters to be included in the request:
 
-  * "givenName", the optional user first name
+    * "givenName", the optional user first name
 
-  * "surname", the optional user last name
+    * "surname", the optional user last name
 
-  * "name", the mandatory username
+    * "name", the mandatory username
 
-  * "password", the mandatory (8 characters or more) user password
+    * "password", the mandatory (8 characters or more) user password
 
-  * "mail", the optional user e-mail address
+    * "mail", the optional user e-mail address
 
-  It returns some info about the created user. Response example:
+    It returns some info about the created user. Response example:
 
     ```json
     {
