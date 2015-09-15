@@ -537,7 +537,7 @@ by the module in a simple and more accessible way.
     * "givenName", the optional user first name
     * "surname", the optional user last name
     * "name", the mandatory username
-    * "password", the mandatory (8 chars or more) user password
+    * "password", the mandatory (8 characters or more) user password
     * "mail", the optional user e-mail address
 
    It returns some info about the created user. Response example:
@@ -595,4 +595,7 @@ by the module in a simple and more accessible way.
         ]
     }
     ```
+
+ * **/user/delete** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "name", the user to delete
 
