@@ -513,7 +513,7 @@ by the module in a simple and more accessible way.
     }
     ```
 
- * **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is optional) session cookies to be included in the request and returns some info useful for session management (whether the user session is still valid and some info about the user); if the query parameter "altCookie" is set to true the info is related to the session of the "vitalManToken" cookie, otherwise of the "vitalAccessToken" cookie. Response example:
+ * **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is optional) session cookies to be included in the request and returns some info useful for session management (whether the user session is still valid or not and some info about the user); if the query parameter "altCookie" is set to true the info is related to the session of the "vitalManToken" cookie, otherwise of the "vitalAccessToken" cookie. Response example:
 
     ```json
     {
