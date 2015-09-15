@@ -67,7 +67,7 @@ the following:
 }
 ```
 
-All services are exposed under the subpath "/rest".
+All services are exposed under the subpath "**/rest**".
 
 ### GET endpoints
 
