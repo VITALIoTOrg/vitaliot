@@ -159,3 +159,33 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/policy/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the policy identified by "id". Response example:
+
+    ```json
+    {
+        "name":"Resource A",
+        "active":true,
+        "description":"Resource A",
+        "applicationName":"iPlanetAMWebAgentService",
+        "actionValues":{
+            "GET":true
+        },
+        "resources":[
+            "http://vitalsp.cloud.reply.eu:80/resA",
+            "https://vitalsp.cloud.reply.eu:443/resA/*",
+            "https://vitalsp.cloud.reply.eu:443/resA",
+            "http://vitalsp.cloud.reply.eu:80/resA/*"
+        ],
+        "subject":{
+            "type":"Identity",
+            "subjectValues":[
+                "id=Base_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+            ]
+        },
+        "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+        "lastModifiedDate":"2015-09-01T12:55:23.181Z",
+        "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+        "creationDate":"2015-08-07T09:15:04.115Z"
+    }
+    ```
+
