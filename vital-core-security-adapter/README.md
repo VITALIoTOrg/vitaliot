@@ -649,7 +649,7 @@ form parameter (the user to delete) to be included in the request.
  * **/group/create** expects the "vitalManToken" session cookie and the "name"
 form parameter (the name of the group to create) to be included in the request.
 
-   It returns some info about the created group. Response example:
+       It returns some info about the created group. Response example:
 
     ```json
     {
@@ -678,7 +678,7 @@ form parameter (the group to delete) to be included in the request.
 "user" form parameter (the user to add to the group "id") to be included in the
 request.
 
-   It returns some info about the group updated with the added user. Response
+       It returns some info about the group updated with the added user. Response
 example:
 
     ```json
@@ -725,7 +725,7 @@ following form parameters to be included in the request:
     * "actions[ACTION]", boolean values specifying if the ACTION (GET, POST,
       PUT, etc.) is allowed or denied
 
-   It returns some info about the created policy. Response example:
+       It returns some info about the created policy. Response example:
 
     ```json
     {
@@ -767,7 +767,7 @@ following form parameters to be included in the request:
 
     * "resources[]", the array of patterns for allowed resources in policies
 
-   It returns some info about the created application. Response example:
+       It returns some info about the created application. Response example:
 
     ```json
     {
