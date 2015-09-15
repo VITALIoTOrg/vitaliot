@@ -189,3 +189,66 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/application/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the application identified by "id". Response example:
+
+    ```json
+    {
+        "name":"iPlanetAMWebAgentService",
+        "description":"The built-in Application used by OpenAM Policy Agents.",
+        "resources":[
+            "*://*:*/*?*",
+            "*://*:*/*"
+        ],
+        "subjects":[
+            "JwtClaim",
+            "AuthenticatedUsers",
+            "Identity",
+            "NOT",
+            "AND",
+            "NONE",
+            "OR"
+        ],
+        "conditions":[
+            "AuthenticateToService",
+            "AuthLevelLE",
+            "AuthScheme",
+            "IPv6",
+            "SimpleTime",
+            "OAuth2Scope",
+            "IPv4",
+            "AuthenticateToRealm",
+            "OR",
+            "AMIdentityMembership",
+            "LDAPFilter",
+            "AuthLevel",
+            "SessionProperty",
+            "Session",
+            "NOT",
+            "AND",
+            "ResourceEnvIP"
+        ],
+        "applicationType":"iPlanetAMWebAgentService",
+        "attributeNames":[
+
+        ],
+        "lastModifiedDate":1419267875053,
+        "resourceComparator":null,
+        "createdBy":"id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+        "saveIndex":null,
+        "lastModifiedBy":"id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+        "searchIndex":null,
+        "entitlementCombiner":"DenyOverride",
+        "realm":"/",
+        "creationDate":1419267875053,
+        "actions":{
+            "POST":true,
+            "PATCH":true,
+            "GET":true,
+            "DELETE":true,
+            "OPTIONS":true,
+            "HEAD":true,
+            "PUT":true
+        }
+    }
+    ```
+
