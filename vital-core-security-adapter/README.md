@@ -328,3 +328,175 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/groups** expects the "vitalManToken" session cookie to be included in the request and returns the list of groups. Response example:
+
+    ```json
+    {
+        "result":[
+            "Advanced_Users",
+            "Base_Users",
+            "Dev_Users"
+        ],
+        "resultCount":3,
+        "remainingPagedResults":-1
+    }
+    ```
+
+ * **/policies** expects the "vitalManToken" session cookie to be included in the request and returns some info about the policies. Response example:
+
+    ```json
+    {
+        "result":[
+            {
+                "name":"Resource B",
+                "active":true,
+                "description":"Resource B",
+                "applicationName":"iPlanetAMWebAgentService",
+                "actionValues":{
+                    "GET":true
+                },
+                "resources":[
+                    "http://vitalsp.cloud.reply.eu:80/resB",
+                    "http://vitalsp.cloud.reply.eu:80/resB/*"
+                ],
+                "subject":{
+                    "type":"Identity",
+                    "subjectValues":[
+                        "id=Advanced_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+                    ]
+                },
+                "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "lastModifiedDate":"2015-08-31T08:14:18.282Z",
+                "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "creationDate":"2015-08-07T09:18:42.369Z"
+            },
+            {
+                "name":"Resource A",
+                "active":true,
+                "description":"Resource A",
+                "applicationName":"iPlanetAMWebAgentService",
+                "actionValues":{
+                    "GET":true
+                },
+                "resources":[
+                    "http://vitalsp.cloud.reply.eu:80/resA",
+                    "https://vitalsp.cloud.reply.eu:443/resA/*",
+                    "https://vitalsp.cloud.reply.eu:443/resA",
+                    "http://vitalsp.cloud.reply.eu:80/resA/*"
+                ],
+                "subject":{
+                    "type":"Identity",
+                    "subjectValues":[
+                        "id=Base_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+                    ]
+                },
+                "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "lastModifiedDate":"2015-09-01T12:55:23.181Z",
+                "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+                "creationDate":"2015-08-07T09:15:04.115Z"
+            }
+        ],
+        "resultCount":2,
+        "remainingPagedResults":0
+    }
+    ```
+
+ * **/applications** expects the "vitalManToken" session cookie to be included in the request and returns the list of users. Response example:
+
+    ```json
+    {
+        "result":[
+            {
+                "name":"openProvisioning",
+                "resources":[
+                    "/*"
+                ],
+                "subjects":[
+
+                ],
+                "conditions":[
+
+                ],
+                "applicationType":"openProvisioning",
+                "attributeNames":[
+
+                ],
+                "lastModifiedDate":1419267870652,
+                "resourceComparator":null,
+                "createdBy":"id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+                "saveIndex":null,
+                "lastModifiedBy":"id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+                "searchIndex":null,
+                "entitlementCombiner":"DenyOverride",
+                "realm":"/",
+                "creationDate":1419267870652,
+                "actions":{
+                    "UPDATE":true,
+                    "CREATE":true,
+                    "DELETE":true,
+                    "READ":true
+                }
+            },
+            {
+                "name":"sunIdentityServerLibertyPPService",
+                "resources":[
+                    "*"
+                ],
+                "subjects":[
+                    "JwtClaim",
+                    "AuthenticatedUsers",
+                    "Identity",
+                    "NOT",
+                    "AND",
+                    "OR"
+                ],
+                "conditions":[
+                    "AuthenticateToService",
+                    "AuthLevelLE",
+                    "AuthScheme",
+                    "IPv6",
+                    "SimpleTime",
+                    "OAuth2Scope",
+                    "IPv4",
+                    "AuthenticateToRealm",
+                    "OR",
+                    "AMIdentityMembership",
+                    "LDAPFilter",
+                    "AuthLevel",
+                    "SessionProperty",
+                    "Session",
+                    "NOT",
+                    "AND",
+                    "ResourceEnvIP"
+                ],
+                "applicationType":"sunIdentityServerLibertyPPService",
+                "attributeNames":[
+
+                ],
+                "lastModifiedDate":1419267868733,
+                "resourceComparator":null,
+                "createdBy":"id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+                "saveIndex":null,
+                "lastModifiedBy":"id=dsameuser,ou=user,dc=openam,dc=forgerock,dc=org",
+                "searchIndex":null,
+                "entitlementCombiner":"DenyOverride",
+                "realm":"/",
+                "creationDate":1419267868733,
+                "actions":{
+                    "QUERY_interactForConsent":false,
+                    "QUERY_interactForValue":false,
+                    "MODIFY_interactForValue":false,
+                    "QUERY_deny":false,
+                    "MODIFY_deny":false,
+                    "MODIFY_interactForConsent":false,
+                    "MODIFY_allow":true,
+                    "QUERY_allow":true
+                }
+            },
+            [...]
+        ],
+        "resultCount":10,
+        "remainingPagedResults":0
+    }
+    ```
+
