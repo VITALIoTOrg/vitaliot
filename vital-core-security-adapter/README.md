@@ -52,16 +52,16 @@ by the module in a simple and more accessible way.
 
 Below the responses formats on success case are described. In case of failure almost all the REST endpoints return a generic HTTP code (400 for bad request and 500 for internal error) and JSON body describing the error more precisely. An example of error response is the following:
 
-    ```json
-    {
-        "result":[
+```json
+{
+    "result":[
 
-        ],
-        "reason":"Unauthorized",
-        "code":401,
-        "message":"Access Denied"
-    }
-    ```
+    ],
+    "reason":"Unauthorized",
+    "code":401,
+    "message":"Access Denied"
+}
+```
 
 ### GET endpoints
 
