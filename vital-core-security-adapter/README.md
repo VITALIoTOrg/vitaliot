@@ -762,3 +762,29 @@ by the module in a simple and more accessible way.
 
  * **/application/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the application to delete) to be included in the request.
 
+ * **/user/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "givenName", the updated user first name
+    * "surname", the updated user last name
+    * "mail", the updated user e-mail address
+    * "status", "Active" or "Inactive"
+
+   It returns some info about the user identified by "id" with the updated fields (please refer to user info get or creation for response format).
+
+ * **/user/changePassword** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "userpass", the new password
+    * "currpass", the old password
+
+   It changes the sets the new password "currpass" for the user corresponding to the session of the "vitalManToken" cookie.
+
+ * **/policy/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "description", the updated policy description
+    * "active", new policy status (false/true)
+    * "groups[]", the updated list of groups to be affected by the policy
+    * "nogr", a boolean value which set to false allows to update without including the previous parameter (a.k.a. groups are not updated), while set to true means that if no group is specified then all groups are removed from the policy
+    * "resources[]", the updated list of resources to be affected by the policy
+    * "nores", a boolean value which set to false allows to update without including the previous parameter (a.k.a. resources are not updated), while set to true means that if no resource is specified then all resources are removed from the policy
+    * "actions[ACTION]", updated boolean values specifying if the ACTION (GET, POST, PUT, etc.) is allowed or denied
+    * "nores", a boolean which set to false allows to update without including the previous parameter (a.k.a. actions are not updated), while set to true means that if no action is specified then all actions are removed from the policy (the policy is then ineffective)
+
+   It returns some info about the user identified by "id" with the updated fields (please refer to user info get or creation for response format).
+
