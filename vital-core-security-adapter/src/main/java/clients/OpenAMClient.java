@@ -2263,9 +2263,9 @@ public class OpenAMClient {
 		} else {
 			ArrayList<String> groupsId = new ArrayList<String>();
 			
-			for (int i=0; i<groups.size();i++) {
+			for(int i = 0; i < groups.size(); i++) {
 				String currentGroup = groups.get(i);
-				if (getGroup(currentGroup, token).getUsername() == null) {
+				if(getGroup(currentGroup, token).getUsername() == null) {
 					return false;
 				} else {
 					groupsId.add(getGroup(currentGroup, token).getUniversalid().get(0)); 
