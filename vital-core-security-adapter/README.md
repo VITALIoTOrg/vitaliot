@@ -784,7 +784,60 @@ by the module in a simple and more accessible way.
     * "resources[]", the updated list of resources to be affected by the policy
     * "nores", a boolean value which set to false allows to update without including the previous parameter (a.k.a. resources are not updated), while set to true means that if no resource is specified then all resources are removed from the policy
     * "actions[ACTION]", updated boolean values specifying if the ACTION (GET, POST, PUT, etc.) is allowed or denied
-    * "nores", a boolean which set to false allows to update without including the previous parameter (a.k.a. actions are not updated), while set to true means that if no action is specified then all actions are removed from the policy (the policy is then ineffective)
+    * "noact", a boolean which set to false allows to update without including the previous parameter (a.k.a. actions are not updated), while set to true means that if no action is specified then all actions are removed from the policy (the policy is then ineffective)
 
    It returns some info about the policy identified by "id" with the updated fields (please refer to policy info get or creation for response format).
+
+ * **/application/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "description", the updated application description
+    * "resources[]", the updated list of patterns for resources allowed in policies
+    * "nores", a boolean value which set to false allows to update without including the previous parameter (a.k.a. patterns are not updated), while set to true means that if no pattern is specified then all patterns are removed from the application
+
+   It returns some info about the application identified by "id" with the updated fields (please refer to application info get or creation for response format).
+
+ * **/authenticate** expects the following form parameters to be included in the request:
+    * "name", username
+    * "password", user password
+    * "altCookie", if false the SSO "vitalAccessToken" cookie is returned, otherwise the alternative "vitalManToken" cookie is included in the response.
+
+    It returns some info useful for session management. Response example:
+
+    ```json
+    {
+        "uid":"jsmith",
+        "name":"John",
+        "fullname":"John Connor",
+        "creation":{
+            "year":"2015",
+            "month":"July",
+            "day":"09"
+        },
+        "mailhash":"6dd9fe44b007f7898e3ab1305cbcddca"
+    }
+    ```
+
+ * **/logout** expects either the "vitalManToken" or the "vitalAccessToken" session cookie to be included in the request and performs logout (destroys the session identified by the cookie); if the form parameter "altCookie" is set to true the adapter will use the "vitalManToken" cookie, otherwise the "vitalAccessToken" cookie.
+
+ * **/evaluate** expects both the "vitalManToken" (user session with the rights to request a policy evaluation) and the "vitalAccessToken" (session corresponding to the user for whom the policy is evaluated) session cookie and the form parameter "resources[]" (resources for which user permissions are requested) to be included in the request.
+
+    It returns for each resource the list of permitted or denied actions. Response example:
+
+    ```json
+    {
+        "responses":[
+            {
+                "advices":{
+
+                },
+                "resource":"https://vitalsp.cloud.reply.eu/resA/",
+                "actions":{
+                    "GET":true
+                },
+                "attributes":{
+
+                }
+            }
+        ]
+    }
+    ```
 
