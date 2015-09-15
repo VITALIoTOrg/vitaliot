@@ -55,128 +55,69 @@ by the module in a simple and more accessible way.
  * **/rest/user/{id}**: returns info about the user identified by "id" (expects the
    "vitalManToken" session cookie); response example:
 
-   ```
-    {
+```
+{
+    "username":"jconnor",
+    "realm":"/",
+    "uid":[
+        "jconnor"
+    ],
+    "mail":[
+        "john.connor@sky.net"
+    ],
+    "userPassword":[
+        "{SSHA}adPfkc6+UG0gIsFXfxw4eH50SlWyWGqLqj8/Ng=="
+    ],
+    "sn":[
+        "Connor"
+    ],
+    "createTimestamp":[
+        "20150630124922Z"
+    ],
+    "cn":[
+        "jconnor"
+    ],
+    "modifyTimestamp":[
+        "20150826152345Z"
+    ],
+    "givenName":[
+        "John"
+    ],
+    "givenname":[
 
-        "username":"jconnor",
+    ],
+    "inetUserStatus":[
+        "Active"
+    ],
+    "dn":[
+        "uid=jconnor,ou=people,dc=reply,dc=vital,dc=eu"
+    ],
+    "sun-fm-saml2-nameid-info":[
 
-        "realm":"/",
+    ],
+    "objectClass":[
+        "devicePrintProfilesContainer",
+        "person",
+        "sunIdentityServerLibertyPPService",
+        "inetorgperson",
+        "sunFederationManagerDataStore",
+        "iPlanetPreferences",
+        "iplanet-am-auth-configuration-service",
+        "organizationalperson",
+        "sunFMSAML2NameIdentifier",
+        "inetuser",
+        "forgerock-am-dashboard-service",
+        "iplanet-am-managed-person",
+        "iplanet-am-user-service",
+        "sunAMAuthAccountLockout",
+        "top"
+    ],
+    "universalid":[
+        "id=jconnor,ou=user,dc=openam,dc=forgerock,dc=org"
+    ],
+    "sun-fm-saml2-nameid-infokey":[
 
-        "uid":[
-
-            "jconnor"
-
-        ],
-
-        "mail":[
-
-            "john.connor@sky.net"
-
-        ],
-
-        "userPassword":[
-
-            "{SSHA}adPfkc6+UG0gIsFXfxw4eH50SlWyWGqLqj8/Ng=="
-
-        ],
-
-        "sn":[
-
-            "Connor"
-
-        ],
-
-        "createTimestamp":[
-
-            "20150630124922Z"
-
-        ],
-
-        "cn":[
-
-            "jconnor"
-
-        ],
-
-        "modifyTimestamp":[
-
-            "20150826152345Z"
-
-        ],
-
-        "givenName":[
-
-            "John"
-
-        ],
-
-        "givenname":[
-
-
-        ],
-
-        "inetUserStatus":[
-
-            "Active"
-
-        ],
-
-        "dn":[
-
-            "uid=jconnor,ou=people,dc=reply,dc=vital,dc=eu"
-
-        ],
-
-        "sun-fm-saml2-nameid-info":[
-
-
-        ],
-
-        "objectClass":[
-
-            "devicePrintProfilesContainer",
-
-            "person",
-
-            "sunIdentityServerLibertyPPService",
-
-            "inetorgperson",
-
-            "sunFederationManagerDataStore",
-
-            "iPlanetPreferences",
-
-            "iplanet-am-auth-configuration-service",
-
-            "organizationalperson",
-
-            "sunFMSAML2NameIdentifier",
-
-            "inetuser",
-
-            "forgerock-am-dashboard-service",
-
-            "iplanet-am-managed-person",
-
-            "iplanet-am-user-service",
-
-            "sunAMAuthAccountLockout",
-
-            "top"
-
-        ],
-
-        "universalid":[
-
-            "id=jconnor,ou=user,dc=openam,dc=forgerock,dc=org"
-
-        ],
-
-        "sun-fm-saml2-nameid-infokey":[
-
-
-        ]
-
-    }
-   ```
+    ]
+}
+```
 
