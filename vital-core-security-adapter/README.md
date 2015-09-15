@@ -587,7 +587,7 @@ form parameters to be included in the request:
 
     * "mail", the optional user e-mail address
 
-   It returns some info about the created user. Response example:
+       It returns some info about the created user. Response example:
 
     ```json
     {
