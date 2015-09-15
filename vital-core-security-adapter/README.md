@@ -694,3 +694,71 @@ by the module in a simple and more accessible way.
 
  * **/policy/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the policy to delete) to be included in the request.
 
+ * **/application/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "name", the name of the application to create
+    * "description", some free text describing the application
+    * "resources[]", the array of patterns for allowed resources in policies
+
+   It returns some info about the created application. Response example:
+
+    ```json
+    {
+        "creationDate":1442319637578,
+        "lastModifiedDate":1442319637578,
+        "conditions":[
+            "AuthenticateToService",
+            "AuthScheme",
+            "IPv6",
+            "SimpleTime",
+            "OAuth2Scope",
+            "IPv4",
+            "AuthenticateToRealm",
+            "OR",
+            "AMIdentityMembership",
+            "LDAPFilter",
+            "SessionProperty",
+            "AuthLevel",
+            "LEAuthLevel",
+            "Session",
+            "NOT",
+            "AND",
+            "ResourceEnvIP"
+        ],
+        "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+        "resourceComparator":null,
+        "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+        "applicationType":"iPlanetAMWebAgentService",
+        "subjects":[
+            "JwtClaim",
+            "AuthenticatedUsers",
+            "Identity",
+            "NOT",
+            "AND",
+            "OR"
+        ],
+        "actions":{
+            "POST":true,
+            "PATCH":true,
+            "GET":true,
+            "DELETE":true,
+            "OPTIONS":true,
+            "HEAD":true,
+            "PUT":true
+        },
+        "entitlementCombiner":"DenyOverride",
+        "saveIndex":null,
+        "searchIndex":null,
+        "attributeNames":[
+
+        ],
+        "name":"TestApp",
+        "resources":[
+            "http//what.com/*"
+        ],
+        "description":"My awesome application",
+        "realm":"/"
+    }
+    ```
+
+ * **/application/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the application to delete) to be included in the request.
+
