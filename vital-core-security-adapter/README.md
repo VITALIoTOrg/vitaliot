@@ -67,9 +67,11 @@ the following:
 }
 ```
 
+All services are exposed under the subpath "/rest".
+
 ### GET endpoints
 
- * **/rest/user/{id}** expects the "vitalManToken" session cookie to be included
+ * **/user/{id}** expects the "vitalManToken" session cookie to be included
 in the request and returns some info about the user identified by "id". Response
 example:
 
