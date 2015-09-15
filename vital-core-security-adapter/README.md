@@ -493,7 +493,7 @@ by the module in a simple and more accessible way.
                     "QUERY_allow":true
                 }
             },
-            [...]
+            ...
         ],
         "resultCount":10,
         "remainingPagedResults":0
@@ -528,6 +528,71 @@ by the module in a simple and more accessible way.
             "month":"July",
             "day":"09"
         }
+    }
+    ```
+
+### POST endpoints
+
+ * **/user/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "givenName", the optional user first name
+    * "surname", the optional user last name
+    * "name", the mandatory username
+    * "password", the mandatory (8 chars or more) user password
+    * "mail", the optional user e-mail address
+
+   It returns some info about the created user. Response example:
+
+    ```json
+    {
+        "username":"jbrown",
+        "realm":"/",
+        "uid":[
+            "jbrown"
+        ],
+        "mail":[
+            "jack.brown@example.com"
+        ],
+        "createTimestamp":[
+            "20150915094620Z"
+        ],
+        "sn":[
+            "Brown"
+        ],
+        "userPassword":[
+            "{SSHA}UrcRwePAKyP/J8AEbVtkeDZh7STfuxaAI6HjGg=="
+        ],
+        "cn":[
+            "jbrown"
+        ],
+        "givenName":[
+            "Jack"
+        ],
+        "inetUserStatus":[
+            "Active"
+        ],
+        "dn":[
+            "uid=jbrown,ou=people,dc=reply,dc=vital,dc=eu"
+        ],
+        "objectClass":[
+            "devicePrintProfilesContainer",
+            "person",
+            "sunIdentityServerLibertyPPService",
+            "inetorgperson",
+            "sunFederationManagerDataStore",
+            "iPlanetPreferences",
+            "iplanet-am-auth-configuration-service",
+            "organizationalperson",
+            "sunFMSAML2NameIdentifier",
+            "inetuser",
+            "forgerock-am-dashboard-service",
+            "iplanet-am-managed-person",
+            "iplanet-am-user-service",
+            "sunAMAuthAccountLockout",
+            "top"
+        ],
+        "universalid":[
+            "id=jbrown,ou=user,dc=openam,dc=forgerock,dc=org"
+        ]
     }
     ```
 
