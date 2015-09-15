@@ -708,8 +708,8 @@ example:
 "user" form parameter (the user to remove from the group "id") to be included in
 the request.
 
-   It returns some info about the group updated without the removed user (see
-above for the format).
+   It returns some info about the group updated without the removed user (same
+format as "addUser").
 
  * **/policy/create** expects the "vitalManToken" session cookie and the
 following form parameters to be included in the request:
@@ -865,14 +865,14 @@ form parameters to be included in the request:
     * "groups[]", the updated list of groups to be affected by the policy
 
     * "nogr", a boolean value which set to false allows to update without
-      including the previous parameter (a.k.a. groups are not updated), while
+      including the previous parameter (i.e. groups are not updated), while
       set to true means that if no group is specified then all groups are
       removed from the policy
 
     * "resources[]", the updated list of resources to be affected by the policy
 
     * "nores", a boolean value which set to false allows to update without
-      including the previous parameter (a.k.a. resources are not updated), while
+      including the previous parameter (i.e. resources are not updated), while
       set to true means that if no resource is specified then all resources are
       removed from the policy
 
@@ -880,14 +880,15 @@ form parameters to be included in the request:
       POST, PUT, etc.) is allowed or denied
 
     * "noact", a boolean which set to false allows to update without including
-      the previous parameter (a.k.a. actions are not updated), while set to true
+      the previous parameter (i.e. actions are not updated), while set to true
       means that if no action is specified then all actions are removed from the
-      policy (the policy then has not effect)
+      policy (the policy will have no effect)
 
    It returns some info about the policy identified by "id" with the updated
 fields (please refer to policy info GET or creation for response format).
 
- * **/application/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+ * **/application/{id}** expects the "vitalManToken" session cookie and the
+following form parameters to be included in the request:
 
     * "description", the updated application description
 
@@ -895,7 +896,7 @@ fields (please refer to policy info GET or creation for response format).
       policies
 
     * "nores", a boolean value which set to false allows to update without
-      including the previous parameter (a.k.a. patterns are not updated), while
+      including the previous parameter (i.e. patterns are not updated), while
       set to true means that if no pattern is specified then all patterns are
       removed from the application
 
@@ -911,8 +912,8 @@ request:
     * "password", user password
 
     * "altCookie", if false the SSO "vitalAccessToken" cookie is returned,
-    * otherwise the alternative "vitalManToken" cookie is included in the
-    * response.
+      otherwise the alternative "vitalManToken" cookie is included in the
+      response.
 
     It returns some info useful for session management. Response example:
 
