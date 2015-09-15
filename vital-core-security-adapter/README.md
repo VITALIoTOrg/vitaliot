@@ -624,3 +624,30 @@ by the module in a simple and more accessible way.
 
  * **/group/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the group to delete) to be included in the request.
 
+ * **/group/{id}/addUser** expects the "vitalManToken" session cookie and the "user" form parameter (the user to add to the group) to be included in the request.
+
+   It returns some info about the group updated with the added user. Response example:
+
+    ```json
+    {
+        "username":"test",
+        "realm":"/",
+        "uniqueMember":[
+            "uid=devtry,ou=people,dc=reply,dc=vital,dc=eu"
+        ],
+        "cn":[
+            "test"
+        ],
+        "dn":[
+            "cn=test,ou=groups,dc=reply,dc=vital,dc=eu"
+        ],
+        "objectclass":[
+            "groupofuniquenames",
+            "top"
+        ],
+        "universalid":[
+            "id=test,ou=group,dc=openam,dc=forgerock,dc=org"
+        ]
+    }
+    ```
+
