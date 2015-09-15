@@ -50,6 +50,19 @@ While reading the code may still be the best way to understand the adapter
 working details, this section will try and describe the RESTful services exposed
 by the module in a simple and more accessible way.
 
+Below the responses formats on success case are described. In case of failure almost all the REST endpoints return a generic HTTP code (400 for bad request and 500 for internal error) and JSON body describing the error more precisely. An example of error response is the following:
+
+    ```json
+    {
+        "result":[
+
+        ],
+        "reason":"Unauthorized",
+        "code":401,
+        "message":"Access Denied"
+    }
+    ```
+
 ### GET endpoints
 
  * **/rest/user/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the user identified by "id". Response example:
@@ -777,7 +790,7 @@ by the module in a simple and more accessible way.
    It changes the sets the new password "currpass" for the user corresponding to the session of the "vitalManToken" cookie.
 
  * **/policy/{id}** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
-    * "description", the updated policy description
+    * "description", the updated policy descriptionINTERNAL_SERVER_ERROR
     * "active", new policy status (false/true)
     * "groups[]", the updated list of groups to be affected by the policy
     * "nogr", a boolean value which set to false allows to update without including the previous parameter (a.k.a. groups are not updated), while set to true means that if no group is specified then all groups are removed from the policy
