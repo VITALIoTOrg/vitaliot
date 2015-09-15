@@ -48,9 +48,13 @@ Management UI, another component of the Vital security system.
 
 While reading the code may still be the best way to understand the adapter
 working details, this section will try and describe the RESTful services exposed
-by the module in a simple and more accessible way.
+by the module in a simple and accessible way.
 
-Below the responses formats on success case are described. In case of failure almost all the REST endpoints return a generic HTTP code (400 for bad request and 500 for internal error) and JSON body describing the error more precisely. An example of error response is the following:
+The following subsections include the format of the responses sent by the
+adapter in case of success. In case of failure almost all the REST endpoints
+return a generic HTTP code (400 for bad request and 500 for internal error) and
+a JSON body describing the error more precisely. An example of error response is
+the following:
 
 ```json
 {
@@ -65,7 +69,9 @@ Below the responses formats on success case are described. In case of failure al
 
 ### GET endpoints
 
- * **/rest/user/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the user identified by "id". Response example:
+ * **/rest/user/{id}** expects the "vitalManToken" session cookie to be included
+in the request and returns some info about the user identified by "id". Response
+example:
 
     ```json
     {
