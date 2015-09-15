@@ -54,7 +54,7 @@ by the module in a simple and more accessible way.
 
  * **/rest/user/{id}**: expects the "vitalManToken" session cookie to be included in the request and returns some info about the user identified by "id". Response example:
 
-    ```
+    ```json
     {
         "username":"jconnor",
         "realm":"/",
@@ -122,7 +122,7 @@ by the module in a simple and more accessible way.
 
  * **/user/{id}/groups**: expects the "vitalManToken" session cookie to be included in the request and returns the list of groups having the user identified by "id" as member. Response example:
 
-    ```
+    ```json
     {
         "result":[
             "Advanced_Users"
