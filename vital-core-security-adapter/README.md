@@ -132,3 +132,30 @@ by the module in a simple and more accessible way.
     }
     ```
 
+ * **/group/{id}** expects the "vitalManToken" session cookie to be included in the request and returns some info about the group identified by "id". Response example:
+
+    ```json
+    {
+        "username":"Advanced_Users",
+        "realm":"/",
+        "uniqueMember":[
+            "uid=devtry,ou=people,dc=reply,dc=vital,dc=eu",
+            "uid=jconnor,ou=people,dc=reply,dc=vital,dc=eu",
+            "uid=amAdmin,ou=people,dc=openam,dc=forgerock,dc=org"
+        ],
+        "cn":[
+            "Advanced_Users"
+        ],
+        "dn":[
+            "cn=Advanced_Users,ou=groups,dc=reply,dc=vital,dc=eu"
+        ],
+        "objectclass":[
+            "groupofuniquenames",
+            "top"
+        ],
+        "universalid":[
+            "id=Advanced_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+        ]
+    }
+    ```
+
