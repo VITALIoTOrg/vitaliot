@@ -624,7 +624,7 @@ by the module in a simple and more accessible way.
 
  * **/group/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the group to delete) to be included in the request.
 
- * **/group/{id}/addUser** expects the "vitalManToken" session cookie and the "user" form parameter (the user to add to the group) to be included in the request.
+ * **/group/{id}/addUser** expects the "vitalManToken" session cookie and the "user" form parameter (the user to add to the group "id") to be included in the request.
 
    It returns some info about the group updated with the added user. Response example:
 
@@ -650,4 +650,8 @@ by the module in a simple and more accessible way.
         ]
     }
     ```
+
+ * **/group/{id}/delUser** expects the "vitalManToken" session cookie and the "user" form parameter (the user to remove from the group "id") to be included in the request.
+
+   It returns some info about the group updated without the removed user.
 
