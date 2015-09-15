@@ -401,7 +401,7 @@ by the module in a simple and more accessible way.
     }
     ```
 
- * **/applications** expects the "vitalManToken" session cookie to be included in the request and returns the list of users. Response example:
+ * **/applications** expects the "vitalManToken" session cookie to be included in the request and returns some info about the applications. Response example:
 
     ```json
     {
@@ -497,6 +497,37 @@ by the module in a simple and more accessible way.
         ],
         "resultCount":10,
         "remainingPagedResults":0
+    }
+    ```
+
+ * **/stats** returns some statistics about the status of the OpenAM server. Response example:
+
+    ```json
+    {
+        "activeSessions":1,
+        "currInternalSessions":9,
+        "currRemoteSessions":0,
+        "cumPolicyEval":238,
+        "avgPolicyEval":0,
+        "avgPolicyEvalTree":0
+    }
+    ```
+
+ * **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is optional) session cookies to be included in the request and returns some info useful for session management (whether the user session is still valid and some info about the user); if the query parameter "altCookie" is set to true the info is related to the session of the "vitalManToken" cookie, otherwise of the "vitalAccessToken" cookie. Response example:
+
+    ```json
+    {
+        "valid":true,
+        "uid":"jsmith",
+        "realm":"/",
+        "name":"John",
+        "fullname":"John Connor",
+        "mailhash":"6dd9fe44b007f7898e3ab1305cbcddca",
+        "creation":{
+            "year":"2015",
+            "month":"July",
+            "day":"09"
+        }
     }
     ```
 
