@@ -11,16 +11,16 @@ REST interface to access Vital security features.
 In order to change the configuration you need to edit file
 "src/main/resources/config.properties" and change the values of the properties:
 
- * **IDP_HOST** is the address of the server running OpenAM
+* **IDP_HOST** is the address of the server running OpenAM
 
- * **IDP_PORT** is the port number where OpenAM is listening (REST interface)
+* **IDP_PORT** is the port number where OpenAM is listening (REST interface)
 
- * **SNMP_PORT** is the port number where the OpenAM SNMP interface is listening
+* **SNMP_PORT** is the port number where the OpenAM SNMP interface is listening
    (used for monitoring)
 
- * **AUTH_TOKEN** is the name of the token cookie used by OpenAM
+* **AUTH_TOKEN** is the name of the token cookie used by OpenAM
 
- * **MAN_TOKEN** is the name of the alternative token cookie currently used by
+* **MAN_TOKEN** is the name of the alternative token cookie currently used by
    the Security Management application
 
 ## Build and run
@@ -28,7 +28,7 @@ In order to change the configuration you need to edit file
 In order to build the application you will need the following tool to be
 installed on your machine:
 
- * **Maven** (https://maven.apache.org/)
+* **Maven** (https://maven.apache.org/)
 
 Then you can build issuing the following command:
 
@@ -71,7 +71,7 @@ All services are exposed under the subpath **/rest**.
 
 ### GET endpoints
 
- * **/user/{id}** expects the "vitalManToken" session cookie to be included
+* **/user/{id}** expects the "vitalManToken" session cookie to be included
 in the request and returns some info about the user identified by "id". Response
 example:
 
@@ -141,7 +141,7 @@ example:
     }
     ```
 
- * **/user/{id}/groups** expects the "vitalManToken" session cookie to be
+* **/user/{id}/groups** expects the "vitalManToken" session cookie to be
 included in the request and returns the list of groups having the user
 identified by "id" as member. Response example:
 
@@ -155,7 +155,7 @@ identified by "id" as member. Response example:
     }
     ```
 
- * **/group/{id}** expects the "vitalManToken" session cookie to be included in
+* **/group/{id}** expects the "vitalManToken" session cookie to be included in
 the request and returns some info about the group identified by "id". Response
 example:
 
@@ -184,7 +184,7 @@ example:
     }
     ```
 
- * **/policy/{id}** expects the "vitalManToken" session cookie to be included in
+* **/policy/{id}** expects the "vitalManToken" session cookie to be included in
 the request and returns some info about the policy identified by "id". Response
 example:
 
@@ -216,7 +216,7 @@ example:
     }
     ```
 
- * **/application/{id}** expects the "vitalManToken" session cookie to be
+* **/application/{id}** expects the "vitalManToken" session cookie to be
 included in the request and returns some info about the application identified
 by "id". Response example:
 
@@ -281,7 +281,7 @@ by "id". Response example:
     }
     ```
 
- * **/application/{id}/policies** expects the "vitalManToken" session cookie to
+* **/application/{id}/policies** expects the "vitalManToken" session cookie to
 be included in the request and returns some info about the policies part of the
 application identified by "id". Response example:
 
@@ -342,7 +342,7 @@ application identified by "id". Response example:
     }
     ```
 
- * **/users** expects the "vitalManToken" session cookie to be included in the
+* **/users** expects the "vitalManToken" session cookie to be included in the
 request and returns the list of users. Response example:
 
     ```json
@@ -360,7 +360,7 @@ request and returns the list of users. Response example:
     }
     ```
 
- * **/groups** expects the "vitalManToken" session cookie to be included in the
+* **/groups** expects the "vitalManToken" session cookie to be included in the
 request and returns the list of groups. Response example:
 
     ```json
@@ -375,7 +375,7 @@ request and returns the list of groups. Response example:
     }
     ```
 
- * **/policies** expects the "vitalManToken" session cookie to be included in
+* **/policies** expects the "vitalManToken" session cookie to be included in
 the request and returns some info about the policies. Response example:
 
     ```json
@@ -435,7 +435,7 @@ the request and returns some info about the policies. Response example:
     }
     ```
 
- * **/applications** expects the "vitalManToken" session cookie to be included
+* **/applications** expects the "vitalManToken" session cookie to be included
 in the request and returns some info about the applications. Response example:
 
     ```json
@@ -535,7 +535,7 @@ in the request and returns some info about the applications. Response example:
     }
     ```
 
- * **/stats** returns some statistics about the status of the OpenAM server.
+* **/stats** returns some statistics about the status of the OpenAM server.
 Response example:
 
     ```json
@@ -549,7 +549,7 @@ Response example:
     }
     ```
 
- * **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is
+* **/user** expects the "vitalManToken" and "vitalAccessToken" (the latter is
 optional) session cookies to be included in the request and returns some info
 useful for session management (whether the user session is still valid or not
 and some info about the user); if the query parameter "altCookie" is set to true
