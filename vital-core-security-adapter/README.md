@@ -655,3 +655,42 @@ by the module in a simple and more accessible way.
 
    It returns some info about the group updated without the removed user.
 
+ * **/policy/create** expects the "vitalManToken" session cookie and the following form parameters to be included in the request:
+    * "name", the name of the policy to create
+    * "appname", the application name
+    * "resources[]", the array of resources the policy will affect
+    * "groups[]", the array of user groups the policy will affect
+    * "actions[ACTION]", boolean values specifying if the ACTION (GET, POST, PUT, etc.) is allowed or denied
+
+   It returns some info about the created policy. Response example:
+
+    ```json
+    {
+        "name":"test",
+        "active":true,
+        "description":"test created from REST.",
+        "applicationName":"iPlanetAMWebAgentService",
+        "actionValues":{
+            "POST":false,
+            "GET":true,
+            "PUT":false
+        },
+        "resources":[
+            "http://what.com:80/hey"
+        ],
+        "subject":{
+            "type":"Identity",
+            "subjectValues":[
+                "id=Dev_Users,ou=group,dc=openam,dc=forgerock,dc=org",
+                "id=Advanced_Users,ou=group,dc=openam,dc=forgerock,dc=org"
+            ]
+        },
+        "lastModifiedBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+        "lastModifiedDate":"2015-09-15T10:31:00.96Z",
+        "createdBy":"id=amAdmin,ou=user,dc=openam,dc=forgerock,dc=org",
+        "creationDate":"2015-09-15T10:31:00.96Z"
+    }
+    ```
+
+ * **/policy/delete** expects the "vitalManToken" session cookie and the "name" form parameter (the policy to delete) to be included in the request.
+
