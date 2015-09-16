@@ -729,7 +729,7 @@ public class GetServices {
 		if((time != null) && (!time.isEmpty())) {
 			date.setYear(time.get(0).substring(0, 4));
 			int m = Integer.parseInt(time.get(0).substring(4, 6));
-			date.setMonth(new DateFormatSymbols().getMonths()[m]);
+			date.setMonth(new DateFormatSymbols().getMonths()[m - 1]);
 			date.setDay(time.get(0).substring(6, 8));
 			val.setCreation(date);
 		}
