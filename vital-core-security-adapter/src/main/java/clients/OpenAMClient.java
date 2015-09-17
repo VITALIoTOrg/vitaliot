@@ -1832,7 +1832,7 @@ public class OpenAMClient {
 	 * @param actions
 	 * @param resources
 	 */
-	public boolean createAuthenticatedPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, String token) {
+	public boolean createAuthenticatedPolicy(String policyName, String description, ArrayList<Action> actions, ArrayList<String> resources, String token) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
 		
@@ -1851,7 +1851,7 @@ public class OpenAMClient {
 		
 		policyAuthenticatedModel.setName(policyName);
 		policyAuthenticatedModel.setActive(true);
-		policyAuthenticatedModel.setDescription(policyName+" created from REST.");
+		policyAuthenticatedModel.setDescription(description);
 		policyAuthenticatedModel.setResources(resources);
 		
 		ActionValues__ actVal = new ActionValues__();
@@ -1958,7 +1958,7 @@ public class OpenAMClient {
 	 * @param users
 	 * @return
 	 */
-	public boolean createIdentityUsersPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> users, String token) {
+	public boolean createIdentityUsersPolicy(String policyName, String description, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> users, String token) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
 		
@@ -1991,7 +1991,7 @@ public class OpenAMClient {
 		
 		policyIdentityModel.setName(policyName);
 		policyIdentityModel.setActive(true);
-		policyIdentityModel.setDescription(policyName+" creted from REST.");
+		policyIdentityModel.setDescription(description);
 		policyIdentityModel.setResources(resources);
 		
 		ActionValues___ actVal = new ActionValues___();
@@ -2090,7 +2090,7 @@ public class OpenAMClient {
 		return false;
 	}
 	
-	public boolean createIdentityGroupsPolicy(String policyName, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, String applicationName, StringBuilder goingOn, String token) {
+	public boolean createIdentityGroupsPolicy(String policyName, String description, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, String applicationName, StringBuilder goingOn, String token) {
 	
 		/*boolean currentSessionIsValid = isTokenValid();
 		
@@ -2123,7 +2123,7 @@ public class OpenAMClient {
 		
 		policyIdentityModel.setName(policyName);
 		policyIdentityModel.setActive(true);
-		policyIdentityModel.setDescription(policyName+" created from REST.");
+		policyIdentityModel.setDescription(description);
 		policyIdentityModel.setResources(resources);
 		policyIdentityModel.setApplicationName(applicationName);
 		
