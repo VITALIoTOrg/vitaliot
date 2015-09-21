@@ -716,6 +716,8 @@ following form parameters to be included in the request:
 
     * "name", the name of the policy to create
 
+    * "description", a textual description of the policy to create
+
     * "appname", the application name
 
     * "resources[]", the array of resources the policy will affect
