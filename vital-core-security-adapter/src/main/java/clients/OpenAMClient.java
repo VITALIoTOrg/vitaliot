@@ -548,6 +548,72 @@ public class OpenAMClient {
 		return validation;
 	}
 	
+	public Validation validateToken(String token, String userToken) {
+		
+		/*boolean currentSessionIsValid = isTokenValid();
+		
+		if (!currentSessionIsValid) {
+			authenticate(null, null);
+		}
+		
+		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/sessions/")
+			.setCustomQuery("_action=isActive&tokenId="+userToken)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader(authToken, token);
+		
+		// Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}    
+		}
+		
+		Validation validation = new Validation();
+		
+		try {
+			validation = (Validation) JsonUtils.deserializeJson(respString, Validation.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		return validation;
+	}
+	
 	public Users getUsers(String token) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();

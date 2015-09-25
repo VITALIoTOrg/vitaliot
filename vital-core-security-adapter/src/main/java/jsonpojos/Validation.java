@@ -23,7 +23,8 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "name",
     "fullname",
     "mailhash",
-    "creation"
+    "creation",
+    "active"
 })
 public class Validation {
 
@@ -41,6 +42,8 @@ public class Validation {
     private String mailhash;
     @JsonProperty("creation")
     private SimpleDate creation;
+    @JsonProperty("active")
+    private Boolean active;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -216,6 +219,31 @@ public class Validation {
 
     public Validation withCreation(SimpleDate creation) {
         this.creation = creation;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The active
+     */
+    @JsonProperty("active")
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     * 
+     * @param active
+     *     The active
+     */
+    @JsonProperty("active")
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Validation withActive(Boolean active) {
+        this.active = active;
         return this;
     }
 
