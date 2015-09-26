@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html ng-app="app.main">
+<html ng-app="main">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="path" content="<%= path %>"/>
+    <meta charset="UTF-8">
+    <title>Vital | Orchestrator</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
-    <title>VITAL ORCHESTRATOR</title>
+    <!-- bower:css -->
+    <!-- endbower -->
 
-    <!-- compiled CSS -->
-    <% styles.forEach( function ( file ) { %>
-    <link rel="stylesheet" type="text/css" href="<%= file %>"/>
-    <% }); %>
+    <!-- injector:css -->
+    <!-- endinjector -->
 
-    <!-- compiled JavaScript -->
-    <% scripts.forEach( function ( file ) { %>
-    <script type="text/javascript" src="<%= file %>?ver=<%=version%>"></script>
-    <% }); %>
+    <!-- bower:js -->
+    <!-- endbower -->
+
+    <!-- injector:js -->
+    <!-- endinjector -->
+
 </head>
 
-<body class="skin-black sidebar-mini">
-
+<body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
     <header class="main-header">
-
         <!-- Logo -->
         <a href="#/home" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -44,13 +43,14 @@
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="./assets/user-profile.jpg" class="user-image" alt="User Image"/>
+                            <img src="vendor/admin-lte/dist/img/user1-128x128.jpg" class="user-image" alt="User Image"/>
                             <span class="hidden-xs">Orchestrator User</span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="./assets/user-profile.jpg" class="img-circle" alt="User Image"/>
+                                <img src="vendor/admin-lte/dist/img/user1-128x128.jpg" class="img-circle"
+                                     alt="User Image"/>
 
                                 <p>
                                     Alexander Pierce - Web Developer
@@ -85,6 +85,7 @@
 
         </nav>
     </header>
+
     <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
@@ -111,7 +112,8 @@
                 </li>
                 <li class="active treeview">
                     <a>
-                        <i class="fa fa-cloud"></i> <span>Meta Services</span> <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-cloud"></i> <span>Meta Services</span> <i
+                        class="fa fa-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="#/metaservice/list"><i class="fa fa-circle-o"></i> Meta Service List</a></li>
@@ -124,7 +126,7 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <div ng-view>Loading....</div>
+        <section class="content" ng-view>Loading ...</section>
     </div>
     <!-- /.content-wrapper -->
 

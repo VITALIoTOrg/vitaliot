@@ -1,7 +1,6 @@
 'use strict';
-angular.module('app.main.workflow', [
-    'ngRoute'
-])
+angular.module('main.workflow', [])
+
     .config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.when('/workflow/list', {
@@ -80,7 +79,7 @@ angular.module('app.main.workflow', [
                     workflowListCtrl.state.errors.length = 0;
                     workflowResource.createMetaservice(metaservice)
                         .then(function(savedMetaservice) {
-                            workflowListCtrl.state.errors.push("Deployed");
+                            workflowListCtrl.state.errors.push('Deployed');
                         }, function(error) {
                             workflowListCtrl.state.errors.push(error);
                         });

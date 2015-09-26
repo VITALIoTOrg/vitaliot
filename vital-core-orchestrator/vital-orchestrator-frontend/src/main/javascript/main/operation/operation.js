@@ -1,7 +1,6 @@
 'use strict';
-angular.module('app.main.operation', [
-    'ngRoute'
-])
+angular.module('main.operation', [])
+
     .config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.when('/operation/list', {

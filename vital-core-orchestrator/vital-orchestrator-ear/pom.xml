@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
     JBoss, Home of Professional Open Source
     Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
     contributors by the @authors tag. See the copyright.txt in the
@@ -16,7 +15,7 @@
     limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -45,11 +44,13 @@
         <dependency>
             <groupId>eu.vital.orchestrator</groupId>
             <artifactId>vital-orchestrator-web</artifactId>
+            <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
             <groupId>eu.vital.orchestrator</groupId>
             <artifactId>vital-orchestrator-ejb</artifactId>
+            <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
     </dependencies>
@@ -69,16 +70,16 @@
                         have any modules (EJB-JARs and WARs) use them -->
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <modules>
-                    <!-- Default context root of the web app is /vital-orchestrator-web.
-                        If a custom context root is needed, uncomment the following snippet to
-                        register our War as a web module and set the contextRoot property -->
-                    <!--
-                    <webModule>
-                        <groupId>eu.vital.orchestrator</groupId>
-                        <artifactId>vital-orchestrator-web</artifactId>
-                        <contextRoot>/vital-orchestrator</contextRoot>
-                    </webModule>
-                    -->
+                        <!-- Default context root of the web app is /vital-orchestrator-web.
+                            If a custom context root is needed, uncomment the following snippet to
+                            register our War as a web module and set the contextRoot property -->
+                        <!--
+                        <webModule>
+                            <groupId>eu.vital.orchestrator</groupId>
+                            <artifactId>vital-orchestrator-web</artifactId>
+                            <contextRoot>/vital-orchestrator</contextRoot>
+                        </webModule>
+                        -->
                     </modules>
                     <fileNameMapping>no-version</fileNameMapping>
                 </configuration>
@@ -91,13 +92,12 @@
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
                 <configuration>
-                    <filename>${project.artifactId}.ear</filename>
                     <skip>false</skip>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-   
+
     <profiles>
         <profile>
             <!-- When built in OpenShift the 'openshift' profile will be used when invoking mvn. -->

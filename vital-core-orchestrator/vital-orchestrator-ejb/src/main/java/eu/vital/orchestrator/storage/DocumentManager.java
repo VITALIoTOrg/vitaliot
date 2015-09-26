@@ -54,7 +54,8 @@ public class DocumentManager implements Serializable {
 	public void produceElasticSearchTransportClient() {
 		log.info("produceElasticSearchTransportClient");
 
-		String url = System.getProperty("vital.elasticsearch.host");
+		//String url = System.getProperty("vital.elasticsearch.host");
+		String url = "localhost";
 		TransportClient client = new TransportClient();
 		client.addTransportAddress(new InetSocketTransportAddress(url, 9300));
 		this.esClient = client;

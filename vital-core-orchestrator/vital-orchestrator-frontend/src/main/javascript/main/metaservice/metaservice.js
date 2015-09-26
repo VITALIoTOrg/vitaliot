@@ -1,7 +1,6 @@
 'use strict';
-angular.module('app.main.metaservice', [
-    'ngRoute'
-])
+angular.module('main.metaservice', [])
+
     .config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.when('/metaservice/list', {
