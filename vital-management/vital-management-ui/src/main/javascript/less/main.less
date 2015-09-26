@@ -1,17 +1,17 @@
 //Import Bootstrap
-@import "../../../../vendor/bootstrap/less/bootstrap";
+@import (reference) "../vendor/bootstrap/less/bootstrap.less";
 // Import FontAwesome
-@import "../../../../vendor/fontawesome/less/font-awesome";
-// Import AdminLTE
-@import "../../../../vendor/admin-lte/less/AdminLTE";
-//Import Morris Chars less
-@import "../../../../vendor/morrisjs/less/morris.core.less";
+@import "../vendor/fontawesome/less/font-awesome.less";
 
-@fa-font-path: "../assets/fonts";
-@icon-font-path: "../assets/fonts/";
+// Import AdminLTE
+//@import (reference) "../vendor/admin-lte/build/less/AdminLTE.less";
+//@import (reference) "../vendor/admin-lte/build/less/skins/skin-black.less";
+//Import Morris Chars less
+//@import "../vendor/morrisjs/less/morris.core.less";
+
+@fa-font-path: "./vendor/fontawesome/fonts";
 
 @gray: #2f2f2f;
-
 
 // Block Grid
 // Technique adapted from Foundation 5 for Bootstrap 3.

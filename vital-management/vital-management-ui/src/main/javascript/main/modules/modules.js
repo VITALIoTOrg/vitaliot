@@ -1,5 +1,5 @@
 'use strict';
-angular.module('app.main.modules', [
+angular.module('main.modules', [
     'ngRoute'
 ])
     .config(['$routeProvider', function ($routeProvider) {

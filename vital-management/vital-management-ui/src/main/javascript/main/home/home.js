@@ -1,5 +1,5 @@
 'use strict';
-angular.module('app.main.home', [
+angular.module('main.home', [
     'ngRoute'
 ])
     .config(['$routeProvider', function ($routeProvider) {
@@ -15,8 +15,8 @@ angular.module('app.main.home', [
  * HomeController
  */
     .controller('HomeController', [
-        '$window', '$location', 'pathService', '$scope',
-        function ($window, $location, pathService, $scope) {
+        '$window', '$location', '$scope',
+        function ($window, $location, $scope) {
 
         }
     ]);

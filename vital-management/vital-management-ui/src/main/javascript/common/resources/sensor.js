@@ -2,8 +2,8 @@
 angular.module('common.resources.sensor', [])
 
     .factory('sensorResource', [
-        '$http', '$q', 'API_PATH', 'BASE_ICO_URL',
-        function($http, $q, API_PATH, BASE_ICO_URL) {
+        '$http', '$q', 'API_PATH',
+        function ($http, $q, API_PATH) {
             function randomInt(min, max) {
                 return Math.floor(Math.random() * (max - min)) + min;
             }
@@ -84,29 +84,29 @@ angular.module('common.resources.sensor', [])
             // The public API of the service
             var service = {
 
-                fetchList: function() {
+                fetchList: function () {
                     return $http.get(API_PATH + '/sensor')
-                        .then(function(response) {
+                        .then(function (response) {
                             var sensors = [];
-                            angular.forEach(response.data, function(sensor) {
+                            angular.forEach(response.data, function (sensor) {
                                 sensors.push(sensor);
                             });
                             return sensors;
                         });
                 },
 
-                fetch: function(sensor_id) {
+                fetch: function (sensor_id) {
                     defaultQuery.sensor = sensor_id;
                     return $http.post(API_PATH + '/sensor/metadata', defaultQuery)
-                        .then(function(response) {
+                        .then(function (response) {
                             return angular.extend(sensorDefaults, response.data);
                         });
                 },
 
-                fetchStatus: function(sensor_id) {
+                fetchStatus: function (sensor_id) {
                     defaultQuery.sensor = sensor_id;
                     return $http.post(API_PATH + '/sensor/metadata/status', defaultQuery)
-                        .then(function(response) {
+                        .then(function (response) {
                             return response.data;
                         });
                 }

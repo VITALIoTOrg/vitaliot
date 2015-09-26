@@ -1,8 +1,8 @@
 'use strict';
-angular.module('app.main.sensor', [
+angular.module('main.sensor', [
     'ngRoute'
 ])
-    .config(['$routeProvider', 'BASE_ICO_URL', function($routeProvider, BASE_ICO_URL) {
+    .config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.when('/sensor/list', {
             templateUrl: 'main/sensor/sensor-list.tpl.html',

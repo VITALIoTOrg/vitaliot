@@ -1,8 +1,8 @@
 'use strict';
 angular.module('common.resources.system', [])
     .factory('systemResource', [
-        '$http', '$q', 'API_PATH', 'BASE_SYSTEM_URL',
-        function($http, $q, API_PATH, BASE_SYSTEM_URL) {
+        '$http', '$q', 'API_PATH',
+        function($http, $q, API_PATH) {
             var systemDefaults = {
                 '@id': '',
                 '@type': 'http://vital-iot.eu/ontology/ns/IotSystem',
