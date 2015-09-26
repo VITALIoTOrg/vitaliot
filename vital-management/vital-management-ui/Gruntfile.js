@@ -114,9 +114,7 @@ module.exports = function (grunt) {
                 ignorePath: '../../src/main/javascript/', // This is to create the proper path in the html file
                 exclude: [
                     /angular-mocks.js/,
-                    ///bootstrap.css/,
-                    /font-awesome.css/,
-                    ///morris.css/
+                    /font-awesome.css/
                 ],
                 'overrides': {
                     'angular-bootstrap': {
@@ -139,6 +137,13 @@ module.exports = function (grunt) {
                             'less/bootstrap.less',
                             'dist/js/bootstrap.js',
                             'dist/css/bootstrap.css'
+                        ]
+                    },
+                    'leaflet.markercluster': {
+                        'main': [
+                            'dist/leaflet.markercluster.js',
+                            'dist/MarkerCluster.css',
+                            'dist/MarkerCluster.Default.css'
                         ]
                     }
                 }
@@ -322,7 +327,17 @@ module.exports = function (grunt) {
             options: {
                 port: 9000,
                 hostname: 'localhost',
-                base: './target/build'
+                base: './target/build',
+                middleware: function (connect, options) {
+                    var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
+                    var serveStatic = require('serve-static');
+                    return [
+                        // Include the proxy first
+                        proxy,
+                        // Serve static files.
+                        serveStatic(options.base[0])
+                    ];
+                }
             },
             proxies: [
                 {
@@ -333,24 +348,6 @@ module.exports = function (grunt) {
                     changeOrigin: false
                 }
             ]
-            //livereload: {
-            //    options: {
-            //        middleware: function (connect, options) {
-            //            var middlewares = [];
-            //            middlewares.push(connect.static('./target/build'));
-            //
-            //            // Setup the proxy
-            //            middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
-            //
-            //            // Serve static files
-            //            options.base.forEach(function (base) {
-            //                middlewares.push(connect.static(base));
-            //            });
-            //
-            //            return middlewares;
-            //        }
-            //    }
-            //}
         },
 
         watch: {
