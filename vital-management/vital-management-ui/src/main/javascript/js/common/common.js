@@ -49,9 +49,16 @@ angular.module('common', [
         };
     })
 
-    .
-    filter('decodeHistoryComponent', function() {
+    .filter('decodeHistoryComponent', function() {
         return function(input) {
             return decodeURIComponent(input).replace(/\\/g, '/');
+        };
+    })
+
+
+    .filter('statusDisplay', function() {
+        return function(input) {
+            var array = input.split('/');
+            return array[array.length - 1];
         };
     });

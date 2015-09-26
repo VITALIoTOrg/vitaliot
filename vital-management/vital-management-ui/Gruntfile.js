@@ -1,11 +1,11 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     'use strict';
 
     /**
      * A utility function to get all app HTML sources.
      */
     function filterForHTML(files) {
-        return files.filter(function(file) {
+        return files.filter(function (file) {
             return file.match(/\.html$/);
         });
     }
@@ -14,7 +14,7 @@ module.exports = function(grunt) {
      * A utility function to get all app JavaScript sources.
      */
     function filterForJS(files) {
-        return files.filter(function(file) {
+        return files.filter(function (file) {
             return file.match(/\.js$/);
         });
     }
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
      * A utility function to get all app CSS sources.
      */
     function filterForCSS(files) {
-        return files.filter(function(file) {
+        return files.filter(function (file) {
             return file.match(/\.css$/);
         });
     }
@@ -51,28 +51,28 @@ module.exports = function(grunt) {
      * the list into variables for the template to use and then runs the
      * compilation.
      */
-    grunt.registerMultiTask('processhtml', 'Process html templates', function() {
+    grunt.registerMultiTask('processhtml', 'Process html templates', function () {
         var thisTask = this;
         var srcRE = new RegExp('^(' + grunt.config('src_folder') + ')\/', 'g');
         var dirRE = new RegExp('^(' + grunt.config('build_folder') + '|' + grunt.config('dist_folder') + ')\/', 'g');
         var htmlFiles = filterForHTML(thisTask.filesSrc);
-        htmlFiles.forEach(function(file) {
-            var depth = (file.match(/\//g) || []).length - 1;
-            var prefix = (function() {
+        htmlFiles.forEach(function (file) {
+            var depth = (file.match(/\//g) || []).length - 3;
+            var prefix = (function () {
                 var s = '';
                 for (var i = 0; i < depth; i++) {
                     s += '../';
                 }
                 return s;
             })();
-            var jsFiles = filterForJS(thisTask.filesSrc).map(function(jsFile) {
+            var jsFiles = filterForJS(thisTask.filesSrc).map(function (jsFile) {
                 return prefix + jsFile.replace(dirRE, '');
             });
-            var cssFiles = filterForCSS(thisTask.filesSrc).map(function(cssFile) {
+            var cssFiles = filterForCSS(thisTask.filesSrc).map(function (cssFile) {
                 return prefix + cssFile.replace(dirRE, '');
             });
             grunt.file.copy(file, thisTask.data.dir + '/' + file.replace(srcRE, ''), {
-                process: function(contents) {
+                process: function (contents) {
                     return grunt.template.process(contents, {
                         data: {
                             path: file.replace(srcRE, ''),
@@ -543,7 +543,7 @@ module.exports = function(grunt) {
                     hostname: '*',
                     port: 8001,
                     base: '<%= build_folder %>',
-                    middleware: function(connect, options) {
+                    middleware: function (connect, options) {
                         if (!Array.isArray(options.base)) {
                             options.base = [options.base];
                         }
@@ -552,7 +552,7 @@ module.exports = function(grunt) {
                         var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
 
                         // Serve static files
-                        options.base.forEach(function(base) {
+                        options.base.forEach(function (base) {
                             middlewares.push(connect.static(base));
                         });
 
@@ -582,7 +582,7 @@ module.exports = function(grunt) {
                     port: 8001,
                     base: '<%= dist_folder %>',
                     keepalive: true,
-                    middleware: function(connect, options) {
+                    middleware: function (connect, options) {
                         if (!Array.isArray(options.base)) {
                             options.base = [options.base];
                         }
@@ -591,7 +591,7 @@ module.exports = function(grunt) {
                         var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
 
                         // Serve static files
-                        options.base.forEach(function(base) {
+                        options.base.forEach(function (base) {
                             middlewares.push(connect.static(base));
                         });
 
@@ -672,5 +672,4 @@ module.exports = function(grunt) {
      */
     grunt.registerTask('default', ['dist']);
 
-}
-;
+};

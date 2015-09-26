@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
     JBoss, Home of Professional Open Source
     Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
     contributors by the @authors tag. See the copyright.txt in the
@@ -16,7 +15,7 @@
     limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <name>vital-management</name>
     <modelVersion>4.0.0</modelVersion>
     <groupId>eu.vital.management</groupId>
@@ -36,19 +35,8 @@
         <module>vital-management-ejb</module>
         <module>vital-management-web</module>
         <module>vital-management-ear</module>
+        <module>vital-management-ui</module>
     </modules>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <modules>
-                <module>vital-management-ui</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>publish</id>
-        </profile>
-    </profiles>
 
     <properties>
         <!-- Explicitly declaring the source encoding eliminates the following 
@@ -76,7 +64,7 @@
         <version.es>1.4.2</version.es>
         <version.junit>4.12</version.junit>
         <version.mockito>1.10.19</version.mockito>
-      <!--   <version.powermock>1.6.1</version.powermock>  -->
+        <!--   <version.powermock>1.6.1</version.powermock>  -->
 
         <!-- maven-compiler-plugin -->
         <maven.compiler.target>1.7</maven.compiler.target>
@@ -128,14 +116,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- Test scope dependencies -->
-        	<dependency>
-            	<groupId>junit</groupId>
-            	<artifactId>junit</artifactId>
-            	<version>${version.junit}</version>
-            	<scope>test</scope>
-        	</dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>
@@ -162,13 +150,25 @@
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
                     <version>${version.wildfly.maven.plugin}</version>
-                    <inherited>true</inherited>
                     <configuration>
-                        <skip>true</skip>
+                        <hostname>5.79.79.172</hostname>
+                        <port>9990</port>
+                        <username>managewildfly</username>
+                        <password>W#mat.31</password>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
