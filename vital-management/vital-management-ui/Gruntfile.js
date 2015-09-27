@@ -169,12 +169,8 @@ module.exports = function (grunt) {
                     './target/build/index.html': [
                         [
                             // Order matters
-                            './target/build/common/*/**/*.js',
-                            './target/build/common/common.templates.js',
-                            './target/build/common/common.js',
-                            './target/build/main/*/**/*.js',
-                            // './target/build/main/main.templates.js',
-                            './target/build/main/main.js'
+                            './target/build/common/**/*.js',
+                            './target/build/main/**/*.js'
                         ]
                     ]
                 }

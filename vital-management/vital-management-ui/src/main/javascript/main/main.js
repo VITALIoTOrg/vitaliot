@@ -1,7 +1,7 @@
 'use strict';
 angular.module('main', [
     'common',
-    //'main.templates',
+    'main.templates',
     'main.home',
     'main.sensor',
     'main.system',
