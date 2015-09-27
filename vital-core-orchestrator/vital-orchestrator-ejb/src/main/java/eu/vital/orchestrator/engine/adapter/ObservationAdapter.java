@@ -1,6 +1,5 @@
 package eu.vital.orchestrator.engine.adapter;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import eu.vital.orchestrator.service.ObservationService;
@@ -16,7 +15,6 @@ public class ObservationAdapter {
 
 	@Inject
 	private ObservationService observationService;
-
 
 	public Map get(String sensorUri, String observationType) throws Exception {
 

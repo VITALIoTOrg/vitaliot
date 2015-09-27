@@ -134,7 +134,8 @@
       "services": [
         "<orchestrator.url>/service/configuration",
         "<orchestrator.url>/service/monitoring",
-        "<orchestrator.url>/service/workflow"
+        "<orchestrator.url>/service/workflow",
+        "<orchestrator.url>/service/meta"
       ],
       "sensors": [
         "<orchestrator.url>/sensor/monitoring"
@@ -214,11 +215,6 @@
           {
             "type": "vital:GetSystemStatus",
             "hrest:hasAddress": "<orchestrator.url>/ppi/status",
-            "hrest:hasMethod": "hrest:POST"
-          },
-          {
-            "type": "vital:GetSensorStatus",
-            "hrest:hasAddress": "<orchestrator.url>/ppi/sensor/status",
             "hrest:hasMethod": "hrest:POST"
           },
           {
@@ -320,6 +316,59 @@
           }
         ]
       }
-    ]
+    ],
+    "performance": [
+      {
+        "type": "http://vital-iot.eu/ontology/ns/SysUptime",
+        "id": "<orchestrator.url>sensor/monitoring/sysUptime"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/UsedMem",
+        "id": "<orchestrator.url>sensor/monitoring/usedMem"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/AvailableMem",
+        "id": "<orchestrator.url>sensor/monitoring/availableMem"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/ServedRequests",
+        "id": "<orchestrator.url>sensor/monitoring/servedRequests"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/Errors",
+        "id": "<orchestrator.url>sensor/monitoring/errors"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/SysLoad",
+        "id": "<orchestrator.url>sensor/monitoring/sysLoad"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/PendingRequests",
+        "id": "<orchestrator.url>sensor/monitoring/pendingRequests"
+      },
+      {
+        "type": "http://vital-iot.eu/ontology/ns/MaxRequests",
+        "id": "<orchestrator.url>sensor/monitoring/maxRequests"
+      }
+    ],
+    "observation": {
+      "@context": "<orchestrator.url>/contexts/measurement.jsonld",
+      "uri": "<orchestrator.url>/sensor/monitoring/observation/servedRequests/<observation.id>",
+      "type": "ssn:Observation",
+      "ssn:observationProperty": {
+        "type": "vital:servedRequests"
+      },
+      "ssn:observationResultTime": {
+        "time:inXSDDateTime": "2015-06-14T19:37:22Z"
+      },
+      "ssn:observationResult": {
+        "type": "ssn:SensorOutput",
+        "ssn:hasValue": {
+          "type": "ssn:ObservationValue",
+          "value": 5.0,
+          "qudt:unit": "qudt:Number"
+        }
+      }
+    }
   }
 }
