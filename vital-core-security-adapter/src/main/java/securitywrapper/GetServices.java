@@ -75,25 +75,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -124,9 +115,6 @@ public class GetServices {
 		
 		return Response.ok()
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		
 	}
@@ -164,25 +152,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -221,25 +200,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -278,25 +248,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -327,9 +288,6 @@ public class GetServices {
 		
 		return Response.ok()
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		
 	}
@@ -366,25 +324,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -422,25 +371,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -478,25 +418,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -534,25 +465,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -657,18 +579,12 @@ public class GetServices {
 			
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			answer = value.substring(7);
 			return Response.status(Status.BAD_REQUEST)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -752,25 +668,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
@@ -814,25 +721,16 @@ public class GetServices {
 		if(code >= 400 && code < 500) {
 			return Response.status(Status.BAD_REQUEST)
 				.entity(answer)
-				.header("Access-Control-Allow-Origin", "*")
-				.header("Access-Control-Allow-Credentials", "true")
-				.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 				.build();
 		}
 		else if(code >= 500 && code < 600) {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		else {
 			return Response.ok()
 					.entity(answer)
-					.header("Access-Control-Allow-Origin", "*")
-					.header("Access-Control-Allow-Credentials", "true")
-					.header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT")
 					.build();
 		}
 		
