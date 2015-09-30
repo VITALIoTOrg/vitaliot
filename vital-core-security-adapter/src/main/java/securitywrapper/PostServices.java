@@ -1000,10 +1000,10 @@ public class PostServices {
 			String domain = uri.getBaseUri().getHost();
 			Pattern pattern = Pattern.compile("^[^.]*(..*)$");
 			Matcher matcher = pattern.matcher(domain);
-
 			if (matcher.find()) {
 			    domain = matcher.group(1);
 			}
+
 			if(!altCookie) {
 				ck = new Cookie(client.getSSOcookieName(), auth.getTokenId(), "/", domain);
 				return Response.ok()
