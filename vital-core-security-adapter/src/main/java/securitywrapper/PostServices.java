@@ -4,15 +4,19 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import jsonpojos.Application;
@@ -900,7 +904,8 @@ public class PostServices {
 	public Response authenticate(
 			@FormParam("name") String name,
 			@FormParam("password") String password,
-			@FormParam("altCookie") boolean altCookie) {
+			@FormParam("altCookie") boolean altCookie,
+			@Context UriInfo uri) {
 		
 		Authenticate auth;
 		String answer;
@@ -992,14 +997,21 @@ public class PostServices {
 			
 			// Will all services be over HTTPS? Will any client side script need to access the cookies?
 			// If the answer is (Yes, No) then we can keep secure and HttpOnly flags
+			String domain = uri.getBaseUri().getHost();
+			Pattern pattern = Pattern.compile("^[^.]*(..*)$");
+			Matcher matcher = pattern.matcher(domain);
+
+			if (matcher.find()) {
+			    domain = matcher.group(1);
+			}
 			if(!altCookie) {
-				ck = new Cookie(client.getSSOcookieName(), auth.getTokenId(), "/", ".cloud.reply.eu");
+				ck = new Cookie(client.getSSOcookieName(), auth.getTokenId(), "/", domain);
 				return Response.ok()
 						.entity(answer)
 						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
 						.build();
 			} else {
-				ck = new Cookie(client.getManTokenCookieName(), auth.getTokenId(), "/", ".cloud.reply.eu");
+				ck = new Cookie(client.getManTokenCookieName(), auth.getTokenId(), "/", domain);
 				return Response.ok()
 						.entity(answer)
 						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
