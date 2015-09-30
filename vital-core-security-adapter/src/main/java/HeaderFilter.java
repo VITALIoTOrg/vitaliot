@@ -10,7 +10,12 @@ public class HeaderFilter implements ContainerResponseFilter {
 
 	@Override
     public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext cres) throws IOException {
-        cres.getHeaders().add("Access-Control-Allow-Origin", requestContext.getHeaderString("Origin"));
+		String allowedOrigin;
+
+		if((allowedOrigin = requestContext.getHeaderString("Origin")) == null) {
+			allowedOrigin = "*";
+		}
+		cres.getHeaders().add("Access-Control-Allow-Origin", allowedOrigin);
         cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
         cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
     }
