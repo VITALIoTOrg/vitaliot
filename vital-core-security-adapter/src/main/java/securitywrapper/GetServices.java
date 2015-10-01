@@ -493,12 +493,11 @@ public class GetServices {
 		answer = value = null;
 		ok = true;
 		
-		
 		if(ok) {
 			// Active Sessions
 			oidValue = ".1.3.6.1.4.1.42.2.230.3.1.1.2.1.11.1.0";
 			value = client.getStatValue(oidValue);
-			if(value.startsWith("Error")) {
+			if(value.contains("message")) {
 				ok = false;
 			}
 			else {
@@ -510,7 +509,7 @@ public class GetServices {
 			// Current Internal Sessions
 			oidValue = ".1.3.6.1.4.1.36733.1.2.1.1.1.0";
 			value = client.getStatValue(oidValue);
-			if(value.startsWith("Error")) {
+			if(value.contains("message")) {
 				ok = false;
 			}
 			else {
@@ -522,7 +521,7 @@ public class GetServices {
 			// Current Remote Sessions
 			oidValue = ".1.3.6.1.4.1.36733.1.2.1.2.1.0";
 			value = client.getStatValue(oidValue);
-			if(value.startsWith("Error")) {
+			if(value.contains("message")) {
 				ok = false;
 			}
 			else {
@@ -534,7 +533,7 @@ public class GetServices {
 			// Cumulative Policy Evaluations (specific resource)
 			oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.1.0";
 			value = client.getStatValue(oidValue);
-			if(value.startsWith("Error")) {
+			if(value.contains("message")) {
 				ok = false;
 			}
 			else {
@@ -546,7 +545,7 @@ public class GetServices {
 			// Average rate of policy evaluations for specific resources
 			oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.1.2.0";
 			value = client.getStatValue(oidValue);
-			if(value.startsWith("Error")) {
+			if(value.contains("message")) {
 				ok = false;
 			}
 			else {
@@ -558,7 +557,7 @@ public class GetServices {
 			// Average rate of policy evaluations for a tree of resources (subtree)
 			oidValue = ".1.3.6.1.4.1.36733.1.2.2.1.2.1.0";
 			value = client.getStatValue(oidValue);
-			if(value.startsWith("Error")) {
+			if(value.contains("message")) {
 				ok = false;
 			}
 			else {
@@ -582,7 +581,7 @@ public class GetServices {
 					.build();
 		}
 		else {
-			answer = value.substring(7);
+			answer = value;
 			return Response.status(Status.BAD_REQUEST)
 					.entity(answer)
 					.build();
