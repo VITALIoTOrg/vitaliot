@@ -572,6 +572,21 @@ the "vitalAccessToken" cookie. Response example:
     }
     ```
 
+* **/validate** expects the "vitalManToken" and "vitalAccessToken" (the latter
+is optional) session cookies to be included in the request and returns a single
+json boolean attribute telling if the session is active or not; if the query
+parameter "altCookie" is set to true the info is related to the session of the
+"vitalManToken" cookie, otherwise of the "vitalAccessToken" cookie. While the
+above endpoint resets the user idle time, this one does not, but because of an
+OpenAM bug requires the user corresponding to the "vitalManToken" to be an
+administrator. Response example:
+
+    ```json
+    {
+        "active":true
+    }
+    ```
+
 ### POST endpoints
 
 * **/user/create** expects the "vitalManToken" session cookie and the following
