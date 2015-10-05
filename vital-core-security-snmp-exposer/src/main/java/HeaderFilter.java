@@ -16,7 +16,6 @@ public class HeaderFilter implements ContainerResponseFilter {
 			allowedOrigin = "*";
 		}
 		cres.getHeaders().add("Access-Control-Allow-Origin", allowedOrigin);
-        cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
-        cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+        cres.getHeaders().add("Access-Control-Allow-Methods", "GET");
     }
 }

@@ -1,4 +1,3 @@
-
 package jsonpojos;
 
 import java.util.HashMap;
