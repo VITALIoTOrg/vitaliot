@@ -1,0 +1,4 @@
+<jboss-web>
+    <context-root>snmp</context-root>
+</jboss-web>
+
