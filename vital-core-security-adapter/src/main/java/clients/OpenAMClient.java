@@ -22,6 +22,7 @@ import jsonpojos.GroupModel;
 import jsonpojos.GroupModelWithUsers;
 import jsonpojos.Groups;
 import jsonpojos.LogoutResponse;
+import jsonpojos.Monitor;
 import jsonpojos.Policies;
 import jsonpojos.Policy;
 import jsonpojos.PolicyAuthenticatedModel;
@@ -48,18 +49,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.snmp4j.CommunityTarget;
-import org.snmp4j.PDU;
-import org.snmp4j.Snmp;
-import org.snmp4j.TransportMapping;
-import org.snmp4j.event.ResponseEvent;
-import org.snmp4j.mp.SnmpConstants;
-import org.snmp4j.smi.Integer32;
-import org.snmp4j.smi.OID;
-import org.snmp4j.smi.OctetString;
-import org.snmp4j.smi.UdpAddress;
-import org.snmp4j.smi.VariableBinding;
-import org.snmp4j.transport.DefaultUdpTransportMapping;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -76,7 +65,6 @@ public class OpenAMClient {
 	
 	private String idpHost;
 	private int idpPort;
-	private String snmpPort;
 	private String userAdmin;
 	private String pwdAdmin;
 	private String authToken;
@@ -88,9 +76,6 @@ public class OpenAMClient {
 		
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
-		snmpPort = configReader.get(ConfigReader.SNMP_PORT);
-		//userAdmin = configReader.get(ConfigReader.USER_ADM);
-		//pwdAdmin = configReader.get(ConfigReader.PWD_ADM);
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
 		manToken = configReader.get(ConfigReader.MAN_TOKEN);
 		
@@ -883,83 +868,60 @@ public class OpenAMClient {
 		return policies;
 	}
 	
-	public String getStatValue(String oidValue) {
+	public Monitor getStats() {
 		
-		String answer = null;
-
-		int snmpVersion  = SnmpConstants.version2c;
-		String community = "public";
-
-	    // Create TransportMapping and Listen
-	    TransportMapping transport = null;
+		URI uri = null;
 		try {
-			transport = new DefaultUdpTransportMapping();
-			transport.listen();
+			uri = new URIBuilder()
+			.setScheme("http")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /snmp/openam_stats")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpGet httpget = new HttpGet(uri);
+		
+		// Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		HttpEntity entity = response.getEntity();
 
-	    // Create Target Address object
-	    CommunityTarget comtarget = new CommunityTarget();
-	    comtarget.setCommunity(new OctetString(community));
-	    comtarget.setVersion(snmpVersion);
-	    comtarget.setAddress(new UdpAddress(idpHost + "/" + snmpPort));
-	    comtarget.setRetries(2);
-	    comtarget.setTimeout(1000);
-
-	    // Create the PDU object
-	    PDU pdu = new PDU();
-	    pdu.add(new VariableBinding(new OID(oidValue)));
-	    pdu.setType(PDU.GET);
-	    pdu.setRequestID(new Integer32(1));
-
-		// Create Snmp object for sending data to Agent
-		Snmp snmp = new Snmp(transport);
-
-		ResponseEvent response = null;
-		try {
-			response = snmp.get(pdu, comtarget);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Process Agent Response
-		if(response != null) {
-			PDU responsePDU = response.getResponse();
-			if(responsePDU != null) {
-				int errorStatus = responsePDU.getErrorStatus();
-		        String errorStatusText = responsePDU.getErrorStatusText();
-
-		        if(errorStatus == PDU.noError) {
-		        	//System.out.println("Snmp Get Response = " + responsePDU.getVariableBindings());
-		        	answer = responsePDU.getVariableBindings().firstElement().toString();
-		        	String delims = "[=]";
-		        	answer = answer.split(delims)[1].substring(1);
-		        }
-		        else {
-		        	//System.out.println("Error: Request Failed");
-		        	//System.out.println("Error Status = " + errorStatus);
-		        	//System.out.println("Error Index = " + errorIndex);
-		        	//System.out.println("Error Status Text = " + errorStatusText);
-		        	answer = "{ \"message\": \"" + errorStatusText + "\" }";
-		        }
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		    else {
-		    	//System.out.println("Error: Response PDU is null");
-		    	answer = "{ \"message\": \"" + "Response PDU is null" + "\" }";
-		    }
+		    
 		}
-		else {
-			//System.out.println("Error: Agent Timeout... ");
-			answer = "{ \"message\": \"" + "Agent Timeout" + "\" }";
-		}
+		
+		Monitor values = new Monitor();
+		
 		try {
-			snmp.close();
+			values = (Monitor) JsonUtils.deserializeJson(respString, Monitor.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		return answer;   
+		return values;
 	}
 	
 	public User getUser(String username, String token) {
