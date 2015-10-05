@@ -41,8 +41,8 @@ deploy the application on WildFly (tested on WildFly 9.0.1 with OpenJDK 8) over
 HTTPS.
 
 You may also want to take a look at the Vital Deployer project, featuring a
-script to automatically build and deploy this application plus the Security
-Management UI, another component of the Vital security system.
+script to automatically build and deploy this application plus other components
+of the Vital system.
 
 ## Usage
 
