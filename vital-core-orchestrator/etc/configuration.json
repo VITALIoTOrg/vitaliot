@@ -102,9 +102,9 @@
     ]
   },
   "orchestrator": {
-    "url": "http://localhost:8080/vital-orchestrator-web/rest",
+    "url": "http://vital-integration.atosresearch.eu:8180/vital-orchestrator-web/rest",
     "status": {
-      "@context": "<orchestrator.url>/contexts/measurement.jsonld",
+      "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
       "id": "<orchestrator.url>/sensor/monitoring/observation/status/1434443438930",
       "type": "ssn:Observation",
       "ssn:observedBy": "<orchestrator.url>/sensor/monitoring",
@@ -124,7 +124,7 @@
       }
     },
     "system": {
-      "@context": "<orchestrator.url>/contexts/system.jsonld",
+      "@context": "http://vital-iot.eu/contexts/system.jsonld",
       "id": "<orchestrator.url>/orchestrator",
       "type": "vital:IotSystem",
       "name": "Vital Orchestrator",
@@ -143,7 +143,7 @@
     },
     "sensor": [
       {
-        "@context": "<orchestrator.url>/contexts/sensor.jsonld",
+        "@context": "http://vital-iot.eu/contexts/sensor.jsonld",
         "id": "<orchestrator.url>/sensor/monitoring",
         "type": "vital:MonitoringSensor",
         "name": "Orchestrator monitoring sensor.",
@@ -191,7 +191,7 @@
     ],
     "service": [
       {
-        "@context": "<orchestrator.url>/contexts/service.jsonld",
+        "@context": "http://vital-iot.eu/contexts/service.jsonld",
         "id": "<orchestrator.url>/service/configuration",
         "type": "vital:ConfigurationService",
         "operations": [
@@ -208,7 +208,7 @@
         ]
       },
       {
-        "@context": "<orchestrator.url>/contexts/service.jsonld",
+        "@context": "http://vital-iot.eu/contexts/service.jsonld",
         "id": "<orchestrator.url>/service/monitoring",
         "type": "vital:MonitoringService",
         "operations": [
@@ -230,7 +230,7 @@
         ]
       },
       {
-        "@context": "<orchestrator.url>/contexts/service.jsonld",
+        "@context": "http://vital-iot.eu/contexts/service.jsonld",
         "id": "<orchestrator.url>/service/operation",
         "type": "vital:OrchestratorService",
         "operations": [
@@ -352,7 +352,7 @@
       }
     ],
     "observation": {
-      "@context": "<orchestrator.url>/contexts/measurement.jsonld",
+      "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
       "uri": "<orchestrator.url>/sensor/monitoring/observation/servedRequests/<observation.id>",
       "type": "ssn:Observation",
       "ssn:observationProperty": {

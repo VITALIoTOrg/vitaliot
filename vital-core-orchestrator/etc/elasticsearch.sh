@@ -16,4 +16,3 @@ curl -XPUT '5.79.79.172:9200/vital-orchestrator/_mapping/sensor/?pretty' -d @map
 curl -XPUT '5.79.79.172:9200/vital-orchestrator/_mapping/service/?pretty' -d @mappings/service-mapping.json
 
 curl -XPUT '5.79.79.172:9200/vital-orchestrator/CONFIGURATION/1?pretty=true' -d '@configuration.json'
-

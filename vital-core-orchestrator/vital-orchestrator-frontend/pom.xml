@@ -32,7 +32,7 @@
                     <webResources>
                         <resource>
                             <!-- this is relative to the pom.xml directory -->
-                            <directory>build</directory>
+                            <directory>target/build</directory>
                         </resource>
                     </webResources>
                 </configuration>
