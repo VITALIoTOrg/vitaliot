@@ -1,10 +1,7 @@
 {
   "@context": {
-    "@vocab": "http://vital-iot.com/ontology#",
-    "uri": "@id",
-    "type": "@type",
-    "name": "rdfs:label",
-    "description": "rdfs:comment",
+    "@vocab": "http://vital-iot.eu/ontology/ns/",
+    "vital": "http://vital-iot.eu/ontology/ns/",
     "vital": "http://vital-iot.com/ontology#",
     "lsm": "http://lsm.deri.ie/ont/lsm.owl#",
     "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
@@ -12,11 +9,13 @@
     "time": "http://www.w3.org/2006/time#",
     "qudt": "http://qudt.org/vocab/unit#",
     "xsd": "http://www.w3.org/2001/XMLSchema#",
-    "dul" : "http://www.loa-cnr.it/ontologies/DUL.owl#",
+    "id": "@id",
+    "type": "@type",
     "time:inXSDDateTime": {
       "@type": "xsd:dateTime"
     },
-    "qudt:unit":  {
+    "qudt:unit": {
       "@type": "@id"
     }
   }
+}

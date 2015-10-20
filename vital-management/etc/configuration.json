@@ -1,7 +1,10 @@
 {
   "discovery_url": "",
   "system_urls": [
-    "http://104.131.128.70:8080/istanbul-traffic/ppi",
-    "http://localhost:8080/vital-orchestrator-web/rest/ppi"
+    "http://vital-integration.atosresearch.eu:8180/vital-orchestrator-web/rest/ppi",
+    "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
+    "http://vital-integration.atosresearch.eu:8180/filtering/ppi",
+    "http://vital-integration.atosresearch.eu:8180/iot-data-adapter-ppi/ppi/system",
+    "http://vital-integration.atosresearch.eu:8180/cep"
   ]
 }

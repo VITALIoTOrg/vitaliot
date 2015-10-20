@@ -3,7 +3,7 @@ angular.module('common.widgets.utilization', ['common.resources.observation'])
 
     .directive('widgetUtilization', [
         '$interval', '$q', 'managementResource',
-        function($interval, $q, managementResource) {
+        function ($interval, $q, managementResource) {
             return {
                 restrict: 'EA',
                 templateUrl: 'common/widgets/management/utilization.tpl.html',
@@ -11,12 +11,35 @@ angular.module('common.widgets.utilization', ['common.resources.observation'])
                     system: '=',
                     supportedMetrics: '='
                 },
-                link: function(scope, element, attrs) {
+                link: function (scope, element, attrs) {
+                    // Validate
+                    if (!_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/ServedRequests') ||
+                        !_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/MaxRequests')) {
+                        return;
+                    }
+
                     scope.utilization = 0;
                     var prev = {
                         timestamp: 0,
                         load: 0
                     };
+
+                    // Init
+                    var interval = $interval(function () {
+                        managementResource.fetchPerformanceMetric(
+                            scope.system['@id'], [
+                                'http://vital-iot.eu/ontology/ns/ServedRequests',
+                                'http://vital-iot.eu/ontology/ns/MaxRequests'
+                            ]).then(function (data) {
+                                console.log(data);
+                                getUtil.apply(this, data);
+                            });
+                    }, 5000);
+
+                    scope.$on('$destroy', function (event) {
+                            $interval.cancel(interval);
+                        }
+                    );
 
                     function getUtil(servedRequests, maxRequests) {
                         var current = {
@@ -36,29 +59,6 @@ angular.module('common.widgets.utilization', ['common.resources.observation'])
                         prev.load = current.load;
                         prev.timestamp = current.timestamp;
                     }
-
-                    // Validate
-                    if (!_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/ServedRequests') ||
-                        !_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/MaxRequests')) {
-                        return;
-                    }
-
-                    // Init
-                    var interval = $interval(function() {
-                        managementResource.fetchPerformanceMetric(
-                            scope.system['@id'], [
-                                'http://vital-iot.eu/ontology/ns/ServedRequests',
-                                'http://vital-iot.eu/ontology/ns/MaxRequests'
-                            ]).then(function(data) {
-                                console.log(data);
-                                getUtil.apply(this, data);
-                            });
-                    }, 5000);
-
-                    scope.$on('$destroy', function(event) {
-                            $interval.cancel(interval);
-                        }
-                    );
                 }
             };
         }

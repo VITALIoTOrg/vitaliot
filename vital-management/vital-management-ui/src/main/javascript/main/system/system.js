@@ -2,7 +2,7 @@
 angular.module('main.system', [
     'ngRoute'
 ])
-    .config(['$routeProvider', function($routeProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider.when('/system/list', {
             templateUrl: 'main/system/system-list.tpl.html',
@@ -10,7 +10,7 @@ angular.module('main.system', [
             resolve: {
                 systemList: [
                     'systemResource',
-                    function(systemResource) {
+                    function (systemResource) {
                         return systemResource.fetchList();
                     }
                 ]
@@ -23,16 +23,21 @@ angular.module('main.system', [
             resolve: {
                 system: [
                     '$route', 'systemResource', '$filter',
-                    function($route, systemResource, $filter) {
+                    function ($route, systemResource, $filter) {
                         var uri = $filter('decodeHistoryComponent')($route.current.params.uri);
                         return systemResource.fetch(uri);
                     }
                 ],
                 supportedMetrics: [
                     '$route', 'managementResource', '$filter',
-                    function($route, managementResource, $filter) {
+                    function ($route, managementResource, $filter) {
                         var uri = $filter('decodeHistoryComponent')($route.current.params.uri);
-                        return managementResource.fetchSupportedPerformanceMetricList(uri);
+                        return managementResource.fetchSupportedPerformanceMetricList(uri)
+                            .then(function (supportedMetrics) {
+                                return supportedMetrics;
+                            }, function (error) {
+                                return [];
+                            });
                     }
                 ]
             }
@@ -44,7 +49,7 @@ angular.module('main.system', [
             resolve: {
                 system: [
                     '$route', 'systemResource', '$filter',
-                    function($route, systemResource, $filter) {
+                    function ($route, systemResource, $filter) {
                         var uri = $filter('decodeHistoryComponent')($route.current.params.uri);
                         return systemResource.fetch(uri);
                     }
@@ -59,14 +64,14 @@ angular.module('main.system', [
  */
     .controller('SystemListController', [
         '$scope', 'systemResource', 'systemList',
-        function($scope, systemResource, systemList) {
+        function ($scope, systemResource, systemList) {
             $scope.systems = systemList;
         }
     ])
 
     .controller('SystemViewController', [
         '$scope', 'systemResource', 'system', 'supportedMetrics',
-        function($scope, systemResource, system, supportedMetrics) {
+        function ($scope, systemResource, system, supportedMetrics) {
             $scope.system = system;
             $scope.supportedMetrics = supportedMetrics;
         }
@@ -74,7 +79,7 @@ angular.module('main.system', [
 
     .controller('SystemEditController', [
         '$scope', 'systemResource', 'system',
-        function($scope, systemResource, system) {
+        function ($scope, systemResource, system) {
             $scope.system = system;
         }
     ]);

@@ -1,22 +1,15 @@
 {
   "@context": {
-    "@vocab": "http://vital-iot.com/ontology#",
-    "uri": "@id",
-    "vital": "http://vital-iot.com/ontology#",
+    "@vocab": "http://vital-iot.eu/ontology/ns/",
+    "vital": "http://vital-iot.eu/ontology/ns/",
     "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
     "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
     "hrest": "http://www.wsmo.org/ns/hrests#",
-    "hrest:hasAddress": {
-      "@type": "hrest:URITemplate"
-    },
+    "id": "@id",
     "type": "@type",
+    "name": "rdfs:label",
+    "description": "rdfs:comment",
     "status": {
-      "@type": "@id"
-    },
-    "hasOutput": {
-      "@type": "@id"
-    },
-    "hasInput": {
       "@type": "@id"
     },
     "operator": {
@@ -25,7 +18,13 @@
     "serviceArea": {
       "@type": "@id"
     },
-    "name": "rdfs:label",
-    "description": "rdfs:comment"
+    "services": {
+      "@id": "vital:providesService",
+      "@type": "@id"
+    },
+    "sensors": {
+      "@id": "vital:managesSensor",
+      "@type": "@id"
+    }
   }
 }

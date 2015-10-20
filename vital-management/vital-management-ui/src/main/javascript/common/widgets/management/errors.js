@@ -3,7 +3,7 @@ angular.module('common.widgets.errors', ['common.resources.observation'])
 
     .directive('widgetErrors', [
         '$interval', '$q', 'managementResource',
-        function($interval, $q, managementResource) {
+        function ($interval, $q, managementResource) {
             return {
                 restrict: 'EA',
                 templateUrl: 'common/widgets/management/errors.tpl.html',
@@ -11,8 +11,31 @@ angular.module('common.widgets.errors', ['common.resources.observation'])
                     system: '=',
                     supportedMetrics: '='
                 },
-                link: function(scope, element, attrs) {
+                link: function (scope, element, attrs) {
+                    // Validate
+                    if (!_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/Errors') ||
+                        !_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/ServedRequests')) {
+                        return;
+                    }
+
                     scope.errors = 0;
+
+                    var interval = $interval(function () {
+
+                        managementResource.fetchPerformanceMetric(
+                            scope.system['@id'], [
+                                'http://vital-iot.eu/ontology/ns/Errors',
+                                'http://vital-iot.eu/ontology/ns/ServedRequests'
+                            ])
+                            .then(function (data) {
+                                getErrors.apply(this, data);
+                            });
+                    }, 5000);
+
+                    scope.$on('$destroy', function (event) {
+                            $interval.cancel(interval);
+                        }
+                    );
 
 
                     function getErrors(error, servedRequest) {
@@ -24,23 +47,6 @@ angular.module('common.widgets.errors', ['common.resources.observation'])
                             ['http://vital-iot.eu/ontology/ns/value'];
                         scope.errors = (errors * 100) / servedRequests;
                     }
-
-                    var interval = $interval(function() {
-
-                        managementResource.fetchPerformanceMetric(
-                            scope.system['@id'], [
-                                'http://vital-iot.eu/ontology/ns/Errors',
-                                'http://vital-iot.eu/ontology/ns/ServedRequests'
-                            ])
-                            .then(function(data) {
-                                getErrors.apply(this, data);
-                            });
-                    }, 5000);
-
-                    scope.$on('$destroy', function(event) {
-                            $interval.cancel(interval);
-                        }
-                    );
                 }
             };
         }

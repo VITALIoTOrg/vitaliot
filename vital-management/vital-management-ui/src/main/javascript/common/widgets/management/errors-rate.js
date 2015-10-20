@@ -12,6 +12,11 @@ angular.module('common.widgets.errors-rate', ['common.resources.observation'])
                     supportedMetrics: '='
                 },
                 link: function(scope, element, attrs) {
+                    // Validate
+                    if (!_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/Errors')) {
+                        return;
+                    }
+
                     var data = [];
                     var historyChart;
                     var prev = {

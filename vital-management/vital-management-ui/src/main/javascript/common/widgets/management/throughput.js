@@ -12,8 +12,12 @@ angular.module('common.widgets.throughput', ['common.resources.observation'])
                     supportedMetrics: '='
                 },
                 link: function(scope, element, attrs) {
-                    var data = [];
+                    // Validate
+                    if (!_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/ServedRequests')) {
+                        return;
+                    }
 
+                    var data = [];
                     var historyChart = Morris.Line({
                         element: element.find('div[data-chart=throughput]'),
                         data: [],
@@ -22,16 +26,10 @@ angular.module('common.widgets.throughput', ['common.resources.observation'])
                         labels: ['Throughput History'],
                         hideHover: 'auto'
                     });
-
                     var prev = {
                         timestamp: 0,
                         load: 0
                     };
-
-                    // Validate
-                    if (!_.has(scope.supportedMetrics, 'http://vital-iot.eu/ontology/ns/ServedRequests')) {
-                        return;
-                    }
 
                     // Init
                     var interval = $interval(function() {
