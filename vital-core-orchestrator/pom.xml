@@ -140,12 +140,13 @@
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
                     <version>${version.wildfly.maven.plugin}</version>
-                    <!--<configuration>-->
-                        <!--<hostname>5.79.79.172</hostname>-->
-                        <!--<port>9990</port>-->
-                        <!--<username>managewildfly</username>-->
-                        <!--<password>W#mat.31</password>-->
-                    <!--</configuration>-->
+                    <configuration>
+                        <protocol>https-remoting</protocol>
+                        <hostname>5.79.79.172</hostname>
+                        <port>9993</port>
+                        <username>managewildfly</username>
+                        <password>W#mat.31</password>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

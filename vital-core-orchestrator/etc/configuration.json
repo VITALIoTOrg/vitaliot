@@ -114,7 +114,6 @@
       "ssn:observationResultTime": {
         "time:inXSDDateTime": "2015-06-16T08:30:38Z"
       },
-      "ssn:featureOfInterest": "<orchestrator.url>/istanbul-traffic",
       "ssn:observationResult": {
         "type": "ssn:SensorOutput",
         "ssn:hasValue": {
@@ -215,6 +214,11 @@
           {
             "type": "vital:GetSystemStatus",
             "hrest:hasAddress": "<orchestrator.url>/ppi/status",
+            "hrest:hasMethod": "hrest:POST"
+          },
+          {
+            "type": "vital:GetSensorStatus",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/sensor/status",
             "hrest:hasMethod": "hrest:POST"
           },
           {

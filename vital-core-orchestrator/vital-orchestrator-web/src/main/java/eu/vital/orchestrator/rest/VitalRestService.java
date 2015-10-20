@@ -124,6 +124,24 @@ public class VitalRestService extends RESTService {
 		return Response.ok(result).build();
 	}
 
+	@POST
+	@Path("/sensor/status")
+	public Response getSensorStatus(JsonNode sensorList) throws Exception {
+		JsonNode configuration = configurationDAO.get();
+
+		// Get configuration.orchestrator.status template
+		JsonNode status = configuration.get("orchestrator").get("status");
+		ArrayNode statusList = objectMapper.createArrayNode();
+		statusList.add(status);
+
+		// Replace url
+		String url = configuration.get("orchestrator").get("url").asText();
+		String result = statusList.toString().replaceAll("<orchestrator.url>", url);
+
+		// Return resulte
+		return Response.ok(result).build();
+	}
+
 	@GET
 	@Path("/performance")
 	public Response getSupportedPerformanceMetrics() throws Exception {
