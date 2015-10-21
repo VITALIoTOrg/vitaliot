@@ -5,25 +5,25 @@
 
     <schedule>
 
-        <!--<job>-->
-            <!--<name>SyncSystemsJob</name>-->
-            <!--<group>VITAL_JOBS</group>-->
-            <!--<description>SyncSystemsJob</description>-->
-            <!--<job-class>eu.vital.management.job.SyncSystemsJob</job-class>-->
-        <!--</job>-->
+        <job>
+            <name>SyncSystemsJob</name>
+            <group>VITAL_JOBS</group>
+            <description>SyncSystemsJob</description>
+            <job-class>eu.vital.management.job.SyncSystemsJob</job-class>
+        </job>
 
-        <!-- -->
-        <!--<trigger>-->
-            <!--<cron>-->
-                <!--<name>SyncSystemsJobCronTrigger</name>-->
-                <!--<group>VITAL_TRIGGERS</group>-->
-                <!--<job-name>SyncSystemsJob</job-name>-->
-                <!--<job-group>VITAL_JOBS</job-group>-->
-                <!--&lt;!&ndash; trigger every 10 minutes &ndash;&gt;-->
-                <!--<cron-expression>0 0/10 * * * ?</cron-expression>-->
-                <!--&lt;!&ndash;<cron-expression>0/30 * * * * ?</cron-expression>&ndash;&gt;-->
-            <!--</cron>-->
-        <!--</trigger>-->
+
+        <trigger>
+            <cron>
+                <name>SyncSystemsJobCronTrigger</name>
+                <group>VITAL_TRIGGERS</group>
+                <job-name>SyncSystemsJob</job-name>
+                <job-group>VITAL_JOBS</job-group>
+                <!-- trigger every 30 minutes -->
+                <cron-expression>0 0/30 * * * ?</cron-expression>
+                <!--<cron-expression>0/30 * * * * ?</cron-expression>-->
+            </cron>
+        </trigger>
 
     </schedule>
 

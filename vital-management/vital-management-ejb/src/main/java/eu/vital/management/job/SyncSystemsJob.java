@@ -62,13 +62,17 @@ public class SyncSystemsJob implements Job {
 			ArrayNode systemURLs = (ArrayNode) configurationDAO.get().get("system_urls");
 			for (int i = 0; i < systemURLs.size(); i++) {
 				String systemURL = systemURLs.get(i).asText();
-				log.info("SyncSystem " + systemURL);
-				JsonNode systemJSON = syncSystem(systemURL);
-				log.info("SyncSystem: " + systemJSON.get("@id").asText());
-				ArrayNode sensorList = syncSensors(systemJSON);
-				log.info("SyncSystem/Sensors: " + sensorList.size());
-				ArrayNode serviceList = syncServices(systemJSON);
-				log.info("SyncSystem/Services: " + serviceList.size());
+				try {
+					log.info("SyncSystem " + systemURL);
+					JsonNode systemJSON = syncSystem(systemURL);
+					log.info("SyncSystem: " + systemJSON.get("@id").asText());
+					ArrayNode sensorList = syncSensors(systemJSON);
+					log.info("SyncSystem/Sensors: " + sensorList.size());
+					ArrayNode serviceList = syncServices(systemJSON);
+					log.info("SyncSystem/Services: " + serviceList.size());
+				} catch (Exception e) {
+					log.info("SyncSystem " + systemURL + " failed");
+				}
 			}
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Failed to sync", e);

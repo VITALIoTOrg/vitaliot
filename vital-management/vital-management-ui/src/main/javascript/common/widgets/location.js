@@ -12,7 +12,7 @@ angular.module('common.widgets.location', [])
                         ['http://www.w3.org/2003/01/geo/wgs84_pos#lat']),
                     lng: parseFloat(sensor
                         ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
-                        ['http://www.w3.org/2003/01/geo/wgs84_pos#lon']),
+                        ['http://www.w3.org/2003/01/geo/wgs84_pos#long']),
                     focus: false,
                     draggable: false,
                     riseOnHover: true,
@@ -39,7 +39,7 @@ angular.module('common.widgets.location', [])
                                     ['http://www.w3.org/2003/01/geo/wgs84_pos#lat']),
                                 lng: parseFloat($scope.sensor
                                     ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
-                                    ['http://www.w3.org/2003/01/geo/wgs84_pos#lon']),
+                                    ['http://www.w3.org/2003/01/geo/wgs84_pos#long']),
                                 zoom: 10
                             },
                             markers: {

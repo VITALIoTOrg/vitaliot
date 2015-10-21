@@ -2,7 +2,7 @@
 angular.module('main.sensor', [
     'ngRoute'
 ])
-    .config(['$routeProvider', function($routeProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider.when('/sensor/list', {
             templateUrl: 'main/sensor/sensor-list.tpl.html',
@@ -10,7 +10,7 @@ angular.module('main.sensor', [
             resolve: {
                 sensorList: [
                     'sensorResource',
-                    function(sensorResource) {
+                    function (sensorResource) {
                         return sensorResource.fetchList();
                     }
                 ]
@@ -23,7 +23,7 @@ angular.module('main.sensor', [
             resolve: {
                 sensorList: [
                     'sensorResource',
-                    function(sensorResource) {
+                    function (sensorResource) {
                         return sensorResource.fetchList();
                     }
                 ]
@@ -36,7 +36,7 @@ angular.module('main.sensor', [
             resolve: {
                 sensor: [
                     '$route', 'sensorResource', '$filter',
-                    function($route, sensorResource, $filter) {
+                    function ($route, sensorResource, $filter) {
                         var uri = $filter('decodeHistoryComponent')($route.current.params.uri);
                         return sensorResource.fetch(uri);
                     }
@@ -48,16 +48,16 @@ angular.module('main.sensor', [
 
     .controller('SensorListController', [
         '$scope', '$compile', 'sensorResource', 'sensorList',
-        function($scope, $compile, sensorResource, sensorList) {
+        function ($scope, $compile, sensorResource, sensorList) {
             $scope.sensors = sensorList;
 
-            angular.forEach(sensorList, function(sensor) {
+            angular.forEach(sensorList, function (sensor) {
             });
         }
     ])
 
     .directive('sensorPopup', [
-        function() {
+        function () {
             return {
                 restrict: 'E',
                 replace: true,
@@ -65,7 +65,7 @@ angular.module('main.sensor', [
                     'sensor': '='
                 },
                 templateUrl: 'main/sensor/sensor-popup.tpl.html',
-                link: function(scope, element, attrs) {
+                link: function (scope, element, attrs) {
                 }
             };
         }
@@ -73,7 +73,7 @@ angular.module('main.sensor', [
 
     .controller('SensorMapController', [
         '$scope', '$compile', '$filter', 'sensorResource', 'sensorList',
-        function($scope, $compile, $filter, sensorResource, sensorList) {
+        function ($scope, $compile, $filter, sensorResource, sensorList) {
 
             // Functions
             function sensorToMarker(sensor) {
@@ -87,7 +87,7 @@ angular.module('main.sensor', [
                 marker[id] = {
                     layer: 'sensors',
                     lat: parseFloat(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#lat']),
-                    lng: parseFloat(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#lon']),
+                    lng: parseFloat(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#long']),
                     focus: false,
                     draggable: false,
                     riseOnHover: true,
@@ -109,7 +109,7 @@ angular.module('main.sensor', [
             function readSensors(sensorList) {
                 $scope.sensors.length = 0;
                 $scope.mapOptions.markers = {};
-                angular.forEach(sensorList, function(sensor) {
+                angular.forEach(sensorList, function (sensor) {
                     $scope.sensors.push(sensor);
                     if (angular.isObject(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation'])) {
                         angular.extend($scope.mapOptions.markers, sensorToMarker(sensor));
@@ -164,7 +164,7 @@ angular.module('main.sensor', [
                 }
             };
 
-            $scope.$on('leafletDirectiveMap.popupopen', function(event, leafletEvent) {
+            $scope.$on('leafletDirectiveMap.popupopen', function (event, leafletEvent) {
                 var newScope = $scope.$new();
                 newScope.sensor = leafletEvent.leafletEvent.popup.options.sensor;
                 $compile(leafletEvent.leafletEvent.popup._contentNode)(newScope);
@@ -177,7 +177,7 @@ angular.module('main.sensor', [
 
     .controller('SensorViewController', [
         '$scope', '$compile', 'sensorResource', 'sensor',
-        function($scope, $compile, sensorResource, sensor) {
+        function ($scope, $compile, sensorResource, sensor) {
             $scope.sensor = sensor;
         }
     ]);

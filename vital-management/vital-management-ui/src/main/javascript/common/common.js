@@ -14,7 +14,7 @@ angular.module('common', [
 
     .filter('encodeHistoryComponent', function() {
         return function(input) {
-            return encodeURIComponent(input.replace(/\//g, '\\'));
+            return encodeURIComponent((input || '').replace(/\//g, '\\'));
         };
     })
 
