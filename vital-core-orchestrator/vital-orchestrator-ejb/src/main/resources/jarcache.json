@@ -1,0 +1,22 @@
+[
+  {
+    "Content-Location": "http://vital-iot.eu/contexts/system.jsonld",
+    "X-Classpath": "contexts/system-context.json",
+    "Content-Type": "application/ld+json"
+  },
+  {
+    "Content-Location": "http://vital-iot.eu/contexts/service.jsonld",
+    "X-Classpath": "contexts/service-context.json",
+    "Content-Type": "application/ld+json"
+  },
+  {
+    "Content-Location": "http://vital-iot.eu/contexts/sensor.jsonld",
+    "X-Classpath": "contexts/sensor-context.json",
+    "Content-Type": "application/ld+json"
+  },
+  {
+    "Content-Location": "http://vital-iot.eu/contexts/measurement.jsonld",
+    "X-Classpath": "contexts/measurement-context.json",
+    "Content-Type": "application/ld+json"
+  }
+]

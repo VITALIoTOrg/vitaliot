@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import eu.vital.orchestrator.storage.DocumentManager;
+import eu.vital.orchestrator.storage.OrchestratorStorage;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ public class ServiceDAO {
 	private Logger log;
 
 	@Inject
-	private DocumentManager documentManager;
+	private OrchestratorStorage orchestratorStorage;
 
 	@Inject
 	ObjectMapper objectMapper;
@@ -25,7 +25,7 @@ public class ServiceDAO {
 
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
-		ArrayNode documents = documentManager.getList(DocumentManager.DOCUMENT_TYPE.SERVICE.toString());
+		ArrayNode documents = orchestratorStorage.getList(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString());
 		return documents;
 	}
 
@@ -39,13 +39,13 @@ public class ServiceDAO {
 
 	public ObjectNode get(String uri) throws Exception {
 		// Connect to ES and retrieve result
-		ObjectNode document = documentManager.get(DocumentManager.DOCUMENT_TYPE.SERVICE.toString(), uri);
+		ObjectNode document = orchestratorStorage.get(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString(), uri);
 		return document;
 	}
 
 	public ObjectNode save(ObjectNode serviceData) throws Exception {
 		String uri = serviceData.get("@id").asText();
-		documentManager.update(DocumentManager.DOCUMENT_TYPE.SERVICE.toString(), uri, serviceData);
+		orchestratorStorage.update(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString(), uri, serviceData);
 		return get(uri);
 	}
 

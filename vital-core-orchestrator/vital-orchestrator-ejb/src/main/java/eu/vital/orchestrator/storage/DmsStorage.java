@@ -23,19 +23,12 @@ import java.io.Serializable;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class DocumentManager implements Serializable {
+public class DmsStorage implements Serializable {
 
 	private static final long serialVersionUID = -6384206813479073234L;
 
 	public enum DOCUMENT_TYPE {
-		SYSTEM,
-		SERVICE,
-		SENSOR,
-		OBSERVATION,
-		CONFIGURATION,
-		OPERATION,
-		WORKFLOW,
-		METASERVICE
+		measurement
 	}
 
 	@Inject
@@ -46,16 +39,14 @@ public class DocumentManager implements Serializable {
 
 	private Client esClient;
 
-	private static final String MAPPING_LOCATION = "mappings";
-
-	private static final String MAIN_INDEX = "vital-orchestrator";
+	private final String MAIN_INDEX = "dms";
 
 	@PostConstruct
 	public void produceElasticSearchTransportClient() {
 		log.info("produceElasticSearchTransportClient");
 
 		//String url = System.getProperty("vital.elasticsearch.host");
-		String url = "localhost";
+		String url = "vital-integration.atosresearch.eu";
 		TransportClient client = new TransportClient();
 		client.addTransportAddress(new InetSocketTransportAddress(url, 9300));
 		this.esClient = client;
@@ -81,7 +72,6 @@ public class DocumentManager implements Serializable {
 		log.info("Document was indexed successfully in " + type + "/" + response.getId() + ".");
 		return response.getId();
 	}
-
 
 	public void update(String type, String documentId, JsonNode document) {
 		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type, documentId).setSource(document.toString());

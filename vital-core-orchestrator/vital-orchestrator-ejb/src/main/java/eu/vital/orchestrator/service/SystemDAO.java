@@ -3,7 +3,7 @@ package eu.vital.orchestrator.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import eu.vital.orchestrator.storage.DocumentManager;
+import eu.vital.orchestrator.storage.OrchestratorStorage;
 import eu.vital.orchestrator.util.OntologyParser;
 import eu.vital.orchestrator.util.VitalClient;
 
@@ -18,7 +18,7 @@ public class SystemDAO {
 	private Logger log;
 
 	@Inject
-	private DocumentManager documentManager;
+	private OrchestratorStorage orchestratorStorage;
 
 	@Inject
 	ObjectMapper objectMapper;
@@ -31,20 +31,20 @@ public class SystemDAO {
 
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
-		ArrayNode documents = documentManager.getList(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString());
+		ArrayNode documents = orchestratorStorage.getList(OrchestratorStorage.DOCUMENT_TYPE.SYSTEM.toString());
 		return documents;
 	}
 
 	public ObjectNode get(String systemId) throws Exception {
 		// Connect to ES and retrieve result
-		ObjectNode document = documentManager.get(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), systemId);
+		ObjectNode document = orchestratorStorage.get(OrchestratorStorage.DOCUMENT_TYPE.SYSTEM.toString(), systemId);
 		return document;
 	}
 
 
 	public ObjectNode save(ObjectNode systemData) throws Exception {
 		String systemId = systemData.get("@id").asText();
-		documentManager.update(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), systemId, systemData);
+		orchestratorStorage.update(OrchestratorStorage.DOCUMENT_TYPE.SYSTEM.toString(), systemId, systemData);
 		return get(systemId);
 	}
 

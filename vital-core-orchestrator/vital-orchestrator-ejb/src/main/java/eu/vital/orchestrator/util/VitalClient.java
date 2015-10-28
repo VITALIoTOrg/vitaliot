@@ -3,6 +3,8 @@ package eu.vital.orchestrator.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
@@ -36,9 +38,13 @@ public class VitalClient {
 				.get(JsonNode.class);
 		client.close();
 		logger.info("GET RESPONSE: " + url + " SUCCESS");
-
+		if (jsonNode == null) {
+			return null;
+		}
+		logger.info("Compact: " + jsonNode.toString());
 		jsonNode = expand(jsonNode);
-		logger.info(jsonNode.toString());
+		logger.info("Expanded: " + jsonNode.toString());
+
 		return jsonNode;
 	}
 
@@ -53,7 +59,9 @@ public class VitalClient {
 				.post(Entity.json(data), JsonNode.class);
 		client.close();
 		logger.info("POST RESPONSE: " + url + " SUCCESS");
-
+		if (jsonNode == null) {
+			return null;
+		}
 		logger.info("Compact: " + jsonNode.toString());
 		jsonNode = expand(jsonNode);
 		logger.info("Expanded: " + jsonNode.toString());
@@ -62,7 +70,34 @@ public class VitalClient {
 	}
 
 
-	private JsonNode expand(JsonNode jsonLD) throws Exception {
+	public JsonNode expand(JsonNode jsonLD) throws Exception {
+		boolean isArray = jsonLD.isArray();
+		boolean isObject = jsonLD.isObject();
+
+		if (isArray) {
+			return expandArray((ArrayNode) jsonLD);
+		}
+		if (isObject) {
+			return expandObject((ObjectNode) jsonLD);
+		}
+		return jsonLD;
+	}
+
+	private ArrayNode expandArray(ArrayNode jsonLD) throws Exception {
+		ArrayNode arrayNode = objectMapper.createArrayNode();
+		for (JsonNode objectNode : jsonLD) {
+			ObjectNode expandedObjectNode = expandObject((ObjectNode) objectNode);
+			arrayNode.add(expandedObjectNode);
+		}
+		return arrayNode;
+	}
+
+	private ObjectNode expandObject(ObjectNode jsonLD) throws Exception {
+		if (!jsonLD.has("@context")) {
+			// It is JSON not JSON-LD
+			return jsonLD;
+		}
+
 		Map context = new HashMap();
 		JsonLdOptions options = new JsonLdOptions();
 
@@ -70,11 +105,10 @@ public class VitalClient {
 		List<Object> result = JsonLdProcessor.expand(jsonObject, options);
 		Object compactJSON = JsonLdProcessor.compact(result, context, options);
 
+		// Convert expanded
 		String compactJSONString = JsonUtils.toString(compactJSON);
-		JsonNode jsonNode = objectMapper.readTree(compactJSONString);
-		if (jsonNode.has("@graph")) {
-			jsonNode = jsonNode.get("@graph");
-		}
+		ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(compactJSONString);
+
 		return jsonNode;
 	}
 

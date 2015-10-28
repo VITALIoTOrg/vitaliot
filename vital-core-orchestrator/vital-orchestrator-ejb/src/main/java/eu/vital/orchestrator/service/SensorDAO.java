@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import eu.vital.orchestrator.storage.DocumentManager;
+import eu.vital.orchestrator.storage.OrchestratorStorage;
 import eu.vital.orchestrator.util.OntologyParser;
 import eu.vital.orchestrator.util.VitalClient;
 
@@ -19,7 +19,7 @@ public class SensorDAO {
 	private Logger log;
 
 	@Inject
-	private DocumentManager documentManager;
+	private OrchestratorStorage orchestratorStorage;
 
 	@Inject
 	private ObjectMapper objectMapper;
@@ -35,18 +35,18 @@ public class SensorDAO {
 
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
-		return documentManager.getList(DocumentManager.DOCUMENT_TYPE.SENSOR.toString());
+		return orchestratorStorage.getList(OrchestratorStorage.DOCUMENT_TYPE.SENSOR.toString());
 	}
 
 	public ObjectNode get(String uri) throws Exception {
 		// Connect to ES and retrieve result
-		ObjectNode document = documentManager.get(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), uri);
+		ObjectNode document = orchestratorStorage.get(OrchestratorStorage.DOCUMENT_TYPE.SENSOR.toString(), uri);
 		return document;
 	}
 
 	public JsonNode save(JsonNode ico) throws Exception {
 		String uri = ico.get("@id").asText();
-		documentManager.update(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), uri, ico);
+		orchestratorStorage.update(OrchestratorStorage.DOCUMENT_TYPE.SENSOR.toString(), uri, ico);
 		return get(uri);
 	}
 

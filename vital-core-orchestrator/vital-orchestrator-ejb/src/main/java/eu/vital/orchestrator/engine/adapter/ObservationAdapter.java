@@ -1,10 +1,13 @@
 package eu.vital.orchestrator.engine.adapter;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import eu.vital.orchestrator.service.ObservationService;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +28,18 @@ public class ObservationAdapter {
 		}
 
 		return new HashMap();
+	}
+
+	public Collection<Map> getAll(String observationType) throws Exception {
+
+		ArrayNode observationArray = observationService.fetchObservations(observationType);
+
+		Collection<Map> observationList = new ArrayList<Map>();
+		for (JsonNode sensorNode : observationArray) {
+			Map sensor = objectMapper.convertValue(sensorNode, Map.class);
+			observationList.add(sensor);
+		}
+		return observationList;
 	}
 
 }

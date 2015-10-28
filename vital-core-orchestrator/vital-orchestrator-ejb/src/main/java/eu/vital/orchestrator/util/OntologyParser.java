@@ -39,7 +39,7 @@ public class OntologyParser {
 				}
 			}
 		}
-		throw new Exception("operation not supported");
+		throw new Exception("operation of " + serviceType + " " + operationType + " not supported");
 	}
 
 
@@ -49,7 +49,6 @@ public class OntologyParser {
 				.get("http://www.wsmo.org/ns/hrests#hasAddress")
 				.get("@value")
 				.asText();
-
 		return operationURL;
 	}
 
