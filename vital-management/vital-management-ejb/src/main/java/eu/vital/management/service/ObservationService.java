@@ -42,12 +42,6 @@ public class ObservationService {
 	@Inject
 	private VitalClient vitalClient;
 
-	public ArrayNode list() throws Exception {
-		// Connect to ES and retrieve result
-		ArrayNode document = documentManager.getList(OBSERVATION_TYPE);
-		return document;
-	}
-
 	public ArrayNode fetchObservation(String sensorURI, String observationType) throws Exception {
 
 		try {
@@ -66,7 +60,9 @@ public class ObservationService {
 
 			// Connect to this URL and fetch all sensors:
 			ObjectNode operationInput = objectMapper.createObjectNode();
-			operationInput.put("sensor", sensorURI);
+			ArrayNode sensorArray = objectMapper.createArrayNode();
+			sensorArray.add(sensorURI);
+			operationInput.put("sensor", sensorArray);
 			operationInput.put("property", observationType);
 			JsonNode result = vitalClient.doPost(operationURL, operationInput);
 
@@ -81,6 +77,9 @@ public class ObservationService {
 		}
 	}
 
+	/**********************
+	 * Random Observations:
+	 **********************/
 
 	public ArrayNode fetchRandomObservation(String sensorId, String property) throws Exception {
 		// Return result with randomized data
@@ -154,19 +153,6 @@ public class ObservationService {
 			}
 		}
 		return obsTemplate;
-	}
-
-
-	public JsonNode get(String uri) throws Exception {
-		// Connect to ES and retrieve result
-		JsonNode document = documentManager.get(OBSERVATION_TYPE, uri);
-		return document;
-	}
-
-	public JsonNode save(JsonNode observation) throws Exception {
-		String uri = observation.get("uri").asText();
-		documentManager.update(OBSERVATION_TYPE, uri, observation);
-		return get(uri);
 	}
 
 }
