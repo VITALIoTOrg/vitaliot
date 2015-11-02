@@ -1,6 +1,8 @@
 package securitywrapper;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DateFormatSymbols;
 import java.util.List;
 
@@ -10,9 +12,21 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 
 import jsonpojos.Application;
 import jsonpojos.Applications;
@@ -670,6 +684,71 @@ public class GetServices {
 					.build();
 		}
 		
+	}
+	
+	@Path("/getresource")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public Response getresource(
+			@CookieParam("vitalAccessToken") String vitalToken,
+			@QueryParam("resource") String resource) {
+		
+		Cookie ck;
+		HttpClient httpclient;
+		
+		httpclient = HttpClients.createDefault();
+		
+		URI uri = null;
+		try {
+			uri = new URI(resource);
+		} catch (URISyntaxException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		HttpGet httpget = new HttpGet(uri);
+		ck = new Cookie(client.getSSOcookieName(), vitalToken);
+		httpget.setHeader("Cookie", ck.toString());
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpget.setConfig(requestConfigBuilder.build());
+		
+		// Execute and get the response.
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(httpget);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			try {
+				response = httpclient.execute(httpget);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+				return Response.ok()
+						.entity("Failed...")
+						.build();
+			}
+		}
+		HttpEntity entity = response.getEntity();
+
+		String respString = "";
+		
+		if (entity != null) {
+		    
+			try {
+				respString = EntityUtils.toString(entity);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
+		
+		return Response.ok()
+				.entity(respString)
+				.build();
 	}
 		
 }

@@ -41,6 +41,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -106,6 +108,9 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -114,7 +119,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -186,6 +197,9 @@ public class OpenAMClient {
 		
 		StringEntity strEntity = new StringEntity("{}", StandardCharsets.UTF_8);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -194,7 +208,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -248,7 +268,10 @@ public class OpenAMClient {
 		} else {
 			httppost.setHeader("X-OpenAM-Username", userAdmin);
 			httppost.setHeader("X-OpenAM-Password", pwdAdmin);
-		}		
+		}
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -257,7 +280,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -341,6 +370,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -349,7 +381,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -431,6 +469,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, tokenUser);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -439,7 +480,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -493,6 +540,9 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -501,7 +551,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -559,6 +615,9 @@ public class OpenAMClient {
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -567,7 +626,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -625,6 +690,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -633,7 +701,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -692,6 +766,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -700,7 +777,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -760,15 +843,18 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
 		try {
 			response = httpclient.execute(httppost);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (ClientProtocolException ea) {
+			ea.printStackTrace();
+		} catch (IOException ea) {
+			ea.printStackTrace();
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -827,6 +913,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -835,7 +924,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -883,6 +978,9 @@ public class OpenAMClient {
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpget.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -891,7 +989,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpget);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -949,6 +1053,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -957,7 +1064,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1028,6 +1141,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1036,7 +1152,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1095,6 +1217,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1103,7 +1228,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1161,6 +1292,9 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1169,7 +1303,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1262,6 +1402,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1270,7 +1413,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1344,7 +1493,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1353,7 +1504,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1454,6 +1611,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1462,7 +1622,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1522,6 +1688,9 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1530,7 +1699,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpdelete);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1590,6 +1765,9 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1598,7 +1776,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpdelete);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1658,6 +1842,9 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1666,7 +1853,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpdelete);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1726,6 +1919,9 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1734,7 +1930,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpdelete);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1821,6 +2023,9 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1829,7 +2034,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpput);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -1943,6 +2154,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -1951,7 +2165,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2084,6 +2304,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -2092,7 +2315,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2217,6 +2446,9 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -2225,7 +2457,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httppost);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2376,6 +2614,9 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -2384,7 +2625,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpput);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2529,6 +2776,9 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -2537,7 +2787,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpput);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2602,7 +2858,9 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -2611,7 +2869,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpput);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2713,6 +2977,9 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
+		Builder requestConfigBuilder = RequestConfig.custom();
+    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
+    	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
 		HttpResponse response = null;
@@ -2721,7 +2988,13 @@ public class OpenAMClient {
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			try {
+				response = httpclient.execute(httpput);
+			} catch (ClientProtocolException ea) {
+				ea.printStackTrace();
+			} catch (IOException ea) {
+				ea.printStackTrace();
+			}
 		}
 		HttpEntity entity = response.getEntity();
 
@@ -2753,7 +3026,6 @@ public class OpenAMClient {
 			// the group does not exist
 			return false;
 		}
-		
 		
 		List<String> currentUsers = currentGroup.getUniqueMember(); // users currently in the group
 		ArrayList<String> usersId = new ArrayList<String>(); // IDs of users to add
