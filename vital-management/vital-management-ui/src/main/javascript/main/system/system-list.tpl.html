@@ -1,36 +1,40 @@
 <div>
-    <div class="row">
-        <div class="col-xs-12">
-            <ul class="block-grid-lg-4 block-grid-md-2 block-grid-sm-2">
-                <li class="block-grid-item" ng-repeat="system in systems">
-
-                    <ul class="list-group">
-                        <li class="list-group-item active">
-                        <span class="badge bg-green" ng-class="{
-                            'bg-orange' : system['http://vital-iot.eu/ontology/ns/status']['@id'] !== 'http://vital-iot.eu/ontology/ns/Running'}">
-                        {{system['http://vital-iot.eu/ontology/ns/status']['@id']}}
-                        </span>
-                            {{system['http://www.w3.org/2000/01/rdf-schema#label']}}
-                        </li>
-                        <li class="list-group-item">
-                            <p>{{system['http://www.w3.org/2000/01/rdf-schema#comment']}}</p>
-                        </li>
-                        <li class="list-group-item">
-                            <div class="btn-group btn-group-justified">
-                                <a class="btn" ng-href="#/system/view/{{system['@id'] | encodeHistoryComponent}}">
-                                    <i class="fa fa-eye"></i> View
-                                </a>
-                                <a class="btn" ng-href="#/system/edit/{{system['@id'] | encodeHistoryComponent}}">
-                                    <i class="fa fa-edit"></i> Edit
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-
-                </li>
-            </ul>
-        </div>
-        <hr/>
-    </div>
-</div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th width="15%"></th>
+        </tr>
+        </thead>
+        <tbody class="table-hover">
+        <tr ng-repeat="system in systems">
+            <td>{{$index + 1}}</td>
+            <td>
+                {{system['http://www.w3.org/2000/01/rdf-schema#label']}}
+            </td>
+            <td>
+                {{system['http://www.w3.org/2000/01/rdf-schema#comment']}}
+            </td>
+            <td>
+                <span class="badge bg-green" ng-class="{
+                'bg-orange' : system['http://vital-iot.eu/ontology/ns/status']['@id'] !== 'http://vital-iot.eu/ontology/ns/Running'}">
+                {{system['http://vital-iot.eu/ontology/ns/status']['@id'] | statusDisplay}}
+                </span>
+            </td>
+            <td>
+                <div class="btn-group btn-group-justified">
+                    <a class="btn" ng-href="#/system/view/{{system['@id'] | encodeHistoryComponent}}">
+                        <i class="fa fa-eye"></i> View
+                    </a>
+                    <a class="btn" ng-href="#/system/edit/{{system['@id'] | encodeHistoryComponent}}">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

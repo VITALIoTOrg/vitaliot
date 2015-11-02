@@ -47,7 +47,7 @@ public class ManagementService {
 				"http://vital-iot.eu/ontology/ns/GetSupportedPerformanceMetrics",
 				systemServices);
 		JsonNode result = vitalClient.doGet(operationURL);
-		ArrayNode metricList = (ArrayNode) result;
+		ArrayNode metricList = (ArrayNode) result.get("metrics");
 		for (JsonNode metric : metricList) {
 			ObjectNode metricJSON = (ObjectNode) metric;
 			metricJSON.put("system", systemJSON.get("@id").asText());

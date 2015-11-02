@@ -15,30 +15,33 @@ angular.module('common.widgets.area', [])
                 controller: [
                     '$scope',
                     function ($scope) {
+                        var area = _.get($scope.system, ['http://vital-iot.eu/ontology/ns/serviceArea', '@id'], '');
+
+                        var lat, lng;
+                        if (area.indexOf('Camden_Town') >= 0) {
+                            lat = 51.539011;
+                            lng = -0.142555;
+                        } else if (area.indexOf('Istanbul') >= 0) {
+                            lat = 41.01759913903529;
+                            lng = 28.98124694824219;
+                        } else {
+                            // No map info
+                            return;
+                        }
+
                         $scope.mapOptions = {
                             center: {
-                                lat: 41.01759913903529,
-                                lng: 28.98124694824219,
+                                lat: lat,
+                                lng: lng,
                                 zoom: 10
                             },
                             defaults: {
                                 scrollWheelZoom: true
                             },
-                            paths: {
-                                p1: {
-                                    color: '#008000',
-                                    weight: 8,
-                                    latlngs: [
-                                        {lat: 51.50, lng: -0.082},
-                                        {lat: 48.83, lng: 2.37},
-                                        {lat: 41.91, lng: 12.48}
-                                    ]
-                                }
-                            },
                             markers: {
-                                istanbul: {
-                                    lat: 41.01759913903529,
-                                    lng: 28.98124694824219
+                                systemArea: {
+                                    lat: lat,
+                                    lng: lng
                                 }
                             }
                         };

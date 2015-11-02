@@ -78,6 +78,16 @@ angular.module('main.sensor', [
             // Functions
             function sensorToMarker(sensor) {
                 var marker = {};
+                var lattitude = parseFloat(sensor
+                    ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
+                    ['http://www.w3.org/2003/01/geo/wgs84_pos#lat']);
+                var longitude = parseFloat(
+                    sensor
+                        ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
+                        ['http://www.w3.org/2003/01/geo/wgs84_pos#lon'] ||
+                    sensor
+                        ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
+                        ['http://www.w3.org/2003/01/geo/wgs84_pos#long']);
                 var id = sensor['@id']
                     .replace('http://', '')
                     .replace(/:/g, '_')
@@ -86,8 +96,8 @@ angular.module('main.sensor', [
                     .replace(/-/g, '0');
                 marker[id] = {
                     layer: 'sensors',
-                    lat: parseFloat(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#lat']),
-                    lng: parseFloat(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#long']),
+                    lat: lattitude,
+                    lng: longitude,
                     focus: false,
                     draggable: false,
                     riseOnHover: true,
@@ -124,9 +134,9 @@ angular.module('main.sensor', [
             $scope.mapOptions = {
                 markers: {},
                 center: {
-                    lat: 41.01759913903529,
-                    lng: 28.98124694824219,
-                    zoom: 10
+                    lat: 45.4058528,
+                    lng: 12.1008673,
+                    zoom: 4
                 },
                 defaults: {
                     minZoom: 1,

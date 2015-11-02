@@ -3,16 +3,24 @@ angular.module('common.widgets.location', [])
 
     .directive('widgetLocation', [
         '$compile', '$interval', 'sensorResource',
-        function($compile, $interval, sensorResource) {
+        function ($compile, $interval, sensorResource) {
             // Functions
             function sensorToMarker(sensor) {
+                var lattitude = parseFloat(sensor
+                    ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
+                    ['http://www.w3.org/2003/01/geo/wgs84_pos#lat']);
+
+                var longitude = parseFloat(
+                    sensor
+                        ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
+                        ['http://www.w3.org/2003/01/geo/wgs84_pos#lon'] ||
+                    sensor
+                        ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
+                        ['http://www.w3.org/2003/01/geo/wgs84_pos#long']);
+
                 var marker = {
-                    lat: parseFloat(sensor
-                        ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
-                        ['http://www.w3.org/2003/01/geo/wgs84_pos#lat']),
-                    lng: parseFloat(sensor
-                        ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
-                        ['http://www.w3.org/2003/01/geo/wgs84_pos#long']),
+                    lat: lattitude,
+                    lng: longitude,
                     focus: false,
                     draggable: false,
                     riseOnHover: true,
@@ -30,20 +38,23 @@ angular.module('common.widgets.location', [])
                 },
                 controller: [
                     '$scope',
-                    function($scope) {
+                    function ($scope) {
                         // Map Configuration
+
+                        if (!_.has($scope.sensor, ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation'])) {
+                            return;
+                        }
+
+                        var marker = sensorToMarker($scope.sensor);
+
                         $scope.mapOptions = {
                             center: {
-                                lat: parseFloat($scope.sensor
-                                    ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
-                                    ['http://www.w3.org/2003/01/geo/wgs84_pos#lat']),
-                                lng: parseFloat($scope.sensor
-                                    ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
-                                    ['http://www.w3.org/2003/01/geo/wgs84_pos#long']),
+                                lat: marker.lat,
+                                lng: marker.lng,
                                 zoom: 10
                             },
                             markers: {
-                                mainMarker: sensorToMarker($scope.sensor)
+                                mainMarker: marker
                             },
                             defaults: {
                                 minZoom: 1,
