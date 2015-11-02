@@ -109,7 +109,7 @@ public class OpenAMClient {
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -198,7 +198,7 @@ public class OpenAMClient {
 		StringEntity strEntity = new StringEntity("{}", StandardCharsets.UTF_8);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 
 		// Execute and get the response.
@@ -270,7 +270,7 @@ public class OpenAMClient {
 			httppost.setHeader("X-OpenAM-Password", pwdAdmin);
 		}
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 
 		// Execute and get the response.
@@ -371,7 +371,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -470,7 +470,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, tokenUser);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -541,7 +541,7 @@ public class OpenAMClient {
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -616,7 +616,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -691,7 +691,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -767,7 +767,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -844,7 +844,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -914,7 +914,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -979,7 +979,7 @@ public class OpenAMClient {
 		
 		HttpGet httpget = new HttpGet(uri);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpget.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1054,7 +1054,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1142,7 +1142,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1218,7 +1218,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1293,7 +1293,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1403,7 +1403,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1494,7 +1494,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1612,7 +1612,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1689,7 +1689,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1766,7 +1766,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1843,7 +1843,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -1920,7 +1920,7 @@ public class OpenAMClient {
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpdelete.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2024,7 +2024,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2155,7 +2155,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2305,7 +2305,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2447,7 +2447,7 @@ public class OpenAMClient {
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httppost.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2615,7 +2615,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2777,7 +2777,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2859,7 +2859,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
@@ -2978,7 +2978,7 @@ public class OpenAMClient {
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
 		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(4000).setConnectTimeout(4000).setSocketTimeout(4000);
+    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
     	httpput.setConfig(requestConfigBuilder.build());
 		
 		// Execute and get the response.
