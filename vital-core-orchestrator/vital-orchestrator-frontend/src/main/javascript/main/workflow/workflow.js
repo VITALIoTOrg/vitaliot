@@ -1,7 +1,7 @@
 'use strict';
 angular.module('main.workflow', [])
 
-    .config(['$routeProvider', function($routeProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider.when('/workflow/list', {
             templateUrl: 'main/workflow/workflow-list.tpl.html',
@@ -10,7 +10,7 @@ angular.module('main.workflow', [])
             resolve: {
                 workflowList: [
                     '$route', 'workflowResource',
-                    function($route, workflowResource) {
+                    function ($route, workflowResource) {
                         return workflowResource.fetchList();
                     }
                 ]
@@ -24,7 +24,7 @@ angular.module('main.workflow', [])
             resolve: {
                 workflow: [
                     '$route', 'workflowResource',
-                    function($route, workflowResource) {
+                    function ($route, workflowResource) {
                         var id = $route.current.params.id;
                         if (!!id) {
                             // Just retrieve from server
@@ -40,7 +40,7 @@ angular.module('main.workflow', [])
                 ],
                 operationList: [
                     '$route', 'operationResource',
-                    function($route, operationResource) {
+                    function ($route, operationResource) {
                         return operationResource.fetchList();
                     }
                 ]
@@ -54,7 +54,7 @@ angular.module('main.workflow', [])
             resolve: {
                 workflow: [
                     '$route', 'workflowResource',
-                    function($route, workflowResource) {
+                    function ($route, workflowResource) {
                         return workflowResource.fetch($route.current.params.id);
 
                     }
@@ -65,31 +65,31 @@ angular.module('main.workflow', [])
 
     .controller('WorkflowListController', [
         '$scope', 'workflowResource', 'workflowList',
-        function($scope, workflowResource, workflowList) {
+        function ($scope, workflowResource, workflowList) {
             var workflowListCtrl = this;
             workflowListCtrl.workflowList = workflowList;
             workflowListCtrl.state = {
                 errors: []
             };
             workflowListCtrl.actions = {
-                createMetaservice: function(workflow) {
+                createMetaservice: function (workflow) {
                     var metaservice = {
                         workflow: angular.copy(workflow)
                     };
                     workflowListCtrl.state.errors.length = 0;
                     workflowResource.createMetaservice(metaservice)
-                        .then(function(savedMetaservice) {
+                        .then(function (savedMetaservice) {
                             workflowListCtrl.state.errors.push('Deployed');
-                        }, function(error) {
+                        }, function (error) {
                             workflowListCtrl.state.errors.push(error);
                         });
                 },
-                delete: function(workflow) {
+                delete: function (workflow) {
                     workflowListCtrl.state.errors.length = 0;
                     workflowResource.delete(workflow.id)
-                        .then(function(saveWorkflow) {
+                        .then(function (saveWorkflow) {
                             workflowListCtrl.workflowList.splice(workflowListCtrl.workflowList.indexOf(workflow), 1);
-                        }, function(error) {
+                        }, function (error) {
                             workflowListCtrl.state.errors.push(error);
                         });
                 }
@@ -100,7 +100,7 @@ angular.module('main.workflow', [])
 
     .controller('WorkflowEditController', [
         '$scope', '$location', 'workflowResource', 'workflow', 'operationList',
-        function($scope, $location, workflowResource, workflow, operationList) {
+        function ($scope, $location, workflowResource, workflow, operationList) {
             var thisCtrl = this;
 
             thisCtrl.workflow = workflow;
@@ -126,31 +126,44 @@ angular.module('main.workflow', [])
             };
 
             thisCtrl.actions = {
-                addOperation: function(operation) {
+                addOperation: function (operation) {
+                    operation = operation || {
+                            'script': 'function execute(input) {\n' +
+                            '\tvar output;\n' +
+                            '\n' +
+                            '\t/*** Insert you code here ***/\n' +
+                            '\t \n' +
+                            '\t \n' +
+                            '\t \n  ' +
+                            '\t/*** End: Insert you code here ***/\n' +
+                            '\n' +
+                            '\treturn output;\n' +
+                            '}\n'
+                        };
                     workflow.operationList.push(angular.copy(operation));
                 },
-                removeOperation: function(operation) {
+                removeOperation: function (operation) {
                     workflow.operationList.splice(workflow.operationList.indexOf(operation), 1);
                 },
-                save: function(ngFormController) {
+                save: function (ngFormController) {
                     if (ngFormController.$invalid) {
                         return;
                     }
                     workflowResource.save(thisCtrl.workflow)
-                        .then(function(savedWorkflow) {
+                        .then(function (savedWorkflow) {
                             angular.copy(savedWorkflow, thisCtrl.workflow);
-                        }, function(error) {
+                        }, function (error) {
 
                         });
                 },
-                execute: function() {
+                execute: function () {
                     var inputData = angular.fromJson(thisCtrl.workflow.operationList[0].inputData);
                     thisCtrl.output = null;
                     thisCtrl.data.errors.length = 0;
                     workflowResource.execute(thisCtrl.workflow, inputData)
-                        .then(function(output) {
+                        .then(function (output) {
                             thisCtrl.output = output;
-                        }, function(error) {
+                        }, function (error) {
                             thisCtrl.options.errors.push(error);
                         });
                 }
@@ -161,8 +174,8 @@ angular.module('main.workflow', [])
 
     .filter('jsonString', [
         '$filter',
-        function($filter) {
-            return function(jsonString) {
+        function ($filter) {
+            return function (jsonString) {
                 var obj = angular.fromJson(jsonString);
                 return $filter('json')(obj);
             };
@@ -171,53 +184,53 @@ angular.module('main.workflow', [])
 
     .factory('workflowResource', [
         '$http', '$q', 'SERVICE_URL', 'metaserviceResource',
-        function($http, $q, SERVICE_URL, metaserviceResource) {
+        function ($http, $q, SERVICE_URL, metaserviceResource) {
             var ROOT_URL = SERVICE_URL + '/workflow';
             var EXECUTE_URL = SERVICE_URL + '/execute';
 
             // The public API of the workflow
             var workflow = {
 
-                fetchList: function() {
+                fetchList: function () {
                     return $http.get(ROOT_URL)
-                        .then(function(response) {
+                        .then(function (response) {
                             return response.data;
                         });
                 },
 
-                fetch: function(id) {
+                fetch: function (id) {
                     return $http.get(ROOT_URL + '/' + id)
-                        .then(function(response) {
+                        .then(function (response) {
                             return response.data;
                         });
                 },
 
-                save: function(workflow) {
+                save: function (workflow) {
                     if (!!workflow.id) {
                         return $http.put(ROOT_URL + '/' + workflow.id, workflow)
-                            .then(function(response) {
+                            .then(function (response) {
                                 return response.data;
                             });
                     } else {
                         return $http.post(ROOT_URL, workflow)
-                            .then(function(response) {
+                            .then(function (response) {
                                 return response.data;
                             });
                     }
 
                 },
 
-                delete: function(id) {
+                delete: function (id) {
                     return $http.delete(ROOT_URL + '/' + id);
                 },
 
                 createMetaservice: metaserviceResource.save,
 
-                execute: function(workflow, input) {
+                execute: function (workflow, input) {
                     return $http.post(EXECUTE_URL + '/workflow', {
                         input: input,
                         workflow: workflow
-                    }).then(function(response) {
+                    }).then(function (response) {
                         return response.data;
                     });
                 }

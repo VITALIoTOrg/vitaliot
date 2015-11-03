@@ -60,7 +60,9 @@ public class ObservationService {
 
 			// Connect to this URL and fetch all sensors:
 			ObjectNode operationInput = objectMapper.createObjectNode();
-			operationInput.put("sensor", sensorURI);
+			ArrayNode sensorsArray = objectMapper.createArrayNode();
+			sensorsArray.add(sensorURI);
+			operationInput.put("sensor", sensorsArray);
 			operationInput.put("property", observationType);
 			JsonNode result = vitalClient.doPost(operationURL, operationInput);
 
@@ -81,7 +83,8 @@ public class ObservationService {
 			// Connect to DMS-ES and retrieve result
 			// TODO: How to do this dynamically???
 			observationType = observationType.replace("http://vital-iot.com/ontology#", "vital:");
-			QueryBuilder query = QueryBuilders.matchQuery("ssn:observationProperty.type", observationType);
+
+			QueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.matchPhraseQuery("ssn:observationProperty.type", observationType));
 			ArrayNode result = dmsStorage.search(DmsStorage.DOCUMENT_TYPE.measurement.toString(), query);
 			// Expand JSON-LD documents:
 			result = (ArrayNode) vitalClient.expand(result);

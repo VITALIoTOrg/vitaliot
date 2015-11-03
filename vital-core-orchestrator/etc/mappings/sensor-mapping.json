@@ -6,9 +6,16 @@
         "type": "string",
         "index": "not_analyzed"
       },
+      "@type": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
       "system": {
         "type": "string",
         "index": "not_analyzed"
+      },
+      "http://purl.oclc.org/NET/ssnx/ssn#observes": {
+        "type": "nested"
       }
     }
   }

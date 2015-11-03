@@ -16,19 +16,23 @@
  */
 package eu.vital.orchestrator.rest;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.engine.WorkFlowEngine;
 import eu.vital.orchestrator.service.MetaserviceDAO;
 import eu.vital.orchestrator.service.WorkflowDAO;
 
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/execute")
 public class ExecutionRESTService extends RESTService {
@@ -42,6 +46,8 @@ public class ExecutionRESTService extends RESTService {
 	@Inject
 	MetaserviceDAO metaserviceDAO;
 
+	@Inject
+	ObjectMapper objectMapper;
 
 	@POST
 	@Path("/operation")
@@ -61,7 +67,7 @@ public class ExecutionRESTService extends RESTService {
 		return Response.ok(response).build();
 	}
 
-	@PUT
+	@POST
 	@Path("/service/{id}")
 	public Response executeWorkflow(@PathParam("id") String serviceId, JsonNode input) throws Exception {
 		JsonNode service = metaserviceDAO.getMetaservice(serviceId);
@@ -75,6 +81,18 @@ public class ExecutionRESTService extends RESTService {
 		}
 		//2. Return result
 		return Response.ok(lastOperation.get("outputData")).build();
+	}
+
+	@GET
+	@Path("/service/{id}")
+	public Response executeGetWorkflow(@PathParam("id") String serviceId, @Context UriInfo uriInfo) throws Exception {
+		ObjectNode input = objectMapper.createObjectNode();
+		MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+		for (String param : queryParams.keySet()) {
+			input.put(param, queryParams.get(param).get(0));
+		}
+		// DO POST:
+		return executeWorkflow(serviceId, input);
 	}
 
 }

@@ -1,104 +1,12 @@
 {
-  "context": {
-    "system.jsonld": {
-      "@context": {
-        "@vocab": "http://vital-iot.eu/ontology/ns/",
-        "vital": "http://vital-iot.eu/ontology/ns/",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
-        "hrest": "http://www.wsmo.org/ns/hrests#",
-        "id": "@id",
-        "type": "@type",
-        "name": "rdfs:label",
-        "description": "rdfs:comment",
-        "status": {
-          "@type": "@id"
-        },
-        "operator": {
-          "@type": "@id"
-        },
-        "serviceArea": {
-          "@type": "@id"
-        },
-        "services": {
-          "@id": "vital:providesService",
-          "@type": "@id"
-        },
-        "sensors": {
-          "@id": "vital:managesSensor",
-          "@type": "@id"
-        }
-      }
-    },
-    "sensor.jsonld": {
-      "@context": {
-        "@vocab": "http://vital-iot.eu/ontology/ns/",
-        "vital": "http://vital-iot.eu/ontology/ns/",
-        "lsm": "http://lsm.deri.ie/ont/lsm.owl#",
-        "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
-        "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
-        "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
-        "hrest": "http://www.wsmo.org/ns/hrests#",
-        "hard": "http://www.w3.org/2007/uwa/context/hardware.owl#",
-        "soft": " http://www.w3.org/2007/uwa/context/software.owl#",
-        "id": "@id",
-        "type": "@type",
-        "name": "rdfs:label",
-        "description": "rdfs:comment",
-        "ssn:madeObservation": {
-          "@type": "@id"
-        },
-        "status": {
-          "@type": "@id"
-        }
-      }
-    },
-    "service.jsonld": {
-      "@context": {
-        "@vocab": "http://vital-iot.eu/ontology/ns/",
-        "vital": "http://vital-iot.eu/ontology/ns/",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
-        "hrest": "http://www.wsmo.org/ns/hrests#",
-        "id": "@id",
-        "type": "@type",
-        "name": "rdfs:label",
-        "description": "rdfs:comment",
-        "hrest:hasAddress": {
-          "@type": "hrest:URITemplate"
-        },
-        "operations": {
-          "@id": "msm:hasOperation",
-          "@type": "@id"
-        }
-      }
-    },
-    "measurement.jsonld": {
-      "@context": {
-        "@vocab": "http://vital-iot.eu/ontology/ns/",
-        "vital": "http://vital-iot.eu/ontology/ns/",
-        "vital": "http://vital-iot.com/ontology#",
-        "lsm": "http://lsm.deri.ie/ont/lsm.owl#",
-        "ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
-        "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
-        "time": "http://www.w3.org/2006/time#",
-        "qudt": "http://qudt.org/vocab/unit#",
-        "xsd": "http://www.w3.org/2001/XMLSchema#",
-        "id": "@id",
-        "type": "@type",
-        "time:inXSDDateTime": {
-          "@type": "xsd:dateTime"
-        },
-        "qudt:unit": {
-          "@type": "@id"
-        }
-      }
-    }
-  },
   "bootstrap": {
     "discovery_url": "",
     "system_urls": [
-      "http://104.131.128.70:8080/istanbul-traffic/ppi"
+      "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
+      "http://vital-integration.atosresearch.eu:8180/filtering/ppi",
+      "http://vital-integration.atosresearch.eu:8180/cep",
+      "http://vital-integration.atosresearch.eu:8180/camden-footfall-ppi/ppi/system",
+      "http://vital-integration.atosresearch.eu:8180/hireplyppi"
     ]
   },
   "orchestrator": {
@@ -202,6 +110,18 @@
           {
             "type": "vital:SetConfiguration",
             "hrest:hasAddress": "<orchestrator.url>/ppi/service/configuration",
+            "hrest:hasMethod": "hrest:POST"
+          }
+        ]
+      },
+      {
+        "@context": "http://vital-iot.eu/contexts/service.jsonld",
+        "id": "<orchestrator.url>/service/observation",
+        "type": "vital:ObservationService",
+        "operations": [
+          {
+            "type": "vital:GetObservations",
+            "hrest:hasAddress": "<orchestrator.url>/ppi/observation",
             "hrest:hasMethod": "hrest:POST"
           }
         ]
@@ -321,43 +241,45 @@
         ]
       }
     ],
-    "performance": [
-      {
-        "type": "http://vital-iot.eu/ontology/ns/SysUptime",
-        "id": "<orchestrator.url>sensor/monitoring/sysUptime"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/UsedMem",
-        "id": "<orchestrator.url>sensor/monitoring/usedMem"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/AvailableMem",
-        "id": "<orchestrator.url>sensor/monitoring/availableMem"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/ServedRequests",
-        "id": "<orchestrator.url>sensor/monitoring/servedRequests"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/Errors",
-        "id": "<orchestrator.url>sensor/monitoring/errors"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/SysLoad",
-        "id": "<orchestrator.url>sensor/monitoring/sysLoad"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/PendingRequests",
-        "id": "<orchestrator.url>sensor/monitoring/pendingRequests"
-      },
-      {
-        "type": "http://vital-iot.eu/ontology/ns/MaxRequests",
-        "id": "<orchestrator.url>sensor/monitoring/maxRequests"
-      }
-    ],
+    "performance": {
+      "metrics": [
+        {
+          "type": "http://vital-iot.eu/ontology/ns/SysUptime",
+          "id": "<orchestrator.url>sensor/monitoring/sysUptime"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/UsedMem",
+          "id": "<orchestrator.url>sensor/monitoring/usedMem"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/AvailableMem",
+          "id": "<orchestrator.url>sensor/monitoring/availableMem"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/ServedRequests",
+          "id": "<orchestrator.url>sensor/monitoring/servedRequests"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/Errors",
+          "id": "<orchestrator.url>sensor/monitoring/errors"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/SysLoad",
+          "id": "<orchestrator.url>sensor/monitoring/sysLoad"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/PendingRequests",
+          "id": "<orchestrator.url>sensor/monitoring/pendingRequests"
+        },
+        {
+          "type": "http://vital-iot.eu/ontology/ns/MaxRequests",
+          "id": "<orchestrator.url>sensor/monitoring/maxRequests"
+        }
+      ]
+    },
     "observation": {
       "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
-      "uri": "<orchestrator.url>/sensor/monitoring/observation/servedRequests/<observation.id>",
+      "id": "<orchestrator.url>/sensor/monitoring/observation/servedRequests/<observation.id>",
       "type": "ssn:Observation",
       "ssn:observationProperty": {
         "type": "vital:servedRequests"

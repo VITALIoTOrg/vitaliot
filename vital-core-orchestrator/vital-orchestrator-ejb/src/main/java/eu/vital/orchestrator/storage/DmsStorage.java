@@ -103,7 +103,9 @@ public class DmsStorage implements Serializable {
 	public ArrayNode search(String type, QueryBuilder qb) throws Exception {
 		SearchRequestBuilder srb = esClient.prepareSearch(MAIN_INDEX)
 				.setTypes(type)
-				.setQuery(qb);
+				.setQuery(qb)
+				.setFrom(0)
+				.setSize(Integer.MAX_VALUE);
 		return getResults(srb);
 	}
 

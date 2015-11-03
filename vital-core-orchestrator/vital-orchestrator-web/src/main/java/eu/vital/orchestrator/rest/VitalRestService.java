@@ -175,22 +175,8 @@ public class VitalRestService extends RESTService {
 
 		for (JsonNode metric : metrics) {
 			String observationType = metric.asText();
-			observationType = observationType.substring(observationType.lastIndexOf("/") + 1);
-
 			// Get configuration.orchestrator.performance template
-			ObjectNode observation = configuration.get("orchestrator").get("observation").deepCopy();
-			//1. URI
-			observation.put("uri", url + "/sensor/monitoring/observation/" + observationType + "/" + System.currentTimeMillis());
-			//2. TYPE
-			ObjectNode observationProperty = (ObjectNode) observation.get("ssn:observationProperty");
-			observationProperty.put("type", "vital:" + Character.toLowerCase(observationType.charAt(0)) + observationType.substring(1));
-			//3. Value
-			ObjectNode observationValue = (ObjectNode) observation.get("ssn:observationResult").get("ssn:hasValue");
-			observationValue.put("value", 10);
-			//4. Date
-			ObjectNode observationTime = (ObjectNode) observation.get("ssn:observationResultTime");
-			observationTime.put("time:inXSDDateTime", sdf.format(new Date()));
-
+			ObjectNode observation = generatePerformanceObservation(observationType);
 			// Add to array
 			observationsArray.add(observation);
 		}
@@ -199,5 +185,63 @@ public class VitalRestService extends RESTService {
 
 		// Return result
 		return Response.ok(result).build();
+	}
+
+	@POST
+	@Path("/observation")
+	public Response getObservation(JsonNode query) throws Exception {
+		JsonNode configuration = configurationDAO.get();
+		String url = configuration.get("orchestrator").get("url").asText();
+		/*
+		{
+			"sensor": [
+				"http://example.com/sensor/2"
+			],
+			"property": "http://lsm.deri.ie/OpenIot/Temperature",
+			"from": "2014-11-17T09:00:00+02:00",
+			"to": "2014-11-17T11:00:00+02:00"
+		}
+		*/
+		ArrayNode sensorsArray = (ArrayNode) query.get("sensor");
+		String observationType = query.get("property").asText();
+
+		ArrayNode observationsArray = objectMapper.createArrayNode();
+
+		for (JsonNode sensor : sensorsArray) {
+			String sensorId = sensor.asText();
+			// Only performance metrics from the /sensor/monitoring are returned
+			if (sensorId.indexOf("/sensor/monitoring") > 0) {
+				JsonNode observation = generatePerformanceObservation(observationType);
+				observationsArray.add(observation);
+			}
+		}
+		// Replace url
+		String result = observationsArray.toString().replaceAll("<orchestrator.url>", url);
+
+		// Return result
+		return Response.ok(result).build();
+	}
+
+	private ObjectNode generatePerformanceObservation(String observationType) throws Exception {
+
+		JsonNode configuration = configurationDAO.get();
+		String url = configuration.get("orchestrator").get("url").asText();
+		observationType = observationType.substring(observationType.lastIndexOf("/") + 1);
+
+		// Get configuration.orchestrator.performance template
+		ObjectNode observation = configuration.get("orchestrator").get("observation").deepCopy();
+		//1. URI
+		observation.put("uri", url + "/sensor/monitoring/observation/" + observationType + "/" + System.currentTimeMillis());
+		//2. TYPE
+		ObjectNode observationProperty = (ObjectNode) observation.get("ssn:observationProperty");
+		observationProperty.put("type", "vital:" + Character.toLowerCase(observationType.charAt(0)) + observationType.substring(1));
+		//3. Value
+		ObjectNode observationValue = (ObjectNode) observation.get("ssn:observationResult").get("ssn:hasValue");
+		observationValue.put("value", 10);
+		//4. Date
+		ObjectNode observationTime = (ObjectNode) observation.get("ssn:observationResultTime");
+		observationTime.put("time:inXSDDateTime", sdf.format(new Date()));
+
+		return observation;
 	}
 }

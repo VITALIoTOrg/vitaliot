@@ -17,6 +17,8 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 	public Response toResponse(Exception exception) {
 		ObjectNode error = objectMapper.createObjectNode();
 		error.put("error", exception.getMessage());
+		error.put("type", exception.getClass().toString());
+
 		return Response.status(Response.Status.CONFLICT).entity(error).build();
 	}
 
