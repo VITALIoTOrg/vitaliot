@@ -35,7 +35,8 @@
         <module>vital-orchestrator-ejb</module>
         <module>vital-orchestrator-web</module>
         <module>vital-orchestrator-ear</module>
-        <!--<module>vital-orchestrator-frontend</module>-->
+
+        <module>vital-orchestrator-frontend</module>
     </modules>
 
     <properties>

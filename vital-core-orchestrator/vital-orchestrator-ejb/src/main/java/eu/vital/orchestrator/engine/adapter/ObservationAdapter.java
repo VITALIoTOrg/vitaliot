@@ -21,7 +21,7 @@ public class ObservationAdapter {
 
 	public Map get(String sensorUri, String observationType) throws Exception {
 
-		ArrayNode observationNode = observationService.fetchObservation(sensorUri, observationType);
+		ArrayNode observationNode = observationService.fetchLatestBySensorAndType(sensorUri, observationType);
 		if (observationNode.size() > 0) {
 			Map observation = objectMapper.convertValue(observationNode.get(0), Map.class);
 			return observation;
@@ -30,9 +30,33 @@ public class ObservationAdapter {
 		return new HashMap();
 	}
 
-	public Collection<Map> getAll(String observationType) throws Exception {
+	public Collection<Map> fetchAll() throws Exception {
 
-		ArrayNode observationArray = observationService.fetchObservations(observationType);
+		ArrayNode observationArray = observationService.fetchAll();
+
+		Collection<Map> observationList = new ArrayList<Map>();
+		for (JsonNode sensorNode : observationArray) {
+			Map sensor = objectMapper.convertValue(sensorNode, Map.class);
+			observationList.add(sensor);
+		}
+		return observationList;
+	}
+
+	public Collection<Map> fetchAllByType(String observationType) throws Exception {
+
+		ArrayNode observationArray = observationService.fetchAllByType(observationType);
+
+		Collection<Map> observationList = new ArrayList<Map>();
+		for (JsonNode sensorNode : observationArray) {
+			Map sensor = objectMapper.convertValue(sensorNode, Map.class);
+			observationList.add(sensor);
+		}
+		return observationList;
+	}
+
+	public Collection<Map> fetchAllBySensorAndType(String sensorUri, String observationType) throws Exception {
+
+		ArrayNode observationArray = observationService.fetchAllBySensorAndType(sensorUri, observationType);
 
 		Collection<Map> observationList = new ArrayList<Map>();
 		for (JsonNode sensorNode : observationArray) {

@@ -3,6 +3,7 @@
  */
 'use strict';
 
+// Camden - Get Footfall prediction for area in the future
 //1. FIRST INPUT;
 //{
 //    "lat": 51.539011,
@@ -10,7 +11,7 @@
 //    "atDate" : "2015-06-14T19:37:22Z"
 //}
 
-//Operation1: Get List of Sensors measuring footfal
+//Operation1: Get List of Sensors measuring footfall
 
 function execute(input) {
     input.sensorList = sensorAdapter.searchByObservationType('http://vital-iot.eu/ontology/ns/Footfall');
@@ -43,8 +44,10 @@ function execute(input) {
         }
     }
 
-    return result;
+    input.sensor = sensor;
+    return input;
 
+    // Distance function
     function distance(lat1, lon1, lat2, lon2) {
         var R = 6371; // Radius of the earth in km
         var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -63,21 +66,37 @@ function execute(input) {
 }
 
 
-//Operation 3: Get Last Observation from Sensor
-//{
-//    sensor: {}
-//}
-
+//Operation 3: Get All Observations from Sensor
 function execute(input) {
-    var observation;
-    observation = observationAdapter.get(input.sensor['@id'], 'http://vital-iot.eu/ontology/ns/Footfall');
-    return {
-        measurementDate: observation['http://purl.oclc.org/NET/ssnx/ssn#observationResultTime']
-            ['http://www.w3.org/2006/time#inXSDDateTime']
-            ['@value'],
-        measurementValue: observation['http://purl.oclc.org/NET/ssnx/ssn#observationResult']
-            ['http://purl.oclc.org/NET/ssnx/ssn#hasValue']
-            ['http://vital-iot.eu/ontology/ns/value']
-    };
+    var observationList = observationAdapter.fetchAllBySensorAndType(input.sensor['@id'], 'http://vital-iot.eu/ontology/ns/Footfall');
+
+    input.observationList = observationList;
+    return input;
 }
 
+
+// Operation4: Run prediction on results
+function execute(input) {
+    var values = [];
+    for (var i = 0; i < input.observationList.length; i++) {
+        var observation = input.observationList[i];
+        var value = observation
+            ['http://purl.oclc.org/NET/ssnx/ssn#observationResult']
+            ['http://purl.oclc.org/NET/ssnx/ssn#hasValue']
+            ['http://vital-iot.eu/ontology/ns/value'];
+        values.push(value);
+    }
+
+    // Do prediction here:
+    //r.parseEvalQ('library(forecast)');
+    //r.parseEvalQ('value <- c(' + values.join(', ') + ')');
+    //r.parseEvalQ('sensor<-ts(value,frequency=24)');
+    //r.parseEvalQ('fit <- auto.arima(sensor)');
+    //r.parseEvalQ('LH.pred<-predict(fit,n.ahead=1)');
+    //var prediction = r.parseEval("LH.pred$pred");
+    var prediction = 13;
+
+    // ------------------
+
+    return prediction;
+}

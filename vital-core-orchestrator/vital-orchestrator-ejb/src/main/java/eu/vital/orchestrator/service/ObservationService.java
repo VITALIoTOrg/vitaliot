@@ -42,7 +42,7 @@ public class ObservationService {
 	@Inject
 	private VitalClient vitalClient;
 
-	public ArrayNode fetchObservation(String sensorURI, String observationType) throws Exception {
+	public ArrayNode fetchLatestBySensorAndType(String sensorURI, String observationType) throws Exception {
 
 		try {
 			// Connect to ES and retrieve result
@@ -77,7 +77,22 @@ public class ObservationService {
 		}
 	}
 
-	public ArrayNode fetchObservations(String observationType) throws Exception {
+	public ArrayNode fetchAll() throws Exception {
+
+		try {
+			ArrayNode result = dmsStorage.getList(DmsStorage.DOCUMENT_TYPE.measurement.toString());
+			// Expand JSON-LD documents:
+			result = (ArrayNode) vitalClient.expand(result);
+			// Return result
+			return result;
+
+		} catch (Exception e) {
+			log.log(Level.WARNING, "", e);
+			return objectMapper.createArrayNode();
+		}
+	}
+
+	public ArrayNode fetchAllByType(String observationType) throws Exception {
 
 		try {
 			// Connect to DMS-ES and retrieve result
@@ -85,6 +100,27 @@ public class ObservationService {
 			observationType = observationType.replace("http://vital-iot.com/ontology#", "vital:");
 
 			QueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.matchPhraseQuery("ssn:observationProperty.type", observationType));
+			ArrayNode result = dmsStorage.search(DmsStorage.DOCUMENT_TYPE.measurement.toString(), query);
+			// Expand JSON-LD documents:
+			result = (ArrayNode) vitalClient.expand(result);
+			// Return result
+			return result;
+
+		} catch (Exception e) {
+			log.log(Level.WARNING, "", e);
+			return objectMapper.createArrayNode();
+		}
+	}
+
+	public ArrayNode fetchAllBySensorAndType(String sensorURI, String observationType) throws Exception {
+
+		try {
+			// Connect to DMS-ES and retrieve result
+			observationType = observationType.replace("http://vital-iot.com/ontology#", "vital:");
+
+			QueryBuilder query = QueryBuilders.boolQuery()
+					.must(QueryBuilders.matchPhraseQuery("ssn:observedBy", sensorURI))
+					.must(QueryBuilders.matchPhraseQuery("ssn:observationProperty.type", observationType));
 			ArrayNode result = dmsStorage.search(DmsStorage.DOCUMENT_TYPE.measurement.toString(), query);
 			// Expand JSON-LD documents:
 			result = (ArrayNode) vitalClient.expand(result);
