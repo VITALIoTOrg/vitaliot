@@ -106,12 +106,22 @@ public class OpenAMClient {
 		} catch (Exception e) {
 			try {
 				// Try again with a higher timeout
+				try {
+					Thread.sleep(1000); // experimental: do not retry immediately
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				requestConfigBuilder.setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000);
 		    	request.setConfig(requestConfigBuilder.build());
 				response = httpclient.execute(request);
 				entity = response.getEntity();
 			} catch (Exception ea) {
 				// Try again with an even higher timeout
+				try {
+					Thread.sleep(1000); // experimental: do not retry immediately
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				requestConfigBuilder.setConnectionRequestTimeout(12000).setConnectTimeout(12000).setSocketTimeout(12000);
 		    	request.setConfig(requestConfigBuilder.build());
 				response = httpclient.execute(request);
