@@ -96,7 +96,6 @@ public class DocumentManager implements Serializable {
 	public String create(String type, JsonNode document) {
 		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type).setSource(document.toString());
 		IndexResponse response = irb.get();
-		log.info("Document was indexed successfully in " + type + "/" + response.getId() + ".");
 		return response.getId();
 	}
 
@@ -104,7 +103,6 @@ public class DocumentManager implements Serializable {
 	public void update(String type, String documentId, JsonNode document) {
 		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type, documentId).setSource(document.toString());
 		IndexResponse response = irb.get();
-		log.info("Document was indexed successfully in " + type + "/" + response.getId() + ".");
 	}
 
 	public boolean documentExists(String type, JsonNode document) {
@@ -184,7 +182,6 @@ public class DocumentManager implements Serializable {
 		DeleteIndexResponse dir = null;
 		try {
 			dir = esClient.admin().indices().prepareDelete(indexName).get();
-			log.info("Index " + indexName + " was deleted!");
 		} catch (ElasticsearchException ex) {
 			log.log(Level.SEVERE, "Error when deleting index " + indexName + ". " + ex.getDetailedMessage(), ex);
 		}

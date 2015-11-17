@@ -30,20 +30,16 @@ public class VitalClient {
 	public JsonNode doGet(String url) throws Exception {
 		Client client = ClientBuilder.newClient();
 		client.register(new BasicAuthenticator("silo", "phier0Sa"));
-		logger.info("GET REQUEST: " + url);
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-						//.header("Authorization", "Basic c2lsbzpwaGllcjBTYQ==")
+				//.header("Authorization", "Basic c2lsbzpwaGllcjBTYQ==")
 				.accept("*")
 				.get(JsonNode.class);
 		client.close();
-		logger.info("GET RESPONSE: " + url + " SUCCESS");
 		if (jsonNode == null) {
 			return null;
 		}
-		logger.info("Compact: " + jsonNode.toString());
 		jsonNode = expand(jsonNode);
-		logger.info("Expanded: " + jsonNode.toString());
 
 		return jsonNode;
 	}
@@ -51,20 +47,16 @@ public class VitalClient {
 	public JsonNode doPost(String url, JsonNode data) throws Exception {
 		Client client = ClientBuilder.newClient();
 		client.register(new BasicAuthenticator("silo", "phier0Sa"));
-		logger.info("POST REQUEST: " + url + " " + data.toString());
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-						//.header("Authorization", "Basic c2lsbzpwaGllcjBTYQ==")
+				//.header("Authorization", "Basic c2lsbzpwaGllcjBTYQ==")
 				.accept("*")
 				.post(Entity.json(data), JsonNode.class);
 		client.close();
-		logger.info("POST RESPONSE: " + url + " SUCCESS");
 		if (jsonNode == null) {
 			return null;
 		}
-		logger.info("Compact: " + jsonNode.toString());
 		jsonNode = expand(jsonNode);
-		logger.info("Expanded: " + jsonNode.toString());
 
 		return jsonNode;
 	}

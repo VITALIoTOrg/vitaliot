@@ -13,7 +13,7 @@ angular.module('common.widgets.status', [])
                 },
                 link: function(scope, element, attrs) {
                     scope.data = {
-                        status: '...s'
+                        status: '...'
                     };
 
                     scope.actions = {

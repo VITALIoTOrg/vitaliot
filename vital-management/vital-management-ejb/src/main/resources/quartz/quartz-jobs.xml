@@ -21,7 +21,6 @@
                 <job-group>VITAL_JOBS</job-group>
                 <!-- trigger every 30 minutes -->
                 <cron-expression>0 0/30 * * * ?</cron-expression>
-                <!--<cron-expression>0/30 * * * * ?</cron-expression>-->
             </cron>
         </trigger>
 

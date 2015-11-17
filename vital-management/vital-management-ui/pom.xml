@@ -12,7 +12,7 @@
     <artifactId>vital-management-ui</artifactId>
     <packaging>war</packaging>
 
-    <name>vital-management: Forntend Module</name>
+    <name>vital-management: Frontend Module</name>
 
     <dependencies>
 

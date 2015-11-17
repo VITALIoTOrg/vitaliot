@@ -48,7 +48,6 @@ angular.module('common.resources.observation', [])
                 fetch: function(sensor_uri, observation_uri) {
                     defaultQuery.sensor = sensor_uri;
                     defaultQuery.property = observation_uri;
-                    defaultQuery.property = 'http://vital-iot.eu/ontology/ns/Speed';
                     return $http.post(API_PATH + '/observation', defaultQuery)
                         .then(function(response) {
                             return response.data;

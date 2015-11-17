@@ -1,6 +1,7 @@
 package eu.vital.management.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import eu.vital.management.service.ObservationService;
 import eu.vital.management.service.SensorDAO;
 
@@ -43,7 +44,15 @@ public class ObservationRestService {
 		String sensorId = query.get("sensor").asText();
 		String observationType = query.get("property").asText();
 
-		return Response.ok(observationService.fetchObservation(sensorId, observationType)).build();
+		ArrayNode observationList = observationService.fetchObservation(sensorId, observationType);
+		if (observationList.size() == 0 && observationType.startsWith("http://vital-iot.eu/ontology/ns/")) {
+			observationList = observationService.fetchObservation(
+					sensorId,
+					observationType.replaceAll("http://vital-iot.eu/ontology/ns/", "vital:")
+			);
+		}
+
+		return Response.ok(observationList).build();
 	}
 
 	@POST
