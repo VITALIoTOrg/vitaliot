@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.storage.OrchestratorStorage;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,10 +33,9 @@ public class ServiceDAO {
 
 	public ArrayNode searchBySystem(JsonNode systemJSON) throws Exception {
 		// Connect to ES and retrieve result
-//		QueryBuilder query = QueryBuilders.termQuery("dul:isPartOf", systemJSON.get("id").asText());
-//		ArrayNode documents = documentManager.search(SERVICE_TYPE, query);
-//		return documents;
-		return list();
+		QueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.matchPhraseQuery("system", systemJSON.get("@id").asText()));
+		ArrayNode documents = orchestratorStorage.search(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString(), query);
+		return documents;
 	}
 
 	public ObjectNode get(String uri) throws Exception {

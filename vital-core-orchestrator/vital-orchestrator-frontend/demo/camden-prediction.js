@@ -68,7 +68,7 @@ function execute(input) {
 
 //Operation 3: Get All Observations from Sensor
 function execute(input) {
-    var observationList = observationAdapter.fetchAllBySensorAndType(input.sensor['@id'], 'http://vital-iot.eu/ontology/ns/Footfall');
+    var observationList = observationAdapter.fetchAllBySensorAndType(input.sensor['@id'], 'vital:Footfall');
 
     input.observationList = observationList;
     return input;
@@ -77,26 +77,28 @@ function execute(input) {
 
 // Operation4: Run prediction on results
 function execute(input) {
-    var values = [];
+    var regression = new org.apache.commons.math3.stat.regression.SimpleRegression();
     for (var i = 0; i < input.observationList.length; i++) {
         var observation = input.observationList[i];
         var value = observation
             ['http://purl.oclc.org/NET/ssnx/ssn#observationResult']
             ['http://purl.oclc.org/NET/ssnx/ssn#hasValue']
             ['http://vital-iot.eu/ontology/ns/value'];
-        values.push(value);
-    }
+        var dateStr = observation
+                ['http://purl.oclc.org/NET/ssnx/ssn#observationResultTime']
+                ['http://www.w3.org/2006/time#inXSDDateTime']
+                ['@value'] + ':00';
+        var date = javax.xml.bind.DatatypeConverter.parseDateTime(dateStr);
 
-    // Do prediction here:
-    //r.parseEvalQ('library(forecast)');
-    //r.parseEvalQ('value <- c(' + values.join(', ') + ')');
-    //r.parseEvalQ('sensor<-ts(value,frequency=24)');
-    //r.parseEvalQ('fit <- auto.arima(sensor)');
-    //r.parseEvalQ('LH.pred<-predict(fit,n.ahead=1)');
-    //var prediction = r.parseEval("LH.pred$pred");
-    var prediction = 13;
+        regression.addData(date.getTimeInMillis(), value);
+    }
+    var futureMillis = javax.xml.bind.DatatypeConverter.parseDateTime(input.atDate).getTimeInMillis();
+    var prediction = regression.predict(futureMillis);
 
     // ------------------
 
-    return prediction;
+    return {
+        predictionDate: input.atDate,
+        predictionValue: prediction
+    };
 }

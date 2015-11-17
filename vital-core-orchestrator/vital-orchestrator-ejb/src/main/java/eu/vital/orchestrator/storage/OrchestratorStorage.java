@@ -76,14 +76,12 @@ public class OrchestratorStorage implements Serializable {
 	public String create(String type, JsonNode document) {
 		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type).setSource(document.toString());
 		IndexResponse response = irb.get();
-		log.info("Document was indexed successfully in " + type + "/" + response.getId() + ".");
 		return response.getId();
 	}
 
 	public void update(String type, String documentId, JsonNode document) {
 		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type, documentId).setSource(document.toString());
 		IndexResponse response = irb.get();
-		log.info("Document was indexed successfully in " + type + "/" + response.getId() + ".");
 	}
 
 	public void delete(String type, String documentId) throws Exception {

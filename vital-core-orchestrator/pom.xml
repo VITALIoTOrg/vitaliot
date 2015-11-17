@@ -142,11 +142,11 @@
                     <artifactId>wildfly-maven-plugin</artifactId>
                     <version>${version.wildfly.maven.plugin}</version>
                     <configuration>
-                        <!--<protocol>https-remoting</protocol>-->
-                        <!--<hostname>5.79.79.172</hostname>-->
-                        <!--<port>9993</port>-->
-                        <!--<username>managewildfly</username>-->
-                        <!--<password>W#mat.31</password>-->
+                        <protocol>https-remoting</protocol>
+                        <hostname>5.79.79.172</hostname>
+                        <port>9993</port>
+                        <username>managewildfly</username>
+                        <password>sh</password>
                     </configuration>
                 </plugin>
             </plugins>

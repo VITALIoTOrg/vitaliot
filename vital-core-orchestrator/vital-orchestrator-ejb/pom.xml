@@ -114,6 +114,12 @@
             <version>2.2.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.2</version>
+        </dependency>
+
         <!-- End: Custom user added -->
 
         <!-- Test scope dependencies -->
