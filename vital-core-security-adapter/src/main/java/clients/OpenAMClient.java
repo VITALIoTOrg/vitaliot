@@ -37,12 +37,10 @@ import jsonpojos.Users;
 import jsonpojos.Validation;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.config.RequestConfig.Builder;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -50,7 +48,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -60,10 +57,11 @@ import utils.Action;
 import utils.ConfigReader;
 import utils.JsonUtils;
 import utils.SessionUtils;
+import utils.HttpCommonClient;
 
 public class OpenAMClient {
 
-	private HttpClient httpclient;
+	private HttpCommonClient httpclient;
 	private ConfigReader configReader;
 	
 	private String idpHost;
@@ -74,7 +72,7 @@ public class OpenAMClient {
 	private String manToken;
 	
 	public OpenAMClient() {
-		httpclient = HttpClients.createDefault();
+		httpclient = HttpCommonClient.getInstance();
 		configReader = ConfigReader.getInstance();
 		
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
@@ -93,39 +91,38 @@ public class OpenAMClient {
 	}
 	
     private HttpEntity performRequest(HttpRequestBase request) throws ClientProtocolException, IOException {
-    	HttpResponse response;
+    	CloseableHttpResponse response;
     	HttpEntity entity;
 
-    	Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000);
-    	request.setConfig(requestConfigBuilder.build());
+    	request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
 
 		try {
-			response = httpclient.execute(request);
+			response = httpclient.httpc.execute(request);
 			entity = response.getEntity();
+			response.close();
 		} catch (Exception e) {
 			try {
 				// Try again with a higher timeout
 				try {
-					Thread.sleep(1000); // experimental: do not retry immediately
+					Thread.sleep(1000); // do not retry immediately
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				requestConfigBuilder.setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000);
-		    	request.setConfig(requestConfigBuilder.build());
-				response = httpclient.execute(request);
+		    	request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000).build());
+				response = httpclient.httpc.execute(request);
 				entity = response.getEntity();
+				response.close();
 			} catch (Exception ea) {
 				// Try again with an even higher timeout
 				try {
-					Thread.sleep(1000); // experimental: do not retry immediately
+					Thread.sleep(1000); // do not retry immediately
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				requestConfigBuilder.setConnectionRequestTimeout(12000).setConnectTimeout(12000).setSocketTimeout(12000);
-		    	request.setConfig(requestConfigBuilder.build());
-				response = httpclient.execute(request);
+		    	request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(12000).setConnectTimeout(12000).setSocketTimeout(12000).build());
+				response = httpclient.httpc.execute(request);
 				entity = response.getEntity();
+				response.close();
 			}
 		}
 
