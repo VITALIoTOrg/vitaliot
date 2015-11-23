@@ -37,7 +37,6 @@ import jsonpojos.Users;
 import jsonpojos.Validation;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -90,16 +89,20 @@ public class OpenAMClient {
 		return manToken;
 	}
 	
-    private HttpEntity performRequest(HttpRequestBase request) throws ClientProtocolException, IOException {
-    	CloseableHttpResponse response;
-    	HttpEntity entity;
+    private String performRequest(HttpRequestBase request) {
+    	String response = "";
+    	HttpEntity httpent;
 
     	request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
 
+    	CloseableHttpResponse resp;
 		try {
-			response = httpclient.httpc.execute(request);
-			entity = response.getEntity();
-			response.close();
+			resp = httpclient.httpc.execute(request);
+			httpent = resp.getEntity();
+			if(httpent != null) {
+				response = EntityUtils.toString(httpent);
+			}
+            resp.close();
 		} catch (Exception e) {
 			try {
 				// Try again with a higher timeout
@@ -109,9 +112,12 @@ public class OpenAMClient {
 					e1.printStackTrace();
 				}
 		    	request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000).build());
-				response = httpclient.httpc.execute(request);
-				entity = response.getEntity();
-				response.close();
+		    	resp = httpclient.httpc.execute(request);
+				httpent = resp.getEntity();
+				if(httpent != null) {
+					response = EntityUtils.toString(httpent);
+				}
+	            resp.close();
 			} catch (Exception ea) {
 				// Try again with an even higher timeout
 				try {
@@ -120,13 +126,22 @@ public class OpenAMClient {
 					e1.printStackTrace();
 				}
 		    	request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(12000).setConnectTimeout(12000).setSocketTimeout(12000).build());
-				response = httpclient.httpc.execute(request);
-				entity = response.getEntity();
-				response.close();
+		    	try {
+					resp = httpclient.httpc.execute(request);
+					httpent = resp.getEntity();
+					if(httpent != null) {
+						response = EntityUtils.toString(httpent);
+					}
+		            resp.close();
+				} catch (ClientProtocolException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 
-    	return entity;
+    	return response;
     }
 	
 	private boolean isTokenValid(String token) {
@@ -147,25 +162,7 @@ public class OpenAMClient {
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
 
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String respString = "";
-		
-		if (entity != null) {
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}    
-		}
+		String respString = performRequest(httppost);
 		
 		Validation validation = new Validation();
 		
@@ -222,27 +219,8 @@ public class OpenAMClient {
 		
 		StringEntity strEntity = new StringEntity("{}", StandardCharsets.UTF_8);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 
 		try {
 			resp = (LogoutResponse) JsonUtils.deserializeJson(respString, LogoutResponse.class);
@@ -281,27 +259,8 @@ public class OpenAMClient {
 			httppost.setHeader("X-OpenAM-Username", userAdmin);
 			httppost.setHeader("X-OpenAM-Password", pwdAdmin);
 		}
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Authenticate auth = new Authenticate();
 		try {
@@ -369,26 +328,8 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
 		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}    
-		}
+		String respString = performRequest(httppost);
 
 		ChangePasswordResponse resp = new ChangePasswordResponse();
 		
@@ -455,27 +396,8 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, tokenUser);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) { 
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httppost);
 
 		if (respString.contains("\"code\":")) {
 			goingOn.append(respString);
@@ -512,26 +434,8 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}    
-		}
+		String respString = performRequest(httppost);
 		
 		Validation validation = new Validation();
 		
@@ -574,26 +478,8 @@ public class OpenAMClient {
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}    
-		}
+		String respString = performRequest(httppost);
 		
 		Validation validation = new Validation();
 		
@@ -636,27 +522,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Users users = new Users();
 		
@@ -699,27 +566,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Groups groups = new Groups();
 		
@@ -763,27 +611,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Applications applications = new Applications();
 		
@@ -826,27 +655,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Policies policies = new Policies();
 		
@@ -878,27 +688,8 @@ public class OpenAMClient {
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpget);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httpget);
 		
 		Monitor values = new Monitor();
 		
@@ -940,27 +731,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		User user = new User();
 		
@@ -1015,27 +787,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Group group = new Group();
 		
@@ -1078,27 +831,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Policy policy = new Policy();
 		
@@ -1140,27 +874,8 @@ public class OpenAMClient {
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		    
-		}
+		String respString = performRequest(httppost);
 		
 		Application application = new Application();
 		
@@ -1237,28 +952,8 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httppost);
 		
 		goingOn.append(respString);
 		
@@ -1315,28 +1010,8 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httppost);
 		
 		goingOn.append(respString);
 			
@@ -1420,31 +1095,12 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
+		String respString = performRequest(httppost);
 		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.contains(applicationName)) {
-					goingOn.append(respString);
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
+		if (respString.contains(applicationName)) {
+			goingOn.append(respString);
+			return true;
 		}
 		
 		goingOn.append(respString);
@@ -1484,32 +1140,12 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpdelete);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.contains("success")) {
-					goingOn.append(respString);
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-		    
+		String respString = performRequest(httpdelete);
+
+		if (respString.contains("success")) {
+			goingOn.append(respString);
+			return true;
 		}
 		
 		goingOn.append(respString);
@@ -1548,32 +1184,12 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpdelete);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.contains("success")) {
-					goingOn.append(respString);
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-		    
+		String respString = performRequest(httpdelete);
+
+		if (respString.contains("success")) {
+			goingOn.append(respString);
+			return true;
 		}
 		
 		goingOn.append(respString);
@@ -1612,32 +1228,12 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpdelete);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.equals("{}")) {
-					goingOn.append(respString);
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-		    
+		String respString = performRequest(httpdelete);
+
+		if (respString.equals("{}")) {
+			goingOn.append(respString);
+			return true;
 		}
 		
 		goingOn.append(respString);
@@ -1676,32 +1272,12 @@ public class OpenAMClient {
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
 		httpdelete.setHeader(authToken, token);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpdelete);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.equals("{}")) {
-					goingOn.append(respString);
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}
-		    
+		String respString = performRequest(httpdelete);
+
+		if (respString.equals("{}")) {
+			goingOn.append(respString);
+			return true;
 		}
 		
 		goingOn.append(respString);
@@ -1767,28 +1343,8 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpput);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httpput);
 		
 		goingOn.append(respString);
 		
@@ -1885,34 +1441,14 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.contains(policyName)) {
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
+		String respString = performRequest(httppost);
+
+		if (respString.contains(policyName)) {
+			return true;
 		}
 		
 		return false;
-		
 	}
 	
 	/**
@@ -2022,30 +1558,11 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.contains(policyName)) {
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
+		String respString = performRequest(httppost);
+
+		if (respString.contains(policyName)) {
+			return true;
 		}
 		
 		return false;
@@ -2151,31 +1668,12 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setHeader(authToken, token);
 		httppost.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httppost);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-				if (respString.contains(policyName)) {
-					goingOn.append(respString);
-					return true;
-				}
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
+		String respString = performRequest(httppost);
+
+		if (respString.contains(policyName)) {
+			goingOn.append(respString);
+			return true;
 		}
 		
 		goingOn.append(respString);
@@ -2306,28 +1804,8 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpput);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httpput);
 		
 		goingOn.append(respString);
 		
@@ -2455,28 +1933,8 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpput);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httpput);
 		
 		goingOn.append(respString);
 		
@@ -2524,28 +1982,8 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpput);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httpput);
 		
 		goingOn.append(respString);
 		
@@ -2630,28 +2068,8 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		HttpEntity entity = null;
-		
-		try {
-			entity = performRequest(httpput);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		String respString = "";
-		
-		if (entity != null) {
-		    
-			try {
-				respString = EntityUtils.toString(entity);
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
-			}    
-		}
+		String respString = performRequest(httpput);
 		
 		goingOn.append(respString);
 		
