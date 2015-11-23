@@ -50,8 +50,8 @@ public class OpenAMClient {
 	    comtarget.setCommunity(new OctetString(community));
 	    comtarget.setVersion(snmpVersion);
 	    comtarget.setAddress(new UdpAddress(idpHost + "/" + snmpPort));
-	    comtarget.setRetries(2);
-	    comtarget.setTimeout(1000);
+	    comtarget.setRetries(3);
+	    comtarget.setTimeout(2000);
 
 	    // Create the PDU object
 	    PDU pdu = new PDU();
