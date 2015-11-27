@@ -26,7 +26,7 @@
 
         <!-- other plugin versions -->
         <version.compiler.plugin>3.3</version.compiler.plugin>
-        <version.surefire.plugin>2.18.1</version.surefire.plugin>
+        <version.surefire.plugin>2.19</version.surefire.plugin>
         <version.war.plugin>2.6</version.war.plugin>
 
         <!-- maven-compiler-plugin -->
@@ -73,7 +73,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.6.2</version>
+            <version>2.6.3</version>
         </dependency>
         
         <!-- common lang per pojo json -->
@@ -87,14 +87,14 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5</version>
+			<version>4.5.1</version>
 		</dependency>
 		
 		<!-- log4j -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.3</version>
+			<version>2.4.1</version>
 		</dependency>
 		
         <!-- First declare the APIs we depend on and need for compilation. All 
