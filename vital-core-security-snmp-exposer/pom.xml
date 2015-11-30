@@ -83,13 +83,6 @@
             <version>2.6</version>
         </dependency>
 		
-		<!-- Apache HTTP components for GET, POST operations -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.1</version>
-		</dependency>
-		
 		<!-- log4j -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
