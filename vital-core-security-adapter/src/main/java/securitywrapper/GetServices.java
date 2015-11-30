@@ -18,13 +18,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.config.RequestConfig.Builder;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
@@ -61,7 +60,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(
             @PathParam("id") String userId,
-            @CookieParam("vitalManToken") String token) {
+            @CookieParam("vitalAccessToken") String token) {
 		
 		User user;
 		String answer;
@@ -109,7 +108,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserGroups(
             @PathParam("id") String userId,
-            @CookieParam("vitalManToken") String token) {
+            @CookieParam("vitalAccessToken") String token) {
 		
 		String answer;
 		
@@ -138,7 +137,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroup(
             @PathParam("id") String groupId,
-            @CookieParam("vitalManToken") String token)  {
+            @CookieParam("vitalAccessToken") String token)  {
 		
 		Group group;
 		String answer;
@@ -186,7 +185,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicy(
             @PathParam("id") String policyId,
-            @CookieParam("vitalManToken") String token) {
+            @CookieParam("vitalAccessToken") String token) {
 		
 		Policy policy;
 		String answer;
@@ -234,7 +233,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplication(
             @PathParam("id") String applicationId,
-            @CookieParam("vitalManToken") String token) {
+            @CookieParam("vitalAccessToken") String token) {
 		
 		Application application;
 		String answer;
@@ -282,7 +281,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationPolicies(
             @PathParam("id") String appName,
-            @CookieParam("vitalManToken") String token) {
+            @CookieParam("vitalAccessToken") String token) {
 		
 		String answer;
 		
@@ -310,7 +309,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(
-            @CookieParam("vitalManToken") String token) {
+            @CookieParam("vitalAccessToken") String token) {
 		
 		Users users;
 		String answer;
@@ -357,7 +356,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroups(
-			@CookieParam("vitalManToken") String token) {
+			@CookieParam("vitalAccessToken") String token) {
 		
 		Groups groups;
 		String answer;
@@ -404,7 +403,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicies(
-			@CookieParam("vitalManToken") String token) {
+			@CookieParam("vitalAccessToken") String token) {
 		
 		Policies policies;
 		String answer;
@@ -451,7 +450,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplications(
-			@CookieParam("vitalManToken") String token) {
+			@CookieParam("vitalAccessToken") String token) {
 		
 		Applications apps;
 		String answer;
@@ -544,24 +543,25 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(
-			@CookieParam("vitalManToken") String token,
+			@CookieParam("vitalTestToken") String testToken,
 			@CookieParam("vitalAccessToken") String vitalToken,
-			@QueryParam("altCookie") boolean altCookie) {
+			@QueryParam("testCookie") boolean testCookie) {
 		
 		Validation val;
-		String answer;
+		String token, answer;
 		int code;
 		
 		answer = null;
 		code = 0;
-		if(altCookie) {
-			val = client.getUserIdFromToken(token);
-		} else {
-			val = client.getUserIdFromToken(vitalToken);
-		}
 		
-		// Let's give back some additional info about the user
+		if(testCookie)
+			token = testToken;
+		else
+			token = vitalToken;
+		
+		val = client.getUserIdFromToken(token);
 		User user = client.getUser(val.getUid(), token); // get the info
+		
 		List<String> gn = null;
 		gn = user.getGivenName();
 		if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
@@ -637,20 +637,19 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response validateToken(
-			@CookieParam("vitalManToken") String token,
+			@CookieParam("vitalTestToken") String testToken,
 			@CookieParam("vitalAccessToken") String vitalToken,
-			@QueryParam("altCookie") boolean altCookie) {
-		
+			@QueryParam("testCookie") boolean testCookie) {
 		Validation val;
 		String answer;
 		int code;
 		
 		answer = null;
 		code = 0;
-		if(altCookie) {
-			val = client.validateToken(token, token);
+		if(testCookie) {
+			val = client.validateToken(vitalToken, testToken);
 		} else {
-			val = client.validateToken(token, vitalToken);
+			val = client.validateToken(vitalToken, vitalToken);
 		}
 		
 		try {
@@ -690,62 +689,86 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Response getresource(
+			@CookieParam("vitalTestToken") String testToken,
 			@CookieParam("vitalAccessToken") String vitalToken,
+			@QueryParam("testCookie") boolean testCookie,
 			@QueryParam("resource") String resource) {
-		
+
 		Cookie ck;
-		HttpClient httpclient;
-		
+		CloseableHttpClient httpclient;
+
 		httpclient = HttpClients.createDefault();
-		
+
 		URI uri = null;
 		try {
 			uri = new URI(resource);
 		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		HttpGet httpget = new HttpGet(uri);
-		ck = new Cookie(client.getSSOcookieName(), vitalToken);
-		httpget.setHeader("Cookie", ck.toString());
-		Builder requestConfigBuilder = RequestConfig.custom();
-    	requestConfigBuilder.setConnectionRequestTimeout(5000).setConnectTimeout(5000).setSocketTimeout(5000);
-    	httpget.setConfig(requestConfigBuilder.build());
+		if(testCookie) {
+			ck = new Cookie(client.getSSOCookieName(), testToken);
+		} else {
+			ck = new Cookie(client.getSSOCookieName(), vitalToken);
+		}
 		
+		httpget.setHeader("Cookie", ck.toString());
+    	httpget.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
+
 		// Execute and get the response.
-		HttpResponse response = null;
+		CloseableHttpResponse response = null;
 		try {
 			response = httpclient.execute(httpget);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			try {
+				// Try again with a higher timeout
+				try {
+					Thread.sleep(1000); // do not retry immediately
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+		    	httpget.setConfig(RequestConfig.custom().setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000).build());
 				response = httpclient.execute(httpget);
 			} catch (ClientProtocolException ea) {
 				ea.printStackTrace();
 			} catch (IOException ea) {
-				ea.printStackTrace();
-				return Response.ok()
-						.entity("Failed...")
+				try {
+					// Try again with a higher timeout
+					try {
+						Thread.sleep(1000); // do not retry immediately
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+			    	httpget.setConfig(RequestConfig.custom().setConnectionRequestTimeout(12000).setConnectTimeout(12000).setSocketTimeout(12000).build());
+					response = httpclient.execute(httpget);
+				} catch (ClientProtocolException eaa) {
+					ea.printStackTrace();
+				} catch (IOException eaa) {
+					ea.printStackTrace();
+					return Response.ok()
+						.entity(eaa.getMessage())
 						.build();
+				}
 			}
 		}
-		HttpEntity entity = response.getEntity();
 
+		HttpEntity entity = response.getEntity();
 		String respString = "";
-		
+
 		if (entity != null) {
-		    
 			try {
 				respString = EntityUtils.toString(entity);
+				response.close();
 			} catch (ParseException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} 
 		}
-		
+
 		return Response.ok()
 				.entity(respString)
 				.build();

@@ -68,7 +68,7 @@ public class OpenAMClient {
 	private String userAdmin;
 	private String pwdAdmin;
 	private String authToken;
-	private String manToken;
+	private String testToken;
 	
 	public OpenAMClient() {
 		httpclient = HttpCommonClient.getInstance();
@@ -77,16 +77,16 @@ public class OpenAMClient {
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
-		manToken = configReader.get(ConfigReader.MAN_TOKEN);
+		testToken = configReader.get(ConfigReader.TEST_TOKEN);
 		
 	}
 	
-	public String getSSOcookieName() {
+	public String getSSOCookieName() {
 		return authToken;
 	}
 	
-	public String getManTokenCookieName() {
-		return manToken;
+	public String getTestCookieName() {
+		return testToken;
 	}
 	
     private String performRequest(HttpRequestBase request) {
