@@ -63,12 +63,6 @@
 
     <dependencies>
 		
-		<dependency>
-			<groupId>org.snmp4j</groupId>
-			<artifactId>snmp4j</artifactId>
-			<version>1.10.1</version>
-		</dependency>
-
         <!-- fasterxmljackson per le annotazioni dei pojo json -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
