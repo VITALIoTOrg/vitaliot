@@ -149,7 +149,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/sessions/"+token)
@@ -203,7 +203,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath("/idp/json/sessions")
@@ -241,7 +241,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath("/idp/json/authenticate")
@@ -311,7 +311,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users/"+getUserIdFromToken(token).getUid())
@@ -379,7 +379,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
@@ -422,7 +422,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/sessions/"+userToken)
@@ -465,7 +465,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/sessions/")
@@ -509,7 +509,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users")
@@ -553,7 +553,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups")
@@ -598,7 +598,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications")
@@ -642,7 +642,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies")
@@ -678,7 +678,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /snmp/openam_stats")
@@ -719,7 +719,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users/"+username)
@@ -775,7 +775,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups/"+groupId)
@@ -819,7 +819,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/"+policyId)
@@ -862,7 +862,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications/"+applicationId)
@@ -935,7 +935,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users/")
@@ -993,7 +993,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups/")
@@ -1078,7 +1078,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications/")
@@ -1128,7 +1128,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users/"+username)
@@ -1172,7 +1172,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups/"+groupId)
@@ -1216,7 +1216,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/"+policyId)
@@ -1260,7 +1260,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications/"+applicationId)
@@ -1327,7 +1327,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/users/"+username)
@@ -1424,7 +1424,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
@@ -1541,7 +1541,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
@@ -1651,7 +1651,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/")
@@ -1788,7 +1788,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/"+name)
@@ -1917,7 +1917,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/policies/"+name)
@@ -1966,7 +1966,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/groups/"+groupId)
@@ -2052,7 +2052,7 @@ public class OpenAMClient {
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
-			.setScheme("http")
+			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/applications/"+applicationName)
