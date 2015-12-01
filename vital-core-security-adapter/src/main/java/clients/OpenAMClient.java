@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.ws.rs.core.Cookie;
+
 import jsonpojos.ActionValues__;
 import jsonpojos.ActionValues___;
 import jsonpojos.Application;
@@ -37,6 +39,7 @@ import jsonpojos.Users;
 import jsonpojos.Validation;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -47,6 +50,8 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -65,6 +70,8 @@ public class OpenAMClient {
 	
 	private String idpHost;
 	private int idpPort;
+	private String proxyHost;
+	private int proxyPort;
 	private String userAdmin;
 	private String pwdAdmin;
 	private String authToken;
@@ -76,6 +83,8 @@ public class OpenAMClient {
 		
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
+		proxyHost = configReader.get(ConfigReader.PROXY_HOST);
+		proxyPort = Integer.parseInt(configReader.get(ConfigReader.PROXY_PORT));
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
 		testToken = configReader.get(ConfigReader.TEST_TOKEN);
 		
@@ -673,23 +682,94 @@ public class OpenAMClient {
 		return policies;
 	}
 	
-	public Monitor getStats() {
+	public Monitor getStats(String token) {
+		String respString = "";
 		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /snmp/openam_stats")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
+		if(token != null && !token.equals("") && isTokenValid(token)) {
+			Cookie ck;
+			CloseableHttpClient httpclient;
+	
+			httpclient = HttpClients.createDefault();
+	
+			URI uri = null;
+			try {
+				uri = new URIBuilder()
+				.setScheme("https")
+				.setHost(proxyHost)
+				.setPort(proxyPort)
+				.setPath(" /snmp/openam_stats")
+				.build();
+			} catch (URISyntaxException e1) {
+				e1.printStackTrace();
+			}
+	
+			HttpGet httpget = new HttpGet(uri);
+			ck = new Cookie(getSSOCookieName(), token);
+			
+			httpget.setHeader("Cookie", ck.toString());
+	    	httpget.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
+	
+			// Execute and get the response.
+			CloseableHttpResponse response = null;
+			try {
+				response = httpclient.execute(httpget);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				try {
+					// Try again with a higher timeout
+					try {
+						Thread.sleep(1000); // do not retry immediately
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+			    	httpget.setConfig(RequestConfig.custom().setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000).build());
+					response = httpclient.execute(httpget);
+				} catch (ClientProtocolException ea) {
+					ea.printStackTrace();
+				} catch (IOException ea) {
+					try {
+						// Try again with a higher timeout
+						try {
+							Thread.sleep(1000); // do not retry immediately
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+				    	httpget.setConfig(RequestConfig.custom().setConnectionRequestTimeout(12000).setConnectTimeout(12000).setSocketTimeout(12000).build());
+						response = httpclient.execute(httpget);
+					} catch (ClientProtocolException eaa) {
+						ea.printStackTrace();
+					} catch (IOException eaa) {
+						ea.printStackTrace();
+					}
+				}
+			}
+	
+			HttpEntity entity = response.getEntity();
+			if(response.getStatusLine().getStatusCode() == 200) {
+				if (entity != null) {
+					try {
+						respString = EntityUtils.toString(entity);
+						response.close();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} 
+				}
+			} else {
+				try {
+					respString = "{ \"code\": " + response.getStatusLine().getStatusCode() + ", \"message\": \"" + response.getStatusLine().getReasonPhrase() + "\"}";
+					response.close();
+				} catch (ParseException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			respString = "{ \"code\": 400, \"message\": \"Invalid token!\"}";
 		}
-		
-		HttpGet httpget = new HttpGet(uri);
-
-		String respString = performRequest(httpget);
 		
 		Monitor values = new Monitor();
 		

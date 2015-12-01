@@ -1027,7 +1027,8 @@ public class PostServices {
 	public Response logout(
 			@CookieParam("vitalTestToken") String testToken,
 			@CookieParam("vitalAccessToken") String vitalToken,
-			@FormParam("testCookie") boolean testCookie) {
+			@FormParam("testCookie") boolean testCookie,
+			@Context UriInfo uri) {
 		
 		LogoutResponse resp;
 		String answer;
@@ -1068,11 +1069,29 @@ public class PostServices {
 					.build();
 		}
 		else {
-			return Response.ok()
-					.entity(answer)
-					.build();
+			Cookie ck;
+			
+			String domain = uri.getBaseUri().getHost();
+			Pattern pattern = Pattern.compile("^[^.]*(..*)$");
+			Matcher matcher = pattern.matcher(domain);
+			if (matcher.find()) {
+			    domain = matcher.group(1);
+			}
+			
+			if(!testCookie) {
+				ck = new Cookie(client.getSSOCookieName(), "", "/", domain);
+				return Response.ok()
+						.entity(answer)
+						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
+						.build();
+			} else {
+				ck = new Cookie(client.getTestCookieName(), "", "/", domain);
+				return Response.ok()
+						.entity(answer)
+						.header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
+						.build();
+			}
 		}
-		
 	}
 	
 	@Path("/evaluate")

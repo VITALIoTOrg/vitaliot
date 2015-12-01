@@ -496,7 +496,8 @@ public class GetServices {
 	@Path("/stats")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getSessions() {
+	public Response getSessions(
+			@CookieParam("vitalAccessToken") String token) {
 		
 		Monitor values;
 		String answer;
@@ -504,7 +505,7 @@ public class GetServices {
 		
 		answer = null;
 		code = 0;
-		values = client.getStats();
+		values = client.getStats(token);
 		
 		try {
 			answer = JsonUtils.serializeJson(values);

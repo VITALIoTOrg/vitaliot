@@ -10,6 +10,8 @@ public class ConfigReader {
 	
 	public static final String IDP_HOST = "IDP_HOST";
 	public static final String IDP_PORT = "IDP_PORT";
+	public static final String PROXY_HOST = "PROXY_HOST";
+	public static final String PROXY_PORT = "PROXY_PORT";
 	public static final String SNMP_PORT = "SNMP_PORT";
 	public static final String AUTH_TOKEN = "AUTH_TOKEN";
 	public static final String TEST_TOKEN = "TEST_TOKEN";
