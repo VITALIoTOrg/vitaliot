@@ -8,14 +8,6 @@ the SNMP interface of OpenAM.
 
 ## Configuration
 
-In order to change the configuration you need to edit file
-"src/main/resources/config.properties" and change the values of the properties:
-
-* **IDP_HOST** is the address of the server running OpenAM
-
-* **SNMP_PORT** is the port number where the OpenAM SNMP interface is listening
-   (used for monitoring)
-
 To change the path where WildFly will deploy the application you have to change
 the value of "context-root" in file "src/main/webapp/WEB-INF/jboss-web.xml".
 
