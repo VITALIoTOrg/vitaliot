@@ -323,7 +323,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users/"+getUserIdFromToken(token).getUid())
+			.setPath(" /idp/json/users/" + getUserIdFromToken(token).getUid())
 			.setCustomQuery("_action=changePassword")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -356,7 +356,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public boolean evaluate(String token, ArrayList<String> resources, StringBuilder goingOn, String tokenUser) {
+	public boolean evaluate(String tokenUser, ArrayList<String> resources, StringBuilder goingOn, String tokenPerformer) {
 		
 		/*boolean currentSessionIsValid = isTokenValid();
 		
@@ -368,7 +368,7 @@ public class OpenAMClient {
 		
 		DecisionRequest req = new DecisionRequest();
 		SubjectAuthenticated sub = new SubjectAuthenticated();
-		sub.setSsoToken(token);
+		sub.setSsoToken(tokenUser);
 		
 		req.setSubject(sub);
 		req.setResources(resources);
@@ -403,7 +403,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, tokenUser);
+		httppost.setHeader(authToken, tokenPerformer);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);

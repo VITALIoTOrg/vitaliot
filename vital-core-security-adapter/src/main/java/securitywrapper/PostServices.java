@@ -1104,20 +1104,20 @@ public class PostServices {
 			@FormParam("resources[]") ArrayList<String> res) {
 		
 		int code;
-		String token, tokenUser;
+		String tokenPerformer, tokenUser;
 		StringBuilder answer = new StringBuilder();
 		DecisionArray resp = new DecisionArray();
 		
 		code = 0;
 		if(testCookie) {
-			token = vitalToken;
+			tokenPerformer = vitalToken;
 			tokenUser = testToken;
 		} else {
-			token = testToken;
+			tokenPerformer = testToken;
 			tokenUser = vitalToken;
 		}
 		
-		if(client.evaluate(tokenUser, res, answer, token)) {
+		if(client.evaluate(tokenUser, res, answer, tokenPerformer)) {
 			
 			try {
 				resp = (DecisionArray) JsonUtils.deserializeJson(answer.toString(), DecisionArray.class);
@@ -1154,7 +1154,5 @@ public class PostServices {
 					.entity(answer.toString())
 					.build();
 		}
-		
 	}
-	
 }
