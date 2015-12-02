@@ -27,7 +27,7 @@ mvn package
 You will then find a ".war" file in the "target" folder; you can use it to
 deploy the application on WildFly (tested on WildFly 9.0.1 with OpenJDK 8).
 
-You may also want to take a look at the Vital Deployer project, featuring a
-script to automatically build and deploy this application plus other components
+You may also want to take a look at the VITAL Deployer project, featuring a
+script to automatically build and deploy this application and other components
 of the Vital system.
 
