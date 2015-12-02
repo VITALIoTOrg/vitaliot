@@ -1,10 +1,10 @@
-# Vital Security Adapter
+# VITAL Security Adapter
 
 ---
 
-This project contains the code for the Vital Security Adapter. The module, made
+This project contains the code for the VITAL Security Module. The module, made
 to run on WildFly and Java 8, interacts with the OpenAM server and exposes a
-REST interface to access Vital security features.
+REST interface to access VITAL security features.
 
 ## Configuration
 
@@ -13,15 +13,22 @@ In order to change the configuration you need to edit file
 
 * **IDP_HOST** is the address of the server running OpenAM
 
-* **IDP_PORT** is the port number where OpenAM is listening (REST interface)
+* **IDP_PORT** is the port number where OpenAM is listening (HTTPS REST
+  interface)
 
-* **SNMP_PORT** is the port number where the OpenAM SNMP interface is listening
-   (used for monitoring)
+* **PROXY_HOST** is the address of the server running the Apache proxy hosting
+  the Policy Agent (needed to communicate with the protected monitoring
+  endpoint)
 
-* **AUTH_TOKEN** is the name of the token cookie used by OpenAM
+* **PROXY_PORT** is the port number where the Apache proxy is listening
 
-* **MAN_TOKEN** is the name of the alternative token cookie currently used by
-   the Security Management application
+* **AUTH_TOKEN** is the name of the SSO token cookie used by OpenAM
+
+* **TEST_TOKEN** is the name of the test token cookie which can be used
+  to call some endpoints of the Security Module having a regular user token and a
+  second token, one authorizing access to functionalities and the other one on
+  which the module performs evaluations (the VITAL Security Management
+  Application uses this for the Access Test page)
 
 ## Build and run
 
@@ -40,15 +47,15 @@ You will then find a ".war" file in the "target" folder; you can use it to
 deploy the application on WildFly (tested on WildFly 9.0.1 with OpenJDK 8) over
 HTTPS.
 
-You may also want to take a look at the Vital Deployer project, featuring a
-script to automatically build and deploy this application plus other components
-of the Vital system.
+You may also want to take a look at the VITAL Deployer project, featuring a
+script to automatically build and deploy this application and other components
+of the VITAL system.
 
 ## Usage
 
-While reading the code may still be the best way to understand the adapter
+While reading the code may still be the best way to understand the module
 working details, this section will try and describe the RESTful services exposed
-by the module in a simple and accessible way.
+in a simple and accessible way.
 
 The following subsections include the format of the responses sent by the
 adapter in case of success. In case of failure almost all the REST endpoints
