@@ -292,14 +292,6 @@ public class OpenAMClient {
 	
 	public ChangePasswordResponse changePassword(String token, String userPass, String currPass) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		ChangePasswordRequest req = new ChangePasswordRequest();
 		
 		req.setCurrentpassword(currPass);
@@ -358,14 +350,6 @@ public class OpenAMClient {
 	
 	public boolean evaluate(String tokenUser, ArrayList<String> resources, StringBuilder goingOn, String tokenPerformer) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		DecisionRequest req = new DecisionRequest();
 		SubjectAuthenticated sub = new SubjectAuthenticated();
 		sub.setSsoToken(tokenUser);
@@ -420,14 +404,6 @@ public class OpenAMClient {
 	
 	public Validation getUserIdFromToken(String userToken) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -462,14 +438,6 @@ public class OpenAMClient {
 	}
 	
 	public Validation validateToken(String token, String userToken) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -507,14 +475,6 @@ public class OpenAMClient {
 	
 	public Users getUsers(String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -550,14 +510,6 @@ public class OpenAMClient {
 	}
 	
 	public Groups getGroups(String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -596,14 +548,6 @@ public class OpenAMClient {
 	
 	public Applications getApplications(String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -639,14 +583,6 @@ public class OpenAMClient {
 	}
 	
 	public Policies getPolicies(String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -788,14 +724,6 @@ public class OpenAMClient {
 	
 	public User getUser(String username, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -844,14 +772,6 @@ public class OpenAMClient {
 	
 	public Group getGroup(String groupId, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -887,14 +807,6 @@ public class OpenAMClient {
 	}
 	
 	public Policy getPolicy(String policyId, String token) {
-			
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		URI uri = null;
 		try {
@@ -931,14 +843,6 @@ public class OpenAMClient {
 	
 	public Application getApplication(String applicationId, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -973,14 +877,6 @@ public class OpenAMClient {
 	}
 	
 	public boolean createUser(String givenName, String surname, String username, String password, String mail, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getUser(username, token).getUsername()!=null) {
 			// user with the same name already existing
@@ -1042,14 +938,6 @@ public class OpenAMClient {
 	
 	public boolean createGroup(String groupId, StringBuilder goingOn, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		if (getGroup(groupId, token).getUsername()!=null) {
 			// group with the same ID already existing 
 			return false;
@@ -1099,14 +987,6 @@ public class OpenAMClient {
 	}
 	
 	public boolean createApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getApplication(applicationName, token).getName() != null) {
 			// application already existing, return false
@@ -1190,14 +1070,6 @@ public class OpenAMClient {
 	
 	public boolean deleteUser(String username, StringBuilder goingOn, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		String currentUserName = getUser(username, token).getUsername();
 		
 		if (currentUserName == null) {
@@ -1235,14 +1107,6 @@ public class OpenAMClient {
 	
 	public boolean deleteGroup(String groupId, StringBuilder goingOn, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		String currentGroupName = getGroup(groupId, token).getUsername();
 		
 		if (currentGroupName == null) {
@@ -1278,14 +1142,6 @@ public class OpenAMClient {
 	}
 	
 	public boolean deletePolicy(String policyId, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		String currentPolicyName = getPolicy(policyId, token).getName();
 		
@@ -1323,14 +1179,6 @@ public class OpenAMClient {
 	
 	public boolean deleteApplication(String applicationId, StringBuilder goingOn, String token) {
 		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
 		String currentApplicationName = getApplication(applicationId, token).getName();
 		
 		if (currentApplicationName == null) {
@@ -1366,14 +1214,6 @@ public class OpenAMClient {
 	}
 	
 	public boolean updateUser(String username, String givenName, String surname, String mail, String status, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		UserModel userModel = new UserModel();
 		
@@ -1438,14 +1278,6 @@ public class OpenAMClient {
 	 * @param resources
 	 */
 	public boolean createAuthenticatedPolicy(String policyName, String description, ArrayList<Action> actions, ArrayList<String> resources, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getPolicy(policyName, token).getName() != null) {
 			// existing policy with the same name
@@ -1540,14 +1372,6 @@ public class OpenAMClient {
 	 * @return
 	 */
 	public boolean createIdentityUsersPolicy(String policyName, String description, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> users, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getPolicy(policyName, token).getName()!=null) {
 			// existing policy with the same name
@@ -1649,14 +1473,6 @@ public class OpenAMClient {
 	}
 	
 	public boolean createIdentityGroupsPolicy(String policyName, String description, ArrayList<Action> actions, ArrayList<String> resources, ArrayList<String> groups, String applicationName, StringBuilder goingOn, String token) {
-	
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
 		
 		if (getPolicy(policyName, token).getName() != null) {
 			// existing policy with the same name
@@ -1762,15 +1578,7 @@ public class OpenAMClient {
 	}
 	
 	public boolean updatePolicyIdentity(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
+
 		PolicyIdentityModel policyModel = new PolicyIdentityModel();
 		Subject___ sub = new Subject___();
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
@@ -1893,15 +1701,7 @@ public class OpenAMClient {
 	}
 	
 	public boolean updatePolicyAuthenticated(String name, String description, Boolean active, ArrayList<String> groups, Boolean nogr, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
+
 		PolicyAuthenticatedModel policyModel = new PolicyAuthenticatedModel();
 		Subject__ sub = new Subject__();
 		policyModel.setName(name); // to be sure it not included in the JSON (name is used in the URL)
@@ -2022,15 +1822,7 @@ public class OpenAMClient {
 	}
 	
 	public boolean updateGroup(String groupId, GroupModelWithUsers groupInfo, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
+
 		String newGroup = "";
 		
 		try {
@@ -2072,15 +1864,7 @@ public class OpenAMClient {
 	}
 	
 	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn, String token) {
-		
-		/*boolean currentSessionIsValid = isTokenValid();
-		
-		if (!currentSessionIsValid) {
-			authenticate(null, null);
-		}
-		
-		String adminAuthToken = SessionUtils.getAdminAuhtToken();*/
-		
+
 		Application application = new Application();
 		
 		application.setName(applicationName);
