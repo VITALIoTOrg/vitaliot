@@ -17,7 +17,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
 })
-public class ChangePasswordResponse {
+public class GenericObject {
 
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -47,7 +47,7 @@ public class ChangePasswordResponse {
         this.additionalProperties.put(name, value);
     }
 
-    public ChangePasswordResponse withAdditionalProperty(String name, Object value) {
+    public GenericObject withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }

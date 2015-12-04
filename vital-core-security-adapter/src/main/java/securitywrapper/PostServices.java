@@ -1,6 +1,8 @@
 package securitywrapper;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.CookieParam;
+import javax.ws.rs.Encoded;
 import javax.ws.rs.FormParam;
 import jsonpojos.Application;
 import jsonpojos.Authenticate;
 import jsonpojos.AuthenticationResponse;
-import jsonpojos.ChangePasswordResponse;
 import jsonpojos.DecisionArray;
+import jsonpojos.GenericObject;
 import jsonpojos.Group;
 import jsonpojos.LogoutResponse;
 import jsonpojos.Policy;
@@ -707,7 +710,7 @@ public class PostServices {
 			@FormParam("userpass") String userPass,
 			@FormParam("currpass") String currPass) {
 		
-		ChangePasswordResponse resp;
+		GenericObject resp;
 		String answer;
 		int code;
 		
@@ -745,7 +748,6 @@ public class PostServices {
 					.entity(answer)
 					.build();
 		}
-		
 	}
 	
 	@Path("/policy/{id}")
@@ -1153,6 +1155,242 @@ public class PostServices {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
 					.entity(answer.toString())
 					.build();
+		}
+	}
+	
+	@Path("/user/register")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response registerUser(
+			@FormParam("mail") String mail) {
+		
+		GenericObject resp;
+		String answer;
+		int code;
+		
+		answer = null;
+		code = 0;
+		resp = client.register(mail);
+		
+		try {
+			answer = JsonUtils.serializeJson(resp);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(resp.getAdditionalProperties().containsKey("code")) {
+			if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) resp.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
+				.entity(answer)
+				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.build();
+		}
+	}
+	
+	@Path("/user/signup")
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response signupUser(
+			@FormParam("givenName") String givenName,
+			@FormParam("surname") String surname,
+			@FormParam("name") String username,
+			@FormParam("password") String password,
+			@FormParam("mail") String mail,
+			@FormParam("tokenId") @Encoded String tokenId,
+			@FormParam("confirmationId") @Encoded String confirmationId) {
+		
+		System.out.println(tokenId);
+		System.out.println(confirmationId);
+		
+		GenericObject resp;
+		String answer;
+		int code;
+		String tokenDec = "";
+		String confirmDec = "";
+		
+		try {
+			tokenDec = URLDecoder.decode(tokenId.replace("+", "%2B"), "UTF-8").replace("%2B", "+");
+			confirmDec = URLDecoder.decode(confirmationId.replace("+", "%2B"), "UTF-8").replace("%2B", "+");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		
+		answer = null;
+		code = 0;
+		resp = client.confirm(mail, tokenDec, confirmDec);
+		
+		try {
+			answer = JsonUtils.serializeJson(resp);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(resp.getAdditionalProperties().containsKey("code")) {
+			if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) resp.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
+				.entity(answer)
+				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.build();
+		}
+		else {
+			answer = null;
+			code = 0;
+			resp = client.selfCreateUser(mail, tokenDec, confirmDec, username, password);
+			
+			try {
+				answer = JsonUtils.serializeJson(resp);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(resp.getAdditionalProperties().containsKey("code")) {
+				if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+					code = (Integer) resp.getAdditionalProperties().get("code");
+				}
+			}
+			if(code >= 400 && code < 500) {
+				return Response.status(Status.BAD_REQUEST)
+					.entity(answer)
+					.build();
+			}
+			else if(code >= 500 && code < 600) {
+				return Response.status(Status.INTERNAL_SERVER_ERROR)
+						.entity(answer)
+						.build();
+			}
+			else {
+				Authenticate auth;
+				
+				answer = null;
+				code = 0;
+				auth = client.authenticate(username, password);
+				
+				try {
+					answer = JsonUtils.serializeJson(auth);
+				} catch (JsonParseException e) {
+					e.printStackTrace();
+				} catch (JsonMappingException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				if(auth.getAdditionalProperties().containsKey("code")) {
+					if(auth.getAdditionalProperties().get("code").getClass() == Integer.class) {
+						code = (Integer) auth.getAdditionalProperties().get("code");
+					}
+				}
+				if(code >= 400 && code < 500) {
+					return Response.status(Status.BAD_REQUEST)
+						.entity(answer)
+						.build();
+				}
+				else if(code >= 500 && code < 600) {
+					return Response.status(Status.INTERNAL_SERVER_ERROR)
+							.entity(answer)
+							.build();
+				}
+				else {
+					StringBuilder answer1 = new StringBuilder();
+					String userJson = null;
+					User user = new User();
+					
+					code = 0;
+					
+					if(client.updateUser(username, givenName, surname, mail, "Active", answer1, auth.getTokenId())) {
+						
+						try {
+							user = (User) JsonUtils.deserializeJson(answer1.toString(), User.class);
+						} catch (JsonParseException e) {
+							e.printStackTrace();
+						} catch (JsonMappingException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						if(user.getAdditionalProperties().containsKey("code")) {
+							if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+								code = (Integer) user.getAdditionalProperties().get("code");
+							}
+						}
+						if(code >= 400 && code < 500) {
+							return Response.status(Status.BAD_REQUEST)
+								.entity(answer1.toString())
+								.build();
+						}
+						else if(code >= 500 && code < 600) {
+							return Response.status(Status.INTERNAL_SERVER_ERROR)
+									.entity(answer1.toString())
+									.build();
+						}
+						else {
+							List<String> gn = null;
+							gn = user.getGivenName();
+							if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+								if(gn.get(0).equals(" "))
+									user.setGivenName(null);
+							}
+							
+							gn = user.getGivenname();
+							if((gn != null) && (!gn.isEmpty())) {
+								if(gn.get(0).equals(" "))
+									user.setGivenName(null);
+							}
+							try {
+								userJson = JsonUtils.serializeJson(user);
+							} catch (JsonParseException e) {
+								e.printStackTrace();
+							} catch (JsonMappingException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							client.logout(auth.getTokenId());
+							return Response.ok()
+									.entity(userJson)
+									.build();
+						}
+					} else {
+						return Response.status(Status.INTERNAL_SERVER_ERROR)
+								.entity(answer1.toString())
+								.build();
+					}
+				}
+			}
 		}
 	}
 }

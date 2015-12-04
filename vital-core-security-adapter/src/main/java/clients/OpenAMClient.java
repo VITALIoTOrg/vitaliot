@@ -17,7 +17,7 @@ import jsonpojos.Application;
 import jsonpojos.Applications;
 import jsonpojos.Authenticate;
 import jsonpojos.ChangePasswordRequest;
-import jsonpojos.ChangePasswordResponse;
+import jsonpojos.GenericObject;
 import jsonpojos.DecisionRequest;
 import jsonpojos.Group;
 import jsonpojos.GroupModel;
@@ -290,7 +290,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public ChangePasswordResponse changePassword(String token, String userPass, String currPass) {
+	public GenericObject changePassword(String token, String userPass, String currPass) {
 		
 		ChangePasswordRequest req = new ChangePasswordRequest();
 		
@@ -332,10 +332,10 @@ public class OpenAMClient {
 		
 		String respString = performRequest(httppost);
 
-		ChangePasswordResponse resp = new ChangePasswordResponse();
+		GenericObject resp = new GenericObject();
 		
 		try {
-			resp = (ChangePasswordResponse) JsonUtils.deserializeJson(respString, ChangePasswordResponse.class);
+			resp = (GenericObject) JsonUtils.deserializeJson(respString, GenericObject.class);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -2085,4 +2085,177 @@ public class OpenAMClient {
 		return policies;
 	}
 	
+	public GenericObject register(String mail) {
+		
+		GenericObject req = new GenericObject();
+		
+		req.setAdditionalProperty("email", mail);
+		req.setAdditionalProperty("subject", "Confirm registration with VITAL");
+		req.setAdditionalProperty("message", "Follow this link to procede with sign up:");
+		
+		String newReq = "";
+		
+		try {
+			newReq = JsonUtils.serializeJson(req);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("https")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/users")
+			.setCustomQuery("_action=register")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setEntity(strEntity);
+		
+		String respString = performRequest(httppost);
+
+		GenericObject resp = new GenericObject();
+		
+		try {
+			resp = (GenericObject) JsonUtils.deserializeJson(respString, GenericObject.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		return resp;
+	}
+	
+	public GenericObject confirm(String mail, String tokenId, String confirmationId) {
+		
+		GenericObject req = new GenericObject();
+		
+		req.setAdditionalProperty("email", mail);
+		req.setAdditionalProperty("tokenId", tokenId);
+		req.setAdditionalProperty("confirmationId", confirmationId);
+		
+		String newReq = "";
+		
+		try {
+			newReq = JsonUtils.serializeJson(req);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("https")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/users")
+			.setCustomQuery("_action=confirm")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setEntity(strEntity);
+		
+		System.out.println(newReq);
+		
+		String respString = performRequest(httppost);
+		
+		System.out.println(respString);
+
+		GenericObject resp = new GenericObject();
+		
+		try {
+			resp = (GenericObject) JsonUtils.deserializeJson(respString, GenericObject.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		return resp;
+	}
+	
+	public GenericObject selfCreateUser(String mail, String tokenId, String confirmationId, String username, String password) {
+		
+		GenericObject req = new GenericObject();
+		
+		req.setAdditionalProperty("email", mail);
+		req.setAdditionalProperty("tokenId", tokenId);
+		req.setAdditionalProperty("confirmationId", confirmationId);
+		req.setAdditionalProperty("username", username);
+		req.setAdditionalProperty("userpassword", password);
+		
+		String newReq = "";
+		
+		try {
+			newReq = JsonUtils.serializeJson(req);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("https")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/users")
+			.setCustomQuery("_action=anonymousCreate")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
+		
+		HttpPost httppost = new HttpPost(uri);
+		httppost.setHeader("Content-Type", "application/json");
+		httppost.setEntity(strEntity);
+		
+		String respString = performRequest(httppost);
+
+		GenericObject resp = new GenericObject();
+		
+		try {
+			resp = (GenericObject) JsonUtils.deserializeJson(respString, GenericObject.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		return resp;
+	}
 }
