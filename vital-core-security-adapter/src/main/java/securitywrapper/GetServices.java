@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ws.rs.CookieParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -33,11 +36,13 @@ import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
 import jsonpojos.Policy;
+import jsonpojos.Result;
 import jsonpojos.SimpleDate;
 import jsonpojos.User;
 import jsonpojos.Users;
 import jsonpojos.Validation;
 import jsonpojos.Monitor;
+import jsonpojos.Permissions;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -773,6 +778,87 @@ public class GetServices {
 		return Response.ok()
 				.entity(respString)
 				.build();
+	}
+	
+	@Path("/permissions")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPermissions(
+			@CookieParam("vitalAccessToken") String vitalToken,
+			@CookieParam("vitalTestToken") String testToken,
+			@DefaultValue("false") @QueryParam("testCookie") boolean testCookie) { // Needed to authorize requests to OpenAM
+		
+		String tokenPerformer, tokenUser;
+		boolean error = false;
+		int code;
+		
+		if (testCookie) {
+			tokenPerformer = vitalToken;
+			tokenUser = testToken;
+		} else {
+			tokenPerformer = testToken;
+			tokenUser = vitalToken;
+		}
+		
+		Permissions resp = new Permissions();
+		
+		List<String> allowed = new ArrayList<String>();
+		List<String> denied = new ArrayList<String>();
+		
+		Validation val = client.getUserIdFromToken(tokenUser);
+		Groups groups = client.listUserGroups(val.getUid(), tokenPerformer);
+		Policies policies = client.getPolicies(tokenPerformer);
+		
+		if(val.getAdditionalProperties().containsKey("code")) {
+			if(val.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) val.getAdditionalProperties().get("code");
+				if(code < 200 || code > 299)
+					error = true;
+			}
+		}
+		if(policies.getAdditionalProperties().containsKey("code")) {
+			if(policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) policies.getAdditionalProperties().get("code");
+				if(code < 200 || code > 299)
+					error = true;
+			}
+		}
+		
+		if(!error) {
+			List<Result> list = policies.getResult();
+			Iterator<Result> iter = list.listIterator();
+			
+			while (iter.hasNext()) {
+				Result policy = iter.next();
+				if (policy.getSubject().getType().equals("Identity")) {
+					List<String> polgroups = policy.getSubject().getSubjectValues();
+					Iterator<String> iterint = polgroups.iterator();
+					while (iterint.hasNext()) {
+						String group = iterint.next();
+						System.out.println(group);
+						System.out.println(group.substring(group.indexOf('=') + 1, group.indexOf(',')));
+						if (groups.getResult().contains(group.substring(group.indexOf('=') + 1, group.indexOf(',')))) {
+							if (policy.getActionValues().getGET() == true)
+								allowed.addAll(policy.getResources());
+							else if (policy.getActionValues().getGET() == false)
+								denied.addAll(policy.getResources());
+							break;
+						}
+					}
+				}
+			}
+			
+			resp.setAllowed(allowed);
+			resp.setDenied(denied);
+			
+			return Response.ok()
+					.entity(resp)
+					.build();
+		} else {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity("")
+					.build();
+		}
 	}
 		
 }

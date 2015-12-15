@@ -1,7 +1,9 @@
 
 package jsonpojos;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -23,6 +25,8 @@ public class Subject {
 
     @JsonProperty("type")
     private String type;
+    @JsonProperty("subjectValues")
+    private List<String> subjectValues = new ArrayList<String>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -48,6 +52,31 @@ public class Subject {
 
     public Subject withType(String type) {
         this.type = type;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The subjectValues
+     */
+    @JsonProperty("subjectValues")
+    public List<String> getSubjectValues() {
+        return subjectValues;
+    }
+
+    /**
+     * 
+     * @param subjectValues
+     *     The subjectValues
+     */
+    @JsonProperty("subjectValues")
+    public void setSubjectValues(List<String> subjectValues) {
+        this.subjectValues = subjectValues;
+    }
+
+    public Subject withSubjectValues(List<String> subjectValues) {
+        this.subjectValues = subjectValues;
         return this;
     }
 
