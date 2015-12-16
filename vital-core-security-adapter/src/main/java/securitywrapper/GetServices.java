@@ -786,8 +786,9 @@ public class GetServices {
 	public Response getPermissions(
 			@CookieParam("vitalAccessToken") String vitalToken,
 			@CookieParam("vitalTestToken") String testToken,
-			@DefaultValue("false") @QueryParam("testCookie") boolean testCookie) { // Needed to authorize requests to OpenAM
+			@DefaultValue("false") @QueryParam("testCookie") boolean testCookie) {
 		
+		// One token is used to identify the user, the other one is to authorize the requests
 		String tokenPerformer, tokenUser;
 		boolean error = false;
 		int code;
