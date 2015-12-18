@@ -985,7 +985,7 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean createApplication(String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn, String token) {
+	public boolean createApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn, String token) {
 		
 		if (getApplication(applicationName, token).getName() != null) {
 			// application already existing, return false
@@ -997,7 +997,7 @@ public class OpenAMClient {
 		application.setName(applicationName);
 		application.setDescription(description);
 		application.setResources(resources);
-		application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
+		application.setAdditionalProperty("applicationType", applicationType);
 		application.setAdditionalProperty("entitlementCombiner", "DenyOverride");
 		
 		List<String> subjects = Arrays.asList("AND", "OR", "NOT", "AuthenticatedUsers", "Identity", "JwtClaim");
@@ -1874,7 +1874,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public boolean updateApplication(String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn, String token) {
+	public boolean updateApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn, String token) {
 
 		Application application = new Application();
 		
@@ -1886,7 +1886,7 @@ public class OpenAMClient {
 		else if(!nores) {
 			application.setResources(resources);
 		}
-		application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
+		application.setAdditionalProperty("applicationType", applicationType);
 		application.setAdditionalProperty("entitlementCombiner", "DenyOverride");
 		
 		List<String> subjects = Arrays.asList("AND", "OR", "NOT", "AuthenticatedUsers", "Identity", "JwtClaim");

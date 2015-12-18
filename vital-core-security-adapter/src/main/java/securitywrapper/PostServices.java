@@ -530,6 +530,7 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createApplication(
 			@FormParam("name") String name,
+			@FormParam("type") String type,
 			@FormParam("description") String description,
 			@FormParam("resources[]") ArrayList<String> res,
 			@CookieParam("vitalAccessToken") String token) {
@@ -541,7 +542,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.createApplication(name, description, res, answer, token);
+		result = client.createApplication(type, name, description, res, answer, token);
 		
 		try {
 			application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -858,6 +859,7 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateApplication(
 			@PathParam("id") String name,
+			@FormParam("type") String type,
 			@FormParam("description") String description,
 			@FormParam("resources[]") ArrayList<String> res,
 			@FormParam("nores") Boolean nores,
@@ -869,7 +871,7 @@ public class PostServices {
 		
 		code = 0;
 		
-		if(client.updateApplication(name, description, res, nores, answer, token)) {
+		if(client.updateApplication(type, name, description, res, nores, answer, token)) {
 			
 			try {
 				application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
