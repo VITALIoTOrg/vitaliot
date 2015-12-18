@@ -395,6 +395,8 @@ public class PostServices {
 			@FormParam("actions[PATCH]") Boolean patch,
 			@FormParam("actions[POST]") Boolean post,
 			@FormParam("actions[PUT]") Boolean put,
+			@FormParam("actions[RETRIEVE]") Boolean retrieve,
+			@FormParam("actions[STORE]") Boolean store,
 			@CookieParam("vitalAccessToken") String token) {
 		
 		int code;
@@ -423,6 +425,12 @@ public class PostServices {
 		}
 		if(put != null) {
 			actions.add(new Action("PUT", put.booleanValue()));
+		}
+		if(retrieve != null) {
+			actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
+		}
+		if(store != null) {
+			actions.add(new Action("STORE", store.booleanValue()));
 		}
 		
 		code = 0;

@@ -41,6 +41,10 @@ public class ActionValues {
     private Boolean PUT;
     @JsonProperty("HEAD")
     private Boolean HEAD;
+    @JsonProperty("RETRIEVE")
+    private Boolean RETRIEVE;
+    @JsonProperty("STORE")
+    private Boolean STORE;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -216,6 +220,56 @@ public class ActionValues {
 
     public ActionValues withHEAD(Boolean HEAD) {
         this.HEAD = HEAD;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The RETRIEVE
+     */
+    @JsonProperty("RETRIEVE")
+    public Boolean getRETRIEVE() {
+        return RETRIEVE;
+    }
+
+    /**
+     * 
+     * @param RETRIEVE
+     *     The RETRIEVE
+     */
+    @JsonProperty("RETRIEVE")
+    public void setRETRIEVE(Boolean RETRIEVE) {
+        this.RETRIEVE = RETRIEVE;
+    }
+
+    public ActionValues withRETRIEVE(Boolean RETRIEVE) {
+        this.RETRIEVE = RETRIEVE;
+        return this;
+    }
+
+    /**
+     * 
+     * @return
+     *     The STORE
+     */
+    @JsonProperty("STORE")
+    public Boolean getSTORE() {
+        return STORE;
+    }
+
+    /**
+     * 
+     * @param STORE
+     *     The STORE
+     */
+    @JsonProperty("STORE")
+    public void setSTORE(Boolean STORE) {
+        this.STORE = STORE;
+    }
+
+    public ActionValues withSTORE(Boolean STORE) {
+        this.STORE = STORE;
         return this;
     }
 

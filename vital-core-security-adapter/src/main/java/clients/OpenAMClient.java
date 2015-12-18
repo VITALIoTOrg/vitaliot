@@ -87,7 +87,6 @@ public class OpenAMClient {
 		proxyPort = Integer.parseInt(configReader.get(ConfigReader.PROXY_PORT));
 		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
 		testToken = configReader.get(ConfigReader.TEST_TOKEN);
-		
 	}
 	
 	public String getSSOCookieName() {
@@ -1419,8 +1418,11 @@ public class OpenAMClient {
 				actVal.setPUT(currentAction.getState());
 			} else if (strAction.equals("HEAD")) {
 				actVal.setHEAD(currentAction.getState());
-			}
-				
+			} else if (strAction.equals("RETRIEVE")) {
+				actVal.setRETRIEVE(currentAction.getState());
+			} else if (strAction.equals("STORE")) {
+				actVal.setSTORE(currentAction.getState());
+			}				
 		}
 		
 		policyIdentityModel.setActionValues(actVal);
@@ -1503,7 +1505,7 @@ public class OpenAMClient {
 		
 		ActionValues___ actVal = new ActionValues___();
 		
-		for (int i = 0; i<actions.size(); i++) {
+		for (int i = 0; i < actions.size(); i++) {
 			Action currentAction = actions.get(i);
 			String strAction = currentAction.getAction();
 			
@@ -1521,8 +1523,11 @@ public class OpenAMClient {
 				actVal.setPUT(currentAction.getState());
 			} else if (strAction.equals("HEAD")) {
 				actVal.setHEAD(currentAction.getState());
+			} else if (strAction.equals("RETRIEVE")) {
+				actVal.setRETRIEVE(currentAction.getState());
+			} else if (strAction.equals("STORE")) {
+				actVal.setSTORE(currentAction.getState());
 			}
-				
 		}
 		
 		policyIdentityModel.setActionValues(actVal);
@@ -1644,8 +1649,11 @@ public class OpenAMClient {
 					actVal.setPUT(currentAction.getState());
 				} else if (strAction.equals("HEAD")) {
 					actVal.setHEAD(currentAction.getState());
-				}
-					
+				} else if (strAction.equals("RETRIEVE")) {
+					actVal.setRETRIEVE(currentAction.getState());
+				} else if (strAction.equals("STORE")) {
+					actVal.setSTORE(currentAction.getState());
+				}					
 			}
 			
 			policyModel.setActionValues(actVal);
@@ -1765,8 +1773,11 @@ public class OpenAMClient {
 					actVal.setPUT(currentAction.getState());
 				} else if (strAction.equals("HEAD")) {
 					actVal.setHEAD(currentAction.getState());
-				}
-					
+				} else if (strAction.equals("RETRIEVE")) {
+					actVal.setRETRIEVE(currentAction.getState());
+				} else if (strAction.equals("STORE")) {
+					actVal.setSTORE(currentAction.getState());
+				}					
 			}
 			
 			policyModel.setActionValues(actVal);
