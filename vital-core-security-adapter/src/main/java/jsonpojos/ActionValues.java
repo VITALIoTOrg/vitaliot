@@ -23,7 +23,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "DELETE",
     "OPTIONS",
     "PUT",
-    "HEAD"
+    "HEAD",
+    "RETRIEVE",
+    "STORE"
 })
 public class ActionValues {
 

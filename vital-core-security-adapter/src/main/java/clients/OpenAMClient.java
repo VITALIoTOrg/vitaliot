@@ -1070,9 +1070,27 @@ public class OpenAMClient {
 		application.setName(applicationName);
 		application.setDescription(description);
 		application.setResources(resources);
-		application.setAdditionalProperty("applicationType", applicationType);
+		if(applicationType == null || applicationType.equals(""))
+			application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
+		else
+			application.setAdditionalProperty("applicationType", applicationType);
 		
 		ActionValues___ actVal = new ActionValues___();
+		
+		if(actions == null || actions.size() == 0) {
+			if(applicationType.equals("iPlanetAMWebAgentService")) {
+				actVal.setPOST(true);
+				actVal.setPATCH(true);
+				actVal.setGET(true);
+				actVal.setDELETE(true);
+				actVal.setOPTIONS(true);
+				actVal.setPUT(true);
+				actVal.setHEAD(true);
+			} else if(applicationType.equals("FineGrainedAccess")) {
+				actVal.setRETRIEVE(true);
+				actVal.setSTORE(true);
+			}
+		}
 		
 		for (int i = 0; i < actions.size(); i++) {
 			Action currentAction = actions.get(i);
