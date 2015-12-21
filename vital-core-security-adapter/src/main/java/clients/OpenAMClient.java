@@ -14,6 +14,8 @@ import javax.ws.rs.core.Cookie;
 import jsonpojos.ActionValues__;
 import jsonpojos.ActionValues___;
 import jsonpojos.Application;
+import jsonpojos.ApplicationType;
+import jsonpojos.ApplicationTypes;
 import jsonpojos.Applications;
 import jsonpojos.Authenticate;
 import jsonpojos.ChangePasswordRequest;
@@ -581,6 +583,42 @@ public class OpenAMClient {
 		return applications;
 	}
 	
+	public ApplicationTypes getApplicationTypes(String token) {
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("https")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applicationtypes")
+			.setCustomQuery("_queryFilter=true")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpGet httpget = new HttpGet(uri);
+		httpget.setHeader("Content-Type", "application/json");
+		httpget.setHeader(authToken, token);
+
+		String respString = performRequest(httpget);
+		
+		ApplicationTypes applicationTypes = new ApplicationTypes();
+		
+		try {
+			applicationTypes = (ApplicationTypes) JsonUtils.deserializeJson(respString, ApplicationTypes.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return applicationTypes;
+	}
+	
 	public Policies getPolicies(String token) {
 		
 		URI uri = null;
@@ -848,7 +886,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications/"+applicationId)
+			.setPath(" /idp/json/applications/" + applicationId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -873,6 +911,41 @@ public class OpenAMClient {
 		}
 		
 		return application;
+	}
+	
+	public ApplicationType getApplicationType(String applicationTypeId, String token) {
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("https")
+			.setHost(idpHost)
+			.setPort(idpPort)
+			.setPath(" /idp/json/applicationtypes/" + applicationTypeId)
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpGet httpget = new HttpGet(uri);
+		httpget.setHeader("Content-Type", "application/json");
+		httpget.setHeader(authToken, token);
+
+		String respString = performRequest(httpget);
+		
+		ApplicationType applicationType = new ApplicationType();
+		
+		try {
+			applicationType = (ApplicationType) JsonUtils.deserializeJson(respString, ApplicationType.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return applicationType;
 	}
 	
 	public boolean createUser(String givenName, String surname, String username, String password, String mail, StringBuilder goingOn, String token) {
@@ -985,7 +1058,7 @@ public class OpenAMClient {
 		return true;
 	}
 	
-	public boolean createApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, StringBuilder goingOn, String token) {
+	public boolean createApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, ArrayList<Action> actions, StringBuilder goingOn, String token) {
 		
 		if (getApplication(applicationName, token).getName() != null) {
 			// application already existing, return false
@@ -998,6 +1071,36 @@ public class OpenAMClient {
 		application.setDescription(description);
 		application.setResources(resources);
 		application.setAdditionalProperty("applicationType", applicationType);
+		
+		ActionValues___ actVal = new ActionValues___();
+		
+		for (int i = 0; i < actions.size(); i++) {
+			Action currentAction = actions.get(i);
+			String strAction = currentAction.getAction();
+			
+			if (strAction.equals("POST")) {
+				actVal.setPOST(currentAction.getState());
+			} else if (strAction.equals("PATCH")) {
+				actVal.setPATCH(currentAction.getState());
+			} else if (strAction.equals("GET")) {
+				actVal.setGET(currentAction.getState());
+			} else if (strAction.equals("DELETE")) {
+				actVal.setDELETE(currentAction.getState());
+			} else if (strAction.equals("OPTIONS")) {
+				actVal.setOPTIONS(currentAction.getState());
+			} else if (strAction.equals("PUT")) {
+				actVal.setPUT(currentAction.getState());
+			} else if (strAction.equals("HEAD")) {
+				actVal.setHEAD(currentAction.getState());
+			} else if (strAction.equals("RETRIEVE")) {
+				actVal.setRETRIEVE(currentAction.getState());
+			} else if (strAction.equals("STORE")) {
+				actVal.setSTORE(currentAction.getState());
+			}
+		}
+		
+		application.setActions(actVal);
+		
 		application.setAdditionalProperty("entitlementCombiner", "DenyOverride");
 		
 		List<String> subjects = Arrays.asList("AND", "OR", "NOT", "AuthenticatedUsers", "Identity", "JwtClaim");
@@ -1501,7 +1604,11 @@ public class OpenAMClient {
 		policyIdentityModel.setActive(true);
 		policyIdentityModel.setDescription(description);
 		policyIdentityModel.setResources(resources);
-		policyIdentityModel.setApplicationName(applicationName);
+		if(applicationName == null || applicationName.equals(""))
+			policyIdentityModel.setApplicationName("iPlanetAMWebAgentService");
+		else
+			policyIdentityModel.setApplicationName(applicationName);
+		
 		
 		ActionValues___ actVal = new ActionValues___();
 		
@@ -1874,7 +1981,7 @@ public class OpenAMClient {
 		
 	}
 	
-	public boolean updateApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, Boolean nores, StringBuilder goingOn, String token) {
+	public boolean updateApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
 
 		Application application = new Application();
 		
@@ -1911,6 +2018,48 @@ public class OpenAMClient {
 		
 		application.setSubjects(subjects);
 		application.setConditions(conditions);
+		
+		ActionValues___ actVal = new ActionValues___();
+		
+		if(!actions.isEmpty()) {
+			
+			for (int i = 0; i < actions.size(); i++) {
+				Action currentAction = actions.get(i);
+				String strAction = currentAction.getAction();
+				
+				if (strAction.equals("POST")) {
+					actVal.setPOST(currentAction.getState());
+				} else if (strAction.equals("PATCH")) {
+					actVal.setPATCH(currentAction.getState());
+				} else if (strAction.equals("GET")) {
+					actVal.setGET(currentAction.getState());
+				} else if (strAction.equals("DELETE")) {
+					actVal.setDELETE(currentAction.getState());
+				} else if (strAction.equals("OPTIONS")) {
+					actVal.setOPTIONS(currentAction.getState());
+				} else if (strAction.equals("PUT")) {
+					actVal.setPUT(currentAction.getState());
+				} else if (strAction.equals("HEAD")) {
+					actVal.setHEAD(currentAction.getState());
+				} else if (strAction.equals("RETRIEVE")) {
+					actVal.setRETRIEVE(currentAction.getState());
+				} else if (strAction.equals("STORE")) {
+					actVal.setSTORE(currentAction.getState());
+				}					
+			}
+			
+			application.setActions(actVal);
+		} else if(!noact) {
+			try {
+				application.setActions((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getApplication(applicationName, token).getActions()), actVal.getClass()));
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 				
 		String newApplicationInfo = "";
 		
@@ -1930,7 +2079,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications/"+applicationName)
+			.setPath(" /idp/json/applications/" + applicationName)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1943,6 +2092,8 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
+		
+		System.out.println(newApplicationInfo);
 
 		String respString = performRequest(httpput);
 		

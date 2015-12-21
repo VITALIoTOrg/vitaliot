@@ -533,6 +533,15 @@ public class PostServices {
 			@FormParam("type") String type,
 			@FormParam("description") String description,
 			@FormParam("resources[]") ArrayList<String> res,
+			@FormParam("actions[DELETE]") Boolean delete,
+			@FormParam("actions[GET]") Boolean get,
+			@FormParam("actions[HEAD]") Boolean head,
+			@FormParam("actions[OPTIONS]") Boolean options,
+			@FormParam("actions[PATCH]") Boolean patch,
+			@FormParam("actions[POST]") Boolean post,
+			@FormParam("actions[PUT]") Boolean put,
+			@FormParam("actions[RETRIEVE]") Boolean retrieve,
+			@FormParam("actions[STORE]") Boolean store,
 			@CookieParam("vitalAccessToken") String token) {
 		
 		int code;
@@ -542,7 +551,37 @@ public class PostServices {
 		
 		code = 0;
 		
-		result = client.createApplication(type, name, description, res, answer, token);
+		ArrayList<Action> actions = new ArrayList<Action>();
+		
+		if(delete != null) {
+			actions.add(new Action("DELETE", delete.booleanValue()));
+		}
+		if(get != null) {
+			actions.add(new Action("GET", get.booleanValue()));
+		}
+		if(head != null) {
+			actions.add(new Action("HEAD", head.booleanValue()));
+		}
+		if(options != null) {
+			actions.add(new Action("OPTIONS", options.booleanValue()));
+		}
+		if(patch != null) {
+			actions.add(new Action("PATCH", patch.booleanValue()));
+		}
+		if(post != null) {
+			actions.add(new Action("POST", post.booleanValue()));
+		}
+		if(put != null) {
+			actions.add(new Action("PUT", put.booleanValue()));
+		}
+		if(retrieve != null) {
+			actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
+		}
+		if(store != null) {
+			actions.add(new Action("STORE", store.booleanValue()));
+		}
+		
+		result = client.createApplication(type, name, description, res, actions, answer, token);
 		
 		try {
 			application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -777,6 +816,8 @@ public class PostServices {
 			@FormParam("actions[PATCH]") Boolean patch,
 			@FormParam("actions[POST]") Boolean post,
 			@FormParam("actions[PUT]") Boolean put,
+			@FormParam("actions[RETRIEVE]") Boolean retrieve,
+			@FormParam("actions[STORE]") Boolean store,
 			@FormParam("noact") Boolean noact,
 			@CookieParam("vitalAccessToken") String token) {
 		
@@ -806,6 +847,12 @@ public class PostServices {
 		}
 		if(put != null) {
 			actions.add(new Action("PUT", put.booleanValue()));
+		}
+		if(retrieve != null) {
+			actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
+		}
+		if(store != null) {
+			actions.add(new Action("STORE", store.booleanValue()));
 		}
 		
 		code = 0;
@@ -863,15 +910,55 @@ public class PostServices {
 			@FormParam("description") String description,
 			@FormParam("resources[]") ArrayList<String> res,
 			@FormParam("nores") Boolean nores,
+			@FormParam("actions[DELETE]") Boolean delete,
+			@FormParam("actions[GET]") Boolean get,
+			@FormParam("actions[HEAD]") Boolean head,
+			@FormParam("actions[OPTIONS]") Boolean options,
+			@FormParam("actions[PATCH]") Boolean patch,
+			@FormParam("actions[POST]") Boolean post,
+			@FormParam("actions[PUT]") Boolean put,
+			@FormParam("actions[RETRIEVE]") Boolean retrieve,
+			@FormParam("actions[STORE]") Boolean store,
+			@FormParam("noact") Boolean noact,
 			@CookieParam("vitalAccessToken") String token) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Application application = new Application();
 		
+		ArrayList<Action> actions = new ArrayList<Action>();
+		
+		if(delete != null) {
+			actions.add(new Action("DELETE", delete.booleanValue()));
+		}
+		if(get != null) {
+			actions.add(new Action("GET", get.booleanValue()));
+		}
+		if(head != null) {
+			actions.add(new Action("HEAD", head.booleanValue()));
+		}
+		if(options != null) {
+			actions.add(new Action("OPTIONS", options.booleanValue()));
+		}
+		if(patch != null) {
+			actions.add(new Action("PATCH", patch.booleanValue()));
+		}
+		if(post != null) {
+			actions.add(new Action("POST", post.booleanValue()));
+		}
+		if(put != null) {
+			actions.add(new Action("PUT", put.booleanValue()));
+		}
+		if(retrieve != null) {
+			actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
+		}
+		if(store != null) {
+			actions.add(new Action("STORE", store.booleanValue()));
+		}
+		
 		code = 0;
 		
-		if(client.updateApplication(type, name, description, res, nores, answer, token)) {
+		if(client.updateApplication(type, name, description, res, nores, actions, noact, answer, token)) {
 			
 			try {
 				application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);

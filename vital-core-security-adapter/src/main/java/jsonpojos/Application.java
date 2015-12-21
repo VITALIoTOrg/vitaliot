@@ -35,6 +35,8 @@ public class Application {
     private List<String> subjects = new ArrayList<String>();
     @JsonProperty("conditions")
     private List<String> conditions = new ArrayList<String>();
+    @JsonProperty("actions")
+    private ActionValues___ actions;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -160,6 +162,31 @@ public class Application {
 
     public Application withConditions(List<String> conditions) {
         this.conditions = conditions;
+        return this;
+    }
+    
+    /**
+     * 
+     * @return
+     *     The actions
+     */
+    @JsonProperty("actions")
+    public ActionValues___ getActions() {
+        return actions;
+    }
+
+    /**
+     * 
+     * @param actions
+     *     The actions
+     */
+    @JsonProperty("actions")
+    public void setActions(ActionValues___ actions) {
+        this.actions = actions;
+    }
+
+    public Application withActions(ActionValues___ actions) {
+        this.actions = actions;
         return this;
     }
 

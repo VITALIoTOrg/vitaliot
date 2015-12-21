@@ -1,4 +1,3 @@
-
 package jsonpojos;
 
 import java.util.ArrayList;
@@ -24,10 +23,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
     "pagedResultsCookie",
     "remainingPagedResults"
 })
-public class Applications {
+public class ApplicationTypes {
 
     @JsonProperty("result")
-    private List<Application> result = new ArrayList<Application>();
+    private List<ApplicationType> result = new ArrayList<ApplicationType>();
     @JsonProperty("resultCount")
     private Integer resultCount;
     @JsonProperty("pagedResultsCookie")
@@ -43,7 +42,7 @@ public class Applications {
      *     The result
      */
     @JsonProperty("result")
-    public List<Application> getResult() {
+    public List<ApplicationType> getResult() {
         return result;
     }
 
@@ -53,11 +52,11 @@ public class Applications {
      *     The result
      */
     @JsonProperty("result")
-    public void setResult(List<Application> result) {
+    public void setResult(List<ApplicationType> result) {
         this.result = result;
     }
 
-    public Applications withResult(List<Application> result) {
+    public ApplicationTypes withResult(List<ApplicationType> result) {
         this.result = result;
         return this;
     }
@@ -82,7 +81,7 @@ public class Applications {
         this.resultCount = resultCount;
     }
 
-    public Applications withResultCount(Integer resultCount) {
+    public ApplicationTypes withResultCount(Integer resultCount) {
         this.resultCount = resultCount;
         return this;
     }
@@ -107,7 +106,7 @@ public class Applications {
         this.pagedResultsCookie = pagedResultsCookie;
     }
 
-    public Applications withPagedResultsCookie(Object pagedResultsCookie) {
+    public ApplicationTypes withPagedResultsCookie(Object pagedResultsCookie) {
         this.pagedResultsCookie = pagedResultsCookie;
         return this;
     }
@@ -132,7 +131,7 @@ public class Applications {
         this.remainingPagedResults = remainingPagedResults;
     }
 
-    public Applications withRemainingPagedResults(Integer remainingPagedResults) {
+    public ApplicationTypes withRemainingPagedResults(Integer remainingPagedResults) {
         this.remainingPagedResults = remainingPagedResults;
         return this;
     }
@@ -162,7 +161,7 @@ public class Applications {
         this.additionalProperties.put(name, value);
     }
 
-    public Applications withAdditionalProperty(String name, Object value) {
+    public ApplicationTypes withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }

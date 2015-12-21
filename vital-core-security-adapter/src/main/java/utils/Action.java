@@ -27,6 +27,4 @@ public class Action {
 		this.action = action;
 	}
 	
-	
-	
 }

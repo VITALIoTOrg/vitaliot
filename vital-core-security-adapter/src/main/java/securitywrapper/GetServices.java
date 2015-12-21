@@ -31,6 +31,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import jsonpojos.Application;
+import jsonpojos.ApplicationType;
+import jsonpojos.ApplicationTypes;
 import jsonpojos.Applications;
 import jsonpojos.Group;
 import jsonpojos.Groups;
@@ -281,6 +283,53 @@ public class GetServices {
 		
 	}
 	
+	@Path("/apptype/{id}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getApplicationType(
+            @PathParam("id") String applicationTypeId,
+            @CookieParam("vitalAccessToken") String token) {
+		
+		ApplicationType applicationType;
+		String answer;
+		int code;
+		
+		answer = null;
+		code = 0;
+		applicationType = client.getApplicationType(applicationTypeId, token);
+		
+		try {
+			answer = JsonUtils.serializeJson(applicationType);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(applicationType.getAdditionalProperties().containsKey("code")) {
+			if(applicationType.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) applicationType.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
+				.entity(answer)
+				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.build();
+		}
+	}
+	
 	@Path("/application/{id}/policies")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -495,7 +544,52 @@ public class GetServices {
 					.entity(answer)
 					.build();
 		}
+	}
+	
+	@Path("/apptypes")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getApplicationTypes(
+			@CookieParam("vitalAccessToken") String token) {
 		
+		ApplicationTypes appTypes;
+		String answer;
+		int code;
+		
+		answer = null;
+		code = 0;
+		appTypes = client.getApplicationTypes(token);
+		
+		try {
+			answer = JsonUtils.serializeJson(appTypes);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(appTypes.getAdditionalProperties().containsKey("code")) {
+			if(appTypes.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) appTypes.getAdditionalProperties().get("code");
+			}
+		}
+		if(code >= 400 && code < 500) {
+			return Response.status(Status.BAD_REQUEST)
+				.entity(answer)
+				.build();
+		}
+		else if(code >= 500 && code < 600) {
+			return Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity(answer)
+					.build();
+		}
+		else {
+			return Response.ok()
+					.entity(answer)
+					.build();
+		}
 	}
 	
 	@Path("/stats")
