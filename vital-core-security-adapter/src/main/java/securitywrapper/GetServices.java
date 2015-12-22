@@ -34,6 +34,7 @@ import jsonpojos.Application;
 import jsonpojos.ApplicationType;
 import jsonpojos.ApplicationTypes;
 import jsonpojos.Applications;
+import jsonpojos.AttributeValue;
 import jsonpojos.Group;
 import jsonpojos.Groups;
 import jsonpojos.Policies;
@@ -45,6 +46,7 @@ import jsonpojos.Users;
 import jsonpojos.Validation;
 import jsonpojos.Monitor;
 import jsonpojos.Permissions;
+import jsonpojos.PermissionsCollection;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -895,56 +897,88 @@ public class GetServices {
 			tokenUser = vitalToken;
 		}
 		
-		Permissions resp = new Permissions();
+		PermissionsCollection resp = new PermissionsCollection();
 		
-		List<String> allowed = new ArrayList<String>();
-		List<String> denied = new ArrayList<String>();
+		Permissions permStore = new Permissions();
+		Permissions permRetrieve = new Permissions();
+		
+		List<AttributeValue> allowedStore = new ArrayList<AttributeValue>();
+		List<AttributeValue> deniedStore = new ArrayList<AttributeValue>();
+		
+		List<AttributeValue> allowedRetrieve = new ArrayList<AttributeValue>();
+		List<AttributeValue> deniedRetrieve = new ArrayList<AttributeValue>();
 		
 		Validation val = client.getUserIdFromToken(tokenUser);
 		Groups groups = client.listUserGroups(val.getUid(), tokenPerformer);
 		Policies policies = client.getPolicies(tokenPerformer);
 		
-		if(val.getAdditionalProperties().containsKey("code")) {
-			if(val.getAdditionalProperties().get("code").getClass() == Integer.class) {
+		if (val.getAdditionalProperties().containsKey("code")) {
+			if (val.getAdditionalProperties().get("code").getClass() == Integer.class) {
 				code = (Integer) val.getAdditionalProperties().get("code");
-				if(code < 200 || code > 299)
+				if (code < 200 || code > 299)
 					error = true;
 			}
 		}
-		if(policies.getAdditionalProperties().containsKey("code")) {
-			if(policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
+		if (policies.getAdditionalProperties().containsKey("code")) {
+			if (policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
 				code = (Integer) policies.getAdditionalProperties().get("code");
-				if(code < 200 || code > 299)
+				if (code < 200 || code > 299)
 					error = true;
 			}
 		}
 		
-		if(!error) {
+		if (!error) {
 			List<Result> list = policies.getResult();
 			Iterator<Result> iter = list.listIterator();
 			
 			while (iter.hasNext()) {
 				Result policy = iter.next();
-				if (policy.getSubject().getType().equals("Identity")) {
+				if (policy.getApplicationName().equals("Data access control") && policy.getSubject().getType().equals("Identity")) {
 					List<String> polgroups = policy.getSubject().getSubjectValues();
 					Iterator<String> iterint = polgroups.iterator();
 					while (iterint.hasNext()) {
 						String group = iterint.next();
-						System.out.println(group);
-						System.out.println(group.substring(group.indexOf('=') + 1, group.indexOf(',')));
 						if (groups.getResult().contains(group.substring(group.indexOf('=') + 1, group.indexOf(',')))) {
-							if (policy.getActionValues().getGET() == true)
-								allowed.addAll(policy.getResources());
-							else if (policy.getActionValues().getGET() == false)
-								denied.addAll(policy.getResources());
+							List<String> listCond = policy.getResources();
+							Iterator<String> iterCond = listCond.listIterator();
+							while (iterCond.hasNext()) {
+								String cond = iterCond.next();
+								String attribute = cond.substring(0, cond.indexOf(':'));
+								String value = cond.substring(cond.indexOf(':') + 1);
+								AttributeValue av = new AttributeValue();
+								av.setAttribute(attribute);
+								av.setValue(value);
+								if (policy.getActionValues().getRETRIEVE() == true) {
+									if (!deniedRetrieve.contains(av))
+										allowedRetrieve.add(av);
+								}
+								else if (policy.getActionValues().getRETRIEVE() == false) {
+									deniedRetrieve.add(av);
+									allowedRetrieve.remove(av);
+								}
+								if (policy.getActionValues().getSTORE() == true) {
+									if (!deniedStore.contains(av))
+										allowedStore.add(av);
+								}
+								else if (policy.getActionValues().getSTORE() == false) {
+									deniedStore.add(av);
+									allowedStore.remove(av);
+								}
+							}
 							break;
 						}
 					}
 				}
 			}
 			
-			resp.setAllowed(allowed);
-			resp.setDenied(denied);
+			permStore.setAllowed(allowedStore);
+			permStore.setDenied(deniedStore);
+			
+			permRetrieve.setAllowed(allowedRetrieve);
+			permRetrieve.setDenied(deniedRetrieve);
+			
+			resp.setStore(permStore);
+			resp.setRetrieve(permRetrieve);
 			
 			return Response.ok()
 					.entity(resp)

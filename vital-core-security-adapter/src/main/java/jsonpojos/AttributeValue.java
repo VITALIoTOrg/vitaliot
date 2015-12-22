@@ -1,8 +1,6 @@
 package jsonpojos;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -11,76 +9,83 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "allowed",
-    "denied"
+    "attribute",
+    "value"
 })
-public class Permissions {
+public class AttributeValue {
 
-    @JsonProperty("allowed")
-    private List<AttributeValue> allowed = new ArrayList<AttributeValue>();
-    @JsonProperty("denied")
-    private List<AttributeValue> denied = new ArrayList<AttributeValue>();
+    @JsonProperty("attribute")
+    private String attribute;
+    @JsonProperty("value")
+    private String value ;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * 
      * @return
-     *     The allowed
+     *     The attribute
      */
-    @JsonProperty("allowed")
-    public List<AttributeValue> getAllowed() {
-        return allowed;
+    @JsonProperty("attribute")
+    public String getAttribute() {
+        return attribute;
     }
 
     /**
      * 
-     * @param allowed
-     *     The allowed
+     * @param attribute
+     *     The attribute
      */
-    @JsonProperty("allowed")
-    public void setAllowed(List<AttributeValue> allowed) {
-        this.allowed = allowed;
+    @JsonProperty("attribute")
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 
-    public Permissions withAllowed(List<AttributeValue> allowed) {
-        this.allowed = allowed;
+    public AttributeValue withAttribute(String attribute) {
+        this.attribute = attribute;
         return this;
     }
     
     /**
      * 
      * @return
-     *     The denied
+     *     The value
      */
-    @JsonProperty("denied")
-    public List<AttributeValue> getDenied() {
-        return denied;
+    @JsonProperty("value")
+    public String getValue() {
+        return value;
     }
 
     /**
      * 
-     * @param denied
-     *     The denied
+     * @param value
+     *     The value
      */
-    @JsonProperty("denied")
-    public void setDenied(List<AttributeValue> denied) {
-        this.denied = denied;
+    @JsonProperty("value")
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public Permissions withDenied(List<AttributeValue> denied) {
-        this.denied = denied;
+    public AttributeValue withValue(String value) {
+        this.value = value;
         return this;
     }
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        return EqualsBuilder.reflectionEquals(this, other);
     }
 
     @JsonAnyGetter
@@ -93,7 +98,7 @@ public class Permissions {
         this.additionalProperties.put(name, value);
     }
 
-    public Permissions withAdditionalProperty(String name, Object value) {
+    public AttributeValue withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }
