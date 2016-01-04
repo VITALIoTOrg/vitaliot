@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 @Stateless
 public class ObservationService {
 
-	public static final String OBSERVATION_TYPE = "observation";
-
 	@Inject
 	private Logger log;
 

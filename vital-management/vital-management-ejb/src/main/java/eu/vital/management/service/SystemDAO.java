@@ -14,8 +14,6 @@ import java.util.logging.Logger;
 @Stateless
 public class SystemDAO {
 
-	public static final String SYSTEM_TYPE = "system";
-
 	@Inject
 	private Logger log;
 
@@ -34,20 +32,20 @@ public class SystemDAO {
 
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
-		ArrayNode documents = documentManager.getList(SYSTEM_TYPE);
+		ArrayNode documents = documentManager.getList(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString());
 		return documents;
 	}
 
 	public ObjectNode get(String systemId) throws Exception {
 		// Connect to ES and retrieve result
-		ObjectNode document = documentManager.get(SYSTEM_TYPE, systemId);
+		ObjectNode document = documentManager.get(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), systemId);
 		return document;
 	}
 
 
 	public ObjectNode save(ObjectNode systemData) throws Exception {
 		String systemId = systemData.get("@id").asText();
-		documentManager.update(SYSTEM_TYPE, systemId, systemData);
+		documentManager.update(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), systemId, systemData);
 		return get(systemId);
 	}
 
@@ -62,7 +60,7 @@ public class SystemDAO {
 				"http://vital-iot.eu/ontology/ns/MonitoringService",
 				"http://vital-iot.eu/ontology/ns/GetSystemStatus",
 				systemServices);
-		
+
 		// Connect to this URL and fetch all sensors:
 		ObjectNode operationInput = objectMapper.createObjectNode();
 		ObjectNode result = (ObjectNode) vitalClient.doPost(operationURL, operationInput);

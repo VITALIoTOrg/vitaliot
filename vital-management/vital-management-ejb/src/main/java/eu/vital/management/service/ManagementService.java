@@ -15,9 +15,6 @@ import java.util.logging.Logger;
 @Stateless
 public class ManagementService {
 
-	public static final String PERFORMANCE = "performance";
-	public static final String CONFIGURATION = "configuration";
-
 	@Inject
 	private Logger log;
 

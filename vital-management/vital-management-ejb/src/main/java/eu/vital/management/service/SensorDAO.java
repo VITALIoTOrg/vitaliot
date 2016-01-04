@@ -15,8 +15,6 @@ import java.util.logging.Logger;
 @Stateless
 public class SensorDAO {
 
-	public static final String SENSOR_TYPE = "sensor";
-
 	@Inject
 	private Logger log;
 
@@ -37,18 +35,18 @@ public class SensorDAO {
 
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
-		return documentManager.getList(SENSOR_TYPE);
+		return documentManager.getList(DocumentManager.DOCUMENT_TYPE.SENSOR.toString());
 	}
 
 	public ObjectNode get(String uri) throws Exception {
 		// Connect to ES and retrieve result
-		ObjectNode document = documentManager.get(SENSOR_TYPE, uri);
+		ObjectNode document = documentManager.get(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), uri);
 		return document;
 	}
 
 	public JsonNode save(JsonNode ico) throws Exception {
 		String uri = ico.get("@id").asText();
-		documentManager.update(SENSOR_TYPE, uri, ico);
+		documentManager.update(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), uri, ico);
 		return get(uri);
 	}
 

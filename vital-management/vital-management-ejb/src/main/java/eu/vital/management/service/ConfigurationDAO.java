@@ -11,8 +11,6 @@ import javax.inject.Inject;
 @Stateless
 public class ConfigurationDAO {
 
-	public static final String CONFIGURATION_TYPE = "configuration";
-
 	@Inject
 	private DocumentManager documentManager;
 
@@ -21,7 +19,7 @@ public class ConfigurationDAO {
 
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
-		return documentManager.getList(CONFIGURATION_TYPE);
+		return documentManager.getList(DocumentManager.DOCUMENT_TYPE.CONFIGURATION.toString());
 	}
 
 	public JsonNode get() throws Exception {
