@@ -8,7 +8,7 @@
     <version>1.0</version>
     <packaging>war</packaging>
     <name>VITAL SNMP Exposer</name>
-    <description>SNMP Exposer for the VITAL project (Java 8 / WildFly 9.0.1)</description>
+    <description>SNMP Exposer for the VITAL project (Java 8 / WildFly 10.0.0.CR5)</description>
 
     <properties>
         <!-- Explicitly declaring the source encoding eliminates the following 
