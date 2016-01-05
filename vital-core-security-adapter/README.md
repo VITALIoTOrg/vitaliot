@@ -44,8 +44,8 @@ mvn package
 ```
 
 You will then find a ".war" file in the "target" folder; you can use it to
-deploy the application on WildFly (tested on WildFly 9.0.1 with OpenJDK 8) over
-HTTPS.
+deploy the application on WildFly (tested on WildFly 10.0.0.CR5 with OpenJDK 8)
+over HTTPS.
 
 You may also want to take a look at the VITAL Deployer project, featuring a
 script to automatically build and deploy this application and other components
