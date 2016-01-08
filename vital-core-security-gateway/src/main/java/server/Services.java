@@ -3,23 +3,16 @@ package server;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DateFormatSymbols;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.ws.rs.CookieParam;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -33,15 +26,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import jsonpojos.AttributeValue;
-import jsonpojos.Permissions;
-import jsonpojos.PermissionsCollection;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import utils.JsonUtils;
-import utils.MD5Util;
 import clients.OpenAMClient;
 
 @Path("/ppi")
