@@ -3,12 +3,12 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>security.wrapper</groupId>
-    <artifactId>securitywrapper</artifactId>
-    <version>2.1</version>
+    <groupId>ppi.gateway</groupId>
+    <artifactId>ppigateway</artifactId>
+    <version>0.1</version>
     <packaging>war</packaging>
-    <name>VITAL Security Adapter</name>
-    <description>Security adapter for the VITAL project (Java 8 / WildFly 10.0.0.CR5)</description>
+    <name>PPI gateway</name>
+    <description>PPI gateway for the VITAL project (Java 8 / WildFly 10.0.0.CR5)</description>
 
     <properties>
         <!-- Explicitly declaring the source encoding eliminates the following 
@@ -123,3 +123,4 @@
         </plugins>
     </build>
 </project>
+
