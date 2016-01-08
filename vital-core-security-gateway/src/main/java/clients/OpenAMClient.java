@@ -1,6 +1,7 @@
 package clients;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -11,39 +12,12 @@ import java.util.List;
 
 import javax.ws.rs.core.Cookie;
 
-import jsonpojos.ActionValues__;
-import jsonpojos.ActionValues___;
-import jsonpojos.Application;
-import jsonpojos.ApplicationType;
-import jsonpojos.ApplicationTypes;
-import jsonpojos.Applications;
-import jsonpojos.Authenticate;
-import jsonpojos.ChangePasswordRequest;
-import jsonpojos.GenericObject;
-import jsonpojos.DecisionRequest;
-import jsonpojos.Group;
-import jsonpojos.GroupModel;
-import jsonpojos.GroupModelWithUsers;
-import jsonpojos.Groups;
-import jsonpojos.LogoutResponse;
-import jsonpojos.Monitor;
-import jsonpojos.Policies;
-import jsonpojos.Policy;
-import jsonpojos.PolicyAuthenticatedModel;
-import jsonpojos.PolicyIdentityModel;
-import jsonpojos.Result;
-import jsonpojos.SubjectAuthenticated;
-import jsonpojos.Subject__;
-import jsonpojos.Subject___;
-import jsonpojos.User;
-import jsonpojos.UserModel;
-import jsonpojos.Users;
-import jsonpojos.Validation;
-
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -54,11 +28,14 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import jsonpojos.AuthenticationResponse;
+import jsonpojos.Validation;
 import utils.Action;
 import utils.ConfigReader;
 import utils.JsonUtils;
@@ -70,36 +47,34 @@ public class OpenAMClient {
 	private HttpCommonClient httpclient;
 	private ConfigReader configReader;
 	
-	private String idpHost;
-	private int idpPort;
-	private String proxyHost;
-	private int proxyPort;
-	private String userAdmin;
-	private String pwdAdmin;
-	private String authToken;
-	private String testToken;
+	private String proxyLocation;
+	private String securityurl;
+	private String username;
+	private String password;
+	private static String token = null;
 	
 	public OpenAMClient() {
 		httpclient = HttpCommonClient.getInstance();
 		configReader = ConfigReader.getInstance();
 		
-		idpHost = configReader.get(ConfigReader.IDP_HOST);
-		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
-		proxyHost = configReader.get(ConfigReader.PROXY_HOST);
-		proxyPort = Integer.parseInt(configReader.get(ConfigReader.PROXY_PORT));
-		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
-		testToken = configReader.get(ConfigReader.TEST_TOKEN);
+		proxyLocation = configReader.get(ConfigReader.PROXY_LOCATION);
+		securityurl = configReader.get(ConfigReader.SECURITY_URL);
+		username = configReader.get(ConfigReader.USERNAME);
+		password = configReader.get(ConfigReader.PASSWORD);
 	}
 	
-	public String getSSOCookieName() {
-		return authToken;
+	public String getProxyLocation() {
+		return proxyLocation;
 	}
 	
-	public String getTestCookieName() {
-		return testToken;
+	public String getToken() {
+		if(token == null || !getUserIdFromToken(token).getValid()) {
+			token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "ẗoken");
+		}
+		return token;
 	}
 	
-    private String performRequest(HttpRequestBase request) {
+    private String performRequest(HttpRequestBase request, StringBuilder token) {
     	String response = "";
     	HttpEntity httpent;
 
@@ -111,6 +86,10 @@ public class OpenAMClient {
 			httpent = resp.getEntity();
 			if(httpent != null) {
 				response = EntityUtils.toString(httpent);
+			}
+			if(resp.containsHeader("Set-Cookie")) {
+				String header = resp.getHeaders("Set-Cookie").toString();
+				token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
 			}
             resp.close();
 		} catch (Exception e) {
@@ -127,6 +106,10 @@ public class OpenAMClient {
 				if(httpent != null) {
 					response = EntityUtils.toString(httpent);
 				}
+				if(resp.containsHeader("Set-Cookie")) {
+					String header = resp.getHeaders("Set-Cookie").toString();
+					token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
+				}
 	            resp.close();
 			} catch (Exception ea) {
 				// Try again with an even higher timeout
@@ -142,6 +125,10 @@ public class OpenAMClient {
 					if(httpent != null) {
 						response = EntityUtils.toString(httpent);
 					}
+					if(resp.containsHeader("Set-Cookie")) {
+						String header = resp.getHeaders("Set-Cookie").toString();
+						token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
+					}
 		            resp.close();
 				} catch (ClientProtocolException e1) {
 					e1.printStackTrace();
@@ -154,33 +141,41 @@ public class OpenAMClient {
     	return response;
     }
 	
-	private boolean isTokenValid(String token) {
+	public AuthenticationResponse authenticate(String name, String password) {
+		StringBuilder token;
 		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/"+token)
-			.setCustomQuery("_action=validate")
+			.setHost(securityurl)
+			.setPath("/rest/authenticate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
 		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
+		httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
-		String respString = performRequest(httppost);
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);  
 		
-		Validation validation = new Validation();
+		nameValuePairs.add(new BasicNameValuePair("name", name));  
+		nameValuePairs.add(new BasicNameValuePair("password", password));
+		nameValuePairs.add(new BasicNameValuePair("testCookie", "false"));
 		
 		try {
-			validation = (Validation) JsonUtils.deserializeJson(respString, Validation.class);
-			if (validation.getValid()) {
-				return true;
-			}
+			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+
+		token = new StringBuilder();
+		String respString = performRequest(httppost, token);
+		
+		AuthenticationResponse auth = new AuthenticationResponse();
+		try {
+			auth = (AuthenticationResponse) JsonUtils.deserializeJson(respString, AuthenticationResponse.class);
 		} catch (JsonParseException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -189,275 +184,31 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		return false;
-	}
-	
-	public LogoutResponse logout(String token) {
-		
-		LogoutResponse resp = new LogoutResponse();
-		
-		if(!isTokenValid(token)) {
-			try {
-				resp = (LogoutResponse) JsonUtils.deserializeJson("{\"result\":\"Successfully logged out\"}", LogoutResponse.class);
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			return resp;
-		}
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath("/idp/json/sessions")
-			.setCustomQuery("_action=logout")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
-		
-		StringEntity strEntity = new StringEntity("{}", StandardCharsets.UTF_8);
-		httppost.setEntity(strEntity);
-
-		String respString = performRequest(httppost);
-
-		try {
-			resp = (LogoutResponse) JsonUtils.deserializeJson(respString, LogoutResponse.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return resp;
-		
-	}
-	
-	public Authenticate authenticate(String name, String password) {
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath("/idp/json/authenticate")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		if(name != null) {
-			httppost.setHeader("X-OpenAM-Username", name);
-			httppost.setHeader("X-OpenAM-Password", password);
-		} else {
-			httppost.setHeader("X-OpenAM-Username", userAdmin);
-			httppost.setHeader("X-OpenAM-Password", pwdAdmin);
-		}
-
-		String respString = performRequest(httppost);
-		
-		Authenticate auth = new Authenticate();
-		try {
-			auth = (Authenticate) JsonUtils.deserializeJson(respString, Authenticate.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(name == null) {
-			SessionUtils.setAdminAuthToken(auth.getTokenId());
-		}
+		auth.setAdditionalProperty("token", token.toString());
 		
 		return auth;
-		
 	}
 	
-	public GenericObject changePassword(String token, String userPass, String currPass) {
+	public Validation getUserIdFromToken(String usertoken) {
+		Cookie ck;
 		
-		ChangePasswordRequest req = new ChangePasswordRequest();
-		
-		req.setCurrentpassword(currPass);
-		req.setUserpassword(userPass);
-		
-		String newReq = "";
-		
-		try {
-			newReq = JsonUtils.serializeJson(req);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ck = new Cookie("vitalAccessToken", usertoken);
 		
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/users/" + getUserIdFromToken(token).getUid())
-			.setCustomQuery("_action=changePassword")
+			.setHost(securityurl)
+			.setPath("/rest/user?testCookie=false")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
-		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
-		strEntity.setContentType("application/json");
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
-		httppost.setEntity(strEntity);
-		
-		String respString = performRequest(httppost);
+		HttpGet httpget = new HttpGet(uri);
+		httpget.setHeader("Cookie", ck.toString());
 
-		GenericObject resp = new GenericObject();
-		
-		try {
-			resp = (GenericObject) JsonUtils.deserializeJson(respString, GenericObject.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	
-		return resp;
-		
-	}
-	
-	public boolean evaluate(String tokenUser, ArrayList<String> resources, StringBuilder goingOn, String tokenPerformer) {
-		
-		DecisionRequest req = new DecisionRequest();
-		SubjectAuthenticated sub = new SubjectAuthenticated();
-		sub.setSsoToken(tokenUser);
-		
-		req.setSubject(sub);
-		req.setResources(resources);
-		
-		String newReq = "";
-		
-		try {
-			newReq = JsonUtils.serializeJson(req);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/policies/")
-			.setCustomQuery("_action=evaluate")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		StringEntity strEntity = new StringEntity(newReq, StandardCharsets.UTF_8);
-		strEntity.setContentType("application/json");
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, tokenPerformer);
-		httppost.setEntity(strEntity);
-
-		String respString = performRequest(httppost);
-
-		if (respString.contains("\"code\":")) {
-			goingOn.append(respString);
-		} else {
-			goingOn.append("{ \"responses\" : " + respString + " }");
-		}
-		
-		return true;
-		
-	}
-	
-	public Validation getUserIdFromToken(String userToken) {
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/"+userToken)
-			.setCustomQuery("_action=validate")
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-
-		String respString = performRequest(httppost);
-		
-		Validation validation = new Validation();
-		
-		try {
-			validation = (Validation) JsonUtils.deserializeJson(respString, Validation.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	
-		return validation;
-	}
-	
-	public Validation validateToken(String token, String userToken) {
-		
-		URI uri = null;
-		try {
-			uri = new URIBuilder()
-			.setScheme("https")
-			.setHost(idpHost)
-			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/")
-			.setCustomQuery("_action=isActive&tokenId="+userToken)
-			.build();
-		} catch (URISyntaxException e1) {
-			e1.printStackTrace();
-		}
-		
-		HttpPost httppost = new HttpPost(uri);
-		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
-
-		String respString = performRequest(httppost);
+		String respString = performRequest(httpget, null);
 		
 		Validation validation = new Validation();
 		

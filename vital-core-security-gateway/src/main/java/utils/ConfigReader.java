@@ -8,13 +8,10 @@ public class ConfigReader {
 	private static ConfigReader instance;
 	private Properties config;
 	
-	public static final String IDP_HOST = "IDP_HOST";
-	public static final String IDP_PORT = "IDP_PORT";
-	public static final String PROXY_HOST = "PROXY_HOST";
-	public static final String PROXY_PORT = "PROXY_PORT";
-	public static final String SNMP_PORT = "SNMP_PORT";
-	public static final String AUTH_TOKEN = "AUTH_TOKEN";
-	public static final String TEST_TOKEN = "TEST_TOKEN";
+	public static final String PROXY_LOCATION = "PROXY_LOCATION";
+	public static final String SECURITY_URL = "SECURITY_URL";
+	public static final String USERNAME = "USERNAME";
+	public static final String PASSWORD = "PASSWORD";
 	
 	private ConfigReader() {
 		config = new Properties();
