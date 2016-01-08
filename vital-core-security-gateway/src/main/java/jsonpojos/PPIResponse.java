@@ -9,88 +9,78 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-    "attribute",
-    "value"
+    "id",
+    "type"
 })
-public class AttributeValue {
+public class PPIResponse {
 
-    @JsonProperty("attribute")
-    private String attribute;
-    @JsonProperty("value")
-    private String value ;
+    @JsonProperty("id")
+    private String id;
+    @JsonProperty("type")
+    private String type;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public AttributeValue(String attr, String v) {
-		attribute = attr;
-		value = v;
-	}
-    
     /**
      * 
      * @return
-     *     The attribute
+     *     The id
      */
-    @JsonProperty("attribute")
-    public String getAttribute() {
-        return attribute;
+    @JsonProperty("id")
+    public String getId() {
+        return id;
     }
 
     /**
      * 
-     * @param attribute
-     *     The attribute
+     * @param id
+     *     The id
      */
-    @JsonProperty("attribute")
-    public void setAttribute(String attribute) {
-        this.attribute = attribute;
+    @JsonProperty("id")
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public AttributeValue withAttribute(String attribute) {
-        this.attribute = attribute;
+    public PPIResponse withId(String id) {
+        this.id = id;
         return this;
     }
-    
+
     /**
      * 
      * @return
-     *     The value
+     *     The type
      */
-    @JsonProperty("value")
-    public String getValue() {
-        return value;
+    @JsonProperty("type")
+    public String getType() {
+        return type;
     }
 
     /**
      * 
-     * @param value
-     *     The value
+     * @param type
+     *     The type
      */
-    @JsonProperty("value")
-    public void setValue(String value) {
-        this.value = value;
+    @JsonProperty("type")
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public AttributeValue withValue(String value) {
-        this.value = value;
+    public PPIResponse withType(String type) {
+        this.type = type;
         return this;
     }
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
     }
 
     @JsonAnyGetter
@@ -103,9 +93,26 @@ public class AttributeValue {
         this.additionalProperties.put(name, value);
     }
 
-    public AttributeValue withAdditionalProperty(String name, Object value) {
+    public PPIResponse withAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(id).append(type).append(additionalProperties).toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof PPIResponse) == false) {
+            return false;
+        }
+        PPIResponse rhs = ((PPIResponse) other);
+        return new EqualsBuilder().append(id, rhs.id).append(type, rhs.type).append(additionalProperties, rhs.additionalProperties).isEquals();
     }
 
 }

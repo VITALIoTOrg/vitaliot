@@ -26,6 +26,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import jsonpojos.AuthenticationResponse;
+import jsonpojos.PermissionsCollection;
 import jsonpojos.Validation;
 import utils.ConfigReader;
 import utils.JsonUtils;
@@ -212,5 +213,43 @@ public class OpenAMClient {
 		}
 	
 		return validation;
+	}
+
+	public PermissionsCollection getPermissions(String userToken) {
+		Cookie ck, ckuser;
+		
+		String token = getToken();
+		ck = new Cookie("vitalAccessToken", token);
+		ckuser = new Cookie("vitalTestToken", userToken);
+		
+		URI uri = null;
+		try {
+			uri = new URIBuilder()
+			.setScheme("https")
+			.setHost(securityurl)
+			.setPath("/permissions?testCookie=true")
+			.build();
+		} catch (URISyntaxException e1) {
+			e1.printStackTrace();
+		}
+		
+		HttpGet httpget = new HttpGet(uri);
+		httpget.setHeader("Cookie", ck.toString() + "; " + ckuser.toString());
+
+		String respString = performRequest(httpget, null);
+		
+		PermissionsCollection perm = new PermissionsCollection();
+		
+		try {
+			perm = (PermissionsCollection) JsonUtils.deserializeJson(respString, PermissionsCollection.class);
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		return perm;
 	}
 }

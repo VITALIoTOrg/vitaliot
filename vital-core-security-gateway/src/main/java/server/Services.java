@@ -27,6 +27,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import clients.OpenAMClient;
+import jsonpojos.AttributeValue;
+import jsonpojos.PPIResponseArray;
+import jsonpojos.PermissionsCollection;
+import utils.JsonUtils;
 
 @Path("/ppi")
 public class Services {
@@ -62,6 +66,7 @@ public class Services {
 		String internalToken;
 		CloseableHttpClient httpclient;
 		HttpRequestBase httpaction;
+		PermissionsCollection perm;
 
 		httpclient = HttpClients.createDefault();
 
@@ -141,8 +146,29 @@ public class Services {
 		}
 		
 		// Get user permissions from the security module
+		perm = client.getPermissions(vitalToken);
 		
 		// Convert string to object and filter by specific fields values (you may get an array or not)
+		if(respString.charAt(0) == '[') {
+			PPIResponseArray array = null;
+			try {
+				array = (PPIResponseArray) JsonUtils.deserializeJson(respString, PPIResponseArray.class);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(array != null) {
+				// TODO: you must handle wildcards!
+				array.getDocuments().removeIf(p -> perm.getRetrieve().getDenied().contains(new AttributeValue("id", p.getId())));
+				array.getDocuments().removeIf(p -> perm.getRetrieve().getDenied().contains(new AttributeValue("type", p.getType())));
+				array.getDocuments().removeIf(p -> !perm.getRetrieve().getAllowed().contains(new AttributeValue("id", p.getId())));
+				array.getDocuments().removeIf(p -> !perm.getRetrieve().getAllowed().contains(new AttributeValue("type", p.getType())));
+				try {
+					respString = JsonUtils.serializeJson(array);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 		return Response.ok()
 				.entity(respString)
