@@ -157,11 +157,12 @@ public class Services {
 				e.printStackTrace();
 			}
 			if(array != null) {
-				// TODO: you must handle wildcards!
-				array.getDocuments().removeIf(p -> perm.getRetrieve().getDenied().contains(new AttributeValue("id", p.getId())));
-				array.getDocuments().removeIf(p -> perm.getRetrieve().getDenied().contains(new AttributeValue("type", p.getType())));
-				array.getDocuments().removeIf(p -> !perm.getRetrieve().getAllowed().contains(new AttributeValue("id", p.getId())));
-				array.getDocuments().removeIf(p -> !perm.getRetrieve().getAllowed().contains(new AttributeValue("type", p.getType())));
+				array.getDocuments().removeIf(p -> 
+					p.getId() != null && (perm.getRetrieve().getDenied().contains(new AttributeValue("id", p.getId())) ||
+						perm.getRetrieve().getAllowed().contains(new AttributeValue("id", p.getId()))) ||
+					p.getType() != null && (perm.getRetrieve().getDenied().contains(new AttributeValue("type", p.getType())) ||
+						!perm.getRetrieve().getAllowed().contains(new AttributeValue("type", p.getType())))
+				);
 				try {
 					respString = JsonUtils.serializeJson(array);
 				} catch (IOException e) {

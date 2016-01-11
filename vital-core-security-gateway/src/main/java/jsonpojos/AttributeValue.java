@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -90,7 +89,33 @@ public class AttributeValue {
     
     @Override
     public boolean equals(Object other) {
-        return EqualsBuilder.reflectionEquals(this, other);
+    	String pattern, resource;
+    	
+        if (other == this) {
+            return true;
+        }
+        if ((other instanceof AttributeValue) == false) {
+            return false;
+        }
+        
+        AttributeValue rhs = ((AttributeValue) other);
+        
+        // First thing we need to know which one was is a pattern and which is a real value
+        if(value.contains("*")) {
+        	pattern = value;
+        	resource = rhs.getValue();
+        } else {
+        	pattern = rhs.getValue();
+        	resource = value;
+        }
+    	
+    	// Translate the OpenAM pattern into a Java regular expression
+    	pattern = pattern.replaceAll("-\\*-", "[^/]*");
+    	pattern = pattern.replaceAll("\\?\\*$", "\\?.+");
+    	pattern = pattern.replaceAll("([?])\\*$", "$1.*");
+    	pattern = pattern.replace("([?])\\*.+", "$1.*");
+    	
+        return attribute.equals(rhs.getAttribute()) && resource.matches(pattern);
     }
 
     @JsonAnyGetter

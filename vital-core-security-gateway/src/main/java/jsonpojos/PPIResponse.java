@@ -22,9 +22,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class PPIResponse {
 
     @JsonProperty("id")
-    private String id;
+    private String id = null;
     @JsonProperty("type")
-    private String type;
+    private String type = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
