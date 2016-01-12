@@ -1010,6 +1010,11 @@ public class PostServices {
 		String answer;
 		int code;
 		
+		if (name == null || password == null) {
+			return Response.status(Status.BAD_REQUEST)
+				.build();
+		}
+
 		answer = null;
 		code = 0;
 		auth = client.authenticate(name, password);
@@ -1117,7 +1122,6 @@ public class PostServices {
 						.build();
 			}
 		}
-		
 	}
 	
 	@Path("/logout")
