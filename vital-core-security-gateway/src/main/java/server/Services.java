@@ -41,19 +41,24 @@ public class Services {
 		client = new OpenAMClient();
 	}
 	
+	//TODO: need to forward body
+	
 	@Path("{endpoint: .+}")
 	@GET
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response ppiget(
 			@PathParam("endpoint") String endpoint,
 			@CookieParam("vitalAccessToken") String vitalToken) {
 
+		System.out.println(endpoint);
+		System.out.println(vitalToken);
+		
 		return forwardAndFilter("GET", endpoint, vitalToken);
 	}
 	
 	@Path("{endpoint: .+}")
 	@POST
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response ppipost(
 			@PathParam("endpoint") String endpoint,
 			@CookieParam("vitalAccessToken") String vitalToken) {
@@ -73,7 +78,7 @@ public class Services {
 		URI uri = null;
 		try {
 			// Prepare to forward the request on the proxy
-			uri = new URI(client.getProxyLocation() + endpoint);
+			uri = new URI("https://" + client.getProxyHost() + "/vital/" + endpoint);
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
@@ -84,6 +89,8 @@ public class Services {
 		else {
 			httpaction = new HttpPost(uri);
 		}
+		
+		System.out.println(uri.toString());
 
 		// Get token or authenticate if null or invalid
 		internalToken = client.getToken();
@@ -91,6 +98,7 @@ public class Services {
 		
 		httpaction.setHeader("Cookie", ck.toString());
     	httpaction.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
+    	httpaction.setHeader("Content-Type", "application/json");
 
 		// Execute and get the response.
 		CloseableHttpResponse response = null;

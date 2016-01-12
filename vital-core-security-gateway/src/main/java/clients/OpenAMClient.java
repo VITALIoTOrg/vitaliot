@@ -37,8 +37,8 @@ public class OpenAMClient {
 	private HttpCommonClient httpclient;
 	private ConfigReader configReader;
 	
-	private String proxyLocation;
-	private String securityurl;
+	private String proxyhost;
+	private String securityhost;
 	private String username;
 	private String password;
 	private static String token = null;
@@ -47,19 +47,24 @@ public class OpenAMClient {
 		httpclient = HttpCommonClient.getInstance();
 		configReader = ConfigReader.getInstance();
 		
-		proxyLocation = configReader.get(ConfigReader.PROXY_LOCATION);
-		securityurl = configReader.get(ConfigReader.SECURITY_URL);
+		proxyhost = configReader.get(ConfigReader.PROXY_HOST);
+		securityhost = configReader.get(ConfigReader.SECURITY_HOST);
 		username = configReader.get(ConfigReader.USERNAME);
 		password = configReader.get(ConfigReader.PASSWORD);
 	}
 	
-	public String getProxyLocation() {
-		return proxyLocation;
+	public String getProxyHost() {
+		return proxyhost;
 	}
 	
 	public String getToken() {
-		if(token == null || !getUserIdFromToken(token).getValid()) {
-			token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "ẗoken");
+		if (token == null) {
+			token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
+		} else if (getUserIdFromToken(token).getAdditionalProperties().containsKey("code")) {
+			if ((int)getUserIdFromToken(token).getAdditionalProperties().get("code") == 400)
+				token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
+		} else if (!getUserIdFromToken(token).getValid()) {
+			token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
 		}
 		return token;
 	}
@@ -78,7 +83,8 @@ public class OpenAMClient {
 				response = EntityUtils.toString(httpent);
 			}
 			if(resp.containsHeader("Set-Cookie")) {
-				String header = resp.getHeaders("Set-Cookie").toString();
+				String header = resp.getHeaders("Set-Cookie")[0].getValue();
+				System.out.println(header);
 				token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
 			}
             resp.close();
@@ -138,8 +144,9 @@ public class OpenAMClient {
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setHost(securityurl)
-			.setPath("/rest/authenticate")
+			.setPort(443)
+			.setHost(securityhost)
+			.setPath("/securitywrapper/rest/authenticate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -162,6 +169,8 @@ public class OpenAMClient {
 
 		token = new StringBuilder();
 		String respString = performRequest(httppost, token);
+		
+		System.out.println(respString);
 		
 		AuthenticationResponse auth = new AuthenticationResponse();
 		try {
@@ -188,17 +197,22 @@ public class OpenAMClient {
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setHost(securityurl)
-			.setPath("/rest/user?testCookie=false")
+			.setPort(443)
+			.setHost(securityhost)
+			.setPath("/securitywrapper/rest/user")
+			.setCustomQuery("testCookie=false")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
+		System.out.println(uri.toString());
 		httpget.setHeader("Cookie", ck.toString());
+		System.out.println(ck.toString());
 
 		String respString = performRequest(httpget, null);
+		System.out.println(respString);
 		
 		Validation validation = new Validation();
 		
@@ -226,17 +240,22 @@ public class OpenAMClient {
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setHost(securityurl)
-			.setPath("/permissions?testCookie=true")
+			.setPort(443)
+			.setHost(securityhost)
+			.setPath("/securitywrapper/rest/permissions")
+			.setCustomQuery("testCookie=true")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
+		System.out.println(uri.toString());
 		httpget.setHeader("Cookie", ck.toString() + "; " + ckuser.toString());
+		System.out.println(ck.toString() + "; " + ckuser.toString());
 
 		String respString = performRequest(httpget, null);
+		System.out.println(respString);
 		
 		PermissionsCollection perm = new PermissionsCollection();
 		
