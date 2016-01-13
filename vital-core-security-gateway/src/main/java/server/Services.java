@@ -171,11 +171,12 @@ public class Services {
 				e.printStackTrace();
 			}
 			if(array != null) {
+				AttributeValue av = new AttributeValue();
 				array.getDocuments().removeIf(p -> 
-					p.getId() != null && (perm.getRetrieve().getDenied().contains(new AttributeValue("id", p.getId())) ||
-						perm.getRetrieve().getAllowed().contains(new AttributeValue("id", p.getId()))) ||
-					p.getType() != null && (perm.getRetrieve().getDenied().contains(new AttributeValue("type", p.getType())) ||
-						!perm.getRetrieve().getAllowed().contains(new AttributeValue("type", p.getType())))
+					p.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(p.getId())) ||
+						perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(p.getId()))) ||
+					p.getType() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("type").withValue(p.getType())) ||
+						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(p.getType())))
 				);
 				try {
 					respString = JsonUtils.serializeJson(array);

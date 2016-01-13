@@ -26,11 +26,6 @@ public class AttributeValue {
     private String value ;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    public AttributeValue(String attr, String v) {
-		attribute = attr;
-		value = v;
-	}
     
     /**
      * 
