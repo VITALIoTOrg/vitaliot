@@ -244,13 +244,9 @@ public class OpenAMClient {
 		}
 
 		HttpGet httpget = new HttpGet(uri);
-		httpget.setHeader("Cookie", ck.toString() + "; " + ckuser.toString());
-		
-		System.out.println(ck.toString() + "; " + ckuser.toString());
+		httpget.setHeader("Cookie", ck.toString() + "; " + ckuser.toString() + ";");
 
 		String respString = performRequest(httpget, null);
-		
-		System.out.println(respString);
 		
 		PermissionsCollection perm = new PermissionsCollection();
 		
