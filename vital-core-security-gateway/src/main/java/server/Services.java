@@ -164,6 +164,7 @@ public class Services {
 		
 		// Convert string to object and filter by specific fields values (you may get an array or not)
 		if(respString.charAt(0) == '[') {
+			respString = "{ \"documents\": " + respString + " }";
 			PPIResponseArray array = null;
 			try {
 				array = (PPIResponseArray) JsonUtils.deserializeJson(respString, PPIResponseArray.class);
@@ -174,7 +175,7 @@ public class Services {
 				AttributeValue av = new AttributeValue();
 				array.getDocuments().removeIf(p -> 
 					p.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(p.getId())) ||
-						perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(p.getId()))) ||
+						!perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(p.getId()))) ||
 					p.getType() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("type").withValue(p.getType())) ||
 						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(p.getType())))
 				);

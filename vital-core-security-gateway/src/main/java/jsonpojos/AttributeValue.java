@@ -95,6 +95,8 @@ public class AttributeValue {
         
         AttributeValue rhs = ((AttributeValue) other);
         
+        if(value == null || attribute == null || rhs.getValue() == null || rhs.getAttribute() == null)
+        	return false;
         // First thing we need to know which one was is a pattern and which is a real value
         if(value.contains("*")) {
         	pattern = value;
