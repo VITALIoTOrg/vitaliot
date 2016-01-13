@@ -84,7 +84,6 @@ public class OpenAMClient {
 			}
 			if(resp.containsHeader("Set-Cookie")) {
 				String header = resp.getHeaders("Set-Cookie")[0].getValue();
-				System.out.println(header);
 				token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
 			}
             resp.close();
@@ -170,8 +169,6 @@ public class OpenAMClient {
 		token = new StringBuilder();
 		String respString = performRequest(httppost, token);
 		
-		System.out.println(respString);
-		
 		AuthenticationResponse auth = new AuthenticationResponse();
 		try {
 			auth = (AuthenticationResponse) JsonUtils.deserializeJson(respString, AuthenticationResponse.class);
@@ -207,12 +204,9 @@ public class OpenAMClient {
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
-		System.out.println(uri.toString());
 		httpget.setHeader("Cookie", ck.toString());
-		System.out.println(ck.toString());
 
 		String respString = performRequest(httpget, null);
-		System.out.println(respString);
 		
 		Validation validation = new Validation();
 		
@@ -250,12 +244,9 @@ public class OpenAMClient {
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
-		System.out.println(uri.toString());
 		httpget.setHeader("Cookie", ck.toString() + "; " + ckuser.toString());
-		System.out.println(ck.toString() + "; " + ckuser.toString());
 
 		String respString = performRequest(httpget, null);
-		System.out.println(respString);
 		
 		PermissionsCollection perm = new PermissionsCollection();
 		

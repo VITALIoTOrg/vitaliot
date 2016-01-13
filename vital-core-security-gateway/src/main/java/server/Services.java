@@ -3,7 +3,9 @@ package server;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,6 +24,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -45,28 +48,29 @@ public class Services {
 	
 	@Path("{endpoint: .+}")
 	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response ppiget(
 			@PathParam("endpoint") String endpoint,
-			@CookieParam("vitalAccessToken") String vitalToken) {
-
-		System.out.println(endpoint);
-		System.out.println(vitalToken);
+			@CookieParam("vitalAccessToken") String vitalToken,
+			String body) {
 		
-		return forwardAndFilter("GET", endpoint, vitalToken);
+		return forwardAndFilter("GET", endpoint, vitalToken, body);
 	}
 	
 	@Path("{endpoint: .+}")
 	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response ppipost(
 			@PathParam("endpoint") String endpoint,
-			@CookieParam("vitalAccessToken") String vitalToken) {
+			@CookieParam("vitalAccessToken") String vitalToken,
+			String body) {
 
-		return forwardAndFilter("POST", endpoint, vitalToken);
+		return forwardAndFilter("POST", endpoint, vitalToken, body);
 	}
 	
-	private Response forwardAndFilter(String method, String endpoint, String vitalToken) {
+	private Response forwardAndFilter(String method, String endpoint, String vitalToken, String body) {
 		Cookie ck;
 		String internalToken;
 		CloseableHttpClient httpclient;
@@ -89,8 +93,6 @@ public class Services {
 		else {
 			httpaction = new HttpPost(uri);
 		}
-		
-		System.out.println(uri.toString());
 
 		// Get token or authenticate if null or invalid
 		internalToken = client.getToken();
@@ -99,6 +101,10 @@ public class Services {
 		httpaction.setHeader("Cookie", ck.toString());
     	httpaction.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
     	httpaction.setHeader("Content-Type", "application/json");
+		StringEntity strEntity = new StringEntity(body, StandardCharsets.UTF_8);
+		if (method.equals("POST")) {
+			((HttpPost) httpaction).setEntity(strEntity);
+		}
 
 		// Execute and get the response.
 		CloseableHttpResponse response = null;
