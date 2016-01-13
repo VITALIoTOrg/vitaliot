@@ -82,7 +82,7 @@ public class OpenAMClient {
 			if(httpent != null) {
 				response = EntityUtils.toString(httpent);
 			}
-			if(resp.containsHeader("Set-Cookie")) {
+			if(token != null && resp.containsHeader("Set-Cookie")) {
 				String header = resp.getHeaders("Set-Cookie")[0].getValue();
 				token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
 			}
@@ -101,7 +101,7 @@ public class OpenAMClient {
 				if(httpent != null) {
 					response = EntityUtils.toString(httpent);
 				}
-				if(resp.containsHeader("Set-Cookie")) {
+				if(token != null && resp.containsHeader("Set-Cookie")) {
 					String header = resp.getHeaders("Set-Cookie").toString();
 					token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
 				}
@@ -120,7 +120,7 @@ public class OpenAMClient {
 					if(httpent != null) {
 						response = EntityUtils.toString(httpent);
 					}
-					if(resp.containsHeader("Set-Cookie")) {
+					if(token != null && resp.containsHeader("Set-Cookie")) {
 						String header = resp.getHeaders("Set-Cookie").toString();
 						token.append(header.substring(header.indexOf('=') + 1, header.indexOf(';')));
 					}
@@ -225,11 +225,11 @@ public class OpenAMClient {
 
 	public PermissionsCollection getPermissions(String userToken) {
 		Cookie ck, ckuser;
-		
+
 		String token = getToken();
 		ck = new Cookie("vitalAccessToken", token);
 		ckuser = new Cookie("vitalTestToken", userToken);
-		
+
 		URI uri = null;
 		try {
 			uri = new URIBuilder()
@@ -242,11 +242,15 @@ public class OpenAMClient {
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		HttpGet httpget = new HttpGet(uri);
 		httpget.setHeader("Cookie", ck.toString() + "; " + ckuser.toString());
+		
+		System.out.println(ck.toString() + "; " + ckuser.toString());
 
 		String respString = performRequest(httpget, null);
+		
+		System.out.println(respString);
 		
 		PermissionsCollection perm = new PermissionsCollection();
 		

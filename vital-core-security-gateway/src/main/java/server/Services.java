@@ -162,6 +162,8 @@ public class Services {
 		// Get user permissions from the security module
 		perm = client.getPermissions(vitalToken);
 		
+		System.out.println(perm.toString());
+		
 		// Convert string to object and filter by specific fields values (you may get an array or not)
 		if(respString.charAt(0) == '[') {
 			PPIResponseArray array = null;
