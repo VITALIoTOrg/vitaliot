@@ -948,21 +948,25 @@ public class GetServices {
 								AttributeValue av = new AttributeValue();
 								av.setAttribute(attribute);
 								av.setValue(value);
-								if (policy.getActionValues().getRETRIEVE() == true) {
-									if (!deniedRetrieve.contains(av))
-										allowedRetrieve.add(av);
+								if (policy.getActionValues().getRETRIEVE() != null) {
+									if (policy.getActionValues().getRETRIEVE() == true) {
+										if (!deniedRetrieve.contains(av))
+											allowedRetrieve.add(av);
+									}
+									else if (policy.getActionValues().getRETRIEVE() == false) {
+										deniedRetrieve.add(av);
+										allowedRetrieve.remove(av);
+									}
 								}
-								else if (policy.getActionValues().getRETRIEVE() == false) {
-									deniedRetrieve.add(av);
-									allowedRetrieve.remove(av);
-								}
-								if (policy.getActionValues().getSTORE() == true) {
-									if (!deniedStore.contains(av))
-										allowedStore.add(av);
-								}
-								else if (policy.getActionValues().getSTORE() == false) {
-									deniedStore.add(av);
-									allowedStore.remove(av);
+								if (policy.getActionValues().getSTORE() != null) {
+									if (policy.getActionValues().getSTORE() == true) {
+										if (!deniedStore.contains(av))
+											allowedStore.add(av);
+									}
+									else if (policy.getActionValues().getSTORE() == false) {
+										deniedStore.add(av);
+										allowedStore.remove(av);
+									}
 								}
 							}
 							break;
