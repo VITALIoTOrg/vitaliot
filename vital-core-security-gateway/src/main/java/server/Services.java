@@ -180,7 +180,7 @@ public class Services {
 						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(p.getType())))
 				);
 				try {
-					respString = JsonUtils.serializeJson(array);
+					respString = JsonUtils.serializeJson(array.getDocuments());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
