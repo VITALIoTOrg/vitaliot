@@ -188,6 +188,7 @@ public class Services {
 		}
 		
 		// Filter even if the response is single???
+		// TODO: more error checking... the caller need to know if missing token, unauthorized, etc.
 
 		return Response.ok()
 				.entity(respString)
