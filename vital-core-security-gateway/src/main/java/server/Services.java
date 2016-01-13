@@ -186,6 +186,8 @@ public class Services {
 				}
 			}
 		}
+		
+		// Filter even if the response is single???
 
 		return Response.ok()
 				.entity(respString)

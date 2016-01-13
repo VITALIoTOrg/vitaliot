@@ -85,6 +85,7 @@ public class AttributeValue {
     @Override
     public boolean equals(Object other) {
     	String pattern, resource;
+    	//boolean ha = false;
     	
         if (other == this) {
             return true;
@@ -105,12 +106,21 @@ public class AttributeValue {
         	pattern = rhs.getValue();
         	resource = value;
         }
+        
+        /*if(pattern.contains("*")) {
+        	System.out.println("Pattern: " + pattern);
+        	System.out.println("Resource: " + resource);
+        	ha = true;
+        }*/
     	
     	// Translate the OpenAM pattern into a Java regular expression
     	pattern = pattern.replaceAll("-\\*-", "[^/]*");
     	pattern = pattern.replaceAll("\\?\\*$", "\\?.+");
-    	pattern = pattern.replaceAll("([?])\\*$", "$1.*");
-    	pattern = pattern.replace("([?])\\*.+", "$1.*");
+    	pattern = pattern.replaceAll("([^?])\\*$", "$1.*");
+    	pattern = pattern.replaceAll("\\?\\*.+", "\\?.*");
+    	
+    	/*if(ha)
+    		System.out.println("Pattern Java: " + pattern);*/
     	
         return attribute.equals(rhs.getAttribute()) && resource.matches(pattern);
     }
