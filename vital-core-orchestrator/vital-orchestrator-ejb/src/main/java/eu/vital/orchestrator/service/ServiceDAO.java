@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.storage.OrchestratorStorage;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.bson.conversions.Bson;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.logging.Logger;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Stateless
 public class ServiceDAO {
@@ -24,7 +25,6 @@ public class ServiceDAO {
 	@Inject
 	ObjectMapper objectMapper;
 
-
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
 		ArrayNode documents = orchestratorStorage.getList(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString());
@@ -33,7 +33,7 @@ public class ServiceDAO {
 
 	public ArrayNode searchBySystem(JsonNode systemJSON) throws Exception {
 		// Connect to ES and retrieve result
-		QueryBuilder query = QueryBuilders.boolQuery().must(QueryBuilders.matchPhraseQuery("system", systemJSON.get("@id").asText()));
+		Bson query = eq("system", systemJSON.get("@id").asText());
 		ArrayNode documents = orchestratorStorage.search(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString(), query);
 		return documents;
 	}

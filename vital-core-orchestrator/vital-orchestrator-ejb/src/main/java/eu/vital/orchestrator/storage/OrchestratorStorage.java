@@ -1,26 +1,30 @@
 package eu.vital.orchestrator.storage;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexRequestBuilder;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.search.SearchHit;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.result.DeleteResult;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import static com.mongodb.client.model.Filters.in;
 
 @ApplicationScoped
 public class OrchestratorStorage implements Serializable {
@@ -31,7 +35,6 @@ public class OrchestratorStorage implements Serializable {
 		SYSTEM,
 		SERVICE,
 		SENSOR,
-		OBSERVATION,
 		CONFIGURATION,
 		OPERATION,
 		WORKFLOW,
@@ -44,27 +47,78 @@ public class OrchestratorStorage implements Serializable {
 	@Inject
 	private ObjectMapper objectMapper;
 
-	private Client esClient;
+	private MongoClient mongoClient;
+
+	private MongoDatabase mongoDatabase;
 
 	private final String MAIN_INDEX = "vital-orchestrator";
 
 	@PostConstruct
-	public void produceElasticSearchTransportClient() {
-		log.info("produceElasticSearchTransportClient");
+	public void produceMongoClient() {
+		log.info("produceMongoClient");
 
-		//String url = System.getProperty("vital.elasticsearch.host");
-		String url = "localhost";
-		TransportClient client = new TransportClient();
-		client.addTransportAddress(new InetSocketTransportAddress(url, 9300));
-		this.esClient = client;
+		String url = System.getProperty("vital.mongodb.host");
+		if (url == null) {
+			url = "localhost";
+		}
+		this.mongoClient = new MongoClient(url, 27017);
+		this.mongoDatabase = mongoClient.getDatabase(MAIN_INDEX);
 	}
 
 	@PreDestroy
-	public void disposeElasticSearchClient() {
-		log.info("disposeElasticSearchClient");
-		if (this.esClient != null) {
-			this.esClient.close();
+	public void disposeMongoClient() {
+		log.info("disposeMongoClient");
+		if (this.mongoClient != null) {
+			this.mongoClient.close();
 		}
+	}
+
+	private Document encodeKeys(Document mongoDocument) {
+		Document newMongoDocument = new Document();
+		for (String key : mongoDocument.keySet()) {
+			String newKey = key.replaceAll("\\.", "\\\\u002e");
+			Object value = mongoDocument.get(key);
+			if (value instanceof Document) {
+				newMongoDocument.put(newKey, encodeKeys((Document) value));
+			} else if (value instanceof ArrayList) {
+				ArrayList newList = new ArrayList();
+				for (Object item : (ArrayList) value) {
+					if (item instanceof Document) {
+						newList.add(encodeKeys((Document) item));
+					} else {
+						newList.add(item);
+					}
+				}
+				newMongoDocument.put(newKey, newList);
+			} else {
+				newMongoDocument.put(newKey, value);
+			}
+		}
+		return newMongoDocument;
+	}
+
+	private Document decodeKeys(Document mongoDocument) {
+		Document newMongoDocument = new Document();
+		for (String key : mongoDocument.keySet()) {
+			String newKey = key.replaceAll("\\\\u002e", "\\.");
+			Object value = mongoDocument.get(key);
+			if (value instanceof Document) {
+				newMongoDocument.put(newKey, decodeKeys((Document) value));
+			} else if (value instanceof ArrayList) {
+				ArrayList newList = new ArrayList();
+				for (Object item : (ArrayList) value) {
+					if (item instanceof Document) {
+						newList.add(decodeKeys((Document) item));
+					} else {
+						newList.add(item);
+					}
+				}
+				newMongoDocument.put(newKey, newList);
+			} else {
+				newMongoDocument.put(newKey, value);
+			}
+		}
+		return newMongoDocument;
 	}
 
 	/**
@@ -74,69 +128,109 @@ public class OrchestratorStorage implements Serializable {
 	 */
 
 	public String create(String type, JsonNode document) {
-		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type).setSource(document.toString());
-		IndexResponse response = irb.get();
-		return response.getId();
+		try {
+			Document mongoDocument = encodeKeys(Document.parse(objectMapper.writeValueAsString(document)));
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			mongoCollection.insertOne(mongoDocument);
+
+			return mongoDocument.get("_id").toString();
+		} catch (JsonProcessingException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+			return null;
+		}
 	}
 
 	public void update(String type, String documentId, JsonNode document) {
-		IndexRequestBuilder irb = esClient.prepareIndex(MAIN_INDEX, type, documentId).setSource(document.toString());
-		IndexResponse response = irb.get();
+		try {
+			Document mongoDocument = Document.parse(objectMapper.writeValueAsString(document));
+			mongoDocument.put("_id", documentId);
+
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			FindOneAndReplaceOptions options = new FindOneAndReplaceOptions();
+			options.upsert(true);
+			mongoCollection.findOneAndReplace(queryById(documentId), encodeKeys(mongoDocument), options);
+
+		} catch (JsonProcessingException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+		}
 	}
 
-	public void delete(String type, String documentId) throws Exception {
-		esClient.prepareDelete(MAIN_INDEX, type, documentId)
-				.execute()
-				.actionGet();
+	public ArrayNode getList(String type) {
+		try {
+			ArrayNode arrayNode = objectMapper.createArrayNode();
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			MongoCursor<Document> cursor = mongoCollection.find().iterator();
+			try {
+				while (cursor.hasNext()) {
+					Document mongoDocument = decodeKeys(cursor.next());
+					ObjectNode objectNode = (ObjectNode) objectMapper.readTree(mongoDocument.toJson());
+					objectNode.put("id", mongoDocument.get("_id").toString());
+					arrayNode.add(objectNode);
+				}
+			} finally {
+				cursor.close();
+			}
+			return arrayNode;
+		} catch (IOException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+			return null;
+		}
 	}
 
-	/**
-	 * ***************
-	 * GET Functions:
-	 * ****************
-	 */
-
-	public boolean documentExists(String type, JsonNode document) {
-		return esClient.prepareGet(MAIN_INDEX, type, document.toString()).get().isExists();
+	public ArrayNode search(String type, Bson query) {
+		try {
+			ArrayNode arrayNode = objectMapper.createArrayNode();
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			MongoCursor<Document> cursor = mongoCollection.find(query).iterator();
+			try {
+				while (cursor.hasNext()) {
+					Document mongoDocument = decodeKeys(cursor.next());
+					ObjectNode objectNode = (ObjectNode) objectMapper.readTree(mongoDocument.toJson());
+					objectNode.put("id", mongoDocument.get("_id").toString());
+					arrayNode.add(objectNode);
+				}
+			} finally {
+				cursor.close();
+			}
+			return arrayNode;
+		} catch (IOException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+			return null;
+		}
 	}
 
-	public ArrayNode getList(String... types) throws Exception {
-		SearchRequestBuilder srb = esClient.prepareSearch(MAIN_INDEX).setTypes(types).setSize(10000);
-		return getResults(srb);
+	public ObjectNode get(String type, String documentId) {
+		try {
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			Document mongoDocument = (Document) mongoCollection.find(queryById(documentId)).first();
+
+			ObjectNode objectNode = (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
+			objectNode.put("id", mongoDocument.get("_id").toString());
+
+			return objectNode;
+		} catch (IOException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+			return null;
+		}
 	}
 
-	public ArrayNode search(String type, QueryBuilder qb) throws Exception {
-		SearchRequestBuilder srb = esClient.prepareSearch(MAIN_INDEX)
-				.setTypes(type)
-				.setQuery(qb)
-				.setFrom(0)
-				.setSize(Integer.MAX_VALUE);
-		return getResults(srb);
+	public long delete(String type, String documentId) {
+		MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+		DeleteResult result = mongoCollection.deleteOne(queryById(documentId));
+		return result.getDeletedCount();
 	}
 
-	public ObjectNode get(String type, String documentId) throws Exception {
-		//just the _source field (default) will do
-		GetResponse getResponse = esClient.prepareGet(MAIN_INDEX, type, documentId).get();
-		if (getResponse.isExists()) {
-			ObjectNode document = (ObjectNode) objectMapper.readTree(getResponse.getSourceAsString());
-			document.put("id", getResponse.getId());
-			return document;
+	private Bson queryById(String documentId) {
+		if (ObjectId.isValid(documentId)) {
+			return in("_id", documentId, new ObjectId(documentId));
 		} else {
-			throw new Exception("Not Found " + type + " / " + documentId);
+			return in("_id", documentId);
 		}
-	}
-
-	private ArrayNode getResults(SearchRequestBuilder srb) throws Exception {
-		SearchResponse response = srb.get();
-		SearchHit[] hits = response.getHits().getHits();
-
-		ArrayNode documentList = objectMapper.createArrayNode();
-		for (SearchHit hit : hits) {
-			ObjectNode node = (ObjectNode) objectMapper.readTree(hit.getSourceAsString());
-			node.put("id", hit.getId());
-			documentList.add(node);
-		}
-		return documentList;
 	}
 
 }

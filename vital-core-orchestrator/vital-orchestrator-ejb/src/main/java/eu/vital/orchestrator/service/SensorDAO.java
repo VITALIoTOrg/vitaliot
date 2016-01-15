@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.storage.OrchestratorStorage;
 import eu.vital.orchestrator.util.OntologyParser;
 import eu.vital.orchestrator.util.VitalClient;
-import org.elasticsearch.index.query.QueryBuilder;
+import org.bson.conversions.Bson;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -39,7 +39,7 @@ public class SensorDAO {
 		return orchestratorStorage.getList(OrchestratorStorage.DOCUMENT_TYPE.SENSOR.toString());
 	}
 
-	public ArrayNode search(QueryBuilder qb) throws Exception {
+	public ArrayNode search(Bson qb) throws Exception {
 		return orchestratorStorage.search(OrchestratorStorage.DOCUMENT_TYPE.SENSOR.toString(), qb);
 	}
 

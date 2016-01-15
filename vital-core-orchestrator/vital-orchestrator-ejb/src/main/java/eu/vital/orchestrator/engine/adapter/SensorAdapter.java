@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import eu.vital.orchestrator.service.SensorDAO;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
+import org.bson.conversions.Bson;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class SensorAdapter {
 
@@ -33,7 +34,7 @@ public class SensorAdapter {
 
 	public Collection<Map> searchBySensorType(String sensorType) throws Exception {
 
-		QueryBuilder query = QueryBuilders.matchPhraseQuery("@type", sensorType);
+		Bson query = eq("@type", sensorType);
 		ArrayNode sensors = sensorDAO.search(query);
 
 		Collection<Map> sensorList = new ArrayList<Map>();
@@ -45,10 +46,8 @@ public class SensorAdapter {
 	}
 
 	public Collection<Map> searchByObservationType(String observationType) throws Exception {
-		QueryBuilder query = QueryBuilders
-				.boolQuery()
-				.must(QueryBuilders.matchPhraseQuery(
-						"http://purl.oclc.org/NET/ssnx/ssn#observes.@type", observationType));
+
+		Bson query = eq("http://purl\\u002eoclc\\u002eorg/NET/ssnx/ssn#observes.@type", observationType);
 		ArrayNode sensors = sensorDAO.search(query);
 
 		Collection<Map> sensorList = new ArrayList<Map>();
