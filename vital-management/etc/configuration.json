@@ -1,5 +1,9 @@
 {
-  "discovery_url": "",
+  "dms_url": {
+    "host": "vmvital03.deri.ie",
+    "port": "8011"
+  },
+  "discovery_url": "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
   "system_urls": [
     "http://vital-integration.atosresearch.eu:8180/vital-orchestrator-web/rest/ppi",
     "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",

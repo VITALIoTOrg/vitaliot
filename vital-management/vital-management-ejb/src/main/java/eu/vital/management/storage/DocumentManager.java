@@ -10,8 +10,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -22,7 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 
 @ApplicationScoped
 public class DocumentManager implements Serializable {
@@ -81,7 +83,7 @@ public class DocumentManager implements Serializable {
 					if (item instanceof Document) {
 						newList.add(encodeKeys((Document) item));
 					} else {
-						newList.add(value);
+						newList.add(item);
 					}
 				}
 				newMongoDocument.put(newKey, newList);
@@ -105,7 +107,7 @@ public class DocumentManager implements Serializable {
 					if (item instanceof Document) {
 						newList.add(decodeKeys((Document) item));
 					} else {
-						newList.add(value);
+						newList.add(item);
 					}
 				}
 				newMongoDocument.put(newKey, newList);
@@ -124,18 +126,17 @@ public class DocumentManager implements Serializable {
 
 	public String create(String type, JsonNode document) {
 		try {
-			Document mongoDocument = Document.parse(objectMapper.writeValueAsString(document));
+			Document mongoDocument = encodeKeys(Document.parse(objectMapper.writeValueAsString(document)));
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
-			mongoCollection.insertOne(encodeKeys(mongoDocument));
+			mongoCollection.insertOne(mongoDocument);
 
-			return document.get("_id").asText();
+			return mongoDocument.get("_id").toString();
 		} catch (JsonProcessingException e) {
 			// Should never happen, just log it and return null
 			log.severe(e.getMessage());
 			return null;
 		}
 	}
-
 
 	public void update(String type, String documentId, JsonNode document) {
 		try {
@@ -145,7 +146,7 @@ public class DocumentManager implements Serializable {
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
 			FindOneAndReplaceOptions options = new FindOneAndReplaceOptions();
 			options.upsert(true);
-			mongoCollection.findOneAndReplace(eq("_id", documentId), encodeKeys(mongoDocument), options);
+			mongoCollection.findOneAndReplace(queryById(documentId), encodeKeys(mongoDocument), options);
 
 		} catch (JsonProcessingException e) {
 			// Should never happen, just log it and return null
@@ -162,6 +163,7 @@ public class DocumentManager implements Serializable {
 				while (cursor.hasNext()) {
 					Document mongoDocument = decodeKeys(cursor.next());
 					ObjectNode objectNode = (ObjectNode) objectMapper.readTree(mongoDocument.toJson());
+					objectNode.put("id", mongoDocument.get("_id").toString());
 					arrayNode.add(objectNode);
 				}
 			} finally {
@@ -184,6 +186,7 @@ public class DocumentManager implements Serializable {
 				while (cursor.hasNext()) {
 					Document mongoDocument = decodeKeys(cursor.next());
 					ObjectNode objectNode = (ObjectNode) objectMapper.readTree(mongoDocument.toJson());
+					objectNode.put("id", mongoDocument.get("_id").toString());
 					arrayNode.add(objectNode);
 				}
 			} finally {
@@ -200,13 +203,30 @@ public class DocumentManager implements Serializable {
 	public ObjectNode get(String type, String documentId) {
 		try {
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
-			Document mongoDocument = (Document) mongoCollection.find(eq("_id", documentId)).first();
+			Document mongoDocument = (Document) mongoCollection.find(queryById(documentId)).first();
 
-			return (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
+			ObjectNode objectNode = (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
+			objectNode.put("id", mongoDocument.get("_id").toString());
+
+			return objectNode;
 		} catch (IOException e) {
 			// Should never happen, just log it and return null
 			log.severe(e.getMessage());
 			return null;
+		}
+	}
+
+	public long delete(String type, String documentId) {
+		MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+		DeleteResult result = mongoCollection.deleteOne(queryById(documentId));
+		return result.getDeletedCount();
+	}
+
+	private Bson queryById(String documentId) {
+		if (ObjectId.isValid(documentId)) {
+			return in("_id", documentId, new ObjectId(documentId));
+		} else {
+			return in("_id", documentId);
 		}
 	}
 }

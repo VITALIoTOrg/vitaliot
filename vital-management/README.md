@@ -1,127 +1,115 @@
-vital-management: Example Using Multiple Java EE 7 Technologies Deployed as an EAR
-==============================================================================================
-Author: Pete Muir
-Level: Intermediate
-Technologies: EAR
-Summary: Based on kitchensink, but deployed as an EAR
-Target Project: WildFly
-Source: <https://github.com/wildfly/quickstart/>
+vital-management
+================
 
-What is it?
------------
-
-This is your project! It is a sample, deployable Maven 3 project to help you get your foot in the door developing with Java EE 7 on JBoss WildFly.
-
-This project is setup to allow you to create a compliant Java EE 7 application using JSF 2.0, CDI 1.0, EJB 3.1, JPA 2.0 and Bean Validation 1.0. It includes a persistence unit and some sample persistence and transaction code to introduce you to database access in enterprise Java.
+- Author: Angelos Lenis
+- Summary: This is the Vital Management Platform of vital
+- Target Project: Vital (<http://vital-iot.eu/>)
+- Source: <http://31.210.156.219/anglen/vital-management>
 
 System requirements
 -------------------
 
-All you need to build this project is Java 7.0 (Java SDK 1.7) or better, Maven 3.1 or better.
+For this project you need:
 
-The application this project produces is designed to be run on JBoss WildFly.
+- Java 8.0 (Java SDK 1.8) (<http://openjdk.java.net> or <https://www.oracle.com/java/index.html>)
+- Maven 3.1 or better (<https://maven.apache.org/>)
+- Wildfly 9.0.X (<http://www.wildfly.org>)
+- MongoDB 3.2 (<https://www.mongodb.org>)
+- Node.js (<https://nodejs.org/>)
+- Grunt (<http://gruntjs.com/>)
+- Bower (<http://bower.io/>)
 
- 
-Configure Maven
----------------
+1. Follow installation instructions of Java, Maven, Wildfly, MongoDB and NodeJS for your system
+2. Install grunt and bower with the following commands:
 
-If you have not yet done so, you must [Configure Maven](../README.md#mavenconfiguration) before testing the quickstarts.
+        npm install -g grunt-cli
+        npm install -g bower
 
+Start MongoDB
+--------------
 
-Start JBoss WildFly with the Web Profile
--------------------------
+1. Open a command line and navigate to the home directory of MongoDB
+2. Start mongo with (replace MONGO_HOME with the actual directory of mongo):
 
-1. Open a command line and navigate to the root of the JBoss server directory.
+        For Linux:   $MONGO_HOME/bin/mongod --dbpath $MONGO_HOME/data
+        For Windows: %MONGO_HOME%\bin\mongod --dbpath %MONGO_HOME%/data
+
+3. Check that mongo is started and listens to connections on localhost and port 27017 (default).
+4. If mongo is installed on another machine than jboss, edit the file:
+
+        WILDFLY_HOME/standalone/configuration/standalone.xml
+
+and add this property in system properties:
+
+         <system-properties>
+                <property name="vital.mongodb.host" value="<host name or ip>"/>
+         </system-properties>
+
+Start WildFly
+-------------------------------------------
+
+1. Open a command line and navigate to the root of the Wildfly server directory.
 2. The following shows the command line to start the server with the web profile:
 
-        For Linux:   JBOSS_HOME/bin/standalone.sh
-        For Windows: JBOSS_HOME\bin\standalone.bat
+        For Linux:   WILDFLY_HOME/bin/standalone.sh
+        For Windows: WILDFLY_HOME\bin\standalone.bat
 
- 
-Build and Deploy the Quickstart
--------------------------
+Import CONFIGURATION data to MongoDB
+------------------------------------
 
-_NOTE: The following build command assumes you have configured your Maven user settings. If you have not, you must include Maven setting arguments on the command line. See [Build and Deploy the Quickstarts](../README.md#buildanddeploy) for complete instructions and additional options._
+1. Create a configuration.json file, similar to the one in etc/configuration.json:
 
-1. Make sure you have started the JBoss Server as described above.
-2. Open a command line and navigate to the root directory of this quickstart.
-3. Type this command to build and deploy the archive:
+        {
+          "dms_url": {
+            "host": "vmvital03.deri.ie",
+            "port": "8011"
+          },
+          "discovery_url": "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
+          "system_urls": [
+            "http://vital-integration.atosresearch.eu:8180/vital-orchestrator-web/rest/ppi",
+            "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
+            "http://vital-integration.atosresearch.eu:8180/filtering/ppi",
+            "http://vital-integration.atosresearch.eu:8180/iot-data-adapter-ppi/ppi/system",
+            "http://vital-integration.atosresearch.eu:8180/camden-footfall-ppi/ppi/system",
+            "http://vital-integration.atosresearch.eu:8180/cep",
+            "http://vital-integration.atosresearch.eu:8180/hireplyppi"
+          ]
+        }
+
+2. Execute the following commands to import the file in MongoDB
+
+        mongo vital-management --eval "db.CONFIGURATION.remove({})"
+        mongoimport --db vital-management --collection CONFIGURATION --file configuration.json
+
+
+Build and Deploy the Management Platform
+----------------------------------------
+
+1. Checkout the code from the repository:
+
+        git clone http://31.210.156.219/anglen/vital-management.git
+
+2. Make sure you have started the JBoss Server as described above.
+3. Open a command line and navigate to the root directory of the project.
+4. Type this command to build and deploy the archive:
 
         mvn clean package wildfly:deploy
 
-4. This will deploy `target/vital-management.ear` to the running instance of the server.
-
+5. This will deploy `vital-management-ear/target/vital-management-ear.ear` and `vital-management-ui/target/vital-management-ui.war` to the running instance of the server.
 
 Access the application 
 ---------------------
 
-The application will be running at the following URL: <http://localhost:8080/vital-management-web>.
+The first time the application is started point to this URL: <http://localhost:8080/vital-management-web/api/admin/sync> to sync with other systems metadata
 
-1. Enter a name, email address, and Phone nubmer in the input field and click the _Register_ button.
-2. If the data entered is valid, the new member will be registered and added to the _Members_ display list.
-3. If the data is not valid, you must fix the validation errors and try again.
-4. When the registration is successful, you will see a log message in the server console:
-
-        Registering _the_name_you_entered_
+Access the Management Platform at the following URL: <http://localhost:8080/vital-management-ui>
 
 
-Undeploy the Archive
---------------------
+Undeploy the Management Platform
+--------------------------------
 
 1. Make sure you have started the JBoss Server as described above.
 2. Open a command line and navigate to the root directory of this quickstart.
 3. When you are finished testing, type this command to undeploy the archive:
 
         mvn wildfly:undeploy
-
-
-Run the Arquillian Tests 
--------------------------
-
-This quickstart provides Arquillian tests. By default, these tests are configured to be skipped as Arquillian tests require the use of a container. 
-
-_NOTE: The following commands assume you have configured your Maven user settings. If you have not, you must include Maven setting arguments on the command line. See [Run the Arquillian Tests](../README.md#arquilliantests) for complete instructions and additional options._
-
-1. Make sure you have started the JBoss Server as described above.
-2. Open a command line and navigate to the root directory of this quickstart.
-3. Type the following command to run the test goal with the following profile activated:
-
-        mvn clean test -Parq-wildfly-remote
-
-
-Investigate the Console Output
----------------------
-You should see the following console output when you run the tests:
-
-    Results :
-    Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-
-
-Investigate the Server Console Output
----------------------
-You should see messages similar to the following:
-
-    INFO  [org.jboss.as.server] (management-handler-thread - 9) JBAS018559: Deployed "test.war"
-    INFO  [eu.vital.management.controller.MemberRegistration] (http--127.0.0.1-8080-2) Registering Jane Doe
-    INFO  [eu.vital.management.test.MemberRegistrationTest] (http--127.0.0.1-8080-2) Jane Doe was persisted with id 1
-    INFO  [org.jboss.weld.deployer] (MSC service thread 1-6) JBAS016009: Stopping weld service for deployment test.war
-    INFO  [org.jboss.as.jpa] (MSC service thread 1-1) JBAS011403: Stopping Persistence Unit Service 'test.war#primary'
-    INFO  [org.hibernate.tool.hbm2ddl.SchemaExport] (MSC service thread 1-1) HHH000227: Running hbm2ddl schema export
-    INFO  [org.hibernate.tool.hbm2ddl.SchemaExport] (MSC service thread 1-1) HHH000230: Schema export complete
-    INFO  [org.jboss.as.connector.subsystems.datasources] (MSC service thread 1-5) JBAS010409: Unbound data source [jboss/datasources/vital-managementTestDS]
-    INFO  [org.jboss.as.server.deployment] (MSC service thread 1-6) JBAS015877: Stopped deployment test.war in 19ms
-    INFO  [org.jboss.as.server] (management-handler-thread - 10) JBAS018558: Undeployed "test.war"
-
-
-Run the Quickstart in JBoss Developer Studio or Eclipse
--------------------------------------
-You can also start the server and deploy the quickstarts from Eclipse using JBoss tools. For more information, see [Use JBoss Developer Studio or Eclipse to Run the Quickstarts](../README.md#useeclipse) 
-
-
-Debug the Application
----------------------
-
-If you want to debug the source code or look at the Javadocs of any library in the project, run either of the following commands to pull them into your local repository. The IDE should then detect them.
-
-        mvn dependency:sources
-        mvn dependency:resolve -Dclassifier=javadoc
