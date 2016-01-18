@@ -887,7 +887,14 @@ public class GetServices {
 		// One token is used to identify the user, the other one is to authorize the requests
 		String tokenPerformer, tokenUser;
 		boolean error = false;
+		String errorMsg = "";
 		int code;
+		
+		if(vitalToken == null || vitalToken.equals("") || testToken == null || testToken.equals("")) {
+			return Response.status(Status.UNAUTHORIZED)
+				.entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid user token!\"}")
+				.build();
+		}
 		
 		if (testCookie) {
 			tokenPerformer = vitalToken;
@@ -915,19 +922,36 @@ public class GetServices {
 		if (val.getAdditionalProperties().containsKey("code")) {
 			if (val.getAdditionalProperties().get("code").getClass() == Integer.class) {
 				code = (Integer) val.getAdditionalProperties().get("code");
-				if (code < 200 || code > 299)
+				if (code < 200 || code > 299) {
 					error = true;
+					try {
+						errorMsg = JsonUtils.serializeJson(val);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		if (policies.getAdditionalProperties().containsKey("code")) {
 			if (policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
 				code = (Integer) policies.getAdditionalProperties().get("code");
-				if (code < 200 || code > 299)
+				if (code < 200 || code > 299) {
 					error = true;
+					try {
+						errorMsg = JsonUtils.serializeJson(policies);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		
 		if (!error) {
+			if(!val.getValid()) {
+				return Response.status(Status.UNAUTHORIZED)
+					.entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid user token!\"}")
+					.build();
+			}
 			List<Result> list = policies.getResult();
 			Iterator<Result> iter = list.listIterator();
 			
@@ -985,12 +1009,12 @@ public class GetServices {
 			resp.setRetrieve(permRetrieve);
 			
 			return Response.ok()
-					.entity(resp)
-					.build();
+				.entity(resp)
+				.build();
 		} else {
 			return Response.status(Status.INTERNAL_SERVER_ERROR)
-					.entity("")
-					.build();
+				.entity(errorMsg)
+				.build();
 		}
 	}
 		

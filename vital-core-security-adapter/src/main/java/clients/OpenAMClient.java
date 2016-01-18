@@ -411,7 +411,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/"+userToken)
+			.setPath(" /idp/json/sessions/" + userToken)
 			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -447,7 +447,7 @@ public class OpenAMClient {
 			.setHost(idpHost)
 			.setPort(idpPort)
 			.setPath(" /idp/json/sessions/")
-			.setCustomQuery("_action=isActive&tokenId="+userToken)
+			.setCustomQuery("_action=isActive&tokenId=" + userToken)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
