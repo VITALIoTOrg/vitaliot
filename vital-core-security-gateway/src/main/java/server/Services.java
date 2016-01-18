@@ -15,6 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -75,6 +76,8 @@ public class Services {
 		CloseableHttpClient httpclient;
 		HttpRequestBase httpaction;
 		PermissionsCollection perm;
+		boolean wasEmpty;
+		int code;
 
 		httpclient = HttpClients.createDefault();
 
@@ -160,9 +163,23 @@ public class Services {
 		
 		// Get user permissions from the security module
 		perm = client.getPermissions(vitalToken);
+		if (perm.getAdditionalProperties().containsKey("code")) {
+			if (perm.getAdditionalProperties().get("code").getClass() == Integer.class) {
+				code = (Integer) perm.getAdditionalProperties().get("code");
+				if (code >= 400 || code < 500) {
+					return Response.status(Status.BAD_REQUEST)
+						.entity(perm)
+						.build();
+				} else if (code >= 500 || code < 600) {
+					return Response.status(Status.INTERNAL_SERVER_ERROR)
+							.entity(perm)
+							.build();
+				}
+			}
+		}
 		
 		// Convert string to object and filter by specific fields values (you may get an array or not)
-		if(respString.charAt(0) == '[') {
+		if (respString.charAt(0) == '[') {
 			respString = "{ \"documents\": " + respString + " }";
 			PPIResponseArray array = null;
 			try {
@@ -170,7 +187,8 @@ public class Services {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(array != null) {
+			if (array != null) {
+				wasEmpty = array.getDocuments().isEmpty();
 				AttributeValue av = new AttributeValue();
 				array.getDocuments().removeIf(p -> 
 					p.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(p.getId())) ||
@@ -179,7 +197,13 @@ public class Services {
 						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(p.getType())))
 				);
 				try {
-					respString = JsonUtils.serializeJson(array.getDocuments());
+					if (!wasEmpty && array.getDocuments().isEmpty()) {
+						return Response.status(Status.FORBIDDEN)
+								.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
+								.build();
+					} else {
+						respString = JsonUtils.serializeJson(array.getDocuments());
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -188,25 +212,38 @@ public class Services {
 			PPIResponse resp = null;
 			try {
 				resp = (PPIResponse) JsonUtils.deserializeJson(respString, PPIResponse.class);
+				if (resp.getAdditionalProperties().containsKey("code")) {
+					if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+						code = (Integer) resp.getAdditionalProperties().get("code");
+						if (code >= 400 || code < 500) {
+							return Response.status(Status.BAD_REQUEST)
+								.entity(resp)
+								.build();
+						} else if (code >= 500 || code < 600) {
+							return Response.status(Status.INTERNAL_SERVER_ERROR)
+									.entity(resp)
+									.build();
+						}
+					}
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(resp != null) {
+			if (resp != null) {
 				AttributeValue av = new AttributeValue();
-				if(resp.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(resp.getId())) ||
+				if (resp.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(resp.getId())) ||
 						!perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(resp.getId()))) ||
 					resp.getType() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("type").withValue(resp.getType())) ||
 						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(resp.getType())))) {
-					respString = "{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Not enough permissions to access the requested data!\"}";
+					return Response.status(Status.FORBIDDEN)
+							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
+							.build();
 				}
 			}
 		}
 
-		// TODO: more error checking... the caller needs to know if missing token, unauthorized, etc.
-
 		return Response.ok()
-				.entity(respString)
-				.build();
+			.entity(respString)
+			.build();
 	}
-		
 }
