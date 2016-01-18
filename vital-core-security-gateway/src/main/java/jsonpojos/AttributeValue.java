@@ -106,21 +106,12 @@ public class AttributeValue {
         	pattern = rhs.getValue();
         	resource = value;
         }
-        
-        /*if(pattern.contains("*")) {
-        	System.out.println("Pattern: " + pattern);
-        	System.out.println("Resource: " + resource);
-        	ha = true;
-        }*/
     	
     	// Translate the OpenAM pattern into a Java regular expression
     	pattern = pattern.replaceAll("-\\*-", "[^/]*");
     	pattern = pattern.replaceAll("\\?\\*$", "\\?.+");
     	pattern = pattern.replaceAll("([^?]*)\\*(.*)", "$1.*$2");
     	pattern = pattern.replaceAll("\\?\\*.+", "\\?.*");
-    	
-    	/*if(ha)
-    		System.out.println("Pattern Java: " + pattern);*/
     	
         return attribute.equals(rhs.getAttribute()) && resource.matches(pattern);
     }
