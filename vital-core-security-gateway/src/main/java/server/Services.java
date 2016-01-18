@@ -44,8 +44,6 @@ public class Services {
 		client = new OpenAMClient();
 	}
 	
-	//TODO: need to forward body
-	
 	@Path("{endpoint: .+}")
 	@GET
 	@Consumes(MediaType.APPLICATION_JSON)
