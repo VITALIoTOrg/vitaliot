@@ -96,7 +96,7 @@ public class AttributeValue {
         
         AttributeValue rhs = ((AttributeValue) other);
         
-        if(value == null || attribute == null || rhs.getValue() == null || rhs.getAttribute() == null)
+        if(value == null || attribute == null || rhs.getValue() == null || rhs.getAttribute() == null) // we cannot compare if anything is null
         	return false;
         // First thing we need to know which one was is a pattern and which is a real value
         if(value.contains("*")) {
@@ -116,7 +116,7 @@ public class AttributeValue {
     	// Translate the OpenAM pattern into a Java regular expression
     	pattern = pattern.replaceAll("-\\*-", "[^/]*");
     	pattern = pattern.replaceAll("\\?\\*$", "\\?.+");
-    	pattern = pattern.replaceAll("([^?])\\*$", "$1.*");
+    	pattern = pattern.replaceAll("([^?]*)\\*(.*)", "$1.*$2");
     	pattern = pattern.replaceAll("\\?\\*.+", "\\?.*");
     	
     	/*if(ha)
