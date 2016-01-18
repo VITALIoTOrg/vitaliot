@@ -957,7 +957,7 @@ public class GetServices {
 			
 			while (iter.hasNext()) {
 				Result policy = iter.next();
-				if (policy.getApplicationName().equals("Data access control") && policy.getSubject().getType().equals("Identity")) {
+				if (policy.getApplicationName().equals("Data access control") && policy.getSubject().getType().equals("Identity") && policy.getActive()) {
 					List<String> polgroups = policy.getSubject().getSubjectValues();
 					Iterator<String> iterint = polgroups.iterator();
 					while (iterint.hasNext()) {
