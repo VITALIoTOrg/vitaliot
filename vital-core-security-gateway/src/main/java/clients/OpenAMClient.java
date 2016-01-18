@@ -41,7 +41,7 @@ public class OpenAMClient {
 	private String securityhost;
 	private String username;
 	private String password;
-	private static String token = null;
+	private static String token;
 	
 	public OpenAMClient() {
 		httpclient = HttpCommonClient.getInstance();
@@ -60,11 +60,15 @@ public class OpenAMClient {
 	public String getToken() {
 		if (token == null) {
 			token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
-		} else if (getUserIdFromToken(token).getAdditionalProperties().containsKey("code")) {
-			if ((int)getUserIdFromToken(token).getAdditionalProperties().get("code") == 400)
+		} else {
+			Validation val = getUserIdFromToken(token);
+			if (val.getAdditionalProperties().containsKey("code")) {
+				if ((int)getUserIdFromToken(token).getAdditionalProperties().get("code") == 400) {
+					token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
+				}
+			} else if (!val.getValid()) {
 				token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
-		} else if (!getUserIdFromToken(token).getValid()) {
-			token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
+			}
 		}
 		return token;
 	}
@@ -204,7 +208,7 @@ public class OpenAMClient {
 		}
 		
 		HttpGet httpget = new HttpGet(uri);
-		httpget.setHeader("Cookie", ck.toString());
+		httpget.setHeader("Cookie", ck.toString() + ";");
 
 		String respString = performRequest(httpget, null);
 		
