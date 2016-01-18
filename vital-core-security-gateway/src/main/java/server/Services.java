@@ -31,6 +31,7 @@ import org.apache.http.util.EntityUtils;
 
 import clients.OpenAMClient;
 import jsonpojos.AttributeValue;
+import jsonpojos.PPIResponse;
 import jsonpojos.PPIResponseArray;
 import jsonpojos.PermissionsCollection;
 import utils.JsonUtils;
@@ -183,10 +184,25 @@ public class Services {
 					e.printStackTrace();
 				}
 			}
+		} else if (respString.charAt(0) == '{') {
+			PPIResponse resp = null;
+			try {
+				resp = (PPIResponse) JsonUtils.deserializeJson(respString, PPIResponse.class);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(resp != null) {
+				AttributeValue av = new AttributeValue();
+				if(resp.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(resp.getId())) ||
+						!perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(resp.getId()))) ||
+					resp.getType() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("type").withValue(resp.getType())) ||
+						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(resp.getType())))) {
+					respString = "{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Not enough permissions to access the requested data!\"}";
+				}
+			}
 		}
-		
-		// Filter even if the response is single???
-		// TODO: more error checking... the caller need to know if missing token, unauthorized, etc.
+
+		// TODO: more error checking... the caller needs to know if missing token, unauthorized, etc.
 
 		return Response.ok()
 				.entity(respString)
