@@ -36,7 +36,7 @@ import jsonpojos.PPIResponseArray;
 import jsonpojos.PermissionsCollection;
 import utils.JsonUtils;
 
-@Path("/ppi")
+@Path("")
 public class Services {
 	
 	private OpenAMClient client;
