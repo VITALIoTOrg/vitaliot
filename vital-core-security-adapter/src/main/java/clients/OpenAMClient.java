@@ -2110,8 +2110,6 @@ public class OpenAMClient {
 		httpput.setHeader("Content-Type", "application/json");
 		httpput.setHeader(authToken, token);
 		httpput.setEntity(strEntity);
-		
-		System.out.println(newApplicationInfo);
 
 		String respString = performRequest(httpput);
 		
@@ -2360,11 +2358,7 @@ public class OpenAMClient {
 		httppost.setHeader("Content-Type", "application/json");
 		httppost.setEntity(strEntity);
 		
-		System.out.println(newReq);
-		
 		String respString = performRequest(httppost);
-		
-		System.out.println(respString);
 
 		GenericObject resp = new GenericObject();
 		
