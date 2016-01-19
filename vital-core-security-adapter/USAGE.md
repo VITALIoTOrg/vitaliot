@@ -1,57 +1,7 @@
-# VITAL Security Adapter
+# HOW TO USE
 
----
-
-This project contains the code for the VITAL Security Module. The module, made
-to run on WildFly and Java 8, interacts with the OpenAM server and exposes a
-REST interface to access VITAL security features.
-
-## Configuration
-
-In order to change the configuration you need to edit file
-"src/main/resources/config.properties" and change the values of the properties:
-
-* **IDP_HOST** is the address of the server running OpenAM
-
-* **IDP_PORT** is the port number where OpenAM is listening (HTTPS REST
-  interface)
-
-* **PROXY_HOST** is the address of the server running the Apache proxy hosting
-  the Policy Agent (needed to communicate with the protected monitoring
-  endpoint)
-
-* **PROXY_PORT** is the port number where the Apache proxy is listening
-
-* **AUTH_TOKEN** is the name of the SSO token cookie used by OpenAM
-
-* **TEST_TOKEN** is the name of the test token cookie which can be used
-  to call some endpoints of the Security Module having a regular user token and a
-  second token, one authorizing access to functionalities and the other one on
-  which the module performs evaluations (the VITAL Security Management
-  Application uses this for the Access Test page)
-
-## Build and run
-
-In order to build the application you will need the following tool to be
-installed on your machine:
-
-* **Maven** (https://maven.apache.org/)
-
-Then you can build issuing the following command:
-
-```
-mvn package
-```
-
-You will then find a ".war" file in the "target" folder; you can use it to
-deploy the application on WildFly (tested on WildFly 10.0.0.CR5 with OpenJDK 8)
-over HTTPS.
-
-You may also want to take a look at the VITAL Deployer project, featuring a
-script to automatically build and deploy this application and other components
-of the VITAL system.
-
-## Usage
+This module is not meant to be used directly by end user, but rather by
+developers and system administrators.
 
 While reading the code may still be the best way to understand the module
 working details, this section will try and describe the RESTful services exposed
