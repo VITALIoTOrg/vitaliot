@@ -71,7 +71,7 @@ Follow installation instructions of Java, Maven and WildFly.
 
 ## Access the module
 
-The Security Module is available at the hostname and port of your WildFly instance at path **_/securitywrapper_**. Under **_/rest_** it exposes a number of GET and POST endpoint documentent in file **_USAGE.md_**.
+The Security Module is available at the hostname and port of your WildFly instance at path **_/securitywrapper_**. Under **_/rest_** it exposes a number of GET and POST endpoints documented in file **_USAGE.md_**.
 
 ## Undeploy the Security Module
 
