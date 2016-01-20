@@ -3,7 +3,7 @@
 The module exposes a set of GET and POST HTTP endpoints which can be used to
 interact with the security system of VITAL. This file describes how the
 requests must be constructed and the format of the responses in case of
-success. In case of failure an error HTTP code is returned with a JSON body
+success. In case of failure a HTTP error code is returned with a JSON body
 describing, where possible, the problem. An example of error response is the
 following:
 
@@ -15,12 +15,18 @@ following:
 }
 ```
 
-All services are exposed under the subpath **/rest**.
+All services are exposed under the subpath **_/rest_**.
 
 ## GET endpoints
 
-* **/user/{id}** expects the "vitalAccessToken" session cookie to be included
-in the request and returns some info about the user identified by "id".
+You may have to pass information in three different ways for GET methods:
+
+1. As part of the path of the endpoint (e.g. https://vital.com/endpoint/parameter)
+2. As cookies
+3. As query parameters (included at the end of the URL, e.g. https://vital.com/endpoint?par1=val1&par2=val2)
+
+* **_/user/{id}_** expects the **_vitalAccessToken_** session cookie to be included
+in the request and returns some info about the user identified by **_id_**.
 Response example:
 
     ```json
@@ -89,9 +95,9 @@ Response example:
     }
     ```
 
-* **/user/{id}/groups** expects the "vitalAccessToken" session cookie to be
+* **_/user/{id}/groups_** expects the **_vitalAccessToken_** session cookie to be
 included in the request and returns the list of groups having the user
-identified by "id" as member. Response example:
+identified by **_id_** as member. Response example:
 
     ```json
     {
@@ -103,9 +109,9 @@ identified by "id" as member. Response example:
     }
     ```
 
-* **/group/{id}** expects the "vitalAccessToken" session cookie to be included
-in the request and returns some info about the group identified by "id".
-Response example:
+* **_/group/{id}_** expects the **_vitalAccessToken_** session cookie to be
+included in the request and returns some info about the group identified by
+**_id_**. Response example:
 
     ```json
     {
@@ -132,9 +138,9 @@ Response example:
     }
     ```
 
-* **/policy/{id}** expects the "vitalAccessToken" session cookie to be included
-in the request and returns some info about the policy identified by "id".
-Response example:
+* **_/policy/{id}_** expects the **_vitalAccessToken_** session cookie to be
+included in the request and returns some info about the policy identified by
+**_id_**. Response example:
 
     ```json
     {
@@ -164,9 +170,9 @@ Response example:
     }
     ```
 
-* **/application/{id}** expects the "vitalAccessToken" session cookie to be
+* **_/application/{id}_** expects the **_vitalAccessToken_** session cookie to be
 included in the request and returns some info about the application identified
-by "id". Response example:
+by **_id_**. Response example:
 
     ```json
     {
@@ -229,9 +235,32 @@ by "id". Response example:
     }
     ```
 
-* **/application/{id}/policies** expects the "vitalAccessToken" session cookie
+* **_/apptype/{id}_** expects the **_vitalAccessToken_** session cookie to be
+included in the request and returns some info about the application type identified
+by **_id_**. Response example:
+
+    ```json
+    {
+       "name":"iPlanetAMWebAgentService",
+       "actions":{
+          "POST":true,
+          "PATCH":true,
+          "GET":true,
+          "DELETE":true,
+          "OPTIONS":true,
+          "PUT":true,
+          "HEAD":true
+       },
+       "applicationClassName":"com.sun.identity.entitlement.Application",
+       "resourceComparator":"com.sun.identity.entitlement.URLResourceName",
+       "saveIndex":"org.forgerock.openam.entitlement.indextree.TreeSaveIndex",
+       "searchIndex":"org.forgerock.openam.entitlement.indextree.TreeSearchIndex"
+    }
+    ```
+
+* **_/application/{id}/policies_** expects the **_vitalAccessToken_** session cookie
 to be included in the request and returns some info about the policies part of
-the application identified by "id". Response example:
+the application identified by **_id_**. Response example:
 
     ```json
     {
@@ -290,7 +319,7 @@ the application identified by "id". Response example:
     }
     ```
 
-* **/users** expects the "vitalAccessToken" session cookie to be included in
+* **_/users_** expects the **_vitalAccessToken_** session cookie to be included in
 the request and returns the list of users. Response example:
 
     ```json
@@ -308,7 +337,7 @@ the request and returns the list of users. Response example:
     }
     ```
 
-* **/groups** expects the "vitalAccessToken" session cookie to be included in
+* **_/groups_** expects the **_vitalAccessToken_** session cookie to be included in
 the request and returns the list of groups. Response example:
 
     ```json
@@ -323,8 +352,8 @@ the request and returns the list of groups. Response example:
     }
     ```
 
-* **/policies** expects the "vitalAccessToken" session cookie to be included in
-the request and returns some info about the policies. Response example:
+* **_/policies_** expects the **_vitalAccessToken_** session cookie to be included in
+the request and returns the list of policies with some info for each of them. Response example:
 
     ```json
     {
@@ -383,8 +412,8 @@ the request and returns some info about the policies. Response example:
     }
     ```
 
-* **/applications** expects the "vitalAccessToken" session cookie to be
-included in the request and returns some info about the applications. Response
+* **_/applications_** expects the **_vitalAccessToken_** session cookie to be
+included in the request and returns the list of applications with some info about each of them. Response
 example:
 
     ```json
@@ -484,7 +513,51 @@ example:
     }
     ```
 
-* **/stats** expects the "vitalAccessToken" session cookie to be included in
+* **_/apptypes_** expects the **_vitalAccessToken_** session cookie to be
+included in the request and returns the list of application types with some info about each of them. Response
+example:
+
+    ```json
+    {
+       "result":[
+          {
+             "name":"FineGrainedAccess",
+             "actions":{
+                "RETRIEVE":false,
+                "STORE":false
+             },
+             "applicationClassName":"com.sun.identity.entitlement.Application",
+             "resourceComparator":"com.sun.identity.entitlement.URLResourceName",
+             "saveIndex":"com.sun.identity.entitlement.util.ResourceNameIndexGenerator",
+             "searchIndex":"com.sun.identity.entitlement.util.ResourceNameSplitter"
+          },
+          {
+             "name":"iPlanetAMWebAgentService",
+             "actions":{
+                "POST":true,
+                "PATCH":true,
+                "GET":true,
+                "DELETE":true,
+                "OPTIONS":true,
+                "PUT":true,
+                "HEAD":true
+             },
+             "applicationClassName":"com.sun.identity.entitlement.Application",
+             "resourceComparator":"com.sun.identity.entitlement.URLResourceName",
+             "saveIndex":"org.forgerock.openam.entitlement.indextree.TreeSaveIndex",
+             "searchIndex":"org.forgerock.openam.entitlement.indextree.TreeSearchIndex"
+          },
+          ...
+       ],
+
+       "resultCount":9,
+
+       "remainingPagedResults":0
+
+    }
+    ```
+
+* **_/stats_** expects the **_vitalAccessToken_** session cookie to be included in
 the request and returns some statistics about the status of the OpenAM server.
 Response example:
 
@@ -499,12 +572,12 @@ Response example:
     }
     ```
 
-* **/user** expects either the "vitalAccessToken" session cookie or the
-"vitalTestToken" one to be included in the request and returns some info
+* **_/user_** expects either the **_vitalAccessToken_** session cookie or the
+**_vitalTestToken_** one to be included in the request and returns some info
 useful for session management (whether the user session is still valid or not
-and some info about the user); if the query parameter "testCookie" is set to
-true the info is related to the session of the "vitalTestToken" cookie,
-otherwise of the "vitalAccessToken" cookie. Response example:
+and some info about the user); if the query parameter **_testCookie_** is set to
+true the info is related to the session of the **_vitalTestToken_** cookie,
+otherwise of the **_vitalAccessToken_** cookie. Response example:
 
     ```json
     {
@@ -522,13 +595,13 @@ otherwise of the "vitalAccessToken" cookie. Response example:
     }
     ```
 
-* **/validate** expects the "vitalAccessToken" and "vitalTestToken" (the latter
+* **_/validate_** expects the **_vitalAccessToken_** and **_vitalTestToken_** (the latter
 is optional) session cookies to be included in the request and returns a single
 json boolean attribute telling if the session is active or not; if the query
-parameter "testCookie" is set to true the info is related to the session of the
-"vitalTestToken" cookie, otherwise of the "vitalAccessToken" cookie. While the
+parameter **_testCookie_** is set to true the info is related to the session of the
+**_vitalTestToken_** cookie, otherwise of the **_vitalAccessToken_** cookie. While the
 above endpoint resets the user idle time, this one does not, but because of an
-OpenAM bug requires the user corresponding to the "vitalAccessToken" to be an
+OpenAM bug requires the user corresponding to the **_vitalAccessToken_** to be an
 administrator. Response example:
 
     ```json
@@ -537,12 +610,47 @@ administrator. Response example:
     }
     ```
 
-* **/getresource** expects either the "vitalAccessToken" session cookie or the
-"vitalTestToken" one to be included in the request and returns the response of
-a GET request to the URL specified in the query parameter "resource"; if the
-query parameter "testCookie" is set to true the "vitalTestToken" cookie is
-included in the request, otherwise of the "vitalAccessToken" cookie is
+* **_/getresource_** expects either the **_vitalAccessToken_** session cookie or the
+**_vitalTestToken_** one to be included in the request and returns the response of
+a GET request to the URL specified in the query parameter **_resource_**; if the
+query parameter **_testCookie_** is set to true the **_vitalTestToken_** cookie is
+included in the request, otherwise of the **_vitalAccessToken_** cookie is
 included.
+
+* **_/permissions_** expects the **_vitalAccessToken_** and **_vitalTestToken_** session cookies to be included in the request and returns some info about the user permissions for data access control. This information is in the form of values that the specific attribute of the documents to retrieve are allowed or denied to have. If the query
+parameter **_testCookie_** is set to true the info is related to the user of the
+**_vitalTestToken_** cookie, otherwise of the **_vitalAccessToken_** cookie. Response example:
+
+    ```json
+    {
+       "retrieve":{
+          "allowed":[
+             {
+                "attribute":"id",
+                "value":"*"
+             },
+             {
+                "attribute":"id",
+                "value":"http://vital-integration.atosresearch.eu:8180/hireplyppi/sensor/vital2-I_TrS_2"
+             },
+             {
+                "attribute":"id",
+                "value":"http://vital-integration.atosresearch.eu:8180/hireplyppi/sensor/vital2*"
+             },
+             {
+                "attribute":"type",
+                "value":"vital:VitalSensor"
+             },
+             {
+                "attribute":"type",
+                "value":"*"
+             }
+          ],
+          "denied":[
+          ]
+       }
+    }
+    ```
 
 ## POST endpoints
 
