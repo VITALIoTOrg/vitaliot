@@ -1,23 +1,14 @@
 # HOW TO USE
 
-This module is not meant to be used directly by end user, but rather by
-developers and system administrators.
-
-While reading the code may still be the best way to understand the module
-working details, this section will try and describe the RESTful services exposed
-in a simple and accessible way.
-
-The following subsections include the format of the responses sent by the
-adapter in case of success. In case of failure almost all the REST endpoints
-return a generic HTTP code (400 for bad request and 500 for internal error) and
-a JSON body describing the error more precisely. An example of error response is
-the following:
+The module exposes a set of GET and POST HTTP endpoints which can be used to
+interact with the security system of VITAL. This file describes how the
+requests must be constructed and the format of the responses in case of
+success. In case of failure an error HTTP code is returned with a JSON body
+describing, where possible, the problem. An example of error response is the
+following:
 
 ```json
 {
-    "result":[
-
-    ],
     "reason":"Unauthorized",
     "code":401,
     "message":"Access Denied"
@@ -26,7 +17,7 @@ the following:
 
 All services are exposed under the subpath **/rest**.
 
-### GET endpoints
+## GET endpoints
 
 * **/user/{id}** expects the "vitalAccessToken" session cookie to be included
 in the request and returns some info about the user identified by "id".
@@ -553,7 +544,7 @@ query parameter "testCookie" is set to true the "vitalTestToken" cookie is
 included in the request, otherwise of the "vitalAccessToken" cookie is
 included.
 
-### POST endpoints
+## POST endpoints
 
 * **/user/create** expects the "vitalAccessToken" session cookie and the
 following form parameters to be included in the request:
