@@ -654,18 +654,24 @@ parameter **_testCookie_** is set to true the info is related to the user of the
 
 ## POST endpoints
 
-* **/user/create** expects the "vitalAccessToken" session cookie and the
+You may have to pass information in three different ways for GET methods:
+
+1. As part of the path of the endpoint (e.g. https://vital.com/endpoint/parameter)
+2. As cookies
+3. As form parameters (included in the body with content type **_application/x-www-form-urlencoded_**, e.g. par1=value1&par2=value2)
+
+* **_/user/create_** expects the **_vitalAccessToken_** session cookie and the
 following form parameters to be included in the request:
 
-    * "givenName", the optional user first name
+    * **_givenName_**, the optional user first name
 
-    * "surname", the optional user last name
+    * **_surname_**, the optional user last name
 
-    * "name", the mandatory username
+    * **_name_**, the mandatory username
 
-    * "password", the mandatory (8 characters or more) user password
+    * **_password_**, the mandatory (8 characters or more) user password
 
-    * "mail", the optional user e-mail address
+    * **_mail_**, the optional user e-mail address
 
     It returns some info about the created user. Response example:
 
@@ -723,11 +729,11 @@ following form parameters to be included in the request:
     }
     ```
 
-* **/user/delete** expects the "vitalAccessToken" session cookie and the "name"
-form parameter (the user to delete) to be included in the request.
+* **_/user/delete_** expects the **_vitalAccessToken_** session cookie and the **_name_**
+form parameter (the user to delete) to be included in the request. Deletes the user.
 
-* **/group/create** expects the "vitalAccessToken" session cookie and the
-"name" form parameter (the name of the group to create) to be included in the
+* **_/group/create_** expects the **_vitalAccessToken_** session cookie and the
+**_name_** form parameter (the name of the group to create) to be included in the
 request.
 
     It returns some info about the created group. Response example:
@@ -752,11 +758,11 @@ request.
     }
     ```
 
-* **/group/delete** expects the "vitalAccessToken" session cookie and the
-"name" form parameter (the group to delete) to be included in the request.
+* **_/group/delete_** expects the **_vitalAccessToken_** session cookie and the
+**_name_** form parameter (the group to delete) to be included in the request. Deletes the group.
 
-* **/group/{id}/addUser** expects the "vitalAccessToken" session cookie and the
-"user" form parameter (the user to add to the group "id") to be included in the
+* **_/group/{id}/addUser_** expects the **_vitalAccessToken_** session cookie and the
+**_user_** form parameter (the user to add to the group **_id_**) to be included in the
 request.
 
     It returns some info about the group updated with the added user. Response
@@ -785,27 +791,27 @@ example:
     }
     ```
 
-* **/group/{id}/delUser** expects the "vitalAccessToken" session cookie and the
-"user" form parameter (the user to remove from the group "id") to be included
+* **_/group/{id}/delUser_** expects the **_vitalAccessToken_** session cookie and the
+**_user_** form parameter (the user to remove from the group **_id_**) to be included
 in the request.
 
     It returns some info about the group updated without the removed user (same
-format as "addUser").
+format as **_/addUser_**).
 
-* **/policy/create** expects the "vitalAccessToken" session cookie and the
+* **_/policy/create_** expects the **_vitalAccessToken_** session cookie and the
 following form parameters to be included in the request:
 
-    * "name", the name of the policy to create
+    * **_name_**, the name of the policy to create
 
-    * "description", a textual description of the policy to create
+    * **_description_**, a textual description of the policy to create
 
-    * "appname", the application name
+    * **_appname_**, the application name
 
-    * "resources[]", the array of resources the policy will affect
+    * **_resources[]_**, the array of resources the policy will affect
 
-    * "groups[]", the array of user groups the policy will affect
+    * **_groups[]_**, the array of user groups the policy will affect
 
-    * "actions[ACTION]", boolean values specifying whether the ACTION (GET,
+    * **_actions[ACTION]_**, boolean values specifying whether the ACTION (GET,
       POST, PUT, etc.) is allowed or denied
 
     It returns some info about the created policy. Response example:
@@ -838,17 +844,22 @@ following form parameters to be included in the request:
     }
     ```
 
-* **/policy/delete** expects the "vitalAccessToken" session cookie and the
-"name" form parameter (the policy to delete) to be included in the request.
+* **_/policy/delete_** expects the **_vitalAccessToken_** session cookie and the
+**_name_** form parameter (the policy to delete) to be included in the request. Deletes the policy.
 
-* **/application/create** expects the "vitalAccessToken" session cookie and the
+* **_/application/create_** expects the **_vitalAccessToken_** session cookie and the
 following form parameters to be included in the request:
 
-    * "name", the name of the application to create
+    * **_name_**, the name of the application to create
 
-    * "description", some free text describing the application
+    * **_type_**, the name of the application type to use
 
-    * "resources[]", the array of patterns for allowed resources in policies
+    * **_description_**, some free text describing the application
+
+    * **_resources[]_**, the array of patterns for allowed resources in policies
+
+    * **_actions[ACTION]_**, specifying the default boolean value of the ACTION (GET,
+      POST, PUT, etc.)
 
     It returns some info about the created application. Response example:
 
@@ -911,11 +922,11 @@ following form parameters to be included in the request:
     }
     ```
 
-* **/application/delete** expects the "vitalAccessToken" session cookie and the
-"name" form parameter (the application to delete) to be included in the
-request.
+* **_/application/delete_** expects the **_vitalAccessToken_** session cookie and the
+**_name_** form parameter (the application to delete) to be included in the
+request. Deletes the application.
 
-* **/user/{id}** expects the "vitalAccessToken" session cookie and the
+* **_/user/{id}_** expects the **_vitalAccessToken_** session cookie and the
 following form parameters to be included in the request:
 
     * "givenName", the updated user first name
@@ -926,77 +937,87 @@ following form parameters to be included in the request:
 
     * "status", "Active" or "Inactive"
 
-    It returns some info about the user identified by "id" with the updated
+    It returns some info about the user identified by **_id_** with the updated
 fields (please refer to user info GET or creation for response format).
 
-* **/user/changePassword** expects the "vitalAccessToken" session cookie and
+* **_/user/changePassword_** expects the **_vitalAccessToken_** session cookie and
 the following form parameters to be included in the request:
 
-    * "userpass", the new password
+    * **_userpass_**, the new password
 
-    * "currpass", the old password
+    * **_currpass_**, the old password
 
-    It sets the new password "userpass" for the user corresponding to the
-session of the "vitalAccessToken" cookie.
+    It sets the new password **_userpass_** for the user corresponding to the
+session of the **_vitalAccessToken_** cookie.
 
-* **/policy/{id}** expects the "vitalAccessToken" session cookie and the
+* **_/policy/{id}_** expects the **_vitalAccessToken_** session cookie and the
 following form parameters to be included in the request:
 
-    * "description", the updated policy description
+    * **_description_**, the updated policy description
 
-    * "active", new policy status (false/true)
+    * **_active_**, new policy status (false/true)
 
-    * "groups[]", the updated list of groups to be affected by the policy
+    * **_groups[]_**, the updated list of groups to be affected by the policy
 
-    * "nogr", a boolean value which set to false allows to update without
+    * **_nogr_**, a boolean value which set to false allows to update without
       including the previous parameter (i.e. groups are not updated), while
       set to true means that if no group is specified then all groups are
       removed from the policy
 
-    * "resources[]", the updated list of resources to be affected by the policy
+    * **_resources[]_**, the updated list of resources to be affected by the policy
 
-    * "nores", a boolean value which set to false allows to update without
+    * **_nores_**, a boolean value which set to false allows to update without
       including the previous parameter (i.e. resources are not updated), while
       set to true means that if no resource is specified then all resources are
       removed from the policy
 
-    * "actions[ACTION]", updated boolean values specifying if the ACTION (GET,
+    * **_actions[ACTION]_**, updated boolean values specifying if the ACTION (GET,
       POST, PUT, etc.) is allowed or denied
 
-    * "noact", a boolean value which set to false allows to update without
+    * **_noact_**, a boolean value which set to false allows to update without
       including the previous parameter (i.e. actions are not updated), while
       set to true means that if no action is specified then all actions are
       removed from the policy (the policy will have no effect)
 
-    It returns some info about the policy identified by "id" with the updated
+    It returns some info about the policy identified by **_id_** with the updated
 fields (please refer to policy info GET or creation for response format).
 
-* **/application/{id}** expects the "vitalAccessToken" session cookie and the
+* **_/application/{id}_** expects the **_vitalAccessToken_** session cookie and the
 following form parameters to be included in the request:
 
-    * "description", the updated application description
+    * **_description_**, the updated application description
 
-    * "resources[]", the updated list of patterns for resources allowed in
+    * **_type_**, the updated application type
+
+    * **_resources[]_**, the updated list of patterns for resources allowed in
       policies
 
-    * "nores", a boolean value which set to false allows to update without
+    * **_nores_**, a boolean value which set to false allows to update without
       including the previous parameter (i.e. patterns are not updated), while
       set to true means that if no pattern is specified then all patterns are
       removed from the application
 
-    It returns some info about the application identified by "id" with the
+    * **_actions[ACTION]_**, updated default boolean value for ACTION (GET,
+      POST, PUT, etc.)
+
+    * **_noact_**, a boolean value which set to false allows to update without
+      including the previous parameter (i.e. actions are not updated), while
+      set to true means that if no action is specified then all actions are
+      removed from the application
+
+    It returns some info about the application identified by **_id_** with the
 updated fields (please refer to application info GET or creation for response
 format).
 
-* **/authenticate** expects the following form parameters to be included in the
+* **_/authenticate_** expects the following form parameters to be included in the
 request:
 
-    * "name", username
+    * **_name_**, username
 
-    * "password", user password
+    * **_password_**, user password
 
-    * "testCookie", if false the SSO "vitalAccessToken" cookie is returned,
-      otherwise the alternative "vitalTestToken" cookie is included in the
+    * **_testCookie_**, if false the SSO **_vitalAccessToken_** cookie is returned,
+      otherwise the alternative **_vitalTestToken_** cookie is included in the
       response.
 
     It returns some info useful for session management. Response example:
@@ -1015,18 +1036,18 @@ request:
     }
     ```
 
-* **/logout** expects either the "vitalAccessToken" or the "vitalTestToken"
-session cookie to be included in the request and performs logout (destroys the
-session identified by the cookie and resets the cookie in the response); if the
-form parameter "testCookie" is set to true the module will use the
-"vitalTestToken" cookie, otherwise the "vitalAccessToken" cookie.
+* **_/logout_ ** expects either the **_vitalAccessToken_** or the **_vitalTestToken_**
+session cookie to be included in the request and performs a logout (destroys the
+session identified by the cookie and resets the cookie in the response with an empty value); if the
+form parameter **_testCookie_** is set to true the module will use the
+**_vitalTestToken_** cookie, otherwise the **_vitalAccessToken_** cookie.
 
-* **/evaluate** expects both the "vitalAccessToken" and the "vitalTestToken"
-session cookies and the form parameter "resources[]" (resources for which user
+* **_/evaluate_** expects both the **_vitalAccessToken_** and the **_vitalTestToken_**
+session cookies and the form parameter **_resources[]_** (resources for which user
 permissions are requested) to be included in the request. If the additional
-query parameter "testCookie" is set to true the "vitalAccessToken" cookie is
+query parameter **_testCookie_** is set to true the "vitalAccessToken" cookie is
 considered corresponding to a user session with the rights to request a policy
-evaluation while the "vitalTestToken" cookie to the user for whom the policy is
+evaluation while the **_vitalTestToken_** cookie to the user for whom the policies are
 to be evaluated, otherwise it is the opposite.
 
     It returns for each resource the list of permitted or denied actions.
@@ -1050,4 +1071,25 @@ Response example:
         ]
     }
     ```
+
+* **_/user/register_** expects the form parameter **_mail_**. It send an e-mail to the address specified in the parameter with a link to perform user self-registration.
+
+* **_/user/signup_** expects the
+following form parameters to be included in the request:
+
+    * **_givenName_**, the optional user first name
+
+    * **_surname_**, the optional user last name
+
+    * **_name_**, the mandatory username
+
+    * **_password_**, the mandatory (8 characters or more) user password
+
+    * **_mail_**, the optional user e-mail address
+
+    * **_tokenId_**, generated by the above endpoint and included in the e-mail
+
+    * **_confirmationId_**, generated by the above endpoint and included in the e-mail
+
+    It returns some info about the created user (please refer to user info GET or creation for response format).
 
