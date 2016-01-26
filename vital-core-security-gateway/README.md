@@ -9,11 +9,12 @@
 
 For this project you need:
 
+* Git (<https://git-scm.com>)
 * Java 8.0 (Java SDK 1.8) (<http://openjdk.java.net> or <https://www.oracle.com/java/index.html>)
 * Maven (<https://maven.apache.org>)
 * WildFly (10.X.X or later recommended) (<http://www.wildfly.org>)
 
-Follow installation instructions of Java, Maven and WildFly.
+Follow installation instructions of Git, Java, Maven and WildFly.
 
 ## Configure and Start WildFly
 
