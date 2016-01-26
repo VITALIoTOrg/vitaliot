@@ -1017,5 +1017,15 @@ public class GetServices {
 				.build();
 		}
 	}
-		
+
+	@Path("/unauthorized")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getPermissions() {
+		// Used by the Policy Agent on missing cookie or invalid token to return a proper error
+		return Response.status(Status.UNAUTHORIZED)
+			.entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid SSO token!\"}")
+			.build();
+	}
+
 }
