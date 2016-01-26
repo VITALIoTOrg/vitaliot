@@ -196,6 +196,20 @@ public class OpenAMClient {
 		
 		LogoutResponse resp = new LogoutResponse();
 		
+		if(token == null || token.isEmpty()) {
+			try {
+				resp = (LogoutResponse) JsonUtils.deserializeJson("{ \"code\": 400, \"reason\": \"Bad request!\" , \"message\": \"Missing or empty session cookie!\" }", LogoutResponse.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return resp;
+		}
+		
 		if(!isTokenValid(token)) {
 			try {
 				resp = (LogoutResponse) JsonUtils.deserializeJson("{\"result\":\"Successfully logged out\"}", LogoutResponse.class);
@@ -243,7 +257,6 @@ public class OpenAMClient {
 		}
 		
 		return resp;
-		
 	}
 	
 	public Authenticate authenticate(String name, String password) {
