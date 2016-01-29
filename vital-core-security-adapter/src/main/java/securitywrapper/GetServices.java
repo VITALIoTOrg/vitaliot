@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -69,7 +70,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(
             @PathParam("id") String userId,
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		User user;
 		String answer;
@@ -117,7 +118,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserGroups(
             @PathParam("id") String userId,
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		String answer;
 		
@@ -146,7 +147,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroup(
             @PathParam("id") String groupId,
-            @CookieParam("vitalAccessToken") String token)  {
+            @CookieParam("ssoToken") String token)  {
 		
 		Group group;
 		String answer;
@@ -194,7 +195,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicy(
             @PathParam("id") String policyId,
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		Policy policy;
 		String answer;
@@ -242,7 +243,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplication(
             @PathParam("id") String applicationId,
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		Application application;
 		String answer;
@@ -290,7 +291,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationType(
             @PathParam("id") String applicationTypeId,
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		ApplicationType applicationType;
 		String answer;
@@ -337,7 +338,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationPolicies(
             @PathParam("id") String appName,
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		String answer;
 		
@@ -365,7 +366,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(
-            @CookieParam("vitalAccessToken") String token) {
+            @CookieParam("ssoToken") String token) {
 		
 		Users users;
 		String answer;
@@ -412,7 +413,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroups(
-			@CookieParam("vitalAccessToken") String token) {
+			@CookieParam("ssoToken") String token) {
 		
 		Groups groups;
 		String answer;
@@ -459,7 +460,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicies(
-			@CookieParam("vitalAccessToken") String token) {
+			@CookieParam("ssoToken") String token) {
 		
 		Policies policies;
 		String answer;
@@ -506,7 +507,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplications(
-			@CookieParam("vitalAccessToken") String token) {
+			@CookieParam("ssoToken") String token) {
 		
 		Applications apps;
 		String answer;
@@ -552,7 +553,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationTypes(
-			@CookieParam("vitalAccessToken") String token) {
+			@CookieParam("ssoToken") String token) {
 		
 		ApplicationTypes appTypes;
 		String answer;
@@ -598,7 +599,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSessions(
-			@CookieParam("vitalAccessToken") String token) {
+			@CookieParam("ssoToken") String token) {
 		
 		Monitor values;
 		String answer;
@@ -645,21 +646,29 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(
-			@CookieParam("vitalTestToken") String testToken,
-			@CookieParam("vitalAccessToken") String vitalToken,
-			@QueryParam("testCookie") boolean testCookie) {
+			@CookieParam("vitalAccessToken") String myass,
+			@CookieParam("altToken") String altToken,
+			@CookieParam("ssoToken") String ssoToken,
+			@QueryParam("testCookie") boolean altCookie,
+			@HeaderParam("Cookie") String hahaha) {
 		
 		Validation val;
 		String token, answer;
 		int code;
 		
+		System.out.println("METHOD: " + hahaha);
+		
+		System.out.println("TOKEN: " + ssoToken);
+		
+		System.out.println("HAHAHA: " + myass);
+		
 		answer = null;
 		code = 0;
 		
-		if(testCookie)
-			token = testToken;
+		if(altCookie)
+			token = altToken;
 		else
-			token = vitalToken;
+			token = ssoToken;
 		
 		val = client.getUserIdFromToken(token);
 		User user = client.getUser(val.getUid(), token); // get the info
@@ -739,19 +748,19 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response validateToken(
-			@CookieParam("vitalTestToken") String testToken,
-			@CookieParam("vitalAccessToken") String vitalToken,
-			@QueryParam("testCookie") boolean testCookie) {
+			@CookieParam("altToken") String altToken,
+			@CookieParam("ssoToken") String ssoToken,
+			@QueryParam("testCookie") boolean altCookie) {
 		Validation val;
 		String answer;
 		int code;
 		
 		answer = null;
 		code = 0;
-		if(testCookie) {
-			val = client.validateToken(vitalToken, testToken);
+		if(altCookie) {
+			val = client.validateToken(ssoToken, altToken);
 		} else {
-			val = client.validateToken(vitalToken, vitalToken);
+			val = client.validateToken(ssoToken, ssoToken);
 		}
 		
 		try {
@@ -791,9 +800,9 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Response getresource(
-			@CookieParam("vitalTestToken") String testToken,
-			@CookieParam("vitalAccessToken") String vitalToken,
-			@QueryParam("testCookie") boolean testCookie,
+			@CookieParam("altToken") String altToken,
+			@CookieParam("ssoToken") String ssoToken,
+			@QueryParam("testCookie") boolean altCookie,
 			@QueryParam("resource") String resource) {
 
 		Cookie ck;
@@ -809,10 +818,10 @@ public class GetServices {
 		}
 
 		HttpGet httpget = new HttpGet(uri);
-		if(testCookie) {
-			ck = new Cookie(client.getSSOCookieName(), testToken);
+		if(altCookie) {
+			ck = new Cookie(client.getSSOCookieName(), altToken);
 		} else {
-			ck = new Cookie(client.getSSOCookieName(), vitalToken);
+			ck = new Cookie(client.getSSOCookieName(), ssoToken);
 		}
 		
 		httpget.setHeader("Cookie", ck.toString());
@@ -880,9 +889,9 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPermissions(
-			@CookieParam("vitalAccessToken") String vitalToken,
-			@CookieParam("vitalTestToken") String testToken,
-			@DefaultValue("false") @QueryParam("testCookie") boolean testCookie) {
+			@CookieParam("ssoToken") String ssoToken,
+			@CookieParam("altToken") String altToken,
+			@DefaultValue("false") @QueryParam("testCookie") boolean altCookie) {
 		
 		// One token is used to identify the user, the other one is to authorize the requests
 		String tokenPerformer, tokenUser;
@@ -890,18 +899,18 @@ public class GetServices {
 		String errorMsg = "";
 		int code;
 		
-		if(vitalToken == null || vitalToken.equals("") || testToken == null || testToken.equals("")) {
+		if(ssoToken == null || ssoToken.equals("") || altToken == null || altToken.equals("")) {
 			return Response.status(Status.UNAUTHORIZED)
 				.entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid user token!\"}")
 				.build();
 		}
 		
-		if (testCookie) {
-			tokenPerformer = vitalToken;
-			tokenUser = testToken;
+		if (altCookie) {
+			tokenPerformer = ssoToken;
+			tokenUser = altToken;
 		} else {
-			tokenPerformer = testToken;
-			tokenUser = vitalToken;
+			tokenPerformer = altToken;
+			tokenUser = ssoToken;
 		}
 		
 		PermissionsCollection resp = new PermissionsCollection();
