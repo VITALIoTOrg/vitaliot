@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -70,11 +69,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUser(
             @PathParam("id") String userId,
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		User user;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -118,11 +120,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserGroups(
             @PathParam("id") String userId,
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("cookie") String cookie) {
 		
 		String answer;
 		
 		answer = null;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		Groups groups = client.listUserGroups(userId, token);
 		
@@ -147,11 +152,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroup(
             @PathParam("id") String groupId,
-            @CookieParam("ssoToken") String token)  {
+            @HeaderParam("Cookie") String cookie)  {
 		
 		Group group;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -195,11 +203,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicy(
             @PathParam("id") String policyId,
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		Policy policy;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -243,11 +254,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplication(
             @PathParam("id") String applicationId,
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		Application application;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -291,11 +305,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationType(
             @PathParam("id") String applicationTypeId,
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		ApplicationType applicationType;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -338,11 +355,14 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationPolicies(
             @PathParam("id") String appName,
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		String answer;
 		
 		answer = null;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		Policies policies = client.listApplicationPolicies(appName, token);
 		
@@ -366,11 +386,14 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUsers(
-            @CookieParam("ssoToken") String token) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		Users users;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -413,11 +436,14 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getGroups(
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Groups groups;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -460,11 +486,14 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPolicies(
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Policies policies;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -507,11 +536,14 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplications(
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Applications apps;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -553,11 +585,14 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getApplicationTypes(
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		ApplicationTypes appTypes;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -599,11 +634,14 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getSessions(
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Monitor values;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -646,24 +684,19 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserFromToken(
-			@CookieParam("vitalAccessToken") String myass,
-			@CookieParam("altToken") String altToken,
-			@CookieParam("ssoToken") String ssoToken,
 			@QueryParam("testCookie") boolean altCookie,
-			@HeaderParam("Cookie") String hahaha) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Validation val;
 		String token, answer;
 		int code;
 		
-		System.out.println("METHOD: " + hahaha);
-		
-		System.out.println("TOKEN: " + ssoToken);
-		
-		System.out.println("HAHAHA: " + myass);
-		
 		answer = null;
 		code = 0;
+		
+		String altToken = null, ssoToken = null;
+		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		if(altCookie)
 			token = altToken;
@@ -748,12 +781,15 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response validateToken(
-			@CookieParam("altToken") String altToken,
-			@CookieParam("ssoToken") String ssoToken,
+			@HeaderParam("Cookie") String cookie,
 			@QueryParam("testCookie") boolean altCookie) {
 		Validation val;
 		String answer;
 		int code;
+		
+		String altToken = null, ssoToken = null;
+		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -800,8 +836,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.TEXT_HTML)
 	public Response getresource(
-			@CookieParam("altToken") String altToken,
-			@CookieParam("ssoToken") String ssoToken,
+			@HeaderParam("Cookie") String cookie,
 			@QueryParam("testCookie") boolean altCookie,
 			@QueryParam("resource") String resource) {
 
@@ -817,6 +852,10 @@ public class GetServices {
 			e1.printStackTrace();
 		}
 
+		String altToken = null, ssoToken = null;
+		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		
 		HttpGet httpget = new HttpGet(uri);
 		if(altCookie) {
 			ck = new Cookie(client.getSSOCookieName(), altToken);
@@ -889,8 +928,7 @@ public class GetServices {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPermissions(
-			@CookieParam("ssoToken") String ssoToken,
-			@CookieParam("altToken") String altToken,
+			@HeaderParam("Cookie") String cookie,
 			@DefaultValue("false") @QueryParam("testCookie") boolean altCookie) {
 		
 		// One token is used to identify the user, the other one is to authorize the requests
@@ -898,6 +936,10 @@ public class GetServices {
 		boolean error = false;
 		String errorMsg = "";
 		int code;
+		
+		String altToken = null, ssoToken = null;
+		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		if(ssoToken == null || ssoToken.equals("") || altToken == null || altToken.equals("")) {
 			return Response.status(Status.UNAUTHORIZED)

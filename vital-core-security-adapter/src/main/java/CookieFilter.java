@@ -37,7 +37,6 @@ public class CookieFilter implements ContainerRequestFilter {
 				}
 				headers.remove("Cookie");
 				headers.add("Cookie", cookieHeader);
-				System.out.println("FILTERED: " + cookieHeader);
 			}
 		}
 	}
