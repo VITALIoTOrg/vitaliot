@@ -19,9 +19,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.Encoded;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+
 import jsonpojos.Application;
 import jsonpojos.Authenticate;
 import jsonpojos.AuthenticationResponse;
@@ -59,11 +60,14 @@ public class PostServices {
 			@FormParam("name") String username,
 			@FormParam("password") String password,
 			@FormParam("mail") String mail,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		User user = new User();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -112,12 +116,15 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUser(
 			@FormParam("name") String username,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Boolean result;
 		int code;
 		StringBuilder answer = new StringBuilder();
 		User user = new User();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -164,11 +171,14 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createGroup(
 			@FormParam("name") String name,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Group group = new Group();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -217,12 +227,15 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteGroup(
 			@FormParam("name") String name,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Boolean result;
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Group group = new Group();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -271,7 +284,7 @@ public class PostServices {
 	public Response addUserToGroup(
 			@PathParam("id") String groupId,
 			@FormParam("user") String username,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -279,6 +292,9 @@ public class PostServices {
 		
 		ArrayList<String> usersList = new ArrayList<String>();
 		usersList.add(username);
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -328,7 +344,7 @@ public class PostServices {
 	public Response removeUserFromGroup(
 			@PathParam("id") String groupId,
 			@FormParam("user") String username,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -336,6 +352,9 @@ public class PostServices {
 		
 		ArrayList<String> usersList = new ArrayList<String>();
 		usersList.add(username);
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -397,7 +416,7 @@ public class PostServices {
 			@FormParam("actions[PUT]") Boolean put,
 			@FormParam("actions[RETRIEVE]") Boolean retrieve,
 			@FormParam("actions[STORE]") Boolean store,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -434,6 +453,9 @@ public class PostServices {
 		}
 		
 		code = 0;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		result = client.createIdentityGroupsPolicy(name, description, actions, res, grs, appname, answer, token);
 		
@@ -477,12 +499,15 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deletePolicy(
 			@FormParam("name") String name,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Boolean result;
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Policy policy = new Policy();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -542,12 +567,15 @@ public class PostServices {
 			@FormParam("actions[PUT]") Boolean put,
 			@FormParam("actions[RETRIEVE]") Boolean retrieve,
 			@FormParam("actions[STORE]") Boolean store,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		Application application = new Application();
 		Boolean result;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -622,13 +650,16 @@ public class PostServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteApplication(
 			@FormParam("name") String name,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		Boolean result;
 		int code;
 		StringBuilder answer = new StringBuilder();
 		// Change policy with application once we have the class
 		Application application = new Application();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -680,12 +711,15 @@ public class PostServices {
 			@FormParam("surname") String surname,
 			@FormParam("mail") String mail,
 			@FormParam("status") String status,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
 		String userJson = null;
 		User user = new User();
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -754,13 +788,16 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response changePassword(
-			@CookieParam("ssoToken") String token,
+			@HeaderParam("Cookie") String cookie,
 			@FormParam("userpass") String userPass,
 			@FormParam("currpass") String currPass) {
 		
 		GenericObject resp;
 		String answer;
 		int code;
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -819,7 +856,7 @@ public class PostServices {
 			@FormParam("actions[RETRIEVE]") Boolean retrieve,
 			@FormParam("actions[STORE]") Boolean store,
 			@FormParam("noact") Boolean noact,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -854,6 +891,9 @@ public class PostServices {
 		if(store != null) {
 			actions.add(new Action("STORE", store.booleanValue()));
 		}
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -920,7 +960,7 @@ public class PostServices {
 			@FormParam("actions[RETRIEVE]") Boolean retrieve,
 			@FormParam("actions[STORE]") Boolean store,
 			@FormParam("noact") Boolean noact,
-			@CookieParam("ssoToken") String token) {
+			@HeaderParam("Cookie") String cookie) {
 		
 		int code;
 		StringBuilder answer = new StringBuilder();
@@ -955,6 +995,9 @@ public class PostServices {
 		if(store != null) {
 			actions.add(new Action("STORE", store.booleanValue()));
 		}
+		
+		String token = null;
+		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -1128,14 +1171,17 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response logout(
-			@CookieParam("altToken") String altToken,
-			@CookieParam("ssoToken") String ssoToken,
+			@HeaderParam("Cookie") String cookie,
 			@FormParam("testCookie") boolean altCookie,
 			@Context UriInfo uri) {
 		
 		LogoutResponse resp;
 		String answer;
 		int code;
+		
+		String altToken = null, ssoToken = null;
+		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -1201,8 +1247,7 @@ public class PostServices {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response evaluate(
-			@CookieParam("ssoToken") String ssoToken,
-			@CookieParam("altToken") String altToken,
+			@HeaderParam("Cookie") String cookie,
 			@FormParam("testCookie") boolean altCookie,
 			@FormParam("resources[]") ArrayList<String> res) {
 		
@@ -1210,6 +1255,10 @@ public class PostServices {
 		String tokenPerformer, tokenUser;
 		StringBuilder answer = new StringBuilder();
 		DecisionArray resp = new DecisionArray();
+		
+		String altToken = null, ssoToken = null;
+		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		if(altCookie) {
@@ -1316,9 +1365,6 @@ public class PostServices {
 			@FormParam("mail") String mail,
 			@FormParam("tokenId") @Encoded String tokenId,
 			@FormParam("confirmationId") @Encoded String confirmationId) {
-		
-		System.out.println(tokenId);
-		System.out.println(confirmationId);
 		
 		GenericObject resp;
 		String answer;
