@@ -5,8 +5,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DefaultValue;
@@ -909,11 +911,11 @@ public class GetServices {
 		Permissions permStore = new Permissions();
 		Permissions permRetrieve = new Permissions();
 		
-		List<AttributeValue> allowedStore = new ArrayList<AttributeValue>();
-		List<AttributeValue> deniedStore = new ArrayList<AttributeValue>();
+		Map<String, List<String>> allowedStore = new HashMap<String, List<String>>();
+		Map<String, List<String>> deniedStore = new HashMap<String, List<String>>();
 		
-		List<AttributeValue> allowedRetrieve = new ArrayList<AttributeValue>();
-		List<AttributeValue> deniedRetrieve = new ArrayList<AttributeValue>();
+		Map<String, List<String>> allowedRetrieve = new HashMap<String, List<String>>();
+		Map<String, List<String>> deniedRetrieve = new HashMap<String, List<String>>();
 		
 		Validation val = client.getUserIdFromToken(tokenUser);
 		Groups groups = client.listUserGroups(val.getUid(), tokenPerformer);
@@ -974,22 +976,36 @@ public class GetServices {
 								av.setValue(value);
 								if (policy.getActionValues().getRETRIEVE() != null) {
 									if (policy.getActionValues().getRETRIEVE() == true) {
-										if (!deniedRetrieve.contains(av))
-											allowedRetrieve.add(av);
+										if (!allowedRetrieve.containsKey(av.getAttribute())) {
+											allowedRetrieve.put(av.getAttribute(), new ArrayList<String>());
+										}
+										if (!deniedRetrieve.containsKey(av.getAttribute()) || !deniedRetrieve.get(av.getAttribute()).contains(av.getValue())) {
+											allowedRetrieve.get(av.getAttribute()).add(av.getValue());
+										}
 									}
 									else if (policy.getActionValues().getRETRIEVE() == false) {
-										deniedRetrieve.add(av);
-										allowedRetrieve.remove(av);
+										if (!deniedRetrieve.containsKey(av.getAttribute())) {
+											deniedRetrieve.put(av.getAttribute(), new ArrayList<String>());
+										}
+										deniedRetrieve.get(av.getAttribute()).add(av.getValue());
+										allowedRetrieve.get(av.getAttribute()).remove(av.getValue());
 									}
 								}
 								if (policy.getActionValues().getSTORE() != null) {
 									if (policy.getActionValues().getSTORE() == true) {
-										if (!deniedStore.contains(av))
-											allowedStore.add(av);
+										if (!allowedStore.containsKey(av.getAttribute())) {
+											allowedStore.put(av.getAttribute(), new ArrayList<String>());
+										}
+										if (!deniedStore.containsKey(av.getAttribute()) || !deniedStore.get(av.getAttribute()).contains(av.getValue())) {
+											allowedStore.get(av.getAttribute()).add(av.getValue());
+										}
 									}
 									else if (policy.getActionValues().getSTORE() == false) {
-										deniedStore.add(av);
-										allowedStore.remove(av);
+										if (!deniedStore.containsKey(av.getAttribute())) {
+											deniedStore.put(av.getAttribute(), new ArrayList<String>());
+										}
+										deniedStore.get(av.getAttribute()).add(av.getValue());
+										allowedStore.get(av.getAttribute()).remove(av.getValue());
 									}
 								}
 							}
