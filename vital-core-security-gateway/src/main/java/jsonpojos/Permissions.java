@@ -1,8 +1,6 @@
 package jsonpojos;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -22,9 +20,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class Permissions {
 
     @JsonProperty("allowed")
-    private List<AttributeValue> allowed = new ArrayList<AttributeValue>();
+    private Map<String, RegexStringList> allowed = new HashMap<String, RegexStringList>();
     @JsonProperty("denied")
-    private List<AttributeValue> denied = new ArrayList<AttributeValue>();
+    private Map<String, RegexStringList> denied = new HashMap<String, RegexStringList>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -34,7 +32,7 @@ public class Permissions {
      *     The allowed
      */
     @JsonProperty("allowed")
-    public List<AttributeValue> getAllowed() {
+    public Map<String, RegexStringList> getAllowed() {
         return allowed;
     }
 
@@ -44,11 +42,11 @@ public class Permissions {
      *     The allowed
      */
     @JsonProperty("allowed")
-    public void setAllowed(List<AttributeValue> allowed) {
+    public void setAllowed(Map<String, RegexStringList> allowed) {
         this.allowed = allowed;
     }
 
-    public Permissions withAllowed(List<AttributeValue> allowed) {
+    public Permissions withAllowed(Map<String, RegexStringList> allowed) {
         this.allowed = allowed;
         return this;
     }
@@ -59,7 +57,7 @@ public class Permissions {
      *     The denied
      */
     @JsonProperty("denied")
-    public List<AttributeValue> getDenied() {
+    public Map<String, RegexStringList> getDenied() {
         return denied;
     }
 
@@ -69,11 +67,11 @@ public class Permissions {
      *     The denied
      */
     @JsonProperty("denied")
-    public void setDenied(List<AttributeValue> denied) {
+    public void setDenied(Map<String, RegexStringList> denied) {
         this.denied = denied;
     }
 
-    public Permissions withDenied(List<AttributeValue> denied) {
+    public Permissions withDenied(Map<String, RegexStringList> denied) {
         this.denied = denied;
         return this;
     }

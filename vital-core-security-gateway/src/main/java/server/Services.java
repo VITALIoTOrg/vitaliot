@@ -31,7 +31,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import clients.OpenAMClient;
-import jsonpojos.AttributeValue;
 import jsonpojos.PPIResponse;
 import jsonpojos.PPIResponseArray;
 import jsonpojos.PermissionsCollection;
@@ -54,7 +53,6 @@ public class Services {
 			@PathParam("endpoint") String endpoint,
 			@CookieParam("vitalAccessToken") String vitalToken,
 			String body) {
-		
 		return forwardAndFilter("GET", endpoint, vitalToken, body);
 	}
 	
@@ -66,7 +64,6 @@ public class Services {
 			@PathParam("endpoint") String endpoint,
 			@CookieParam("vitalAccessToken") String vitalToken,
 			String body) {
-
 		return forwardAndFilter("POST", endpoint, vitalToken, body);
 	}
 	
@@ -99,7 +96,7 @@ public class Services {
 		// Get token or authenticate if null or invalid
 		internalToken = client.getToken();
 		ck = new Cookie("vitalAccessToken", internalToken);
-		
+
 		httpaction.setHeader("Cookie", ck.toString());
     	httpaction.setConfig(RequestConfig.custom().setConnectionRequestTimeout(3000).setConnectTimeout(3000).setSocketTimeout(3000).build());
     	httpaction.setHeader("Content-Type", "application/json");
@@ -189,12 +186,11 @@ public class Services {
 			}
 			if (array != null) {
 				wasEmpty = array.getDocuments().isEmpty();
-				AttributeValue av = new AttributeValue();
 				array.getDocuments().removeIf(p -> 
-					p.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(p.getId())) ||
-						!perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(p.getId()))) ||
-					p.getType() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("type").withValue(p.getType())) ||
-						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(p.getType())))
+					p.getId() != null && ((perm.getRetrieve().getDenied().containsKey("id") && perm.getRetrieve().getDenied().get("id").contains(p.getId())) ||
+						!(perm.getRetrieve().getAllowed().containsKey("id") && perm.getRetrieve().getAllowed().get("id").contains(p.getId()))) ||
+					p.getType() != null && ((perm.getRetrieve().getDenied().containsKey("type") && perm.getRetrieve().getDenied().get("type").contains(p.getType())) ||
+						!(perm.getRetrieve().getAllowed().containsKey("type") && perm.getRetrieve().getAllowed().get("type").contains(p.getType())))
 				);
 				try {
 					if (!wasEmpty && array.getDocuments().isEmpty()) {
@@ -230,11 +226,10 @@ public class Services {
 				e.printStackTrace();
 			}
 			if (resp != null) {
-				AttributeValue av = new AttributeValue();
-				if (resp.getId() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("id").withValue(resp.getId())) ||
-						!perm.getRetrieve().getAllowed().contains(av.withAttribute("id").withValue(resp.getId()))) ||
-					resp.getType() != null && (perm.getRetrieve().getDenied().contains(av.withAttribute("type").withValue(resp.getType())) ||
-						!perm.getRetrieve().getAllowed().contains(av.withAttribute("type").withValue(resp.getType())))) {
+				if (resp.getId() != null && ((perm.getRetrieve().getDenied().containsKey("id") && perm.getRetrieve().getDenied().get("id").contains(resp.getId())) ||
+						!(perm.getRetrieve().getAllowed().containsKey("id") && perm.getRetrieve().getAllowed().get("id").contains(resp.getId()))) ||
+					resp.getType() != null && ((perm.getRetrieve().getDenied().containsKey("type") && perm.getRetrieve().getDenied().get("type").contains(resp.getType())) ||
+						!(perm.getRetrieve().getAllowed().containsKey("type") && perm.getRetrieve().getAllowed().get("type").contains(resp.getType())))) {
 					return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
