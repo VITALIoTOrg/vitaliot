@@ -67,7 +67,8 @@ public class PostServices {
 		User user = new User();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -124,7 +125,8 @@ public class PostServices {
 		User user = new User();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -178,7 +180,8 @@ public class PostServices {
 		Group group = new Group();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -235,7 +238,8 @@ public class PostServices {
 		Group group = new Group();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -294,7 +298,8 @@ public class PostServices {
 		usersList.add(username);
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -354,7 +359,8 @@ public class PostServices {
 		usersList.add(username);
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -455,7 +461,8 @@ public class PostServices {
 		code = 0;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		result = client.createIdentityGroupsPolicy(name, description, actions, res, grs, appname, answer, token);
 		
@@ -507,7 +514,8 @@ public class PostServices {
 		Policy policy = new Policy();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -530,12 +538,10 @@ public class PostServices {
 		}
 		
 		if(result) {
-			
 			return Response.ok()
 				.entity(answer.toString())
 				.build();
 		} else {
-			
 			if(code >= 400 && code < 500) {
 				return Response.status(Status.BAD_REQUEST)
 					.entity(answer.toString())
@@ -575,7 +581,8 @@ public class PostServices {
 		Boolean result;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -659,7 +666,8 @@ public class PostServices {
 		Application application = new Application();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -682,12 +690,10 @@ public class PostServices {
 		}
 		
 		if(result) {
-			
 			return Response.ok()
 				.entity(answer.toString())
 				.build();
 		} else {
-			
 			if(code >= 400 && code < 500) {
 				return Response.status(Status.BAD_REQUEST)
 					.entity(answer.toString())
@@ -719,7 +725,8 @@ public class PostServices {
 		User user = new User();
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -797,7 +804,8 @@ public class PostServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -893,7 +901,8 @@ public class PostServices {
 		}
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -997,7 +1006,8 @@ public class PostServices {
 		}
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		code = 0;
 		
@@ -1180,8 +1190,10 @@ public class PostServices {
 		int code;
 		
 		String altToken = null, ssoToken = null;
-		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
-		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null) {
+			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		}
 		
 		answer = null;
 		code = 0;
@@ -1257,8 +1269,10 @@ public class PostServices {
 		DecisionArray resp = new DecisionArray();
 		
 		String altToken = null, ssoToken = null;
-		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
-		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null) {
+			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		}
 		
 		code = 0;
 		if(altCookie) {
@@ -1270,7 +1284,6 @@ public class PostServices {
 		}
 		
 		if(client.evaluate(tokenUser, res, answer, tokenPerformer)) {
-			
 			try {
 				resp = (DecisionArray) JsonUtils.deserializeJson(answer.toString(), DecisionArray.class);
 			} catch (JsonParseException e) {

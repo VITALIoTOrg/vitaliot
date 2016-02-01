@@ -76,7 +76,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -127,7 +128,8 @@ public class GetServices {
 		answer = null;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		Groups groups = client.listUserGroups(userId, token);
 		
@@ -159,7 +161,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -210,7 +213,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -261,7 +265,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -312,7 +317,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -362,7 +368,8 @@ public class GetServices {
 		answer = null;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		Policies policies = client.listApplicationPolicies(appName, token);
 		
@@ -393,7 +400,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -443,7 +451,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -493,7 +502,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -543,7 +553,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -592,7 +603,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -641,7 +653,8 @@ public class GetServices {
 		int code;
 		
 		String token = null;
-		token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null)
+			token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		
 		answer = null;
 		code = 0;
@@ -695,8 +708,10 @@ public class GetServices {
 		code = 0;
 		
 		String altToken = null, ssoToken = null;
-		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
-		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null) {
+			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		}
 		
 		if(altCookie)
 			token = altToken;
@@ -788,8 +803,10 @@ public class GetServices {
 		int code;
 		
 		String altToken = null, ssoToken = null;
-		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
-		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null) {
+			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		}
 		
 		answer = null;
 		code = 0;
@@ -853,8 +870,10 @@ public class GetServices {
 		}
 
 		String altToken = null, ssoToken = null;
-		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
-		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null) {
+			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		}
 		
 		HttpGet httpget = new HttpGet(uri);
 		if(altCookie) {
@@ -938,8 +957,10 @@ public class GetServices {
 		int code;
 		
 		String altToken = null, ssoToken = null;
-		altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
-		ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		if(cookie != null) {
+			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
+			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+		}
 		
 		if(ssoToken == null || ssoToken.equals("") || altToken == null || altToken.equals("")) {
 			return Response.status(Status.UNAUTHORIZED)
