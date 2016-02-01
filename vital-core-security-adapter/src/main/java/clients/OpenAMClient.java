@@ -62,7 +62,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import utils.Action;
 import utils.ConfigReader;
 import utils.JsonUtils;
-import utils.SessionUtils;
 import utils.HttpCommonClient;
 
 public class OpenAMClient {
@@ -76,8 +75,8 @@ public class OpenAMClient {
 	private int proxyPort;
 	private String userAdmin;
 	private String pwdAdmin;
-	private String authToken;
-	private String testToken;
+	private String ssoToken;
+	private String altToken;
 	
 	public OpenAMClient() {
 		httpclient = HttpCommonClient.getInstance();
@@ -87,16 +86,16 @@ public class OpenAMClient {
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
 		proxyHost = configReader.get(ConfigReader.PROXY_HOST);
 		proxyPort = Integer.parseInt(configReader.get(ConfigReader.PROXY_PORT));
-		authToken = configReader.get(ConfigReader.AUTH_TOKEN);
-		testToken = configReader.get(ConfigReader.TEST_TOKEN);
+		ssoToken = configReader.get(ConfigReader.SSO_TOKEN);
+		altToken = configReader.get(ConfigReader.ALT_TOKEN);
 	}
 	
 	public String getSSOCookieName() {
-		return authToken;
+		return ssoToken;
 	}
 	
-	public String getTestCookieName() {
-		return testToken;
+	public String getAltCookieName() {
+		return altToken;
 	}
 	
     private String performRequest(HttpRequestBase request) {
@@ -239,7 +238,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		
 		StringEntity strEntity = new StringEntity("{}", StandardCharsets.UTF_8);
 		httppost.setEntity(strEntity);
@@ -296,12 +295,7 @@ public class OpenAMClient {
 			e.printStackTrace();
 		}
 		
-		if(name == null) {
-			SessionUtils.setAdminAuthToken(auth.getTokenId());
-		}
-		
 		return auth;
-		
 	}
 	
 	public GenericObject changePassword(String token, String userPass, String currPass) {
@@ -341,7 +335,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 		
 		String respString = performRequest(httppost);
@@ -401,7 +395,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, tokenPerformer);
+		httppost.setHeader(ssoToken, tokenPerformer);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -468,7 +462,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -504,7 +498,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -540,7 +534,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -577,7 +571,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -613,7 +607,7 @@ public class OpenAMClient {
 		
 		HttpGet httpget = new HttpGet(uri);
 		httpget.setHeader("Content-Type", "application/json");
-		httpget.setHeader(authToken, token);
+		httpget.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpget);
 		
@@ -649,7 +643,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -788,7 +782,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -836,7 +830,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -872,7 +866,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -907,7 +901,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
 		
@@ -942,7 +936,7 @@ public class OpenAMClient {
 		
 		HttpGet httpget = new HttpGet(uri);
 		httpget.setHeader("Content-Type", "application/json");
-		httpget.setHeader(authToken, token);
+		httpget.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpget);
 		
@@ -1011,7 +1005,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -1061,7 +1055,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -1186,7 +1180,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -1224,7 +1218,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, token);
+		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
 
@@ -1260,7 +1254,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, token);
+		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
 
@@ -1296,7 +1290,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, token);
+		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
 
@@ -1332,7 +1326,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
-		httpdelete.setHeader(authToken, token);
+		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
 
@@ -1394,7 +1388,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, token);
+		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
 		String respString = performRequest(httpput);
@@ -1484,7 +1478,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -1596,7 +1590,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -1705,7 +1699,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
-		httppost.setHeader(authToken, token);
+		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
 		String respString = performRequest(httppost);
@@ -1836,7 +1830,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, token);
+		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
 		String respString = performRequest(httpput);
@@ -1960,7 +1954,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, token);
+		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
 		String respString = performRequest(httpput);
@@ -2001,7 +1995,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, token);
+		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
 		String respString = performRequest(httpput);
@@ -2121,7 +2115,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
-		httpput.setHeader(authToken, token);
+		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
 		String respString = performRequest(httpput);
@@ -2281,7 +2275,7 @@ public class OpenAMClient {
 		GenericObject req = new GenericObject();
 		
 		req.setAdditionalProperty("email", mail);
-		req.setAdditionalProperty("subject", "Confirm registration with VITAL");
+		req.setAdditionalProperty("subject", "Confirm registration");
 		req.setAdditionalProperty("message", "Follow this link to procede with sign up:");
 		
 		String newReq = "";

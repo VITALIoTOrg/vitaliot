@@ -13,8 +13,8 @@ public class ConfigReader {
 	public static final String PROXY_HOST = "PROXY_HOST";
 	public static final String PROXY_PORT = "PROXY_PORT";
 	public static final String SNMP_PORT = "SNMP_PORT";
-	public static final String AUTH_TOKEN = "AUTH_TOKEN";
-	public static final String TEST_TOKEN = "TEST_TOKEN";
+	public static final String SSO_TOKEN = "SSO_TOKEN";
+	public static final String ALT_TOKEN = "ALT_TOKEN";
 	
 	private ConfigReader() {
 		config = new Properties();
