@@ -1041,43 +1041,46 @@ public class GetServices {
 							Iterator<String> iterCond = listCond.listIterator();
 							while (iterCond.hasNext()) {
 								String cond = iterCond.next();
-								String attribute = cond.substring(0, cond.indexOf(':'));
-								String value = cond.substring(cond.indexOf(':') + 1);
-								AttributeValue av = new AttributeValue();
-								av.setAttribute(attribute);
-								av.setValue(value);
-								if (policy.getActionValues().getRETRIEVE() != null) {
-									if (policy.getActionValues().getRETRIEVE() == true) {
-										if (!allowedRetrieve.containsKey(av.getAttribute())) {
-											allowedRetrieve.put(av.getAttribute(), new ArrayList<String>());
+								int s = cond.indexOf('$');
+								if (s > 0) {
+									String attribute = cond.substring(0, s);
+									String value = cond.substring(s + 1);
+									AttributeValue av = new AttributeValue();
+									av.setAttribute(attribute);
+									av.setValue(value);
+									if (policy.getActionValues().getRETRIEVE() != null) {
+										if (policy.getActionValues().getRETRIEVE() == true) {
+											if (!allowedRetrieve.containsKey(av.getAttribute())) {
+												allowedRetrieve.put(av.getAttribute(), new ArrayList<String>());
+											}
+											if (!deniedRetrieve.containsKey(av.getAttribute()) || !deniedRetrieve.get(av.getAttribute()).contains(av.getValue())) {
+												allowedRetrieve.get(av.getAttribute()).add(av.getValue());
+											}
 										}
-										if (!deniedRetrieve.containsKey(av.getAttribute()) || !deniedRetrieve.get(av.getAttribute()).contains(av.getValue())) {
-											allowedRetrieve.get(av.getAttribute()).add(av.getValue());
-										}
-									}
-									else if (policy.getActionValues().getRETRIEVE() == false) {
-										if (!deniedRetrieve.containsKey(av.getAttribute())) {
-											deniedRetrieve.put(av.getAttribute(), new ArrayList<String>());
-										}
-										deniedRetrieve.get(av.getAttribute()).add(av.getValue());
-										allowedRetrieve.get(av.getAttribute()).remove(av.getValue());
-									}
-								}
-								if (policy.getActionValues().getSTORE() != null) {
-									if (policy.getActionValues().getSTORE() == true) {
-										if (!allowedStore.containsKey(av.getAttribute())) {
-											allowedStore.put(av.getAttribute(), new ArrayList<String>());
-										}
-										if (!deniedStore.containsKey(av.getAttribute()) || !deniedStore.get(av.getAttribute()).contains(av.getValue())) {
-											allowedStore.get(av.getAttribute()).add(av.getValue());
+										else if (policy.getActionValues().getRETRIEVE() == false) {
+											if (!deniedRetrieve.containsKey(av.getAttribute())) {
+												deniedRetrieve.put(av.getAttribute(), new ArrayList<String>());
+											}
+											deniedRetrieve.get(av.getAttribute()).add(av.getValue());
+											allowedRetrieve.get(av.getAttribute()).remove(av.getValue());
 										}
 									}
-									else if (policy.getActionValues().getSTORE() == false) {
-										if (!deniedStore.containsKey(av.getAttribute())) {
-											deniedStore.put(av.getAttribute(), new ArrayList<String>());
+									if (policy.getActionValues().getSTORE() != null) {
+										if (policy.getActionValues().getSTORE() == true) {
+											if (!allowedStore.containsKey(av.getAttribute())) {
+												allowedStore.put(av.getAttribute(), new ArrayList<String>());
+											}
+											if (!deniedStore.containsKey(av.getAttribute()) || !deniedStore.get(av.getAttribute()).contains(av.getValue())) {
+												allowedStore.get(av.getAttribute()).add(av.getValue());
+											}
 										}
-										deniedStore.get(av.getAttribute()).add(av.getValue());
-										allowedStore.get(av.getAttribute()).remove(av.getValue());
+										else if (policy.getActionValues().getSTORE() == false) {
+											if (!deniedStore.containsKey(av.getAttribute())) {
+												deniedStore.put(av.getAttribute(), new ArrayList<String>());
+											}
+											deniedStore.get(av.getAttribute()).add(av.getValue());
+											allowedStore.get(av.getAttribute()).remove(av.getValue());
+										}
 									}
 								}
 							}
