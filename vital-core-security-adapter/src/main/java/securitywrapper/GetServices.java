@@ -1062,7 +1062,8 @@ public class GetServices {
 												deniedRetrieve.put(av.getAttribute(), new ArrayList<String>());
 											}
 											deniedRetrieve.get(av.getAttribute()).add(av.getValue());
-											allowedRetrieve.get(av.getAttribute()).remove(av.getValue());
+											if (allowedRetrieve.containsKey(av.getAttribute()))
+												allowedRetrieve.get(av.getAttribute()).remove(av.getValue());
 										}
 									}
 									if (policy.getActionValues().getSTORE() != null) {
@@ -1079,7 +1080,8 @@ public class GetServices {
 												deniedStore.put(av.getAttribute(), new ArrayList<String>());
 											}
 											deniedStore.get(av.getAttribute()).add(av.getValue());
-											allowedStore.get(av.getAttribute()).remove(av.getValue());
+											if (allowedStore.containsKey(av.getAttribute()))
+												allowedStore.get(av.getAttribute()).remove(av.getValue());
 										}
 									}
 								}
