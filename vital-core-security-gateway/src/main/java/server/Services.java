@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -194,13 +195,13 @@ public class Services {
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
 				    array.getDocuments().removeIf(p -> 
-						p.getProperties().containsKey(pair.getKey()) && ((RegexStringList) pair.getValue()).contains(p.getProperties().get(pair.getKey())));
+				    	getSubObject(p, pair.getKey()) != null && ((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
 			    }
 			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
 				    array.getDocuments().removeIf(p -> 
-						p.getProperties().containsKey(pair.getKey()) && !((RegexStringList) pair.getValue()).contains(p.getProperties().get(pair.getKey())));
+				    	getSubObject(p, pair.getKey()) != null && !((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
 			    }
 				try {
 					if (!wasEmpty && array.getDocuments().isEmpty()) {
@@ -239,8 +240,9 @@ public class Services {
 				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
+			    	Object object = getSubObject(resp, pair.getKey());
 			    	//System.out.println("Denied " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
-				    if(resp.getProperties().containsKey(pair.getKey()) && ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())))
+				    if(object != null && ((RegexStringList) pair.getValue()).contains(object))
 				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
@@ -248,8 +250,9 @@ public class Services {
 			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
+			    	Object object = getSubObject(resp, pair.getKey());
 			    	//System.out.println("Allowed " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
-			        if(resp.getProperties().containsKey(pair.getKey()) && !((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())))
+			        if(object != null && !((RegexStringList) pair.getValue()).contains(object))
 				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
@@ -260,5 +263,18 @@ public class Services {
 		return Response.ok()
 			.entity(respString)
 			.build();
+	}
+
+	private Object getSubObject(PPIResponse resp, String key) {
+		PPIResponse inner = new PPIResponse(resp);
+		String[] chain = key.split("\\.");
+		
+		for (int i = 0; i < chain.length - 1; i++) {
+			inner = new PPIResponse((LinkedHashMap<String, Object>) inner.getProperties().get(chain[i]));
+			if(inner.getProperties().isEmpty())
+				return null;
+		}
+		
+		return inner.getProperties().get(chain[chain.length - 1]);
 	}
 }

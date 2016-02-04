@@ -1,6 +1,7 @@
 package jsonpojos;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.annotation.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -21,7 +22,20 @@ public class PPIResponse {
     @JsonIgnore
     private Map<String, Object> properties = new HashMap<String, Object>();
 
-    @Override
+    public PPIResponse() {
+	}
+    
+    public PPIResponse(PPIResponse resp) {
+    	if(resp != null)
+    		properties.putAll(resp.properties);
+	}
+    
+    public PPIResponse(LinkedHashMap<String, Object> map) {
+    	if(map != null)
+    		properties.putAll(map);
+	}
+
+	@Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
