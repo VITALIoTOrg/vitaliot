@@ -30,9 +30,10 @@ public class PPIResponse {
     		properties.putAll(resp.properties);
 	}
     
-    public PPIResponse(LinkedHashMap<String, Object> map) {
+    @SuppressWarnings("unchecked")
+	public PPIResponse(Object map) {
     	if(map != null)
-    		properties.putAll(map);
+    		properties.putAll((LinkedHashMap<String, Object>) map);
 	}
 
 	@Override

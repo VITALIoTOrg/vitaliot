@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -270,7 +269,7 @@ public class Services {
 		String[] chain = key.split("\\.");
 		
 		for (int i = 0; i < chain.length - 1; i++) {
-			inner = new PPIResponse((LinkedHashMap<String, Object>) inner.getProperties().get(chain[i]));
+			inner = new PPIResponse(inner.getProperties().get(chain[i]));
 			if(inner.getProperties().isEmpty())
 				return null;
 		}
