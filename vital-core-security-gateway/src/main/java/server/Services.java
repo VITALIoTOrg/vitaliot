@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -34,6 +36,7 @@ import clients.OpenAMClient;
 import jsonpojos.PPIResponse;
 import jsonpojos.PPIResponseArray;
 import jsonpojos.PermissionsCollection;
+import jsonpojos.RegexStringList;
 import utils.JsonUtils;
 
 @Path("")
@@ -169,8 +172,8 @@ public class Services {
 						.build();
 				} else if (code >= 500 || code < 600) {
 					return Response.status(Status.INTERNAL_SERVER_ERROR)
-							.entity(perm)
-							.build();
+						.entity(perm)
+						.build();
 				}
 			}
 		}
@@ -186,17 +189,24 @@ public class Services {
 			}
 			if (array != null) {
 				wasEmpty = array.getDocuments().isEmpty();
-				array.getDocuments().removeIf(p -> 
-					p.getId() != null && ((perm.getRetrieve().getDenied().containsKey("id") && perm.getRetrieve().getDenied().get("id").contains(p.getId())) ||
-						!(perm.getRetrieve().getAllowed().containsKey("id") && perm.getRetrieve().getAllowed().get("id").contains(p.getId()))) ||
-					p.getType() != null && ((perm.getRetrieve().getDenied().containsKey("type") && perm.getRetrieve().getDenied().get("type").contains(p.getType())) ||
-						!(perm.getRetrieve().getAllowed().containsKey("type") && perm.getRetrieve().getAllowed().get("type").contains(p.getType())))
-				);
+				// Check dynamically on specified attributes
+				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
+			    while (it.hasNext()) {
+			    	Map.Entry<String, RegexStringList> pair = it.next();
+				    array.getDocuments().removeIf(p -> 
+						p.getProperties().containsKey(pair.getKey()) && ((RegexStringList) pair.getValue()).contains(p.getProperties().get(pair.getKey())));
+			    }
+			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
+			    while (it.hasNext()) {
+			    	Map.Entry<String, RegexStringList> pair = it.next();
+				    array.getDocuments().removeIf(p -> 
+						p.getProperties().containsKey(pair.getKey()) && !((RegexStringList) pair.getValue()).contains(p.getProperties().get(pair.getKey())));
+			    }
 				try {
 					if (!wasEmpty && array.getDocuments().isEmpty()) {
 						return Response.status(Status.FORBIDDEN)
-								.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
-								.build();
+							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
+							.build();
 					} else {
 						respString = JsonUtils.serializeJson(array.getDocuments());
 					}
@@ -208,17 +218,17 @@ public class Services {
 			PPIResponse resp = null;
 			try {
 				resp = (PPIResponse) JsonUtils.deserializeJson(respString, PPIResponse.class);
-				if (resp.getAdditionalProperties().containsKey("code")) {
-					if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
-						code = (Integer) resp.getAdditionalProperties().get("code");
+				if (resp.getProperties().containsKey("code")) {
+					if (resp.getProperties().get("code").getClass() == Integer.class) {
+						code = (Integer) resp.getProperties().get("code");
 						if (code >= 400 || code < 500) {
 							return Response.status(Status.BAD_REQUEST)
 								.entity(resp)
 								.build();
 						} else if (code >= 500 || code < 600) {
 							return Response.status(Status.INTERNAL_SERVER_ERROR)
-									.entity(resp)
-									.build();
+								.entity(resp)
+								.build();
 						}
 					}
 				}
@@ -226,14 +236,24 @@ public class Services {
 				e.printStackTrace();
 			}
 			if (resp != null) {
-				if (resp.getId() != null && ((perm.getRetrieve().getDenied().containsKey("id") && perm.getRetrieve().getDenied().get("id").contains(resp.getId())) ||
-						!(perm.getRetrieve().getAllowed().containsKey("id") && perm.getRetrieve().getAllowed().get("id").contains(resp.getId()))) ||
-					resp.getType() != null && ((perm.getRetrieve().getDenied().containsKey("type") && perm.getRetrieve().getDenied().get("type").contains(resp.getType())) ||
-						!(perm.getRetrieve().getAllowed().containsKey("type") && perm.getRetrieve().getAllowed().get("type").contains(resp.getType())))) {
-					return Response.status(Status.FORBIDDEN)
+				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
+			    while (it.hasNext()) {
+			    	Map.Entry<String, RegexStringList> pair = it.next();
+			    	System.out.println("Denied " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
+				    if(resp.getProperties().containsKey(pair.getKey()) && ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())))
+				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
-				}
+			    }
+			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
+			    while (it.hasNext()) {
+			    	Map.Entry<String, RegexStringList> pair = it.next();
+			    	System.out.println("Allowed " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
+			        if(resp.getProperties().containsKey(pair.getKey()) && !((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())))
+				    	return Response.status(Status.FORBIDDEN)
+							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
+							.build();
+			    }
 			}
 		}
 
