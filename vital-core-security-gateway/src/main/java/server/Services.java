@@ -239,7 +239,7 @@ public class Services {
 				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
-			    	System.out.println("Denied " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
+			    	//System.out.println("Denied " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
 				    if(resp.getProperties().containsKey(pair.getKey()) && ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())))
 				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
@@ -248,7 +248,7 @@ public class Services {
 			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
-			    	System.out.println("Allowed " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
+			    	//System.out.println("Allowed " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
 			        if(resp.getProperties().containsKey(pair.getKey()) && !((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())))
 				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
