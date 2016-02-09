@@ -32,7 +32,7 @@ public class PPIResponse {
     
     @SuppressWarnings("unchecked")
 	public PPIResponse(Object map) {
-    	if(map != null)
+    	if(map != null && map instanceof LinkedHashMap<?, ?>)
     		properties.putAll((LinkedHashMap<String, Object>) map);
 	}
 

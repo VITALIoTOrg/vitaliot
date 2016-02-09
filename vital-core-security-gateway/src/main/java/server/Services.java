@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -194,13 +197,13 @@ public class Services {
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
 				    array.getDocuments().removeIf(p -> 
-				    	getSubObject(p, pair.getKey()) != null && ((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
+				    	!getSubObject(p, pair.getKey()).isEmpty() && ((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
 			    }
 			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
 				    array.getDocuments().removeIf(p -> 
-				    	getSubObject(p, pair.getKey()) != null && !((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
+				    	!getSubObject(p, pair.getKey()).isEmpty() && !((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
 			    }
 				try {
 					if (!wasEmpty && array.getDocuments().isEmpty()) {
@@ -239,9 +242,9 @@ public class Services {
 				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
-			    	Object object = getSubObject(resp, pair.getKey());
+			    	List<Object> objects = getSubObject(resp, pair.getKey());
 			    	//System.out.println("Denied " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
-				    if(object != null && ((RegexStringList) pair.getValue()).contains(object))
+				    if(!objects.isEmpty() && ((RegexStringList) pair.getValue()).contains(objects))
 				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
@@ -249,9 +252,9 @@ public class Services {
 			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
-			    	Object object = getSubObject(resp, pair.getKey());
+			    	List<Object> objects = getSubObject(resp, pair.getKey());
 			    	//System.out.println("Allowed " + pair.getKey() + " " + resp.getProperties().containsKey(pair.getKey()) + " " + ((RegexStringList) pair.getValue()).contains(resp.getProperties().get(pair.getKey())));
-			        if(object != null && !((RegexStringList) pair.getValue()).contains(object))
+			        if(!objects.isEmpty() && !((RegexStringList) pair.getValue()).contains(objects))
 				    	return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
@@ -264,16 +267,39 @@ public class Services {
 			.build();
 	}
 
-	private Object getSubObject(PPIResponse resp, String key) {
+	private List<Object> getSubObject(PPIResponse resp, String key) {
 		PPIResponse inner = new PPIResponse(resp);
+		List<Object> values = new ArrayList<Object>();
+		
 		String[] chain = key.split("\\.");
 		
 		for (int i = 0; i < chain.length - 1; i++) {
-			inner = new PPIResponse(inner.getProperties().get(chain[i]));
-			if(inner.getProperties().isEmpty())
-				return null;
+			if (!inner.getProperties().containsKey(chain[i])) {
+				inner = null;
+				break;
+			}
+			PPIResponse hey = new PPIResponse(inner.getProperties().get(chain[i]));
+			if (hey.getProperties().isEmpty()) {
+				List<LinkedHashMap<String, Object>> array;
+				array = new ArrayList<LinkedHashMap<String, Object>>();
+				array.addAll((ArrayList<LinkedHashMap<String, Object>>) inner.getProperties().get(chain[i]));
+				for (int j = 0; j < array.size(); j++) {
+					String subkey = "";
+					for (int k = i + 1; k < chain.length; k++)
+						subkey = subkey + chain[k];
+					List<Object> objs = getSubObject(new PPIResponse(array.get(j)), subkey);
+					if (objs != null)
+						values.addAll(objs);
+				}
+				return values;
+			} else {;
+				inner = hey;
+			}
 		}
 		
-		return inner.getProperties().get(chain[chain.length - 1]);
+		if (inner != null)
+			values.add(inner.getProperties().get(chain[chain.length - 1]));
+		
+		return values;
 	}
 }
