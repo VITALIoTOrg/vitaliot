@@ -51,7 +51,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
 
         git clone http://gitlab.atosresearch.eu/ari/vital-core-security-gateway.git
 
-2. Open file **_src/main/resources/config.properties_** and set the values defined there to match the locations of the security module and the proxy running the Policy Agent. For example:
+2. Open file **_src/main/resources/config.properties_** and set the values defined there to match the locations of the Security Adapter and the proxy running the Policy Agent. For example:
 
       ```
       PROXY_HOST=vitalproxy.com
