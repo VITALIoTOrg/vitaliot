@@ -70,7 +70,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
 5. Make sure you have started the JBoss Server as described above.
 6. In order to deploy copy the package **_target/vital-core-security-adapter.war_** to the **_standalone/deployments_** directory of the running instance of the server.
 
-## Access the Security Adapter
+## Access the module
 
 The Security Adapter is available at the hostname and port of your WildFly instance at path **_/securitywrapper_**. Under **_/rest_** it exposes a number of GET and POST endpoints documented in file **_USAGE.md_**.
 
