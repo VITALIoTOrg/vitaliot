@@ -1,9 +1,9 @@
-# vital-snmp-exposer
+# vital-core-security-snmp-exposer
 
 * Author: Lorenzo Bracco
-* Summary: This is the VITAL SNMP Exposer Module (exposes OpenAM monitoring data on HTTP)
+* Summary: This is the VITAL Core SNMP Exposer Module (exposes OpenAM monitoring data on HTTP)
 * Target Project: VITAL (<http://vital-iot.eu>)
-* Source: <http://31.210.156.219/devtry/snmp-exposer.git>
+* Source: <http://gitlab.atosresearch.eu/ari/vital-core-security-snmp-exposer.git>
 
 ## System requirements
 
@@ -49,7 +49,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
 
 1. Checkout the code from the repository:
 
-        git clone http://31.210.156.219/devtry/snmp-exposer.git
+        git clone http://gitlab.atosresearch.eu/ari/vital-core-security-snmp-exposer.git
 
 2. By default the module expects the SNMP interface to be on **_localhost_** at port **_8080_**. If this is not the case, open file **_src/main/java/clients/OpenAMClient.java_** and set your address:
 
@@ -63,7 +63,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
         mvn package
 
 5. Make sure you have started the JBoss Server as described above.
-6. In order to deploy copy the package **_target/snmpexposer.war_** to the **_standalone/deployments_** directory of the running instance of the server.
+6. In order to deploy copy the package **_target/vital-core-security-snmp-exposer.war_** to the **_standalone/deployments_** directory of the running instance of the server.
 
 ## Access the module
 
@@ -72,7 +72,7 @@ The SNMP Exposer Module is available at the hostname and port of your WildFly in
 ## Undeploy the SNMP Exposer Module
 
 1. Stop the WildFly server (by killing the script used to start it).
-2. Remove the application related files from the **_standalone/deployments_** directory of WildFly.
+2. Remove the package related files from the **_standalone/deployments_** directory of WildFly.
 3. Restart WildFly.
 
 Or use any other method offered by WildFly, such as the **_jboss-cli_** interface.
