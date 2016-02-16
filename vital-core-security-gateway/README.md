@@ -1,9 +1,9 @@
-# vital-ppi-gateway
+# vital-core-security-gateway
 
 * Author: Lorenzo Bracco
-* Summary: This is the VITAL PPI Gateway
+* Summary: This is the VITAL Core Security Gateway (performs data access control on PPIs)
 * Target Project: VITAL (<http://vital-iot.eu>)
-* Source: <http://31.210.156.219/devtry/ppi-gateway.git>
+* Source: <http://gitlab.atosresearch.eu/ari/vital-core-security-gateway.git>
 
 ## System requirements
 
@@ -49,7 +49,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
 
 1. Checkout the code from the repository:
 
-        git clone http://31.210.156.219/devtry/ppi-gateway.git
+        git clone http://gitlab.atosresearch.eu/ari/vital-core-security-gateway.git
 
 2. Open file **_src/main/resources/config.properties_** and set the values defined there to match the locations of the security module and the proxy running the Policy Agent. For example:
 
@@ -66,7 +66,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
         mvn package
 
 5. Make sure you have started the JBoss Server as described above.
-6. In order to deploy copy the package **_target/ppigateway.war_** to the **_standalone/deployments_** directory of the running instance of the server.
+6. In order to deploy copy the package **_target/vital-core-security-gateway.war_** to the **_standalone/deployments_** directory of the running instance of the server.
 
 ## Access the module
 
@@ -75,7 +75,7 @@ The PPI Gateway is available at the hostname and port of your WildFly instance a
 ## Undeploy the PPI Gateway
 
 1. Stop the WildFly server (by killing the script used to start it).
-2. Remove the application related files from the **_standalone/deployments_** directory of WildFly.
+2. Remove the package related files from the **_standalone/deployments_** directory of WildFly.
 3. Restart WildFly.
 
 Or use any other method offered by WildFly, such as the **_jboss-cli_** interface.

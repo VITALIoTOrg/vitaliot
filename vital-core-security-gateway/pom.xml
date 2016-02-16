@@ -3,11 +3,11 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ppi.gateway</groupId>
-    <artifactId>ppigateway</artifactId>
+    <groupId>vital</groupId>
+    <artifactId>vital-core-security-gateway</artifactId>
     <version>0.1</version>
     <packaging>war</packaging>
-    <name>PPI gateway</name>
+    <name>VITAL PPI gateway</name>
     <description>PPI gateway for the VITAL project (Java 8 / WildFly 10.0.0.CR5)</description>
 
     <properties>

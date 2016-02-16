@@ -1,0 +1,4 @@
+<jboss-web>
+    <context-root>ppigateway</context-root>
+</jboss-web>
+
