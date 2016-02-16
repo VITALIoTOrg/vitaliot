@@ -68,7 +68,7 @@ Follow installation instructions of Git, Java, Maven and WildFly.
         mvn package
 
 5. Make sure you have started the JBoss Server as described above.
-6. In order to deploy copy the package **_target/securitywrapper.war_** to the **_standalone/deployments_** directory of the running instance of the server.
+6. In order to deploy copy the package **_target/vital-core-security-adapter.war_** to the **_standalone/deployments_** directory of the running instance of the server.
 
 ## Access the Security Adapter
 
