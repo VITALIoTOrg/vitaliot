@@ -1,9 +1,9 @@
-# vital-security-module
+# vital-core-security-adapter
 
 * Author: Lorenzo Bracco, Fabrizio De Ceglia
-* Summary: This is the VITAL Security Module
+* Summary: This is the VITAL Core Security Adapter
 * Target Project: VITAL (<http://vital-iot.eu>)
-* Source: <http://31.210.156.219/devtry/SecurityWrapper>
+* Source: <http://gitlab.atosresearch.eu/ari/vital-core-security-adapter.git>
 
 ## System requirements
 
@@ -45,11 +45,11 @@ Follow installation instructions of Git, Java, Maven and WildFly.
         For Linux:   WILDFLY_HOME/bin/standalone.sh
         For Windows: WILDFLY_HOME\bin\standalone.bat
 
-## Configure, Build and Deploy the Security Module
+## Configure, Build and Deploy the Security Adapter
 
 1. Checkout the code from the repository:
 
-        git clone http://31.210.156.219/devtry/SecurityWrapper
+        git clone http://gitlab.atosresearch.eu/ari/vital-core-security-adapter.git
 
 2. Open file **_src/main/resources/config.properties_** and set the values defined there to match the locations of OpenAM and the proxy running the Policy Agent. For example:
 
@@ -70,14 +70,14 @@ Follow installation instructions of Git, Java, Maven and WildFly.
 5. Make sure you have started the JBoss Server as described above.
 6. In order to deploy copy the package **_target/securitywrapper.war_** to the **_standalone/deployments_** directory of the running instance of the server.
 
-## Access the module
+## Access the Security Adapter
 
-The Security Module is available at the hostname and port of your WildFly instance at path **_/securitywrapper_**. Under **_/rest_** it exposes a number of GET and POST endpoints documented in file **_USAGE.md_**.
+The Security Adapter is available at the hostname and port of your WildFly instance at path **_/securitywrapper_**. Under **_/rest_** it exposes a number of GET and POST endpoints documented in file **_USAGE.md_**.
 
-## Undeploy the Security Module
+## Undeploy the Security Adapter
 
 1. Stop the WildFly server (by killing the script used to start it).
-2. Remove the application related files from the **_standalone/deployments_** directory of WildFly.
+2. Remove the package related files from the **_standalone/deployments_** directory of WildFly.
 3. Restart WildFly.
 
 Or use any other method offered by WildFly, such as the **_jboss-cli_** interface.
