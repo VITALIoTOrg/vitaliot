@@ -1,0 +1,19 @@
+{
+"@context": "http://IP_ADDRESS/discoverer/contexts/system.jsonld",
+"id": "http://IP_ADDRESS/discoverer",
+"type": "vital:VitalSystem",
+"name": "Discovery System",
+"description": "Service to discover ICOs systems and services",
+"sensors":
+[
+"http://IP_ADDRESS/discoverer/ppi/sensor/monitoring"
+],
+"services":
+[
+"http://IP_ADDRESS/discoverer",
+"http://IP_ADDRESS/discoverer/monitoring",
+"http://IP_ADDRESS/discoverer/observation"
+],
+"status": "vital:Running"
+}
+

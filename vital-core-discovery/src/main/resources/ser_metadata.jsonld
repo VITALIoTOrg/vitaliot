@@ -1,0 +1,57 @@
+[
+{
+"@context": "http://IP_ADDRESS/discoverer/contexts/service.jsonld",
+"id": "http://IP_ADDRESS/discoverer",
+"type": "vital:DiscoveryService",
+"operations":
+[
+{
+"type": "vital:connDMS",
+"hrest:hasAddress": "http://IP_ADDRESS/discoverer/connDMS",
+"hrest:hasMethod": "hrest:GET"
+},
+{
+"type": "vital:discoverICOs",
+"hrest:hasAddress": "http://IP_ADDRESS/discoverer/ico",
+"hrest:hasMethod": "hrest:POST"
+},
+{
+"type": "vital:discoverSystems",
+"hrest:hasAddress": "http://IP_ADDRESS/discoverer/system",
+"hrest:hasMethod": "hrest:POST"
+},
+{
+"type": "vital:discoverServices",
+"hrest:hasAddress": "http://IP_ADDRESS/discoverer/service",
+"hrest:hasMethod": "hrest:POST"
+}
+]
+},
+{
+"@context": "http://IP_ADDRESS/discoverer/contexts/service.jsonld",
+"id": "http://IP_ADDRESS/discoverer/monitoring",
+"type": "vital:MonitoringService",
+"operations":
+[
+{
+"type": "vital:GetSystemStatus",
+"hrest:hasAddress": "http://IP_ADDRESS/discoverer/ppi/status",
+"hrest:hasMethod": "hrest:POST"
+}
+]
+},
+{
+"@context": "http://IP_ADDRESS/discoverer/contexts/service.jsonld",
+"id": "http://IP_ADDRESS/discoverer/observation",
+"type": "vital:ObservationService",
+"operations":
+[
+{
+"type": "vital:GetObservations",
+"hrest:hasAddress": "http://IP_ADDRESS/discoverer/ppi/service/observation",
+"hrest:hasMethod": "hrest:POST"
+}
+]
+}
+]
+
