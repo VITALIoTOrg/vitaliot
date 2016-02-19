@@ -1,0 +1,18 @@
+[
+{
+"@context": "http://IP_ADDRESS/filtering/contexts/sensor.jsonld",
+"id": "http://IP_ADDRESS/filtering/ppi/sensor/monitoring",
+"type": "vital:MonitoringSensor",
+"name": "System Monitoring Sensor",
+"description": "A virtual sensor that monitors the operational
+state of the system, as well as its services and sensors.",
+"status": "vital:Running",
+"ssn:observes":
+[
+{
+"type": "vital:OperationalState",
+"id": "http://IP_ADDRESS/filtering/ppi/sensor/monitoring/operationalState"
+}
+]
+}
+]

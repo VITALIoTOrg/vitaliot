@@ -1,0 +1,19 @@
+{
+"@context": "http://IP_ADDRESS/filtering/contexts/system.jsonld",
+"id": "http://IP_ADDRESS/filtering",
+"type": "vital:VitalSystem",
+"name": "Filtering System",
+"description": "Service to filter data in VITAL",
+"sensors":
+[
+"http://IP_ADDRESS/filtering/ppi/sensor/monitoring"
+],
+"services":
+[
+"http://IP_ADDRESS/filtering/",
+"http://IP_ADDRESS/filtering/monitoring",
+"http://IP_ADDRESS/filtering/observation"
+],
+"status": "vital:Running"
+}
+
