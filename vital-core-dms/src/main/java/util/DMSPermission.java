@@ -98,13 +98,16 @@ public class DMSPermission {
 				HttpResponse response = httpClient.execute(get);
 				HttpEntity entity = response.getEntity();
 				String responseString = EntityUtils.toString(entity, "UTF-8");
-				/*
-				 * List<Cookie> cookies = cookieStore.getCookies(); for (Cookie
-				 * cookie : cookies) { System.out.println("Cookie: " +
-				 * cookie.getName() + " : " + cookie.getValue()); }
-				 */
+
+				List<Cookie> cookies = cookieStore.getCookies();
+				for (Cookie cookie : cookies) {
+					System.out.println("Cookie: " + cookie.getName() + " : "
+							+ cookie.getValue());
+				}
+
 				DBObject objResponse = new BasicDBObject();
 				objResponse = (DBObject) JSON.parse(responseString);
+				System.out.println("objResponse: " + objResponse);
 				if (objResponse.containsField("retrieve")) {
 					permission = objResponse;
 					return successfulPermission;
@@ -120,7 +123,7 @@ public class DMSPermission {
 		}
 	}
 
-	public DBObject getPermission() {
+	public static DBObject getPermission() {
 		if (permission != null) {
 			return permission;
 		}

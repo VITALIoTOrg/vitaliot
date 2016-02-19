@@ -1,9 +1,10 @@
 package core;
 
-import static spark.Spark.get;
-
 import java.util.Timer;
 import java.util.TimerTask;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import api.VitalObservation;
 import api.VitalSensor;
@@ -23,13 +24,14 @@ import util.DMSPermission;
 
 public class DMS {
 
+	private final static Logger logger = LoggerFactory.getLogger(DMS.class);
+
 	final static int responseSuccess = 200;
 	final static int responseUnauthorize = 401;
 	final static int responseBadServer = 500;
 
 	final static boolean isSecurityEnabled = true;
 
-	static DMSPermission DP;
 	static Timer timer;
 
 	public static void main(String[] args) {
@@ -38,16 +40,17 @@ public class DMS {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				System.out.println("Re-authenticating DMS...");
+				logger.info("Re-authenticating DMS...");
 				DMSPermission.securityDMSAuth(); // Temporary blocked for
 													// testing.
 			}
-		}, 20 * 60 * 1000, 60 * 1000);
+		}, 20 * 60 * 1000, 20 * 60 * 1000);
 
 		Spark.get(new Route("/") {
 
 			@Override
 			public Object handle(Request request, Response response) {
+				logger.info("GET: /");
 				DMSPermission.securityDMSAuth();// Temporary blocked for
 												// testing.
 				return "Welcome to DMS.";
@@ -58,6 +61,8 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
+				logger.info("POST: /insertSystem");
+
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
 				try {
@@ -65,9 +70,11 @@ public class DMS {
 					VitalSystem.insertSystem(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
+					logger.info("Successful data inserted. /insertSystem");
 					return objRet;
 
 				} catch (Exception e) {
+					logger.error("Error in /insertSystem. " + e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -78,6 +85,8 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
+				logger.info("POST: /insertService");
+
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
 				try {
@@ -85,9 +94,11 @@ public class DMS {
 					VitalService.insertService(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
+					logger.info("Successful data inserted. /insertService");
 					return objRet;
 
 				} catch (Exception e) {
+					logger.error("Error in /insertService. " + e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -98,6 +109,8 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
+				logger.info("POST: /insertSensor");
+
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
 				try {
@@ -105,9 +118,11 @@ public class DMS {
 					VitalSensor.insertSensor(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
+					logger.info("Successful data inserted. /insertSensor");
 					return objRet;
 
 				} catch (Exception e) {
+					logger.error("Error in /insertSensor. " + e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -118,6 +133,8 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
+				logger.info("POST: /insertObservation");
+
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
 				try {
@@ -125,9 +142,12 @@ public class DMS {
 					VitalObservation.insertObservation(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
+					logger.info("Successful data inserted. /insertObservation");
 					return objRet;
 
 				} catch (Exception e) {
+					logger.error("Error in /insertObservation. "
+							+ e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -141,19 +161,19 @@ public class DMS {
 				DBObject query = DMSUtils.encodeKeys((DBObject) JSON
 						.parse(request.body().trim()));
 				try {
-					response.type("application/json+ld");
+					response.type("application/json");
 					if (isSecurityEnabled) {
 
 						int code = DMSPermission.checkPermission(request);
-						if (code == DMSPermission.successfulPermission) {
 
-							DBObject perm = DMSUtils.encodeKeys(DP
+						if (code == DMSPermission.successfulPermission) {
+							DBObject perm = DMSUtils.encodeKeys(DMSPermission
 									.getPermission());
 
 							DBObject filteredQuery = DMSPermission
 									.permissionFilter(perm, query);
-							// System.out.println("Query: " + filteredQuery);
 							response.status(responseSuccess);
+							response.type("application/json+ld");
 							return VitalSystem.querySystem(filteredQuery);
 
 						} else if (code == DMSPermission.accessTokenNotFound) {
@@ -177,6 +197,169 @@ public class DMS {
 					} else {
 						response.status(responseSuccess);
 						return VitalSystem.querySystem(query);
+					}
+
+				} catch (Exception e) {
+					response.status(responseBadServer);
+					return DMSUtils.sendException(response, e);
+				}
+
+			}
+
+		});
+
+		Spark.post(new Route("/queryService") {
+
+			@Override
+			public Object handle(Request request, Response response) {
+				DBObject query = DMSUtils.encodeKeys((DBObject) JSON
+						.parse(request.body().trim()));
+				try {
+					response.type("application/json");
+					if (isSecurityEnabled) {
+
+						int code = DMSPermission.checkPermission(request);
+
+						if (code == DMSPermission.successfulPermission) {
+							DBObject perm = DMSUtils.encodeKeys(DMSPermission
+									.getPermission());
+
+							DBObject filteredQuery = DMSPermission
+									.permissionFilter(perm, query);
+							response.status(responseSuccess);
+							response.type("application/json+ld");
+							return VitalService.queryService(filteredQuery);
+
+						} else if (code == DMSPermission.accessTokenNotFound) {
+							response.status(responseUnauthorize);
+							return DMSUtils
+									.sendError(
+											"Unauthorized. vitalAccessToken Not Found.",
+											401);
+						} else if (code == DMSPermission.unsuccessful) {
+							response.status(responseUnauthorize);
+							return DMSUtils
+									.sendError(
+											"Unauthorized. Permission Denied. Please re-authorize vitalAccessToken.",
+											401);
+
+						} else {
+							response.status(responseBadServer);
+							return DMSUtils.sendError("Internal Server error.",
+									500);
+						}
+					} else {
+						response.status(responseSuccess);
+						return VitalService.queryService(query);
+					}
+
+				} catch (Exception e) {
+					response.status(responseBadServer);
+					return DMSUtils.sendException(response, e);
+				}
+
+			}
+
+		});
+
+		Spark.post(new Route("/querySensor") {
+
+			@Override
+			public Object handle(Request request, Response response) {
+				DBObject query = DMSUtils.encodeKeys((DBObject) JSON
+						.parse(request.body().trim()));
+				try {
+					response.type("application/json");
+					if (isSecurityEnabled) {
+
+						int code = DMSPermission.checkPermission(request);
+
+						if (code == DMSPermission.successfulPermission) {
+							DBObject perm = DMSUtils.encodeKeys(DMSPermission
+									.getPermission());
+
+							DBObject filteredQuery = DMSPermission
+									.permissionFilter(perm, query);
+							response.status(responseSuccess);
+							response.type("application/json+ld");
+							return VitalSensor.querySensor(filteredQuery);
+
+						} else if (code == DMSPermission.accessTokenNotFound) {
+							response.status(responseUnauthorize);
+							return DMSUtils
+									.sendError(
+											"Unauthorized. vitalAccessToken Not Found.",
+											401);
+						} else if (code == DMSPermission.unsuccessful) {
+							response.status(responseUnauthorize);
+							return DMSUtils
+									.sendError(
+											"Unauthorized. Permission Denied. Please re-authorize vitalAccessToken.",
+											401);
+
+						} else {
+							response.status(responseBadServer);
+							return DMSUtils.sendError("Internal Server error.",
+									500);
+						}
+					} else {
+						response.status(responseSuccess);
+						return VitalSensor.querySensor(query);
+					}
+
+				} catch (Exception e) {
+					response.status(responseBadServer);
+					return DMSUtils.sendException(response, e);
+				}
+
+			}
+
+		});
+
+		Spark.post(new Route("queryObservation") {
+
+			@Override
+			public Object handle(Request request, Response response) {
+				DBObject query = DMSUtils.encodeKeys((DBObject) JSON
+						.parse(request.body().trim()));
+				try {
+					response.type("application/json");
+					if (isSecurityEnabled) {
+
+						int code = DMSPermission.checkPermission(request);
+
+						if (code == DMSPermission.successfulPermission) {
+							DBObject perm = DMSUtils.encodeKeys(DMSPermission
+									.getPermission());
+
+							DBObject filteredQuery = DMSPermission
+									.permissionFilter(perm, query);
+							response.status(responseSuccess);
+							response.type("application/json+ld");
+							return VitalObservation
+									.queryObservation(filteredQuery);
+
+						} else if (code == DMSPermission.accessTokenNotFound) {
+							response.status(responseUnauthorize);
+							return DMSUtils
+									.sendError(
+											"Unauthorized. vitalAccessToken Not Found.",
+											401);
+						} else if (code == DMSPermission.unsuccessful) {
+							response.status(responseUnauthorize);
+							return DMSUtils
+									.sendError(
+											"Unauthorized. Permission Denied. Please re-authorize vitalAccessToken.",
+											401);
+
+						} else {
+							response.status(responseBadServer);
+							return DMSUtils.sendError("Internal Server error.",
+									500);
+						}
+					} else {
+						response.status(responseSuccess);
+						return VitalObservation.queryObservation(query);
 					}
 
 				} catch (Exception e) {
