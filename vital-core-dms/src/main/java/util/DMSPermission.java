@@ -1,26 +1,19 @@
 package util;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 
 import spark.Request;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -41,72 +34,70 @@ public class DMSPermission {
 	final public static int accessTokenNotFound = 1;
 
 	static String DMSToken, userToken;
+	final static BasicCookieStore cookieStore = new org.apache.http.impl.client.BasicCookieStore();
 
-	@SuppressWarnings({ "deprecation", "resource" })
+	static BasicClientCookie testCookie, userCookie;
+
+	static HttpResponse<JsonNode> jsonResponse;
+
 	public static void securityDMSAuth() {
+
 		try {
-			HttpPost post = new HttpPost(authURL);
-			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-			nvps.add(new BasicNameValuePair("name", user));
-			nvps.add(new BasicNameValuePair("password", password));
-			nvps.add(new BasicNameValuePair("testCookie", "true"));
-			post.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-			DefaultHttpClient httpDMSClient = new DefaultHttpClient();
-			CookieStore cookieStore;
-			HttpResponse response = httpDMSClient.execute(post);
-			cookieStore = httpDMSClient.getCookieStore();
-			List<Cookie> cookies = cookieStore.getCookies();
-			for (Cookie cookie : cookies) {
+			// cookieStore = new org.apache.http.impl.client.BasicCookieStore();
+			Unirest.setHttpClient(org.apache.http.impl.client.HttpClients
+					.custom().setDefaultCookieStore(cookieStore).build());
+
+			jsonResponse = Unirest.post(authURL).field("name", user)
+					.field("password", password).field("testCookie", true)
+					.asJson();
+
+			for (final Cookie cookie : cookieStore.getCookies()) {
 				if (cookie.getName().equals("vitalTestToken")) {
 					DMSToken = cookie.getValue();
-					System.out.println("Authenticated. DMSToken: " + DMSToken);
+					testCookie = new BasicClientCookie("vitalTestToken",
+							DMSToken);
+
+					System.out.println("DMS Authenticated: " + DMSToken);
 				}
 			}
+			// cookieStore.addCookie(testCookie);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static int checkPermission(Request request) {
+		BasicCookieStore cs2 = new org.apache.http.impl.client.BasicCookieStore();
+
 		if (request.cookie("vitalAccessToken") == null) {
 			permission = null;
 			return accessTokenNotFound;
 		} else {
 			userToken = request.cookie("vitalAccessToken");
+			// System.out.println("userToken: " + userToken);
+			userCookie = new BasicClientCookie("vitalAccessToken", userToken);
+
 			try {
-				DefaultHttpClient httpClient = new DefaultHttpClient();
-				CookieStore cookieStore = httpClient.getCookieStore();
-				BasicClientCookie dmsCookie = new BasicClientCookie(
-						"vitalTestToken", DMSToken);
-				dmsCookie.setDomain(".cloud.reply.eu");
-				dmsCookie.setPath("/");
 
-				BasicClientCookie userCookie = new BasicClientCookie(
-						"vitalAccessToken", userToken);
+				cs2.addCookie(userCookie);
+				cs2.addCookie(testCookie);
 
-				userCookie.setDomain(".cloud.reply.eu");
-				userCookie.setPath("/");
-
-				cookieStore.addCookie(dmsCookie);
-				cookieStore.addCookie(userCookie);
-
-				httpClient.setCookieStore(cookieStore);
-
-				HttpGet get = new HttpGet(permissionURL);
-
-				HttpResponse response = httpClient.execute(get);
-				HttpEntity entity = response.getEntity();
-				String responseString = EntityUtils.toString(entity, "UTF-8");
-
-				List<Cookie> cookies = cookieStore.getCookies();
-				for (Cookie cookie : cookies) {
-					System.out.println("Cookie: " + cookie.getName() + " : "
+				System.out.println("Cookies...");
+				for (final Cookie cookie : cs2.getCookies()) {
+					System.out.println(cookie.getName() + " : "
 							+ cookie.getValue());
 				}
+				Unirest.setHttpClient(org.apache.http.impl.client.HttpClients
+						.custom().setDefaultCookieStore(cs2).build());
+
+				HttpResponse<JsonNode> resp = Unirest.get(permissionURL)
+						.asJson();
 
 				DBObject objResponse = new BasicDBObject();
-				objResponse = (DBObject) JSON.parse(responseString);
+				objResponse = (DBObject) JSON.parse(resp.getBody()
+						.toString());
+
 				System.out.println("objResponse: " + objResponse);
 				if (objResponse.containsField("retrieve")) {
 					permission = objResponse;
@@ -116,6 +107,10 @@ public class DMSPermission {
 					return unsuccessful;
 				}
 
+			} catch (UnirestException e) {
+				System.out.println("Error: " + e.getMessage());
+				e.printStackTrace();
+				return exception;
 			} catch (Exception e) {
 				permission = null;
 				return exception;
@@ -124,10 +119,7 @@ public class DMSPermission {
 	}
 
 	public static DBObject getPermission() {
-		if (permission != null) {
-			return permission;
-		}
-		return null;
+		return permission;
 	}
 
 	public static DBObject permissionFilter(DBObject perm, DBObject query) {
