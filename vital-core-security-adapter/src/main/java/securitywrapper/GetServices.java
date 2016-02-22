@@ -957,13 +957,18 @@ public class GetServices {
 		boolean error = false;
 		String errorMsg = "";
 		int code;
-		
+
+		//System.out.println(cookie);
+
 		String altToken = null, ssoToken = null;
 		if(cookie != null) {
 			altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
 			ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
 		}
-		
+
+		//System.out.println(ssoToken);
+		//System.out.println(altToken);
+
 		if(ssoToken == null || ssoToken.equals("") || altToken == null || altToken.equals("")) {
 			return Response.status(Status.UNAUTHORIZED)
 				.entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid user token!\"}")
