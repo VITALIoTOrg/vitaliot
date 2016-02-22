@@ -52,16 +52,8 @@ public class DMSPermission {
 	public static void securityDMSAuth() {
 
 		try {
-			customizedRequestConfig = RequestConfig.custom()
-					.setCookieSpec(CookieSpecs.IGNORE_COOKIES).build();
-			customizedClientBuilder = HttpClients.custom()
-			// .setDefaultRequestConfig(customizedRequestConfig)
-					.setDefaultCookieStore(cookieStore);
-			client = customizedClientBuilder.build();
-			Unirest.setHttpClient(client);
-
-			// Unirest.setHttpClient(org.apache.http.impl.client.HttpClients
-			// .custom().setDefaultCookieStore(cookieStore).build());
+			Unirest.setHttpClient(org.apache.http.impl.client.HttpClients
+					.custom().setDefaultCookieStore(cookieStore).build());
 
 			jsonResponse = Unirest.post(authURL).field("name", user)
 					.field("password", password).field("testCookie", true)
@@ -73,8 +65,8 @@ public class DMSPermission {
 					testCookie = new BasicClientCookie("vitalTestToken",
 							DMSToken);
 					testCookie.setDomain(".cloud.reply.eu");
-					// testCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR,
-					// "true");
+					testCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR,
+							"true");
 
 					System.out.println("DMS Authenticated: " + DMSToken);
 				}
@@ -95,18 +87,11 @@ public class DMSPermission {
 			userCookie = new BasicClientCookie("vitalAccessToken", userToken);
 
 			userCookie.setDomain(".cloud.reply.eu");
-			// userCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR, "true");
-			userCookie.setPath("/");
+			userCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR, "true");
 
 			try {
-			
+
 				cookieStore.addCookie(userCookie);
-				customizedClientBuilder = HttpClients.custom()
-						.setDefaultRequestConfig(customizedRequestConfig)
-						.setDefaultCookieStore(cookieStore);
-				client = customizedClientBuilder.build();
-				Unirest.setHttpClient(client);
-				
 				// cookieStore.addCookie(testCookie);
 
 				System.out.println("Cookies...");
@@ -121,7 +106,7 @@ public class DMSPermission {
 				DBObject objResponse = new BasicDBObject();
 				objResponse = (DBObject) JSON.parse(resp.getBody().toString());
 
-				System.out.println("objResponse: " + objResponse);
+				// System.out.println("objResponse: " + objResponse);
 				if (objResponse.containsField("retrieve")) {
 					permission = objResponse;
 					return successfulPermission;
