@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>vital-orchestrator</artifactId>
-        <groupId>eu.vital.orchestrator</groupId>
+        <groupId>eu.vital-iot</groupId>
+        <artifactId>vital-core-orchestrator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>vital-orchestrator-frontend</artifactId>
+    <artifactId>vital-core-orchestrator-frontend</artifactId>
     <packaging>war</packaging>
 
-    <name>vital-orchestrator: Frontend Module</name>
+    <name>Vital Core: Orchestrator Frontend</name>
 
     <dependencies>
 

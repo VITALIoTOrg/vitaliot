@@ -19,15 +19,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>vital-orchestrator</artifactId>
-        <groupId>eu.vital.orchestrator</groupId>
+        <groupId>eu.vital-iot</groupId>
+        <artifactId>vital-core-orchestrator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>vital-orchestrator-ear</artifactId>
+    <artifactId>vital-core-orchestrator-ear</artifactId>
     <packaging>ear</packaging>
 
-    <name>vital-orchestrator: EAR Module</name>
+    <name>Vital Core: Orchestrator EAR</name>
 
     <url>http://wildfly.org</url>
     <licenses>
@@ -42,14 +42,14 @@
 
         <!-- Depend on the ejb module and war so that we can package them -->
         <dependency>
-            <groupId>eu.vital.orchestrator</groupId>
-            <artifactId>vital-orchestrator-web</artifactId>
+            <groupId>eu.vital-iot</groupId>
+            <artifactId>vital-core-orchestrator-web</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>eu.vital.orchestrator</groupId>
-            <artifactId>vital-orchestrator-ejb</artifactId>
+            <groupId>eu.vital-iot</groupId>
+            <artifactId>vital-core-orchestrator-ejb</artifactId>
             <version>${project.parent.version}</version>
             <type>ejb</type>
         </dependency>
@@ -65,8 +65,8 @@
                 <configuration>
                     <!-- Tell Maven we are using Java EE 7 -->
                     <version>6</version>
-                    <!-- Use Java EE ear libraries as needed. Java EE ear libraries 
-                        are in easy way to package any libraries needed in the ear, and automatically 
+                    <!-- Use Java EE ear libraries as needed. Java EE ear libraries
+                        are in easy way to package any libraries needed in the ear, and automatically
                         have any modules (EJB-JARs and WARs) use them -->
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <modules>
@@ -85,7 +85,7 @@
                 </configuration>
             </plugin>
             <!-- The WildFly plugin deploys your ear to a local WildFly container -->
-            <!-- Due to Maven's lack of intelligence with EARs we need to configure 
+            <!-- Due to Maven's lack of intelligence with EARs we need to configure
                 the wildfly maven plugin to skip deployment for all modules. We then enable
                 it specifically in the ear module. -->
             <plugin>

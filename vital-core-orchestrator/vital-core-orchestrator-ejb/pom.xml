@@ -18,29 +18,20 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>vital-orchestrator</artifactId>
-        <groupId>eu.vital.orchestrator</groupId>
+     <parent>
+         <groupId>eu.vital-iot</groupId>
+         <artifactId>vital-core-orchestrator</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>vital-orchestrator-ejb</artifactId>
+    <artifactId>vital-core-orchestrator-ejb</artifactId>
     <packaging>ejb</packaging>
 
-    <name>vital-orchestrator: EJB Module</name>
-
-    <url>http://wildfly.org</url>
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-        </license>
-    </licenses>
+    <name>Vital Core: Orchestrator EJB</name>
 
     <dependencies>
 
-        <!-- Declare the APIs we depend on and need for compilation. All of 
+        <!-- Declare the APIs we depend on and need for compilation. All of
             them are provided by JBoss WildFly -->
 
         <!-- Import the EJB API, we use provided scope as the API is included in JBoss WildFly -->
@@ -136,7 +127,7 @@
         </dependency>
 
         <!-- Optional, but highly recommended -->
-        <!-- Arquillian allows you to test enterprise code such as EJBs and 
+        <!-- Arquillian allows you to test enterprise code such as EJBs and
             Transactional(JTA) JPA from JUnit/TestNG -->
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
@@ -168,9 +159,9 @@
 
     <profiles>
         <profile>
-            <!-- The default profile skips all tests, though you can tune it 
+            <!-- The default profile skips all tests, though you can tune it
                 to run just unit tests based on a custom pattern -->
-            <!-- Seperate profiles are provided for running all tests, including 
+            <!-- Seperate profiles are provided for running all tests, including
                 Arquillian tests that execute in the specified container -->
             <id>default</id>
             <activation>
@@ -190,7 +181,7 @@
         </profile>
 
         <profile>
-            <!-- An optional Arquillian testing profile that executes tests 
+            <!-- An optional Arquillian testing profile that executes tests
                 in your WildFly instance -->
             <!-- This profile will start a new WildFly instance, and execute
                 the test, shutting it down when done -->
@@ -207,7 +198,7 @@
         </profile>
 
         <profile>
-            <!-- An optional Arquillian testing profile that executes tests 
+            <!-- An optional Arquillian testing profile that executes tests
                 in a remote WildFly instance -->
             <!-- Run with: mvn clean test -Parq-wildfly-remote -->
             <id>arq-wildfly-remote</id>

@@ -16,33 +16,26 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <name>vital-orchestrator</name>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>eu.vital.orchestrator</groupId>
-    <artifactId>vital-orchestrator</artifactId>
+
+    <groupId>eu.vital-iot</groupId>
+    <artifactId>vital-core-orchestrator</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <url>http://wildfly.org</url>
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-        </license>
-    </licenses>
-    <modules>
-        <module>vital-orchestrator-ejb</module>
-        <module>vital-orchestrator-web</module>
-        <module>vital-orchestrator-ear</module>
+    <name>Vital Core: Orchestrator</name>
 
-        <!--<module>vital-orchestrator-frontend</module>-->
+    <modules>
+        <module>vital-core-orchestrator-ejb</module>
+        <module>vital-core-orchestrator-web</module>
+        <module>vital-core-orchestrator-ear</module>
+        <module>vital-core-orchestrator-frontend</module>
     </modules>
 
     <properties>
-        <!-- Explicitly declaring the source encoding eliminates the following 
+        <!-- Explicitly declaring the source encoding eliminates the following
             message: -->
-        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered 
+        <!-- [WARNING] Using platform encoding (UTF-8 actually) to copy filtered
             resources, i.e. build is platform dependent! -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -73,19 +66,19 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- Define the version of the EJB jar so that we don't need 
+            <!-- Define the version of the EJB jar so that we don't need
                 to repeat ourselves in every module -->
             <dependency>
-                <groupId>eu.vital.orchestrator</groupId>
+                <groupId>eu.vital-iot</groupId>
                 <artifactId>vital-orchestrator-ejb</artifactId>
                 <version>${project.version}</version>
                 <type>ejb</type>
             </dependency>
 
-            <!-- Define the version of the WAR so that we don't need to repeat 
+            <!-- Define the version of the WAR so that we don't need to repeat
                 ourselves in every module -->
             <dependency>
-                <groupId>eu.vital.orchestrator</groupId>
+                <groupId>eu.vital-iot</groupId>
                 <artifactId>vital-orchestrator-web</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
@@ -93,8 +86,8 @@
             </dependency>
 
             <!-- JBoss distributes a complete set of Java EE 7 APIs including
-                a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or 
-                a collection) of artifacts. We use this here so that we always get the correct 
+                a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
+                a collection) of artifacts. We use this here so that we always get the correct
                 versions of artifacts. Here we use the jboss-javaee-7.0-with-tools stack
                 (you can read this as the JBoss stack of the Java EE 7 APIs, with some extras
                 tools for your project, such as Arquillian for testing) and the jboss-javaee-7.0-with-hibernate
@@ -122,7 +115,7 @@
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Compiler plugin enforces Java 1.6 compatibility and 
+                <!-- Compiler plugin enforces Java 1.6 compatibility and
                     activates annotation processors -->
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -134,7 +127,7 @@
                 </plugin>
                 <!-- The WildFly plugin deploys your ear to a local JBoss
                     AS container -->
-                <!-- Due to Maven's lack of intelligence with EARs we need 
+                <!-- Due to Maven's lack of intelligence with EARs we need
                     to configure the wildfly maven plugin to skip deployment for all modules.
                     We then enable it specifically in the ear module. -->
                 <plugin>
