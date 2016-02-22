@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <groupId>eu.vital-iot</groupId>
         <artifactId>vital-management</artifactId>
-        <groupId>eu.vital.management</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>vital-management-ui</artifactId>
     <packaging>war</packaging>
 
-    <name>vital-management: Frontend Module</name>
+    <name>Vital Management: Frontend</name>
 
     <dependencies>
 
