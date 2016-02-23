@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import spark.Response;
-
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
@@ -48,7 +46,7 @@ public class DMSUtils {
 		return null;
 	}
 
-	static public DBObject sendException(Response response, Exception e) {
+/*	static public DBObject sendException(Response response, Exception e) {
 		DBObject objRet = new BasicDBObject();
 
 		response.status(500);
@@ -57,7 +55,7 @@ public class DMSUtils {
 		// e.printStackTrace();
 		return objRet;
 	}
-
+*/
 	static public DBObject sendError(String message, int code) {
 		DBObject objRet = new BasicDBObject();
 		objRet.put("status", "failed");

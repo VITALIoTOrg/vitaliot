@@ -11,8 +11,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
-import spark.Request;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -75,29 +73,25 @@ public class DMSPermission {
 		}
 	}
 
-	public static int checkPermission(Request request) {
-		if (request.cookie("vitalAccessToken") == null) {
+	public static int checkPermission(Cookie cookie) {
+		if (cookie.equals("") || cookie.equals(null)) {
 			permission = null;
 			return accessTokenNotFound;
 		} else {
-			userToken = request.cookie("vitalAccessToken");
-			// System.out.println("userToken: " + userToken);
-			userCookie = new BasicClientCookie("vitalAccessToken", userToken);
 
+			userCookie = (BasicClientCookie) cookie;
 			userCookie.setDomain(".cloud.reply.eu");
 			userCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR, "true");
-
+			// System.out.println("userCookie: " + userCookie.getValue());
 			try {
 
 				cookieStore.addCookie(userCookie);
 				// cookieStore.addCookie(testCookie);
-
-				System.out.println("Cookies...");
-				for (final Cookie cookie : cookieStore.getCookies()) {
-					System.out.println(cookie.getName() + " : "
-							+ cookie.getValue());
-				}
-
+				/*
+				 * System.out.println("Cookies..."); for (final Cookie cook :
+				 * cookieStore.getCookies()) { System.out
+				 * .println(cook.getName() + " : " + cook.getValue()); }
+				 */
 				HttpResponse<JsonNode> resp = Unirest.get(permissionURL)
 						.asJson();
 
