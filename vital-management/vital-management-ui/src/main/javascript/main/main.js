@@ -1,12 +1,17 @@
 'use strict';
 angular.module('main', [
-    'common',
-    'main.templates',
-    'main.home',
-    'main.sensor',
-    'main.system',
-    'main.modules'
-])
+        'common',
+        'main.templates',
+        'main.home',
+        'main.sensor',
+        'main.system',
+        'main.modules',
+        'main.security'
+    ])
+
+    .service('Shared', function () {
+        this.signedIn = false;
+    })
 
     .config(['$routeProvider', function ($routeProvider) {
 
@@ -16,19 +21,24 @@ angular.module('main', [
 
     }])
 
-/**
- * MainController
- */
+    /**
+     * MainController
+     */
     .controller('MainController', [
-        '$location', '$scope',
-        function ($location, $scope) {
+        '$location', '$scope', 'securityResource', '$timeout', '$interval', '$route', 'Shared',
+        function ($location, $scope, securityResource, $timeout, $interval, $route, Shared) {
 
             $scope.title = '';
             $scope.subtitle = '';
+            Shared.signedIn = false;
+            $scope.active = '';
+            $scope.genloginLoading = false;
+            $scope.genlogoutLoading = false;
 
             $scope.$watch(function () {
                 return $location.path();
             }, function (path) {
+                // Management and Monitoring paths
                 if (path === '/sensor/list') {
                     $scope.title = 'List of ICOs/Sensors';
                 } else if (path === '/sensor/map') {
@@ -42,6 +52,113 @@ angular.module('main', [
                 } else if (/^\/system\/edit\/./.test(path)) {
                     $scope.title = 'System Configuration';
                 }
+
+                // Security paths
+                if (path.substring(0, 9) === '/security') {
+                    $scope.active = 'active';
+                }
+                if (path.substring(0, 18) === '/security/systconf') {
+                    $scope.title = 'Guided System Configuration';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/systconf';
+                } else if (path.substring(0, 15) === '/security/users') {
+                    $scope.title = 'Users Control Panel';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/users';
+                    if (path === '/security/users/create') {
+                        $scope.subtitle = 'Add User';
+                    }
+                    if (path === '/security/users/details') {
+                        $scope.subtitle = 'User Details';
+                    }
+                } else if (path.substring(0, 16) === '/security/groups') {
+                    $scope.title = 'Groups Control Panel';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/groups';
+                    if (path === '/security/groups/create') {
+                        $scope.subtitle = 'Add Group';
+                    }
+                    if (path === '/security/groups/details') {
+                        $scope.subtitle = 'Group Details';
+                    }
+                } else if (path.substring(0, 18) === '/security/policies') {
+                    $scope.title = 'Policies Control Panel';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/policies';
+                    if (path === '/security/policies/create') {
+                        $scope.subtitle = 'Add Policy';
+                    }
+                    if (path === '/security/policies/details') {
+                        $scope.subtitle = 'Policy Details';
+                    }
+                } else if (path.substring(0, 21) === '/security/datacontrol') {
+                    $scope.title = 'Data Access Control';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/datacontrol';
+                } else if (path.substring(0, 22) === '/security/applications') {
+                    $scope.title = 'Applications Control Panel';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/applications';
+                    if (path === '/security/applications/create') {
+                        $scope.subtitle = 'Add Application';
+                    }
+                    if (path === '/security/applications/details') {
+                        $scope.subtitle = 'Application Details';
+                    }
+                } else if (path === '/security/monitor') {
+                    $scope.title = 'Security Monitor';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/monitor';
+                } else if (path === '/security/access') {
+                    $scope.title = 'Access Control Test';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/access';
+                } else if (path === '/security/changepass') {
+                    $scope.title = 'Password Change';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/changepass';
+                } else if (path === '/security/register') {
+                    $scope.title = 'Sign up';
+                    $scope.subtitle = '';
+                    $scope.titlelink = '#/security/register';
+                }
             });
+
+            /** Security **/
+            securityResource.getId($scope, true);
+
+            $scope.isSignedIn = function () {
+                return Shared.signedIn;
+            };
+            $scope.signin = function (data) {
+                $scope.genloginLoading = true;
+                securityResource.authenticate(data, $scope, true);
+            };
+            $scope.signout = function () {
+                $scope.genlogoutLoading = true;
+                securityResource.logout($scope, true);
+            };
+            $scope.doFocus = function (data) {
+                $timeout(function () {
+                    document.getElementById('loginfoc').focus();
+                }, 100);
+            };
+            $scope.checkSession = function () {
+                if (Shared.signedIn) {
+                    securityResource.getId($scope, true)
+                        .then(function (response) {
+                            if (response.data.hasOwnProperty('valid')) {
+                                if (!response.data.valid) {
+                                    securityResource.forgetLogin();
+                                    $route.reload();
+                                }
+                            }
+                        });
+                }
+            };
+
+            $interval($scope.checkSession, 5 * 60 * 1000);
+
+            /** end: Security **/
         }
     ]);

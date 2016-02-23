@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <form ng-submit="addGroup(data)">
+            <div class="form-group">
+                <label for="inputUsername">Group name</label>
+                <input style="color: black;" type="text" class="form-control" ng-model="data.name" placeholder="anameforthegroup" required>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                Create Group
+                <span ng-if="creating == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+            </button>
+        </form>
+        <br />
+        <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">New group "{{createdGroup}}" successfully created!</p>
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+    </div>
+</div>
+
