@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.cookie.BasicClientCookie;
 
 import spark.Request;
@@ -155,7 +153,8 @@ public class DMSPermission {
 
 			searchArguments.add(new BasicDBObject(key, new BasicDBObject(
 					"$exists", false)));
-			innerSearchArguments = (BasicDBList) allowed.get(key);
+			// innerSearchArguments = (BasicDBList) allowed.get(key);
+			innerSearchArguments.addAll((ArrayList<Object>) allowed.get(key));
 			for (Object value : innerSearchArguments) {
 				String valueAsString = (String) value;
 				// searchArguments.add(new BasicDBObject(key, valueAsString));
@@ -171,7 +170,8 @@ public class DMSPermission {
 			innerSearchArguments = new BasicDBList();
 			searchArguments = new ArrayList<BasicDBObject>();
 
-			innerSearchArguments = (BasicDBList) denied.get(key);
+			// innerSearchArguments = (BasicDBList) denied.get(key);
+			innerSearchArguments.addAll((ArrayList<Object>) denied.get(key));
 			for (Object value : innerSearchArguments) {
 				String valueAsString = (String) value;
 				valueAsString = "^" + valueAsString + "$";

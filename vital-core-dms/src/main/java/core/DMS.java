@@ -6,6 +6,9 @@ import java.util.TimerTask;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import api.VitalObservation;
 import api.VitalSensor;
 import api.VitalService;
@@ -24,7 +27,7 @@ import util.DMSPermission;
 
 public class DMS {
 
-//	private final static Logger logger = LoggerFactory.getLogger(DMS.class);
+	private final static Logger logger = LoggerFactory.getLogger(DMS.class);
 
 	final static int responseSuccess = 200;
 	final static int responseUnauthorize = 401;
@@ -44,17 +47,19 @@ public class DMS {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-//				logger.info("Re-authenticating DMS...");
+				if (logger.isDebugEnabled()) {
+					logger.info("Re-authenticating DMS...");
+				}
 				DMSPermission.securityDMSAuth(); // Temporary blocked for
 													// testing.
 			}
-		}, 20 * 60 * 1000, 20 * 60 * 1000);
+		}, 5000, 15 * 60 * 1000);
 
 		Spark.get(new Route("/") {
 
 			@Override
 			public Object handle(Request request, Response response) {
-//				logger.info("GET: /");
+				// logger.info("GET: /");
 				DMSPermission.securityDMSAuth();// Temporary blocked for
 												// testing.
 				return "Welcome to DMS.";
@@ -65,7 +70,7 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
-//				logger.info("POST: /insertSystem");
+				// logger.info("POST: /insertSystem");
 
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
@@ -74,11 +79,12 @@ public class DMS {
 					VitalSystem.insertSystem(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
-//					logger.info("Successful data inserted. /insertSystem");
+					// logger.info("Successful data inserted. /insertSystem");
 					return objRet;
 
 				} catch (Exception e) {
-//					logger.error("Error in /insertSystem. " + e.getMessage());
+					// logger.error("Error in /insertSystem. " +
+					// e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -89,7 +95,7 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
-//				logger.info("POST: /insertService");
+				// logger.info("POST: /insertService");
 
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
@@ -98,11 +104,12 @@ public class DMS {
 					VitalService.insertService(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
-//					logger.info("Successful data inserted. /insertService");
+					// logger.info("Successful data inserted. /insertService");
 					return objRet;
 
 				} catch (Exception e) {
-//					logger.error("Error in /insertService. " + e.getMessage());
+					// logger.error("Error in /insertService. " +
+					// e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -113,7 +120,7 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
-//				logger.info("POST: /insertSensor");
+				// logger.info("POST: /insertSensor");
 
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
@@ -122,11 +129,12 @@ public class DMS {
 					VitalSensor.insertSensor(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
-//					logger.info("Successful data inserted. /insertSensor");
+					// logger.info("Successful data inserted. /insertSensor");
 					return objRet;
 
 				} catch (Exception e) {
-//					logger.error("Error in /insertSensor. " + e.getMessage());
+					// logger.error("Error in /insertSensor. " +
+					// e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
@@ -137,7 +145,7 @@ public class DMS {
 
 			@Override
 			public Object handle(Request request, Response response) {
-//				logger.info("POST: /insertObservation");
+				// logger.info("POST: /insertObservation");
 
 				DBObject objRet = new BasicDBObject();
 				response.type("application/json");
@@ -146,11 +154,12 @@ public class DMS {
 					VitalObservation.insertObservation(inputData);
 					objRet.put("status", "success");
 					response.status(responseSuccess);
-//					logger.info("Successful data inserted. /insertObservation");
+					// logger.info("Successful data inserted. /insertObservation");
 					return objRet;
 
 				} catch (Exception e) {
-//					logger.error("Error in /insertObservation. "+ e.getMessage());
+					// logger.error("Error in /insertObservation. "+
+					// e.getMessage());
 					response.status(responseBadServer);
 					return DMSUtils.sendException(response, e);
 				}
