@@ -63,7 +63,7 @@ public class OpenAMClient {
 		} else {
 			Validation val = getUserIdFromToken(token);
 			if (val.getAdditionalProperties().containsKey("code")) {
-				if ((int)getUserIdFromToken(token).getAdditionalProperties().get("code") == 400) {
+				if ((int) getUserIdFromToken(token).getAdditionalProperties().get("code") == 400) {
 					token = (String) authenticate(username, password).getAdditionalProperties().get((Object) "token");
 				}
 			} else if (!val.getValid()) {
