@@ -59,10 +59,16 @@ public class DMS {
 	public Object insertSystem(String data) {
 
 		try {
-			VitalSystem.insertSystem(data.trim());
 
-			return Response.status(Response.Status.ACCEPTED)
-					.entity("{\"message\" : \"Data pushed.\"}").build();
+			if (VitalSystem.insertSystem(data.trim())) {
+
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Data pushed.\"}").build();
+			} else {
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Error is inserting data.\"}")
+						.build();
+			}
 
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -78,11 +84,15 @@ public class DMS {
 	public Object insertService(String data) {
 
 		try {
-			VitalService.insertService(data.trim());
+			if (VitalService.insertService(data.trim())) {
 
-			return Response.status(Response.Status.ACCEPTED)
-					.entity("{\"message\" : \"Data pushed.\"}").build();
-
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Data pushed.\"}").build();
+			} else {
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Error is inserting data.\"}")
+						.build();
+			}
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity("{\"message\" : \"Exception occured.\"}").build();
@@ -97,10 +107,15 @@ public class DMS {
 	public Object insertSensor(String data) {
 
 		try {
-			VitalSensor.insertSensor(data.trim());
+			if (VitalSensor.insertSensor(data.trim())) {
 
-			return Response.status(Response.Status.ACCEPTED)
-					.entity("{\"message\" : \"Data pushed.\"}").build();
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Data pushed.\"}").build();
+			} else {
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Error is inserting data.\"}")
+						.build();
+			}
 
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -116,11 +131,15 @@ public class DMS {
 	public Object insertObservation(String data) {
 
 		try {
-			VitalObservation.insertObservation(data.trim());
+			if (VitalObservation.insertObservation(data.trim())) {
 
-			return Response.status(Response.Status.ACCEPTED)
-					.entity("{\"message\" : \"Data pushed.\"}").build();
-
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Data pushed.\"}").build();
+			} else {
+				return Response.status(Response.Status.ACCEPTED)
+						.entity("{\"message\" : \"Error is inserting data.\"}")
+						.build();
+			}
 		} catch (Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity("{\"message\" : \"Exception occured.\"}").build();
