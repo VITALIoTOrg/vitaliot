@@ -12,7 +12,7 @@ import javax.ejb.Singleton;
 
 /**
  * Loads properties from a file. The path to that file is specified by the
- * {@code iot-data-adapter.properties} system property.
+ * {@code vital-core-iot-data-adapter.properties} system property.
  * 
  * @author k4t3r1n4
  *
