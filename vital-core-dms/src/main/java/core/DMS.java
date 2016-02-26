@@ -157,7 +157,7 @@ public class DMS {
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
 		org.apache.http.cookie.Cookie c = null;
         if (cookie != null)
-            new BasicClientCookie(cookie.getName(), cookie.getValue());
+            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
@@ -212,7 +212,7 @@ public class DMS {
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
         org.apache.http.cookie.Cookie c = null;
         if (cookie != null)
-            new BasicClientCookie(cookie.getName(), cookie.getValue());
+            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
@@ -267,7 +267,7 @@ public class DMS {
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
         org.apache.http.cookie.Cookie c = null;
         if (cookie != null)
-            new BasicClientCookie(cookie.getName(), cookie.getValue());
+            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
@@ -322,7 +322,7 @@ public class DMS {
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
         org.apache.http.cookie.Cookie c = null;
         if (cookie != null)
-            new BasicClientCookie(cookie.getName(), cookie.getValue());
+            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
