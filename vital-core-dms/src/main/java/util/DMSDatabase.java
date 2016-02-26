@@ -6,11 +6,13 @@ import com.mongodb.MongoClient;
 
 public class DMSDatabase {
 	static MongoClient mongoClient;
-	// final static String HOST = "localhost";
-	final static String HOST = "vmvital03.deri.ie";
-	// final static int PORT = 27017; // for localhost
-	final static int PORT = 8025; // for server
-	final static String dbName = "dmsdata";
+	final static String HOST = "localhost"; // for localhost as well as
+											// integration server
+	// final static String HOST = "vmvital03.deri.ie";
+	final static int PORT = 27017; // for localhost
+	// final static int PORT = 8025; // for server
+	// final static String dbName = "dmsdata";
+	final static String dbName = "vital-dms";
 	static DB database, db;
 	static boolean dbActive;
 
