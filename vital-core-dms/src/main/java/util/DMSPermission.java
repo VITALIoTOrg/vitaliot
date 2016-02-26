@@ -74,7 +74,7 @@ public class DMSPermission {
 	}
 
 	public static int checkPermission(Cookie cookie) {
-		if (cookie.equals("") || cookie.equals(null)) {
+		if (cookie == null || cookie.equals("")) {
 			permission = null;
 			return accessTokenNotFound;
 		} else {

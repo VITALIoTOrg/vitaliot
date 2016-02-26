@@ -155,9 +155,9 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-		org.apache.http.cookie.Cookie c = new BasicClientCookie(
-				cookie.getName(), cookie.getValue());
-
+		org.apache.http.cookie.Cookie c = null;
+        if (cookie != null)
+            new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
@@ -210,9 +210,9 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-		org.apache.http.cookie.Cookie c = new BasicClientCookie(
-				cookie.getName(), cookie.getValue());
-
+        org.apache.http.cookie.Cookie c = null;
+        if (cookie != null)
+            new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
@@ -265,9 +265,9 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-		org.apache.http.cookie.Cookie c = new BasicClientCookie(
-				cookie.getName(), cookie.getValue());
-
+        org.apache.http.cookie.Cookie c = null;
+        if (cookie != null)
+            new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
@@ -320,9 +320,9 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-		org.apache.http.cookie.Cookie c = new BasicClientCookie(
-				cookie.getName(), cookie.getValue());
-
+        org.apache.http.cookie.Cookie c = null;
+        if (cookie != null)
+            new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
