@@ -1,0 +1,72 @@
+ /* 
+
+ SOL/CEP 
+
+ Copyright (c) Atos S.A.
+
+ Research & Innovation - Smart Objects Lab
+
+ All Rights Reserved.
+
+ 
+
+ ATOS PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+
+*/
+
+
+
+event vital_Speed 
+
+
+{
+
+   use
+
+   {
+
+        string id,
+
+        pos location,
+
+        float value
+
+   };
+
+}
+
+complex slowSpeedAvg75
+{
+  group id;
+  payload{
+     string id = id,
+     float value = value,
+     pos location = location
+  };
+  detect vital_Speed where (avg(value) < 75) in [30 seconds];
+}
+
+
+complex trafficJam
+{
+
+   group id;
+
+   payload{
+
+        string id = id,
+        float value = value,
+	pos location = location
+
+   };
+
+   detect vital_Speed where (avg(value)<80 && count(vital_Speed) > 3) in [40 seconds];
+}
+
+
+
+
+
+
+
+
