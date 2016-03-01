@@ -13,13 +13,13 @@
 
     <modules>
         <module>vital-core-discovery</module>
-        <module>vital-core-dms</module>
+        <!--<module>vital-core-dms</module>-->
         <module>vital-core-filtering</module>
-        <module>vital-core-iot-data-adapter</module>
+        <!--<module>vital-core-iot-data-adapter</module>-->
         <module>vital-core-iot-data-adapter-ppi</module>
-        <module>vital-core-orchestrator</module>
-        <module>vital-core-security-adapter</module>
-        <module>vital-core-security-gateway</module>
+        <!--<module>vital-core-orchestrator</module>-->
+        <!--<module>vital-core-security-adapter</module>-->
+        <!--<module>vital-core-security-gateway</module>-->
     </modules>
 
     <properties>
