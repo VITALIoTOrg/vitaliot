@@ -92,19 +92,6 @@
                         </goals>
                     </execution>
 
-                    <execution>
-                        <id>clean</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <executable>grunt</executable>
-                            <arguments>
-                                <argument>clean</argument>
-                            </arguments>
-                        </configuration>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
 
