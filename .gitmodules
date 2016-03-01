@@ -1,0 +1,24 @@
+[submodule "vital-core-filtering"]
+	path = vital-core-filtering
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-filtering.git
+[submodule "vital-core-discovery"]
+	path = vital-core-discovery
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-discovery.git
+[submodule "vital-core-security-adapter"]
+	path = vital-core-security-adapter
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-security-adapter.git
+[submodule "vital-core-security-gateway"]
+	path = vital-core-security-gateway
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-security-gateway.git
+[submodule "vital-core-orchestrator"]
+	path = vital-core-orchestrator
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-orchestrator.git
+[submodule "vital-core-dms"]
+	path = vital-core-dms
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-dms.git
+[submodule "vital-core-iot-data-adapter-ppi"]
+	path = vital-core-iot-data-adapter-ppi
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-iot-data-adapter-ppi.git
+[submodule "vital-core-iot-data-adapter"]
+	path = vital-core-iot-data-adapter
+	url = git@gitlab.atosresearch.eu:vital-iot/vital-core-iot-data-adapter.git
