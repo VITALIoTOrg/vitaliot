@@ -10,6 +10,7 @@ package eu.vital.vitalcep.entities.dolceHandler.statements;
 
 import java.io.Serializable;
 import java.util.StringTokenizer;
+import org.json.JSONArray;
 
 import org.json.JSONObject;
 
@@ -44,8 +45,61 @@ public class ComplexStatement extends DolceStatement implements Serializable {
 	 * @param obj the obj
 	 */
 	public ComplexStatement(JSONObject obj) {
-		id = obj.getString("id");
-		definition = obj.getString("definition");
+            
+            id = obj.getString("id");
+            definition = " payload \n { \n";
+            JSONArray use = obj.getJSONObject("definition")
+                    .getJSONArray("payload");
+                   
+            for (int i = 0, size = use.length(); i < size-1; i++){
+                
+                JSONObject objectInArray = use.getJSONObject(i);
+                String dataType = objectInArray.getString("dataType");
+                String name = objectInArray.getString("name");
+                String assign = objectInArray.getString("assign");
+                
+                  definition = definition + " "+dataType+" "+ name+"="
+                          + assign+", \n";
+             
+            }
+            
+            if ( use.length()>0){
+            
+                JSONObject objectInArray = use.getJSONObject(use.length()-1);
+                String dataType = objectInArray.getString("dataType");
+                String name = objectInArray.getString("name");
+                String assign = objectInArray.getString("assign");
+                
+                  definition = definition + " "+dataType+" "+ name+"="
+                          + assign+" \n";
+            }
+                
+            definition = definition + " };\n";
+            definition = definition + " detect "+obj.getJSONObject("definition")
+                    .getString("detect")+" \n";
+            
+            definition = definition + " where ("+obj.getJSONObject("definition")
+                    .getString("where")+") ";
+            
+             if (obj.getJSONObject("definition")
+                    .has("in")){
+                  definition = definition + "\n in ["+obj.getJSONObject("definition")
+                    .getString("in")+"] ";
+            
+            }
+                      
+            definition = definition + "; \n";
+            
+            
+            if (obj.getJSONObject("definition")
+                    .has("group")){
+                  definition = definition + " group "+obj.getJSONObject("definition")
+                    .getString("group")+"; \n";
+            
+            }
+            
+          
+            
 	}
 
 	// param constructor
