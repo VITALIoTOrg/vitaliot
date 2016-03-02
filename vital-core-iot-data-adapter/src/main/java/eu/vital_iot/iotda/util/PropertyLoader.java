@@ -39,10 +39,8 @@ public class PropertyLoader {
 	@PostConstruct
 	private void init() throws IOException {
 
-		final String path = System.getProperty(PROPERTY_FILE_PATH_PROPERTY);
-		final File file = new File(path);
 		final Properties properties = new Properties();
-		properties.load(new FileInputStream(file));
+		properties.load(PropertyLoader.class.getResourceAsStream("/" + PROPERTY_FILE_PATH_PROPERTY));
 		for (final String name : properties.stringPropertyNames())
 			this.properties.put(name, properties.getProperty(name));
 	}
