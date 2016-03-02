@@ -68,7 +68,7 @@ public class DolceStatementFactory implements Serializable {
 			// body = "\t"+body;
 			EventStatement ds = new EventStatement();
 			ds.setId(name);
-			ds.setDefinitione(body);
+			ds.setDefinition(body);
 
 			return ds;
 
