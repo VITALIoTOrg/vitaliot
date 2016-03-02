@@ -29,7 +29,7 @@
         <module>vital-core-orchestrator</module>
 
         <!-- Governance and Management -->
-        <module>vital-management</module>
+        <!--<module>vital-management</module>-->
 
     </modules>
 
