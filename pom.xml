@@ -8,36 +8,40 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
-    <name>vital</name>
-    <url>http://vital-iot.eu</url>
+    <name>Vital</name>
 
     <modules>
-        <module>vital-core-discovery</module>
+        <!-- PPIs: Not included for release -->
+        <!--<module>vital-ppi-camden-footfall</module>-->
+        <!--<module>vital-ppi-hireply</module>-->
+        <!--<module>vital-ppi-security-gateway</module>-->
+        <!--<module>vital-ppi-iot-data-adapter</module>-->
+
+        <!-- Core Services -->
         <module>vital-core-dms</module>
-        <module>vital-core-filtering</module>
         <module>vital-core-iot-data-adapter</module>
         <module>vital-core-iot-data-adapter-ppi</module>
-        <module>vital-core-orchestrator</module>
         <module>vital-core-security-adapter</module>
         <module>vital-core-security-gateway</module>
+        <module>vital-core-discovery</module>
+        <module>vital-core-filtering</module>
+         <!--<module>vital-core-cep</module>-->
+        <module>vital-core-orchestrator</module>
+
+        <!-- Governance and Management -->
+        <module>vital-management</module>
+
     </modules>
 
     <properties>
         <project.bui1.sourceEncoding>UTF-8</project.bui1.sourceEncoding>
+        <version.compiler.plugin>3.1</version.compiler.plugin>
 
+        <!-- Wildfly Plugins -->
         <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-
         <version.jboss.bom>8.0.0.Final</version.jboss.bom>
         <version.wildfly>8.2.0.Final</version.wildfly>
-        <version.compiler.plugin>3.1</version.compiler.plugin>
-        <version.ear.plugin>2.6</version.ear.plugin>
-        <version.ejb.plugin>2.3</version.ejb.plugin>
-        <version.surefire.plugin>2.16</version.surefire.plugin>
-        <version.war.plugin>2.1.1</version.war.plugin>
-        <version.resteasy>3.0.8.Final</version.resteasy>
-        <version.es>1.4.2</version.es>
-        <version.junit>4.12</version.junit>
-        <version.mockito>1.10.19</version.mockito>
+        <!-- Java Version -->
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
     </properties>
@@ -58,12 +62,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${version.junit}</version>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -82,13 +80,6 @@
                     <groupId>org.wildfly.plugins</groupId>
                     <artifactId>wildfly-maven-plugin</artifactId>
                     <version>${version.wildfly.maven.plugin}</version>
-                    <configuration>
-                        <!--<protocol>https-remoting</protocol>-->
-                        <!--<hostname>5.79.79.172</hostname>-->
-                        <!--<port>9993</port>-->
-                        <!--<username>managewildfly</username>-->
-                        <!--<password>W#mat.31</password>-->
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -103,5 +94,5 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
+

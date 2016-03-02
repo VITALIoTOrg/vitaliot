@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+    <!-- Core Services -->
+
+    <!-- vital-core-dms -->
+
+    <!--vital-core-iot-data-adapter-->
+
+    <!--vital-core-iot-data-adapter-ppi-->
+
+    <!--vital-core-security-adapter-->
+
+    <!--vital-core-security-gateway-->
+
+    <!--vital-core-discovery-->
+
+    <!--vital-core-filtering-->
+
+    <!-- vital-core-cep -->
+
+    <!--vital-core-orchestrator-->
+    <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
+
+
+    <!-- Governance and Management -->
+
+    <!--vital-management-->
+    <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
+
+</properties>
