@@ -6,11 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.FindOneAndReplaceOptions;
 import com.mongodb.client.result.DeleteResult;
+import eu.vital.orchestrator.util.VitalConfiguration;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -45,6 +47,9 @@ public class OrchestratorStorage implements Serializable {
 	private Logger log;
 
 	@Inject
+	private VitalConfiguration vitalConfiguration;
+
+	@Inject
 	private ObjectMapper objectMapper;
 
 	private MongoClient mongoClient;
@@ -56,13 +61,10 @@ public class OrchestratorStorage implements Serializable {
 	@PostConstruct
 	public void produceMongoClient() {
 		log.info("produceMongoClient");
-
-		String url = System.getProperty("vital.mongodb.host");
-		if (url == null) {
-			url = "localhost";
-		}
-		this.mongoClient = new MongoClient(url, 27017);
+		String url = vitalConfiguration.getProperty("vital-core-orchestrator.mongo", "mongodb://localhost:27017");
+		this.mongoClient = new MongoClient(new MongoClientURI(url));
 		this.mongoDatabase = mongoClient.getDatabase(MAIN_INDEX);
+		log.info("produceMongoClient:done");
 	}
 
 	@PreDestroy
