@@ -38,3 +38,7 @@
 	path = vital-core-cep
 	url = http://gitlab.atosresearch.eu/ari/vital-core-cep.git
 	branch = master
+[submodule "vital-core-security-snmp-exposer"]
+	path = vital-core-security-snmp-exposer
+	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-security-snmp-exposer.git
+	branch = master
