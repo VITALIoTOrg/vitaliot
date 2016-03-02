@@ -13,9 +13,7 @@
     <modules>
         <!-- PPIs: Not included for release -->
         <!--<module>vital-ppi-camden-footfall</module>-->
-        <!--<module>vital-ppi-hireply</module>-->
-        <!--<module>vital-ppi-security-gateway</module>-->
-        <!--<module>vital-ppi-iot-data-adapter</module>-->
+        <!--<module>vital-ppi-istanbul-traffic</module>-->
 
         <!-- Core Services -->
         <module>vital-core-dms</module>
