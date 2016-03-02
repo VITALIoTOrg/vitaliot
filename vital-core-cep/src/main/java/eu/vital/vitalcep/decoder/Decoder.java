@@ -52,6 +52,8 @@ public class Decoder {
 
             String observationType = vect[vect.length-1];
             //String observationType =oType; 
+            
+           // String vect = oType;
 
             JSONObject oResoult = input.getJSONObject(i)
                     .getJSONObject("ssn:observationResult");
@@ -132,7 +134,7 @@ public class Decoder {
             dolceInput = number +" "+observationType
                 + " " + location
                 +" string id "+ id 
-                + " "+ stringValue ; 
+                + " "+ stringValue ;
                // +" "+ observationResultTime   ;
                // +" "+" int value "+(long)Math.floor(value + 0.5d);
             dolceInputs.add(dolceInput);
