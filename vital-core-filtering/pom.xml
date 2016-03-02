@@ -8,6 +8,19 @@
 
     <name>Vital Core: Filtering</name>
 
+    <properties>
+        <project.bui1.sourceEncoding>UTF-8</project.bui1.sourceEncoding>
+        <version.compiler.plugin>3.1</version.compiler.plugin>
+
+        <!-- Wildfly Plugins -->
+        <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
+        <version.jboss.bom>8.0.0.Final</version.jboss.bom>
+        <version.wildfly>8.2.0.Final</version.wildfly>
+        <!-- Java Version -->
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -66,7 +79,26 @@
             <version>3.5</version>
         </dependency>
     </dependencies>
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.compiler.plugin}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>${version.wildfly.maven.plugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <finalName>filtering</finalName>
         <plugins>
             <plugin>
