@@ -19,8 +19,8 @@
 
         <!-- Core Services -->
         <module>vital-core-dms</module>
-        <!--<module>vital-core-iot-data-adapter</module>-->
-        <!--<module>vital-core-iot-data-adapter-ppi</module>-->
+        <module>vital-core-iot-data-adapter</module>
+        <module>vital-core-iot-data-adapter-ppi</module>
         <module>vital-core-security-adapter</module>
         <module>vital-core-security-gateway</module>
         <module>vital-core-discovery</module>
@@ -29,10 +29,9 @@
         <module>vital-core-orchestrator</module>
 
         <!-- Governance and Management -->
-        <module>vital-management</module>
+        <!--<module>vital-management</module>-->
 
     </modules>
-
 
     <properties>
         <project.bui1.sourceEncoding>UTF-8</project.bui1.sourceEncoding>
@@ -96,3 +95,4 @@
         </plugins>
     </build>
 </project>
+
