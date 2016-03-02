@@ -27,9 +27,18 @@
 
         <!-- Dependency on the EJB module so we can use it's services if needed -->
         <dependency>
-            <groupId>eu.vital.management</groupId>
+            <groupId>eu.vital-iot</groupId>
             <artifactId>vital-management-ejb</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Servlets -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
 
