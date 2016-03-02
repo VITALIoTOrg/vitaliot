@@ -156,10 +156,9 @@ public class DMS {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
 		org.apache.http.cookie.Cookie c = null;
-        if (cookie != null)
-            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
+		if (cookie != null)
+			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
-
 			if (DMSApp.isSecurityEnabled) {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
@@ -210,11 +209,10 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-        org.apache.http.cookie.Cookie c = null;
-        if (cookie != null)
-            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
+		org.apache.http.cookie.Cookie c = null;
+		if (cookie != null)
+			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
-
 			if (DMSApp.isSecurityEnabled) {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
@@ -265,11 +263,10 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-        org.apache.http.cookie.Cookie c = null;
-        if (cookie != null)
-            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
+		org.apache.http.cookie.Cookie c = null;
+		if (cookie != null)
+			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
-
 			if (DMSApp.isSecurityEnabled) {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
@@ -320,9 +317,9 @@ public class DMS {
 			@CookieParam("vitalAccessToken") Cookie cookie) {
 		DBObject query = DMSUtils
 				.encodeKeys((DBObject) JSON.parse(data.trim()));
-        org.apache.http.cookie.Cookie c = null;
-        if (cookie != null)
-            c = new BasicClientCookie(cookie.getName(), cookie.getValue());
+		org.apache.http.cookie.Cookie c = null;
+		if (cookie != null)
+			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
 		try {
 
 			if (DMSApp.isSecurityEnabled) {
