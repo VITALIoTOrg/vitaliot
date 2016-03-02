@@ -10,6 +10,7 @@ package eu.vital.vitalcep.entities.dolceHandler.statements;
 
 import java.io.Serializable;
 import java.util.StringTokenizer;
+import org.json.JSONArray;
 
 import org.json.JSONObject;
 
@@ -25,7 +26,7 @@ public class EventStatement extends DolceStatement implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The definition. */
-	private String definition = "";
+	private String definition ="";
 
 	/** The string b_statement. */
 	private StringBuilder stringB_statement = null;
@@ -44,8 +45,32 @@ public class EventStatement extends DolceStatement implements Serializable {
 	 * @param obj the obj
 	 */
 	public EventStatement(JSONObject obj) {
-		id = obj.getString("id");
-		definition = obj.getString("definition");
+            id = obj.getString("id");
+            definition = " use \n { \n";
+            JSONArray use = obj.getJSONObject("definition").getJSONArray("use");
+
+                    
+            for (int i = 0, size = use.length(); i < size-1; i++){
+                
+                JSONObject objectInArray = use.getJSONObject(i);
+                String dataType = objectInArray.getString("dataType");
+                String name = objectInArray.getString("name");
+                
+                definition = definition + " "+dataType+" "+ name+ ", \n";
+             
+            }
+            
+            if ( use.length()>0){
+            
+                JSONObject objectInArray = use.getJSONObject(use.length()-1);
+                String dataType = objectInArray.getString("dataType");
+                String name = objectInArray.getString("name");
+                
+                  definition = definition + " "+dataType+" "+ name+ " \n";
+            }
+                
+            definition = definition + " };\n";
+                
 	}
 
 	// param constructor
@@ -103,7 +128,7 @@ public class EventStatement extends DolceStatement implements Serializable {
 	public JSONObject toJson() {
 		JSONObject obj = new JSONObject();
 		obj.put("id", id);
-		obj.put("definition", definition.trim());
+		obj.put("definition", definition);
 
 		return obj;
 	}
@@ -137,7 +162,7 @@ public class EventStatement extends DolceStatement implements Serializable {
 	 *
 	 * @return the definition
 	 */
-	public String getDefinitione() {
+	public String getDefinition() {
 		return definition;
 	}
 
@@ -146,7 +171,7 @@ public class EventStatement extends DolceStatement implements Serializable {
 	 *
 	 * @param definition the new definitione
 	 */
-	public void setDefinitione(String definition) {
+	public void setDefinition(String definition) {
 		this.definition = definition;
 	}
 
