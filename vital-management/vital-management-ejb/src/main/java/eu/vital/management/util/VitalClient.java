@@ -1,6 +1,5 @@
 package eu.vital.management.util;
 
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -8,12 +7,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
+import eu.vital.management.security.SecurityService;
+import eu.vital.management.security.VitalUserPrincipal;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +29,15 @@ public class VitalClient {
 	@Inject
 	ObjectMapper objectMapper;
 
+	@Inject
+	VitalUserPrincipal userPrincipal;
+
 	public JsonNode doGet(String url) throws Exception {
 		Client client = ClientBuilder.newClient();
-		client.register(new BasicAuthenticator("silo", "phier0Sa"));
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-				//.header("Authorization", "Basic c2lsbzpwaGllcjBTYQ==")
 				.accept("*")
+				.cookie(new NewCookie(SecurityService.COOKIE_NAME, userPrincipal.getToken()))
 				.get(JsonNode.class);
 		client.close();
 		if (jsonNode == null) {
@@ -46,10 +50,9 @@ public class VitalClient {
 
 	public JsonNode doPost(String url, JsonNode data) throws Exception {
 		Client client = ClientBuilder.newClient();
-		client.register(new BasicAuthenticator("silo", "phier0Sa"));
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-				//.header("Authorization", "Basic c2lsbzpwaGllcjBTYQ==")
+				.cookie(new NewCookie(SecurityService.COOKIE_NAME, userPrincipal.getToken()))
 				.accept("*")
 				.post(Entity.json(data), JsonNode.class);
 		client.close();
@@ -60,7 +63,6 @@ public class VitalClient {
 
 		return jsonNode;
 	}
-
 
 	private JsonNode expand(JsonNode jsonLD) throws Exception {
 		boolean isArray = jsonLD.isArray();
