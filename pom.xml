@@ -23,7 +23,7 @@
         <module>vital-core-security-gateway</module>
         <module>vital-core-discovery</module>
         <module>vital-core-filtering</module>
-         <!--<module>vital-core-cep</module>-->
+         <module>vital-core-cep</module>
         <module>vital-core-orchestrator</module>
 
         <!-- Governance and Management -->

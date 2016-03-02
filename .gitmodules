@@ -34,4 +34,7 @@
     path = vital-management
     url = http://gitlab.atosresearch.eu/vital-iot/vital-management.git
     branch = master
-
+[submodule "vital-core-cep"]
+	path = vital-core-cep
+	url = http://gitlab.atosresearch.eu/ari/vital-core-cep.git
+	branch = master
