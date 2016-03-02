@@ -3,11 +3,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.atos</groupId>
-    <artifactId>vitalcep</artifactId>
+    <groupId>eu.vital-iot</groupId>
+    <artifactId>vital-core-cep</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>vitalcep</name>
+    <name>Vital Core: CEP</name>
 
     <build>
         <finalName>cep</finalName>
