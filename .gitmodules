@@ -1,27 +1,36 @@
 [submodule "vital-core-filtering"]
 	path = vital-core-filtering
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-filtering.git
+	branch = master
 [submodule "vital-core-discovery"]
 	path = vital-core-discovery
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-discovery.git
+	branch = master
 [submodule "vital-core-security-adapter"]
 	path = vital-core-security-adapter
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-security-adapter.git
+	branch = master
 [submodule "vital-core-security-gateway"]
 	path = vital-core-security-gateway
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-security-gateway.git
+	branch = master
 [submodule "vital-core-orchestrator"]
 	path = vital-core-orchestrator
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-orchestrator.git
+	branch = master
 [submodule "vital-core-dms"]
 	path = vital-core-dms
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-dms.git
+	branch = master
 [submodule "vital-core-iot-data-adapter-ppi"]
 	path = vital-core-iot-data-adapter-ppi
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-iot-data-adapter-ppi.git
+	branch = master
 [submodule "vital-core-iot-data-adapter"]
 	path = vital-core-iot-data-adapter
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-core-iot-data-adapter.git
+	branch = master
 [submodule "vital-management"]
 	path = vital-management
 	url = http://gitlab.atosresearch.eu/vital-iot/vital-management.git
+	branch = master
