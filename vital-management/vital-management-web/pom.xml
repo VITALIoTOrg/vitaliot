@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -27,8 +27,9 @@
 
         <!-- Dependency on the EJB module so we can use it's services if needed -->
         <dependency>
-            <groupId>eu.vital.management</groupId>
+            <groupId>eu.vital-iot</groupId>
             <artifactId>vital-management-ejb</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <type>ejb</type>
             <scope>provided</scope>
         </dependency>
