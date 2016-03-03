@@ -30,7 +30,7 @@ public class Encoder {
      * @param observationTime ***see whether to put it
      * @return  the dolce input string 
      */
-    private JSONObject dolceOutput2Jsonld(String input,String id, 
+    public JSONObject dolceOutput2Jsonld(String input,String id, 
             String sensor, String observationTime) {
 
             JSONObject outputObservation = new JSONObject();
@@ -107,7 +107,7 @@ public class Encoder {
                 loc.put("type","geo:Point");
                 loc.put("geo:lat",aLoc[1]);//ver
                 loc.put("geo:long",aLoc[0]);//ver
-                //value.put("dul:hasLocation",loc);
+                value.put("dul:hasLocation",loc);
             }
 
             
