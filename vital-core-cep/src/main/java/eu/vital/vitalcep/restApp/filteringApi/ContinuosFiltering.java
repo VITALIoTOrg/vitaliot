@@ -38,6 +38,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.gte;
 import com.mongodb.client.result.DeleteResult;
+import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.connectors.mqtt.MQTT_connector_subscriper;
+import eu.vital.vitalcep.connectors.mqtt.MessageProcessor_publisher;
+import eu.vital.vitalcep.connectors.mqtt.MqttConnectorContainer;
+import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 
@@ -46,6 +51,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
 import javax.ws.rs.core.Context;
+import org.apache.commons.lang.RandomStringUtils;
 import org.bson.Document;
 import org.json.JSONException;
 
@@ -202,7 +208,34 @@ public class ContinuosFiltering {
                     DBObject dbObject = 
                             createCEPFilterSensor(filter, randomUUIDString, dsjo);
 
+                    String mqin = RandomStringUtils.randomAlphanumeric(8);
+                    String mqout = RandomStringUtils.randomAlphanumeric(8);
                     
+                    
+
+                    CEP cepProcess = new CEP(CEP.CEPType.DATA,ds.toString()
+                        ,mqin,mqout);
+                
+                
+                    String clientName = cepProcess.fileName;
+
+                    if (cepProcess.PID<1){
+                        return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+                    }
+               
+                   
+                //MIGUEL
+                MessageProcessor_publisher Publisher_MsgProcc = new MessageProcessor_publisher();//555
+                MQTT_connector_subscriper publisher = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
+                MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
+                
+                //TODO --> DESTROY DEL CONNECTOR.
+                
+                MqttConnectorContainer.deleteConnector(publisher.getClientName());
+                
+                
+                //
                    // String cepPath = "/home/a601149/workspace/BCEP/bcepCode/bcep/source";
 
                     //Runtime r = Runtime.getRuntime();
