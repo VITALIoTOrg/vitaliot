@@ -28,7 +28,7 @@ public class TMessageProc implements MessageProcessor{
             return true;
         }
         
-        public ArrayList<MqttMsg> getMsgs(){
-            return internalBuffer;
-        } 
+    public ArrayList<MqttMsg> getMsgs(){
+        return internalBuffer;
+    } 
 }
