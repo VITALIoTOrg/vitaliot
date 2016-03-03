@@ -24,15 +24,12 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
 
 import com.mongodb.util.JSON;
-import com.mongodb.WriteResult;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -42,15 +39,13 @@ import eu.vital.vitalcep.cep.CEP;
 import eu.vital.vitalcep.connectors.mqtt.MQTT_connector_subscriper;
 import eu.vital.vitalcep.connectors.mqtt.MessageProcessor_publisher;
 import eu.vital.vitalcep.connectors.mqtt.MqttConnectorContainer;
-import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
-import java.net.UnknownHostException;
+
 import java.util.logging.Level;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.UUID;
-import javax.ws.rs.core.Context;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bson.Document;
 import org.json.JSONException;
