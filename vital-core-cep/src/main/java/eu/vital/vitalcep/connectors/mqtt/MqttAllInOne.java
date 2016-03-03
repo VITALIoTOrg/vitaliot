@@ -46,32 +46,7 @@ public class MqttAllInOne {
      
      
      
-    public boolean receiveMsg (MessageProcessor processor, String name, ArrayList<String> simpleEvents,
-             String mqin, String mqout ){
-        MessageProcessor msgProc = processor;
-        MsgQueue queue = new MsgQueue(msgProc);
-        //                                  ( name, msgQueue, cepInputTopicName, cepOutputTopicName, qos)
-        MqttConnector connector = new MqttConnector(name, queue, mqin, mqout, 2);
-
-        if (connector!=null){
-
-            try{
-                
-                connector.messageArrived(mqin, null);
- 
-                connector.disconnect();
-
-            }catch(Exception e){}
-         try {
-              Thread.sleep(1000);                 //1000 milliseconds is one second.
-          } catch(InterruptedException ex) {
-              Thread.currentThread().interrupt();
-          }
-         return true;
-        }else
-         return false;
-      
-    } 
+    
      
 //     public boolean sendMsg (MessageProcessor processor, String name, String simpleEvent){
 //      MessageProcessor msgProc = processor;
