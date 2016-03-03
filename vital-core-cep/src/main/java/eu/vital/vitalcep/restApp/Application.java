@@ -25,8 +25,6 @@ public class Application extends javax.ws.rs.core.Application {
     private Set<Object> singletons = new HashSet();
     private Set<Class<?>> empty = new HashSet();
     
-    
- 
     public Application() throws FileNotFoundException, IOException {
         // ADD YOUR RESTFUL RESOURCES HERE
         
