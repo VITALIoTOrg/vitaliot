@@ -5,7 +5,7 @@ The PPI implementation for the VITAL IoT Data Adapter.
 #### Dependencies
 * Java SE Development Kit 8 >= 1.8.0_25
 * Maven >= 3.1.1
-* WildFly >= 9.0.1.Final
+* WildFly >= 8.2.1.Final
 
 #### How to build it
 
@@ -21,14 +21,17 @@ Execute the command:
 
 and then enter:
 
-	/system-property=vital-core-iot-data-adapter-ppi.properties:add(value=${jboss.server.config.dir}/vital-core-iot-data-adapter-ppi.properties)
+	/system-property=vital.properties.file:add(value=${jboss.server.config.dir}/vital-properties.xml)
+
+Execute the command:
+
+	curl -X PUT "http://[es-host]:{es-port]/vital-core-iot-data-adapter"
 		
 #### How to deploy it
 
-Change `src/main/resources/vital-core-iot-data-adapter-ppi.properties` (if necessary).
+Change `src/main/resources/vital-properties.xml` (if necessary).
 
-Copy `src/main/resources/vital-core-iot-data-adapter-ppi.properties` into 
-`standalone/configuration` in Wildfly.
+Copy `src/main/resources/vital-properties.xml` into `standalone/configuration` in Wildfly.
 
 Execute the command:
 

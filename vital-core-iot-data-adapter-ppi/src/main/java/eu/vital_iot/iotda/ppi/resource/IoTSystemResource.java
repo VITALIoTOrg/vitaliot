@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -37,15 +38,22 @@ public class IoTSystemResource {
 	 * The base URL to the IoT data adapter PPI.
 	 */
 	@Inject
-	@Property(name = "vital_core_iot_data_adapter_ppi.base_url")
+	@Property(name = "vital-core-iot-data-adapter-ppi.base-url")
 	private String ppi;
 
 	/**
 	 * The base URL to the IoT data adapter.
 	 */
 	@Inject
-	@Property(name = "iot_data_adapter.base_url")
+	@Property(name = "vital-core-iot-data-adapter.base-url")
 	private String iotda;
+
+	/**
+	 * The logger.
+	 */
+	@SuppressWarnings("unused")
+	@Inject
+	private Logger logger;
 
 	/**
 	 * Gets the metadata for the IoT system.

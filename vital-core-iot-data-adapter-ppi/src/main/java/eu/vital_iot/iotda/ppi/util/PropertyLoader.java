@@ -6,13 +6,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Loads properties from a file. The path to that file is specified by the
- * {@code vital-core-iot-data-adapter-ppi.properties} system property.
+ * {@code vital.properties.file} system property.
  * 
  * @author k4t3r1n4
  *
@@ -23,7 +28,7 @@ public class PropertyLoader {
 	/**
 	 * The property whose value is the path to the properties file.
 	 */
-	private static final String PROPERTY_FILE_PATH_PROPERTY = "vital-core-iot-data-adapter-ppi.properties";
+	private static final String PROPERTY = "vital.properties.file";
 
 	/**
 	 * The properties.
@@ -31,20 +36,32 @@ public class PropertyLoader {
 	private Map<String, String> properties = new HashMap<>();
 
 	/**
+	 * The logger.
+	 */
+	@Inject
+	private Logger logger;
+
+	/**
 	 * Initialises this property loader.
-	 * 
-	 * @throws IOException
-	 *             if the properties failed to be loaded from the file.
 	 */
 	@PostConstruct
-	private void init() throws IOException {
+	private void init() {
 
-		final String path = System.getProperty(PROPERTY_FILE_PATH_PROPERTY);
+		final String path = System.getProperty(PROPERTY);
+		if (StringUtils.isBlank(path)) {
+			logger.log(Level.SEVERE, "No value for vital-ppi-camden-footfall.properties.file.");
+			return;
+		}
 		final File file = new File(path);
 		final Properties properties = new Properties();
-		properties.load(new FileInputStream(file));
-		for (final String name : properties.stringPropertyNames())
+		try {
+			properties.loadFromXML(new FileInputStream(file));
+		} catch (IOException ioe) {
+			logger.log(Level.SEVERE, "Failed to load properties from " + path + ".", ioe);
+		}
+		for (final String name : properties.stringPropertyNames()) {
 			this.properties.put(name, properties.getProperty(name));
+		}
 	}
 
 	/**
