@@ -6,10 +6,7 @@
 package eu.vital.vitalcep.restApp.filteringApi;
 
 import eu.vital.vitalcep.conf.PropertyLoader;
-import eu.vital.vitalcep.connectors.mqtt.MessageProcessor;
-import eu.vital.vitalcep.connectors.mqtt.MqttConnector;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
-import eu.vital.vitalcep.connectors.mqtt.MsgQueue;
 import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
 import eu.vital.vitalcep.utils.DolceInputOutput;
@@ -96,6 +93,8 @@ public class StaticFiltering {
     
     private String mongoDB;
     
+    private String dmsURL;
+    
     public StaticFiltering() throws IOException {
 
         props = new PropertyLoader();
@@ -104,7 +103,7 @@ public class StaticFiltering {
         mongoDB = props.getProperty("mongo.db");
         host = props.getProperty("cep.ip").concat(":8180");
         hostname = props.getProperty("cep.resourceshostname");
-
+        dmsURL = props.getProperty("dms.base_url");
     }
     
     
@@ -167,13 +166,15 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
 
                 CEP cepProcess = new CEP(CEP.CEPType.DATA,ds.toString()
                         ,mqin,mqout);
-
+                
+                
                 String clientName = cepProcess.fileName;
 
                 if (cepProcess.PID<1){
                     return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
                 }
+               
 
                 UUID uuid = UUID.randomUUID();
                 String randomUUIDString = uuid.toString();
@@ -234,11 +235,11 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
 //        (data);
 //
 /////////////////////////////////////////////////////////////////////////////
-                //RECEIVING FROM MOSQUITO
+                //RECEIVING FROM MOSQUITO               
                 ArrayList<MqttMsg> mesagges = MsgProcc.getMsgs();
 
                 //FORMATTING OBSERVATIONS OUTPUT
-                JSONArray aOutput = new JSONArray();
+                JSONArray aOutput ;
                 
                  Encoder encoder = new Encoder();
 
@@ -259,7 +260,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                         .entity(aOutput.toString()).build();
 
 
-            }catch(Exception e){
+            }catch(IOException | JSONException | java.text.ParseException e){
                  return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
     }   
@@ -1223,7 +1224,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 TMessageProc MsgProcc = new TMessageProc();
 
 
-                JSONArray aData =  jo.getJSONArray("data");
+                JSONArray aData =  this.getDMSObservations("query");
 
 /////////////////////////////////////////////////////////////////////////
                 // PREPARING DOLCE INPUT
