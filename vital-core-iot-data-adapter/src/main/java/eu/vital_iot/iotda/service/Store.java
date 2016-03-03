@@ -55,20 +55,20 @@ public class Store {
 	 * The logger.
 	 */
 	@Inject
-	private Logger log;
+	private Logger logger;
 
 	/**
 	 * The URI to connect to MongoDB.
 	 */
 	@Inject
-	@Property(name = "mongo.uri")
+	@Property(name = "vital-core-iot-data-adapter.mongo.uri")
 	private String uri;
 
 	/**
 	 * The name of the MongoDB database.
 	 */
 	@Inject
-	@Property(name = "mongo.db")
+	@Property(name = "vital-core-iot-data-adapter.mongo.db")
 	private String db;
 
 	/**
@@ -92,7 +92,7 @@ public class Store {
 	@PostConstruct
 	public void init() {
 
-		log.log(Level.INFO, "Initialise.");
+		logger.log(Level.INFO, "Initialise.");
 
 		// Construct the client and the database.
 		client = new MongoClient(new MongoClientURI(uri));
@@ -101,7 +101,7 @@ public class Store {
 		mapper.registerModule(new JodaModule());
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
 
-		log.log(Level.INFO, "Initialised.");
+		logger.log(Level.INFO, "Initialised.");
 
 	}
 
@@ -115,7 +115,7 @@ public class Store {
 	 */
 	public List<IoTSystem> read() throws StoreException {
 
-		log.log(Level.INFO, "Read all IoT systems.");
+		logger.log(Level.INFO, "Read all IoT systems.");
 
 		// Search for all IoT systems.
 		final MongoCollection<Document> collection = database.getCollection(IOT_SYSTEM_COLLECTION_NAME);
@@ -131,12 +131,12 @@ public class Store {
 				iotsystem.setId(id);
 				iotsystems.add(iotsystem);
 			} catch (IOException ioe) {
-				log.log(Level.SEVERE, "Failed to read.", ioe);
+				logger.log(Level.SEVERE, "Failed to read.", ioe);
 				throw new StoreException("Failed to read.", ioe);
 			}
 		}
 
-		log.log(Level.INFO, "Read " + iotsystems.size() + " IoT systems.");
+		logger.log(Level.INFO, "Read " + iotsystems.size() + " IoT systems.");
 
 		return iotsystems;
 	}
@@ -154,7 +154,7 @@ public class Store {
 	 */
 	public List<IoTSystem> read(String query) throws StoreException {
 
-		log.log(Level.INFO, "Read IoT systems [ query: " + query + " ].");
+		logger.log(Level.INFO, "Read IoT systems [ query: " + query + " ].");
 
 		// Search for all IoT systems.
 		final MongoCollection<Document> collection = database.getCollection(IOT_SYSTEM_COLLECTION_NAME);
@@ -170,12 +170,12 @@ public class Store {
 				iotsystem.setId(id);
 				iotsystems.add(iotsystem);
 			} catch (IOException ioe) {
-				log.log(Level.SEVERE, "Failed to read.", ioe);
+				logger.log(Level.SEVERE, "Failed to read.", ioe);
 				throw new StoreException("Failed to read.", ioe);
 			}
 		}
 
-		log.log(Level.INFO, "Read " + iotsystems.size() + " IoT systems [ query: " + query + " ].");
+		logger.log(Level.INFO, "Read " + iotsystems.size() + " IoT systems [ query: " + query + " ].");
 
 		return iotsystems;
 	}
@@ -193,7 +193,7 @@ public class Store {
 	 */
 	public IoTSystem create(IoTSystem iotsystem) {
 
-		log.log(Level.INFO, "Create IoT system [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Create IoT system [ iot-system: " + iotsystem + " ].");
 
 		final MongoCollection<Document> collection = database.getCollection(IOT_SYSTEM_COLLECTION_NAME);
 
@@ -202,7 +202,7 @@ public class Store {
 		try {
 			json = mapper.writeValueAsString(iotsystem);
 		} catch (IOException ioe) {
-			log.log(Level.SEVERE, "Failed to create.", ioe);
+			logger.log(Level.SEVERE, "Failed to create.", ioe);
 			throw new StoreException("Failed to create.", ioe);
 		}
 
@@ -212,7 +212,7 @@ public class Store {
 		final ObjectId id = (ObjectId) document.get("_id");
 		iotsystem.setId(id.toString());
 
-		log.log(Level.INFO, "Created IoT system [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Created IoT system [ iot-system: " + iotsystem + " ].");
 
 		return iotsystem;
 	}
@@ -228,7 +228,7 @@ public class Store {
 	 */
 	public IoTSystem update(IoTSystem iotsystem) throws StoreException {
 
-		log.log(Level.INFO, "Update IoT system [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Update IoT system [ iot-system: " + iotsystem + " ].");
 
 		final MongoCollection<Document> collection = database.getCollection(IOT_SYSTEM_COLLECTION_NAME);
 
@@ -237,7 +237,7 @@ public class Store {
 		try {
 			json = mapper.writeValueAsString(iotsystem);
 		} catch (IOException ioe) {
-			log.log(Level.SEVERE, "Failed to update.", ioe);
+			logger.log(Level.SEVERE, "Failed to update.", ioe);
 			throw new StoreException("Failed to update.", ioe);
 		}
 
@@ -246,7 +246,7 @@ public class Store {
 		document.remove("id");
 		collection.replaceOne(BsonDocument.parse("{\"_id\": ObjectId(\"" + iotsystem.getId() + "\") }"), document);
 
-		log.log(Level.INFO, "Updated IoT system [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Updated IoT system [ iot-system: " + iotsystem + " ].");
 
 		return iotsystem;
 	}
@@ -261,14 +261,14 @@ public class Store {
 	 */
 	public void delete(String id) throws StoreException {
 
-		log.log(Level.INFO, "Delete IoT system [ id: " + id + " ].");
+		logger.log(Level.INFO, "Delete IoT system [ id: " + id + " ].");
 
 		final MongoCollection<Document> collection = database.getCollection(IOT_SYSTEM_COLLECTION_NAME);
 
 		// Delete the IoT system with that ID.
 		collection.deleteOne(BsonDocument.parse("{\"_id\": ObjectId(\"" + id + "\") }"));
 
-		log.log(Level.INFO, "Deleted IoT system [ id: " + id + " ].");
+		logger.log(Level.INFO, "Deleted IoT system [ id: " + id + " ].");
 	}
 
 	/**
@@ -282,14 +282,15 @@ public class Store {
 	public void action(String sensor, Date timestamp) {
 
 		final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-		log.log(Level.INFO, "Create action [ sensor: " + sensor + " timestamp: " + FORMAT.format(timestamp) + " ].");
+		logger.log(Level.INFO, "Create action [ sensor: " + sensor + " timestamp: " + FORMAT.format(timestamp) + " ].");
 
 		final MongoCollection<Document> collection = database.getCollection(ACTION_COLLECTION_NAME);
 
 		final Document document = new Document().append("sensor", sensor).append("timestamp", timestamp.getTime());
 		collection.insertOne(document);
 
-		log.log(Level.INFO, "Created action [ sensor: " + sensor + " timestamp: " + FORMAT.format(timestamp) + " ].");
+		logger.log(Level.INFO,
+				"Created action [ sensor: " + sensor + " timestamp: " + FORMAT.format(timestamp) + " ].");
 	}
 
 	/**
@@ -301,7 +302,7 @@ public class Store {
 	 */
 	public Date lastAction(String sensor) {
 
-		log.log(Level.INFO, "Get last action [ sensor: " + sensor + " ].");
+		logger.log(Level.INFO, "Get last action [ sensor: " + sensor + " ].");
 
 		final MongoCollection<Document> collection = database.getCollection(ACTION_COLLECTION_NAME);
 
@@ -311,9 +312,9 @@ public class Store {
 		for (final Document document : iterable) {
 			final Date timestamp = new Date(document.getLong("timestamp"));
 			final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-			log.log(Level.INFO, "Last action: " + FORMAT.format(timestamp) + ".");
+			logger.log(Level.INFO, "Last action: " + FORMAT.format(timestamp) + ".");
 		}
-		log.log(Level.INFO, "No action.");
+		logger.log(Level.INFO, "No action.");
 		return null;
 	}
 
@@ -323,12 +324,12 @@ public class Store {
 	@PreDestroy
 	public void destroy() {
 
-		log.log(Level.INFO, "Destroy.");
+		logger.log(Level.INFO, "Destroy.");
 
 		// Close the client (if necessary).
 		if (client != null)
 			client.close();
 
-		log.log(Level.INFO, "Destroyed.");
+		logger.log(Level.INFO, "Destroyed.");
 	}
 }

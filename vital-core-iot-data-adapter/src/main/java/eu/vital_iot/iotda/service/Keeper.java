@@ -35,8 +35,9 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -70,7 +71,7 @@ public class Keeper {
 	 * The logger.
 	 */
 	@Inject
-	private Logger log;
+	private Logger logger;
 
 	/**
 	 * The store.
@@ -82,7 +83,7 @@ public class Keeper {
 	 * The number of workers.
 	 */
 	@Inject
-	@Property(name = "keeper.workers")
+	@Property(name = "vital-core-iot-data-adapter.keeper.workers")
 	private int nWorkers;
 
 	/**
@@ -94,7 +95,7 @@ public class Keeper {
 	 * The base URL to DMS.
 	 */
 	@Inject
-	@Property(name = "vital_core_dms.base_url")
+	@Property(name = "vital-core-iot-data-adapter.vital-core-dms.base-url")
 	private String dms;
 
 	/**
@@ -108,7 +109,7 @@ public class Keeper {
 	@PostConstruct
 	public void init() {
 
-		log.log(Level.INFO, "Initialise.");
+		logger.log(Level.INFO, "Initialise.");
 
 		// Start the thread pool.
 		pool = Executors.newFixedThreadPool(nWorkers);
@@ -119,27 +120,27 @@ public class Keeper {
 						throws CertificateException {
 					return true;
 				}
-			}).useTLS().build();
-			factory = new SSLConnectionSocketFactory(context, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			}).build();
+			factory = new SSLConnectionSocketFactory(context, NoopHostnameVerifier.INSTANCE);
 		} catch (KeyManagementException | KeyStoreException | NoSuchAlgorithmException e) {
-			log.log(Level.SEVERE, "Failed to build the SSL connection socket factory.", e);
+			logger.log(Level.SEVERE, "Failed to build the SSL connection socket factory.", e);
 		}
 
-		log.log(Level.INFO, "Initialised.");
+		logger.log(Level.INFO, "Initialised.");
 	}
 
 	/**
 	 * Keeps.
 	 */
-	@Schedule(second = "0", minute = "*/5", hour = "*", persistent = false)
+	@Schedule(second = "0", minute = "*/3", hour = "*", persistent = false)
 	public void keep() {
 
-		log.log(Level.INFO, "Keep.");
+		logger.log(Level.INFO, "Keep.");
 
 		for (final IoTSystem iotsystem : store.read("{\"enabled\": true }")) {
 			final int period = iotsystem.getRefreshPeriod();
 			final String last = iotsystem.getLastDataRefresh();
-			log.log(Level.INFO, "Data from " + iotsystem
+			logger.log(Level.INFO, "Data from " + iotsystem
 					+ (last == null ? " has never been refreshed." : " was last refreshed at " + last + "."));
 			final DateFormat FORMAT = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			Date dlast = null;
@@ -147,15 +148,15 @@ public class Keeper {
 				try {
 					dlast = FORMAT.parse(last);
 				} catch (ParseException pe) {
-					log.log(Level.INFO, "Invalid date [ " + last + " ].");
+					logger.log(Level.INFO, "Invalid date [ " + last + " ].");
 				}
 			}
-			if (dlast == null || ((new Date().getTime() - dlast.getTime()) / 60000) < period) {
+			if (dlast == null || ((new Date().getTime() - dlast.getTime()) / 60000) > period) {
 				keepData(iotsystem);
 			}
 		}
 
-		log.log(Level.INFO, "Kept.");
+		logger.log(Level.INFO, "Kept.");
 	}
 
 	/**
@@ -166,7 +167,7 @@ public class Keeper {
 	 */
 	public void keepMetadata(IoTSystem iotsystem) {
 
-		log.log(Level.INFO, "Keep metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Keep metadata [ iot-system: " + iotsystem + " ].");
 
 		if (!iotsystem.isEnabled())
 			return;
@@ -179,10 +180,10 @@ public class Keeper {
 			iotsystem.setLastMetadataRefresh(FORMAT.format(NOW));
 			store.update(iotsystem);
 		} catch (IOException ioe) {
-			log.log(Level.SEVERE, "Failed to keep metadata [ iot-system: " + iotsystem + " ].", ioe);
+			logger.log(Level.SEVERE, "Failed to keep metadata [ iot-system: " + iotsystem + " ].", ioe);
 		}
 
-		log.log(Level.INFO, "Kept metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Kept metadata [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -193,10 +194,10 @@ public class Keeper {
 	 */
 	public void keepData(IoTSystem iotsystem) {
 
-		log.log(Level.INFO, "Keep data [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Keep data [ iot-system: " + iotsystem + " ].");
 
 		if (!iotsystem.isEnabled()) {
-			log.log(Level.INFO, iotsystem + " is disabled.");
+			logger.log(Level.INFO, iotsystem + " is disabled.");
 			return;
 		}
 
@@ -207,10 +208,10 @@ public class Keeper {
 			iotsystem.setLastDataRefresh(FORMAT.format(NOW));
 			store.update(iotsystem);
 		} catch (IOException ioe) {
-			log.log(Level.SEVERE, "Failed to keep data [ iot-system: " + iotsystem + " ].", ioe);
+			logger.log(Level.SEVERE, "Failed to keep data [ iot-system: " + iotsystem + " ].", ioe);
 		}
 
-		log.log(Level.INFO, "Kept data [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Kept data [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -223,7 +224,7 @@ public class Keeper {
 	 */
 	private void pullSystemMetadata(IoTSystem iotsystem) throws IOException {
 
-		log.log(Level.INFO, "Pull system metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pull system metadata [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (iotsystem.getAuthenticationInfo().username != null) {
@@ -234,7 +235,7 @@ public class Keeper {
 		}
 		String metadata = null;
 		try (final CloseableHttpClient client = builder.build()) {
-			log.log(Level.INFO, "Get system metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.INFO, "Get system metadata [ iot-system: " + iotsystem + " ].");
 			final HttpPost post = new HttpPost(iotsystem.getPpi() + "/metadata");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
@@ -243,11 +244,11 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 			metadata = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-			log.log(Level.INFO, "Got system metadata [ iot-system: " + iotsystem + " ].");
-			log.log(Level.FINE, "System metadata: " + metadata + ".");
+			logger.log(Level.INFO, "Got system metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.FINE, "System metadata: " + metadata + ".");
 		}
 
-		log.log(Level.INFO, "Pulled system metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pulled system metadata [ iot-system: " + iotsystem + " ].");
 
 		pushSystemMetadataToDMS(iotsystem, metadata);
 	}
@@ -264,7 +265,7 @@ public class Keeper {
 	 */
 	private void pushSystemMetadataToDMS(IoTSystem iotsystem, String metadata) throws IOException {
 
-		log.log(Level.INFO, "Push system metadata to DMS [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Push system metadata to DMS [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (factory != null) {
@@ -279,7 +280,7 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 		}
-		log.log(Level.INFO, "Pushed system metadata to DMS [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pushed system metadata to DMS [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -292,7 +293,7 @@ public class Keeper {
 	 */
 	private void pullServiceMetadata(IoTSystem iotsystem) throws IOException {
 
-		log.log(Level.INFO, "Pull service metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pull service metadata [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (iotsystem.getAuthenticationInfo().username != null) {
@@ -303,7 +304,7 @@ public class Keeper {
 		}
 		String metadata = null;
 		try (final CloseableHttpClient client = builder.build()) {
-			log.log(Level.INFO, "Get service metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.INFO, "Get service metadata [ iot-system: " + iotsystem + " ].");
 			final HttpPost post = new HttpPost(iotsystem.getPpi() + "/service/metadata");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
@@ -312,11 +313,11 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 			metadata = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-			log.log(Level.INFO, "Got service metadata [ iot-system: " + iotsystem + " ].");
-			log.log(Level.FINE, "Service metadata: " + metadata + ".");
+			logger.log(Level.INFO, "Got service metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.FINE, "Service metadata: " + metadata + ".");
 		}
 
-		log.log(Level.INFO, "Pulled service metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pulled service metadata [ iot-system: " + iotsystem + " ].");
 
 		pushServiceMetadataToDMS(iotsystem, metadata);
 	}
@@ -335,7 +336,7 @@ public class Keeper {
 	 */
 	private void pushServiceMetadataToDMS(IoTSystem iotsystem, String metadata) throws IOException {
 
-		log.log(Level.INFO, "Push service metadata to DMS [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Push service metadata to DMS [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (factory != null) {
@@ -350,7 +351,7 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 		}
-		log.log(Level.INFO, "Pushed service metadata to DMS [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pushed service metadata to DMS [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -363,7 +364,7 @@ public class Keeper {
 	 */
 	private void pullSensorMetadata(IoTSystem iotsystem) throws IOException {
 
-		log.log(Level.INFO, "Pull sensor metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pull sensor metadata [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (iotsystem.getAuthenticationInfo().username != null) {
@@ -374,7 +375,7 @@ public class Keeper {
 		}
 		String metadata = null;
 		try (final CloseableHttpClient client = builder.build()) {
-			log.log(Level.INFO, "Get sensor metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.INFO, "Get sensor metadata [ iot-system: " + iotsystem + " ].");
 			final HttpPost post = new HttpPost(iotsystem.getPpi() + "/sensor/metadata");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
@@ -383,11 +384,11 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 			metadata = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-			log.log(Level.INFO, "Got sensor metadata [ iot-system: " + iotsystem + " ].");
-			log.log(Level.FINE, "Sensor metadata: " + metadata + ".");
+			logger.log(Level.INFO, "Got sensor metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.FINE, "Sensor metadata: " + metadata + ".");
 		}
 
-		log.log(Level.INFO, "Pulled sensor metadata [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pulled sensor metadata [ iot-system: " + iotsystem + " ].");
 
 		pushSensorMetadataToDMS(iotsystem, metadata);
 	}
@@ -405,7 +406,7 @@ public class Keeper {
 	 */
 	private void pushSensorMetadataToDMS(IoTSystem iotsystem, String metadata) throws IOException {
 
-		log.log(Level.INFO, "Push sensor metadata to DMS [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Push sensor metadata to DMS [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (factory != null) {
@@ -420,7 +421,7 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 		}
-		log.log(Level.INFO, "Pushed sensor metadata to DMS [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pushed sensor metadata to DMS [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -434,10 +435,10 @@ public class Keeper {
 	@SuppressWarnings("unchecked")
 	private void pullSensorData(IoTSystem iotsystem) throws IOException {
 
-		log.log(Level.INFO, "Pull sensor data [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pull sensor data [ iot-system: " + iotsystem + " ].");
 
 		final String url = getObservationsURL(iotsystem);
-		log.log(Level.INFO, "Get observations URL: " + url + ".");
+		logger.log(Level.INFO, "Get observations URL: " + url + ".");
 
 		final ObjectMapper mapper = new ObjectMapper();
 
@@ -449,7 +450,7 @@ public class Keeper {
 			builder.setDefaultCredentialsProvider(provider);
 		}
 		try (final CloseableHttpClient client = builder.build()) {
-			log.log(Level.INFO, "Get sensor metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.INFO, "Get sensor metadata [ iot-system: " + iotsystem + " ].");
 			final HttpPost post = new HttpPost(iotsystem.getPpi() + "/sensor/metadata");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
@@ -457,12 +458,12 @@ public class Keeper {
 			final HttpResponse response = client.execute(post);
 			final String sresponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				log.log(Level.SEVERE, "Failed to get sensor metadata [ status-code: "
+				logger.log(Level.SEVERE, "Failed to get sensor metadata [ status-code: "
 						+ response.getStatusLine().getStatusCode() + " ].");
 				return;
 			}
-			log.log(Level.INFO, "Got sensor metadata [ iot-system: " + iotsystem + " ].");
-			log.log(Level.FINE, "Sensor metadata: " + sresponse + ".");
+			logger.log(Level.INFO, "Got sensor metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.FINE, "Sensor metadata: " + sresponse + ".");
 			final List<Object> l = mapper.readValue(sresponse, new TypeReference<List<Object>>() {
 			});
 			for (final Object o : l) {
@@ -473,7 +474,7 @@ public class Keeper {
 					final JsonLdOptions options = new JsonLdOptions();
 					options.setExpandContext(context);
 					s = (Map<String, Object>) JsonLdProcessor.expand(JsonUtils.fromString(sresponse), options).get(0);
-					log.log(Level.INFO, s.toString());
+					logger.log(Level.INFO, s.toString());
 					final String sensor = (String) s.get("@id");
 					final List<Object> ll = (List<Object>) s.get("http://purl.oclc.org/NET/ssnx/ssn#observes");
 					for (final Object oo : ll) {
@@ -483,12 +484,12 @@ public class Keeper {
 						break;
 					}
 				} catch (JsonLdError jle) {
-					log.log(Level.SEVERE, "Failed to get observations URL.", jle);
+					logger.log(Level.SEVERE, "Failed to get observations URL.", jle);
 				}
 			}
 		}
 
-		log.log(Level.INFO, "Pulled sensor data [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Pulled sensor data [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -509,7 +510,7 @@ public class Keeper {
 	@SuppressWarnings("unchecked")
 	private String getObservationsURL(IoTSystem iotsystem) throws IOException {
 
-		log.log(Level.INFO, "Get observations URL [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Get observations URL [ iot-system: " + iotsystem + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		if (iotsystem.getAuthenticationInfo().username != null) {
@@ -519,7 +520,7 @@ public class Keeper {
 			builder.setDefaultCredentialsProvider(provider);
 		}
 		try (final CloseableHttpClient client = builder.build()) {
-			log.log(Level.INFO, "Get service metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.INFO, "Get service metadata [ iot-system: " + iotsystem + " ].");
 			HttpPost post = new HttpPost(iotsystem.getPpi() + "/service/metadata");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
 			HttpEntity entity = new StringEntity(
@@ -528,12 +529,12 @@ public class Keeper {
 			HttpResponse response = client.execute(post);
 			String sresponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				log.log(Level.SEVERE, "Failed to get observations URL [ status-code: "
+				logger.log(Level.SEVERE, "Failed to get observations URL [ status-code: "
 						+ response.getStatusLine().getStatusCode() + " ].");
 				return null;
 			}
-			log.log(Level.INFO, "Got service metadata [ iot-system: " + iotsystem + " ].");
-			log.log(Level.FINE, "Service metadata: " + sresponse + ".");
+			logger.log(Level.INFO, "Got service metadata [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.FINE, "Service metadata: " + sresponse + ".");
 			final ObjectMapper mapper = new ObjectMapper();
 			List<Object> l = mapper.readValue(sresponse, new TypeReference<List<Object>>() {
 			});
@@ -557,12 +558,12 @@ public class Keeper {
 						}
 					}
 				} catch (JsonLdError jle) {
-					log.log(Level.SEVERE, "Failed to get observations URL.", jle);
+					logger.log(Level.SEVERE, "Failed to get observations URL.", jle);
 				}
 			}
 
-			log.log(Level.INFO, "Observations URL: " + url + ".");
-			log.log(Level.INFO, "Got observations URL [ iot-system: " + iotsystem + " ].");
+			logger.log(Level.INFO, "Observations URL: " + url + ".");
+			logger.log(Level.INFO, "Got observations URL [ iot-system: " + iotsystem + " ].");
 			return url;
 		}
 	}
@@ -585,7 +586,7 @@ public class Keeper {
 	 */
 	private void pullSensorData(IoTSystem iotsystem, String url, String sensor, String property) {
 
-		log.log(Level.INFO, "Pull sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
+		logger.log(Level.INFO, "Pull sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
 				+ property + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
@@ -596,7 +597,7 @@ public class Keeper {
 			builder.setDefaultCredentialsProvider(provider);
 		}
 		try (final CloseableHttpClient client = builder.build()) {
-			log.log(Level.INFO, "Get sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + " ].");
+			logger.log(Level.INFO, "Get sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + " ].");
 			final Date NOW = new Date();
 			final Date from = store.lastAction(sensor);
 			final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
@@ -609,20 +610,20 @@ public class Keeper {
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				log.log(Level.SEVERE,
+				logger.log(Level.SEVERE,
 						"Failed to get sensor data [ status-code: " + response.getStatusLine().getStatusCode() + " ].");
 				return;
 			}
 			final String data = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-			log.log(Level.INFO, "Got sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + " ].");
-			log.log(Level.FINE, "Sensor data: " + data + ".");
+			logger.log(Level.INFO, "Got sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + " ].");
+			logger.log(Level.FINE, "Sensor data: " + data + ".");
 			pushSensorDataToDMS(iotsystem, sensor, property, data);
 			store.action(sensor, NOW);
 		} catch (IOException ioe) {
-			log.log(Level.SEVERE, "Failed to pull.", ioe);
+			logger.log(Level.SEVERE, "Failed to pull.", ioe);
 		}
 
-		log.log(Level.INFO, "Pulled sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
+		logger.log(Level.INFO, "Pulled sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
 				+ property + " ].");
 	}
 
@@ -644,7 +645,7 @@ public class Keeper {
 	private void pushSensorDataToDMS(IoTSystem iotsystem, String sensor, String property, String data)
 			throws IOException {
 
-		log.log(Level.INFO, "Push sensor data to DMS [ iot-system: " + iotsystem + ", sensor: " + sensor
+		logger.log(Level.INFO, "Push sensor data to DMS [ iot-system: " + iotsystem + ", sensor: " + sensor
 				+ ", property: " + property + " ].");
 
 		HttpClientBuilder builder = HttpClientBuilder.create();
@@ -660,7 +661,7 @@ public class Keeper {
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
 				return;
 		}
-		log.log(Level.INFO, "Pushed sensor data to DMS [ iot-system: " + iotsystem + ", sensor: " + sensor
+		logger.log(Level.INFO, "Pushed sensor data to DMS [ iot-system: " + iotsystem + ", sensor: " + sensor
 				+ ", property: " + property + " ].");
 	}
 
@@ -670,12 +671,12 @@ public class Keeper {
 	@PreDestroy
 	public void destroy() {
 
-		log.log(Level.INFO, "Destroy.");
+		logger.log(Level.INFO, "Destroy.");
 
 		// Shutdown the thread pool.
 		if (pool != null)
 			pool.shutdownNow();
 
-		log.log(Level.INFO, "Destroyed.");
+		logger.log(Level.INFO, "Destroyed.");
 	}
 }

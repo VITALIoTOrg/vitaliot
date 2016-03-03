@@ -32,8 +32,9 @@ public class PropertyFeeder {
 		final String name = injectionPoint.getAnnotated().getAnnotation(Property.class).name();
 		final String value = loader.getProperty(name);
 
-		if (value == null || name.trim().isEmpty())
+		if (value == null || name.trim().isEmpty()) {
 			throw new IllegalArgumentException("Unknown property: " + name);
+		}
 
 		return value;
 	}

@@ -1,4 +1,4 @@
-package eu.vital_iot.iotda.util;
+package eu.vital_iot.iotda;
 
 import java.util.logging.Logger;
 

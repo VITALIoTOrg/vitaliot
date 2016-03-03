@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- How to access the IoT data adapter. -->
+	<entry key="vital-core-iot-data-adapter.base-url">http://localhost:8080/iot-data-adapter</entry>
+
+	<!-- How to access the DMS. -->
+	<entry key="vital-core-iot-data-adapter.vital-core-dms.base-url">https://vmvital03.deri.ie:8011</entry>
+
+	<!-- How to connect to MongoDB. -->
+	<entry key="vital-core-iot-data-adapter.mongo.uri">mongodb://localhost:27017</entry>
+	<entry key="vital-core-iot-data-adapter.mongo.db">vital-iot-data-adapter</entry>
+
+	<!-- How many workers under keeper. -->
+	<entry key="vital-core-iot-data-adapter.keeper.workers">100</entry>
+
+</properties>
