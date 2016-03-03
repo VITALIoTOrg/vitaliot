@@ -11,7 +11,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 
-public class MqttConnector implements MqttCallback{
+public class MqttConnector implements MqttCallback,MQTT_conn_interface{
 	
     String CepInstanceID;
 	
@@ -63,7 +63,7 @@ public class MqttConnector implements MqttCallback{
                 return;
         }
 
-        logger.info("Connected to: "+BrokerUrl+", client name:"+clientName);
+       // logger.info("Connected to: "+BrokerUrl+", client name:"+clientName);
 
         //subscribe to topic
         try{
@@ -81,9 +81,10 @@ public class MqttConnector implements MqttCallback{
             message.setQos(qos);
             message.setRetained(false);
 
-            logger.debug("Publishing to topic: \"" + publishTopic + "\" qos: " + qos + " MSG:"+ message.toString());
+           // logger.debug("Publishing to topic: \"" + publishTopic 
+            //+ "\" qos: " + qos + " MSG:"+ message.toString());
 
-            String ss= publishTopic + " qos: " + qos + " MSG:"+ message.toString();
+          //  String ss= publishTopic + " qos: " + qos + " MSG:"+ message.toString();
             MqttDeliveryToken token = null;
             try{
                     token = mqttTopic.publish(message);
@@ -95,10 +96,10 @@ public class MqttConnector implements MqttCallback{
 
     @Override
     public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
-            logger.debug("-------------------------------------------------");
-            logger.debug("| Topic:" + arg0);// topic.getName());
-            logger.debug("| Message: " + new String(new String (arg1.getPayload())));
-            logger.debug("-------------------------------------------------");
+//            logger.debug("-------------------------------------------------");
+//            logger.debug("| Topic:" + arg0);// topic.getName());
+//            logger.debug("| Message: " + new String(new String (arg1.getPayload())));
+//            logger.debug("-------------------------------------------------");
 
             MqttMsg msg = new MqttMsg ();
             msg.msg = new String (arg1.getPayload());
@@ -106,10 +107,10 @@ public class MqttConnector implements MqttCallback{
             synchronized (msgQueue){
                     msgQueue.insertMsg(msg);
             }
-            logger.debug("-------------------------------------------------");
-            logger.debug("| Topic:" + arg0);// topic.getName());
-            logger.debug("| Message: " + msg.msg);
-            logger.debug("-------------------------------------------------");
+//            logger.debug("-------------------------------------------------");
+//            logger.debug("| Topic:" + arg0);// topic.getName());
+//            logger.debug("| Message: " + msg.msg);
+//            logger.debug("-------------------------------------------------");
 
     }
 
@@ -136,6 +137,15 @@ public class MqttConnector implements MqttCallback{
     public void deliveryComplete(IMqttDeliveryToken arg0) {
             // TODO Auto-generated method stub
 
+    }
+    
+    @Override
+    public String getClientName(){
+        return clientName;
+    }
+    @Override
+    public String getQueuename(){
+        return subscribedTopic;
     }
 
 }
