@@ -72,6 +72,7 @@ public class MeasurementResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Object> metadata(String data) {
+		
 		try {
 
 			final List<Object> measurements = new ArrayList<>();
