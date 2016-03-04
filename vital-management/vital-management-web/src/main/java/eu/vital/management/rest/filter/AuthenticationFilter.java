@@ -28,7 +28,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		// Exclude /security
 		UriInfo uriInfo = requestContext.getUriInfo();
-		if (uriInfo.getPath().startsWith("/security")) {
+		if (uriInfo.getPath().startsWith("/authentication")) {
 			return;
 		}
 

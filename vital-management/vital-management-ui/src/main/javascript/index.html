@@ -40,65 +40,28 @@
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account -->
-                    <li class="dropdown user user-menu" ng-if="isSignedIn() == false">
-                        <a role="button" tabindex="0" class="dropdown-toggle" data-toggle="dropdown">
-                            <span>Login <i class="caret"></i></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <form ng-submit="signin(data)" style="padding: 15px; padding-bottom: 0px; margin-bottom: 0px;">
-                                    <div class="form-group">
-                                        <label for="inputUsername">Username</label>
-                                        <input id="loginfoc" style="color: black;" type="text" class="form-control" ng-model="data.name" placeholder="yourusername" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="inputPassword">Password</label>
-                                        <input style="color: black;" type="password" class="form-control" ng-model="data.password" placeholder="yourpassword" required>
-                                    </div>
-                                    <div class="pull-left">
-                                        <button type="submit" class="btn btn-primary">
-                                            Sign in
-                                            <span ng-if="genloginLoading == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
-                                            <span ng-if="genlogoutLoading == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
-                                        </button>
-                                    </div>
-                                </form>
-                                <div class="pull-right" style="padding: 15px; padding-top: 0px; margin-top: 0px;">
-                                    <a class="btn btn-default btn-flat" href="#/security/register">Sign up</a>
-                                </div>
-                                <p class="callout callout-danger" style="padding: 15px; margin-right: 15px; margin-left: 15px; margin-top: 65px;" ng-if="respLogin.status == 400 || respLogin.status == 500">
-                                    Error {{respLogin.data.code}}! {{respLogin.data.message}}
-                                </p>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="dropdown user user-menu" ng-if="isSignedIn() == true">
+                    <li class="dropdown user user-menu" ng-if="isAuthenticated()">
                         <a class="dropdown-toggle" data-toggle="dropdown">
                             <i class="glyphicon glyphicon-user"></i>
-                            <span>{{loggedUser.uid}} <i class="caret"></i></span>
+                            <span>{{loggedOnUser.uid}} <i class="caret"></i></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header text-light-blue">
-                                <img src="{{loggedUser.avatar}}" class="img-circle" alt="User Image"/>
+                                <img src="{{loggedOnUser.avatar}}" class="img-circle" alt="User Image"/>
                                 <p>
-                                    {{loggedUser.fullname}}
-                                    <small ng-if="loggedUser.creation != false">Registered since {{loggedUser.creation.day}} {{loggedUser.creation.month}} {{loggedUser.creation.year}}</small>
+                                    {{loggedOnUser.fullname}}
+                                    <small ng-if="loggedOnUser.creation != false">Registered since {{loggedOnUser.creation.day}} {{loggedOnUser.creation.month}} {{loggedOnUser.creation.year}}</small>
                                 </p>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a class="btn btn-default btn-flat" href="#/security/users/details?name={{loggedUser.uid}}">Profile</a>
+                                    <a class="btn btn-default btn-flat" href="#/security/users/details?name={{loggedOnUser.uid}}">Profile</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a class="btn btn-default btn-flat" ng-click="signout()">Sign out</a>
+                                    <a class="btn btn-default btn-flat" ng-click="logout()">Sign out</a>
                                 </div>
-                            </li>
-                            <li style="padding-right: 15px;">
-                                <p class="callout callout-danger" style="padding: 15px;" ng-if="respLogout.status == 400 || respLogout.status == 500">
-                                    Error {{respLogout.data.code}}! {{respLogout.data.message}}
-                                </p>
                             </li>
                         </ul>
                     </li>
@@ -113,7 +76,7 @@
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu" ng-if="isAuthenticated()">
                 <li>
                     <a href="#/system/list">
                         <i class="fa fa-dashboard"></i>

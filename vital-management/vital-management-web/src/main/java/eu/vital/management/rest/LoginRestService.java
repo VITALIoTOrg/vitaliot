@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
-@Path("/security/")
+@Path("/authentication/")
 @RequestScoped
 public class LoginRestService {
 
@@ -44,16 +44,17 @@ public class LoginRestService {
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response login(@FormParam("name") String username, @FormParam("password") String password) throws Exception {
+	public Response login(@FormParam("username") String username, @FormParam("password") String password) throws Exception {
 		String authToken = securityService.login(username, password);
 		if (authToken == null) {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 
 		JsonNode userData = securityService.getLoggedOnUser(authToken);
+		Cookie authCookie = new Cookie(SecurityService.COOKIE_NAME, authToken, "/", null);
 
-		return Response.ok(userData).
-				cookie(new NewCookie(SecurityService.COOKIE_NAME, authToken))
+		return Response.ok(userData)
+				.cookie(new NewCookie(authCookie))
 				.build();
 	}
 

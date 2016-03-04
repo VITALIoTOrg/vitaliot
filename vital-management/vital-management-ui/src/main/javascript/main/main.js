@@ -3,6 +3,7 @@ angular.module('main', [
         'common',
         'main.templates',
         'main.home',
+        'main.login',
         'main.sensor',
         'main.system',
         'main.modules',
@@ -25,12 +26,11 @@ angular.module('main', [
      * MainController
      */
     .controller('MainController', [
-        '$location', '$scope', 'securityResource', '$timeout', '$interval', '$route', 'Shared',
-        function ($location, $scope, securityResource, $timeout, $interval, $route, Shared) {
+        '$location', '$scope', '$timeout', '$interval', '$route', 'authentication',
+        function ($location, $scope, $timeout, $interval, $route, authentication) {
 
             $scope.title = '';
             $scope.subtitle = '';
-            Shared.signedIn = false;
             $scope.active = '';
             $scope.genloginLoading = false;
             $scope.genlogoutLoading = false;
@@ -125,40 +125,17 @@ angular.module('main', [
             });
 
             /** Security **/
-            securityResource.getId($scope, true);
-
-            $scope.isSignedIn = function () {
-                return Shared.signedIn;
+            $scope.isAuthenticated = function () {
+                return authentication.isAuthenticated();
             };
-            $scope.signin = function (data) {
-                $scope.genloginLoading = true;
-                securityResource.authenticate(data, $scope, true);
+            $scope.logout = function () {
+                authentication.logout();
             };
-            $scope.signout = function () {
-                $scope.genlogoutLoading = true;
-                securityResource.logout($scope, true);
-            };
-            $scope.doFocus = function (data) {
-                $timeout(function () {
-                    document.getElementById('loginfoc').focus();
-                }, 100);
-            };
-            $scope.checkSession = function () {
-                if (Shared.signedIn) {
-                    securityResource.getId($scope, true)
-                        .then(function (response) {
-                            if (response.data.hasOwnProperty('valid')) {
-                                if (!response.data.valid) {
-                                    securityResource.forgetLogin();
-                                    $route.reload();
-                                }
-                            }
-                        });
-                }
-            };
-
-            $interval($scope.checkSession, 5 * 60 * 1000);
-
+            $scope.$watch(function () {
+                return authentication.loggedOnUser;
+            }, function (loggedOnUser) {
+                $scope.loggedOnUser = loggedOnUser;
+            });
             /** end: Security **/
         }
     ]);

@@ -1,6 +1,7 @@
 package eu.vital.management.security;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import eu.vital.management.util.VitalConfiguration;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -13,6 +14,8 @@ import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Logger;
 
 /**
@@ -22,16 +25,28 @@ import java.util.logging.Logger;
 public class SecurityService {
 
 	public static final String COOKIE_NAME = "vitalAccessToken";
-	public static final String AUTHENTICATION_URL = "https://vitalgateway.cloud.reply.eu/securitywrapper/rest";
 
 	@Inject
 	private Logger log;
 
+	@Inject
+	VitalConfiguration vitalConfiguration;
+
+	public URL getSecurityProxyUrl() {
+		try {
+			return new URL(vitalConfiguration.getProperty("vital-management.security", "https://localhost:8080/securitywrapper/rest"));
+		} catch (MalformedURLException e) {
+			log.warning("vital-management.security is malformed" + vitalConfiguration.getProperty("vital-management.security"));
+			return null;
+		}
+	}
+
 	public JsonNode getLoggedOnUser(String authToken) {
 		Client client = ClientBuilder.newClient();
+		String securityUrl = vitalConfiguration.getProperty("vital-management.security");
 		try {
 			JsonNode userData = client
-					.target(AUTHENTICATION_URL + "/user")
+					.target(getSecurityProxyUrl() + "/user")
 					.request(MediaType.APPLICATION_JSON_TYPE)
 					.cookie(new NewCookie(COOKIE_NAME, authToken))
 					.accept(MediaType.APPLICATION_JSON_TYPE)
@@ -54,7 +69,7 @@ public class SecurityService {
 
 		try {
 			Response response = client
-					.target(AUTHENTICATION_URL + "/authenticate")
+					.target(getSecurityProxyUrl() + "/authenticate")
 					.request(MediaType.APPLICATION_JSON_TYPE)
 					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
 

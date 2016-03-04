@@ -42,6 +42,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Commons HTTP Client -->
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+
         <!-- Import the JAX-RS API, we use provided scope as the API is included in JBoss WildFly -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>

@@ -10,6 +10,7 @@ import com.github.jsonldjava.utils.JsonUtils;
 import eu.vital.management.security.SecurityService;
 import eu.vital.management.security.VitalUserPrincipal;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@RequestScoped
 public class VitalClient {
 
 	@Inject

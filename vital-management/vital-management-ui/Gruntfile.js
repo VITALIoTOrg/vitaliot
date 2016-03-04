@@ -338,8 +338,8 @@ module.exports = function (grunt) {
             proxies: [
                 {
                     context: '/vital-management-web',
-                    host: 'vital-integration.atosresearch.eu',
-                    port: '8180',
+                    host: 'localhost',
+                    port: '8080',
                     https: false,
                     changeOrigin: false
                 }
