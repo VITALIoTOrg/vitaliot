@@ -37,11 +37,18 @@
 
     <!--vital-core-orchestrator-->
     <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
+    <!--/.vital-core-orchestrator-->
 
 
     <!-- Governance and Management -->
 
     <!--vital-management-->
-    <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
+    <entry key="vital-management.mongo">mongodb://localhost:27017</entry>
+    <!-- URL of securitywrapper/rest service -->
+    <entry key="vital-management.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
+    <!--/.vital-management-->
 
 </properties>
+
+
+
