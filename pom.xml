@@ -31,6 +31,7 @@
 
         <!-- Governance and Management -->
         <module>vital-management</module>
+        <module>vital-management-security-ui</module>
 
     </modules>
 
