@@ -5,12 +5,13 @@
   },
   "discovery_url": "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
   "system_urls": [
-    "http://vital-integration.atosresearch.eu:8180/vital-orchestrator-web/rest/ppi",
     "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
     "http://vital-integration.atosresearch.eu:8180/filtering/ppi",
-    "http://vital-integration.atosresearch.eu:8180/iot-data-adapter-ppi/ppi/system",
-    "http://vital-integration.atosresearch.eu:8180/camden-footfall-ppi/ppi/system",
     "http://vital-integration.atosresearch.eu:8180/cep",
-    "http://vital-integration.atosresearch.eu:8180/hireplyppi"
+    "http://vital-integration.atosresearch.eu:8180/hireplyppi",
+    "http://vital-integration.atosresearch.eu:8180/iot-data-adapter-ppi/ppi/system",
+    "http://vital-integration.atosresearch.eu:8180/vital-ppi-camden-footfall/ppi/system",
+    "http://vital-integration.atosresearch.eu:8180/vital-ppi-london-air-quality/ppi/system",
+    "http://vital-integration.atosresearch.eu:8180/vital-ppi-london-bike/ppi/system"
   ]
 }
