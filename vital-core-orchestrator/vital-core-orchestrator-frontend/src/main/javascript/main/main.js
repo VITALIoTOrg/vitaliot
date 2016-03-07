@@ -8,7 +8,7 @@ angular.module('main', [
     'main.metaservice'
 ])
 
-    .constant('SERVICE_URL', '/vital-orchestrator-web/rest')
+    .constant('SERVICE_URL', '/vital-core-orchestrator-web/rest')
 
     .config(['$routeProvider', function ($routeProvider) {
 
