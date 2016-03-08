@@ -1410,8 +1410,6 @@ public class OpenAMClient {
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
-        System.out.println(uri.toString());
-
 		String respString = performRequest(httpput);
 		
 		goingOn.append(respString);
@@ -2034,8 +2032,6 @@ public class OpenAMClient {
 	}
 	
 	public boolean updateApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
-        System.out.println(applicationName);
-
 		Application application = new Application();
 		
 		application.setName(applicationName);
@@ -2147,9 +2143,6 @@ public class OpenAMClient {
         httpput.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
-
-        System.out.println(newApplicationInfo);
-        System.out.println(uri.toString());
 
 		String respString = performRequest(httpput);
 		
