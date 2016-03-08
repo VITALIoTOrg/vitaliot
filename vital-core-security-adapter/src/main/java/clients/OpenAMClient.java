@@ -161,7 +161,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/"+token)
+			.setPath(" /openam/json/sessions/"+token)
 			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -229,7 +229,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath("/idp/json/sessions")
+			.setPath("/openam/json/sessions")
 			.setCustomQuery("_action=logout")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -266,7 +266,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath("/idp/json/authenticate")
+			.setPath("/openam/json/authenticate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -323,7 +323,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users/" + getUserIdFromToken(token).getUid())
+			.setPath(" /openam/json/users/" + getUserIdFromToken(token).getUid())
 			.setCustomQuery("_action=changePassword")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -335,6 +335,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 		
@@ -383,7 +384,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/")
+			.setPath(" /openam/json/policies/")
 			.setCustomQuery("_action=evaluate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -395,6 +396,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, tokenPerformer);
 		httppost.setEntity(strEntity);
 
@@ -418,7 +420,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/" + userToken)
+			.setPath(" /openam/json/sessions/" + userToken)
 			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -453,7 +455,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/sessions/")
+			.setPath(" /openam/json/sessions/")
 			.setCustomQuery("_action=isActive&tokenId=" + userToken)
 			.build();
 		} catch (URISyntaxException e1) {
@@ -489,7 +491,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users")
+			.setPath(" /openam/json/users")
 			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -498,6 +500,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -525,7 +528,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/groups")
+			.setPath(" /openam/json/groups")
 			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -534,6 +537,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -562,7 +566,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications")
+			.setPath(" /openam/json/applications")
 			.setCustomQuery("_queryFilter=true")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -571,6 +575,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -598,7 +603,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applicationtypes")
+			.setPath(" /openam/json/applicationtypes")
 			.setCustomQuery("_queryFilter=true")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -634,7 +639,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies")
+			.setPath(" /openam/json/policies")
 			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -643,6 +648,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -774,7 +780,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users/"+username)
+			.setPath(" /openam/json/users/"+username)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -782,6 +788,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -822,7 +829,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/groups/"+groupId)
+			.setPath(" /openam/json/groups/"+groupId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -830,6 +837,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -858,7 +866,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/"+policyId)
+			.setPath(" /openam/json/policies/"+policyId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -866,6 +874,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -893,7 +902,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications/" + applicationId)
+			.setPath(" /openam/json/applications/" + applicationId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -901,6 +910,7 @@ public class OpenAMClient {
 		
 		HttpGet httppost = new HttpGet(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 
 		String respString = performRequest(httppost);
@@ -928,7 +938,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applicationtypes/" + applicationTypeId)
+			.setPath(" /openam/json/applicationtypes/" + applicationTypeId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -993,7 +1003,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users/")
+			.setPath(" /openam/json/users/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1005,6 +1015,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
@@ -1043,7 +1054,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/groups/")
+			.setPath(" /openam/json/groups/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1055,6 +1066,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
@@ -1076,6 +1088,7 @@ public class OpenAMClient {
 		
 		application.setName(applicationName);
 		application.setDescription(description);
+        application.setAdditionalProperty("realm", "/");
 		application.setResources(resources);
 		if(applicationType == null || applicationType.equals(""))
 			application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
@@ -1168,7 +1181,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications/")
+			.setPath(" /openam/json/applications/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1180,6 +1193,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
@@ -1210,7 +1224,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users/"+username)
+			.setPath(" /openam/json/users/"+username)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1218,6 +1232,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
+        httpdelete.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
@@ -1246,7 +1261,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/groups/"+groupId)
+			.setPath(" /openam/json/groups/"+groupId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1254,6 +1269,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
+        httpdelete.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
@@ -1282,7 +1298,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/"+policyId)
+			.setPath(" /openam/json/policies/"+policyId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1290,6 +1306,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
+        httpdelete.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
@@ -1318,7 +1335,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications/"+applicationId)
+			.setPath(" /openam/json/applications/"+applicationId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1326,6 +1343,7 @@ public class OpenAMClient {
 		
 		HttpDelete httpdelete = new HttpDelete(uri);
 		httpdelete.setHeader("Content-Type", "application/json");
+        httpdelete.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httpdelete.setHeader(ssoToken, token);
 
 		String respString = performRequest(httpdelete);
@@ -1377,7 +1395,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users/"+username)
+			.setPath("/openam/json/users/" + username)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1388,8 +1406,11 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
+        httpput.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
+
+        System.out.println(uri.toString());
 
 		String respString = performRequest(httpput);
 		
@@ -1466,7 +1487,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/")
+			.setPath(" /openam/json/policies/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1478,6 +1499,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
@@ -1578,7 +1600,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/")
+			.setPath(" /openam/json/policies/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1590,6 +1612,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
@@ -1687,7 +1710,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/")
+			.setPath(" /openam/json/policies/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1699,6 +1722,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httppost.setHeader(ssoToken, token);
 		httppost.setEntity(strEntity);
 
@@ -1819,7 +1843,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/"+name)
+			.setPath(" /openam/json/policies/"+name)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1830,6 +1854,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
+        httpput.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
@@ -1943,7 +1968,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/policies/"+name)
+			.setPath(" /openam/json/policies/"+name)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1954,6 +1979,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
+        httpput.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
@@ -1984,7 +2010,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/groups/"+groupId)
+			.setPath(" /openam/json/groups/"+groupId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1995,6 +2021,7 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
+        httpput.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
 
@@ -2007,11 +2034,13 @@ public class OpenAMClient {
 	}
 	
 	public boolean updateApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, Boolean nores, ArrayList<Action> actions, Boolean noact, StringBuilder goingOn, String token) {
+        System.out.println(applicationName);
 
 		Application application = new Application();
 		
 		application.setName(applicationName);
 		application.setDescription(description);
+        application.setAdditionalProperty("realm", "/");
 		if(resources.isEmpty() && !nores) {
 			application.setResources(getApplication(applicationName, token).getResources());
 		}
@@ -2104,7 +2133,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/applications/" + applicationName)
+			.setPath("/openam/json/applications/" + applicationName)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -2115,8 +2144,12 @@ public class OpenAMClient {
 		
 		HttpPut httpput = new HttpPut(uri);
 		httpput.setHeader("Content-Type", "application/json");
+        httpput.setHeader("Accept-API-Version", "resource=1.0, protocol=1.0");
 		httpput.setHeader(ssoToken, token);
 		httpput.setEntity(strEntity);
+
+        System.out.println(newApplicationInfo);
+        System.out.println(uri.toString());
 
 		String respString = performRequest(httpput);
 		
@@ -2296,7 +2329,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users")
+			.setPath(" /openam/json/users")
 			.setCustomQuery("_action=register")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -2307,6 +2340,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setEntity(strEntity);
 		
 		String respString = performRequest(httppost);
@@ -2352,7 +2386,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users")
+			.setPath(" /openam/json/users")
 			.setCustomQuery("_action=confirm")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -2363,6 +2397,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setEntity(strEntity);
 		
 		String respString = performRequest(httppost);
@@ -2410,7 +2445,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /idp/json/users")
+			.setPath(" /openam/json/users")
 			.setCustomQuery("_action=anonymousCreate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -2421,6 +2456,7 @@ public class OpenAMClient {
 		
 		HttpPost httppost = new HttpPost(uri);
 		httppost.setHeader("Content-Type", "application/json");
+        httppost.setHeader("Accept-API-Version", "resource=2.0, protocol=1.0");
 		httppost.setEntity(strEntity);
 		
 		String respString = performRequest(httppost);
