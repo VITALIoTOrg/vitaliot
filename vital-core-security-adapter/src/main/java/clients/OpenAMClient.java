@@ -71,6 +71,7 @@ public class OpenAMClient {
 	
 	private String idpHost;
 	private int idpPort;
+    private String idpPath;
 	private String proxyHost;
 	private int proxyPort;
 	private String userAdmin;
@@ -84,6 +85,7 @@ public class OpenAMClient {
 		
 		idpHost = configReader.get(ConfigReader.IDP_HOST);
 		idpPort = Integer.parseInt(configReader.get(ConfigReader.IDP_PORT));
+        idpPath = configReader.get(ConfigReader.IDP_PATH);
 		proxyHost = configReader.get(ConfigReader.PROXY_HOST);
 		proxyPort = Integer.parseInt(configReader.get(ConfigReader.PROXY_PORT));
 		ssoToken = configReader.get(ConfigReader.SSO_TOKEN);
@@ -161,7 +163,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/sessions/"+token)
+			.setPath(idpPath + "/json/sessions/"+token)
 			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -229,7 +231,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath("/openam/json/sessions")
+			.setPath(idpPath + "/json/sessions")
 			.setCustomQuery("_action=logout")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -266,7 +268,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath("/openam/json/authenticate")
+			.setPath(idpPath + "/json/authenticate")
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -323,7 +325,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users/" + getUserIdFromToken(token).getUid())
+			.setPath(idpPath + "/json/users/" + getUserIdFromToken(token).getUid())
 			.setCustomQuery("_action=changePassword")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -384,7 +386,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/")
+			.setPath(idpPath + "/json/policies/")
 			.setCustomQuery("_action=evaluate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -420,7 +422,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/sessions/" + userToken)
+			.setPath(idpPath + "/json/sessions/" + userToken)
 			.setCustomQuery("_action=validate")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -455,7 +457,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/sessions/")
+			.setPath(idpPath + "/json/sessions/")
 			.setCustomQuery("_action=isActive&tokenId=" + userToken)
 			.build();
 		} catch (URISyntaxException e1) {
@@ -491,7 +493,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users")
+			.setPath(idpPath + "/json/users")
 			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -528,7 +530,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/groups")
+			.setPath(idpPath + "/json/groups")
 			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -566,7 +568,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/applications")
+			.setPath(idpPath + "/json/applications")
 			.setCustomQuery("_queryFilter=true")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -603,7 +605,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/applicationtypes")
+			.setPath(idpPath + "/json/applicationtypes")
 			.setCustomQuery("_queryFilter=true")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -639,7 +641,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies")
+			.setPath(idpPath + "/json/policies")
 			.setCustomQuery("_queryID=*")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -683,7 +685,7 @@ public class OpenAMClient {
 				.setScheme("https")
 				.setHost(proxyHost)
 				.setPort(proxyPort)
-				.setPath(" /snmp/openam_stats")
+				.setPath("/snmp/openam_stats")
 				.build();
 			} catch (URISyntaxException e1) {
 				e1.printStackTrace();
@@ -780,7 +782,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users/"+username)
+			.setPath(idpPath + "/json/users/"+username)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -829,7 +831,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/groups/"+groupId)
+			.setPath(idpPath + "/json/groups/"+groupId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -866,7 +868,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/"+policyId)
+			.setPath(idpPath + "/json/policies/"+policyId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -902,7 +904,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/applications/" + applicationId)
+			.setPath(idpPath + "/json/applications/" + applicationId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -938,7 +940,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/applicationtypes/" + applicationTypeId)
+			.setPath(idpPath + "/json/applicationtypes/" + applicationTypeId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1003,7 +1005,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users/")
+			.setPath(idpPath + "/json/users/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1054,7 +1056,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/groups/")
+			.setPath(idpPath + "/json/groups/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1181,7 +1183,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/applications/")
+			.setPath(idpPath + "/json/applications/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1224,7 +1226,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users/"+username)
+			.setPath(idpPath + "/json/users/"+username)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1261,7 +1263,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/groups/"+groupId)
+			.setPath(idpPath + "/json/groups/"+groupId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1298,7 +1300,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/"+policyId)
+			.setPath(idpPath + "/json/policies/"+policyId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1335,7 +1337,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/applications/"+applicationId)
+			.setPath(idpPath + "/json/applications/"+applicationId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1395,7 +1397,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath("/openam/json/users/" + username)
+			.setPath(idpPath + "/json/users/" + username)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1485,7 +1487,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/")
+			.setPath(idpPath + "/json/policies/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1598,7 +1600,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/")
+			.setPath(idpPath + "/json/policies/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1708,7 +1710,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/")
+			.setPath(idpPath + "/json/policies/")
 			.setCustomQuery("_action=create")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -1841,7 +1843,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/"+name)
+			.setPath(idpPath + "/json/policies/"+name)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -1966,7 +1968,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/policies/"+name)
+			.setPath(idpPath + "/json/policies/"+name)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -2008,7 +2010,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/groups/"+groupId)
+			.setPath(idpPath + "/json/groups/"+groupId)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -2129,7 +2131,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath("/openam/json/applications/" + applicationName)
+			.setPath(idpPath + "/json/applications/" + applicationName)
 			.build();
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
@@ -2322,7 +2324,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users")
+			.setPath(idpPath + "/json/users")
 			.setCustomQuery("_action=register")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -2379,7 +2381,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users")
+			.setPath(idpPath + "/json/users")
 			.setCustomQuery("_action=confirm")
 			.build();
 		} catch (URISyntaxException e1) {
@@ -2438,7 +2440,7 @@ public class OpenAMClient {
 			.setScheme("https")
 			.setHost(idpHost)
 			.setPort(idpPort)
-			.setPath(" /openam/json/users")
+			.setPath(idpPath + "/json/users")
 			.setCustomQuery("_action=anonymousCreate")
 			.build();
 		} catch (URISyntaxException e1) {
