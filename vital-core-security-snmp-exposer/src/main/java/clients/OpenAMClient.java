@@ -40,7 +40,7 @@ public class OpenAMClient {
 	    CommunityTarget comtarget = new CommunityTarget();
 	    comtarget.setCommunity(new OctetString(community));
 	    comtarget.setVersion(snmpVersion);
-	    comtarget.setAddress(new UdpAddress("localhost" + "/" + "8080"));
+	    comtarget.setAddress(new UdpAddress("localhost" + "/" + "8085"));
 	    comtarget.setRetries(3);
 	    comtarget.setTimeout(2000);
 
