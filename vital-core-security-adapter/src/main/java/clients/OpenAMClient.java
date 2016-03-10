@@ -685,7 +685,7 @@ public class OpenAMClient {
 				.setScheme("https")
 				.setHost(proxyHost)
 				.setPort(proxyPort)
-				.setPath("/snmp/openam_stats")
+				.setPath("/vital/snmp/openam_stats")
 				.build();
 			} catch (URISyntaxException e1) {
 				e1.printStackTrace();
