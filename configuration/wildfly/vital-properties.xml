@@ -34,6 +34,10 @@
     <entry key="vital-core-security-adapter.sso-token">vitalAccessToken</entry>
     <entry key="vital-core-security-adapter.alt-token">vitalTestToken</entry>
 
+    <!--vital-core-security-snmp-exposer-->
+    <entry key="vital-core-security-snmp-exposer.snmp-host">localhost</entry>
+    <entry key="vital-core-security-snmp-exposer.snmp-port">8085</entry>
+
     <!--vital-core-security-gateway-->
 
     <!--vital-core-discovery-->
