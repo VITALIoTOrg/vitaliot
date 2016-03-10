@@ -14,10 +14,18 @@ import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.smi.VariableBinding;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
+import utils.ConfigReader;
 
 public class OpenAMClient {
+    private ConfigReader configReader;
+    private String snmpHost;
+    private int snmpPort;
 	
 	public OpenAMClient() {
+        configReader = ConfigReader.getInstance();
+        
+        snmpHost = configReader.get(ConfigReader.SNMP_HOST);
+        snmpPort = Integer.parseInt(configReader.get(ConfigReader.SNMP_PORT));
 	}
 	
 	public String getStatValue(String oidValue) {
@@ -40,7 +48,7 @@ public class OpenAMClient {
 	    CommunityTarget comtarget = new CommunityTarget();
 	    comtarget.setCommunity(new OctetString(community));
 	    comtarget.setVersion(snmpVersion);
-	    comtarget.setAddress(new UdpAddress("localhost" + "/" + "8085"));
+	    comtarget.setAddress(new UdpAddress(snmpHost + "/" + snmpPort));
 	    comtarget.setRetries(3);
 	    comtarget.setTimeout(2000);
 
