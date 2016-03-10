@@ -724,7 +724,7 @@ public class PostServices {
 		String userJson = null;
 		User user = new User();
 
-        System.out.println(userId);
+        //System.out.println(userId);
 		
 		String token = null;
 		if(cookie != null)
@@ -977,7 +977,7 @@ public class PostServices {
 		StringBuilder answer = new StringBuilder();
 		Application application = new Application();
 
-        System.out.println(name);
+        //System.out.println(name);
 		
 		ArrayList<Action> actions = new ArrayList<Action>();
 		
