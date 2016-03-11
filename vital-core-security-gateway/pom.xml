@@ -88,6 +88,12 @@
             <artifactId>jboss-jsf-api_2.2_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.jsonld-java</groupId>
+            <artifactId>jsonld-java</artifactId>
+            <version>0.8.2</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

@@ -35,12 +35,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.github.jsonldjava.core.JsonLdOptions;
+import com.github.jsonldjava.core.JsonLdProcessor;
+import com.github.jsonldjava.utils.JsonUtils;
+
 import clients.OpenAMClient;
 import jsonpojos.PPIResponse;
 import jsonpojos.PPIResponseArray;
 import jsonpojos.PermissionsCollection;
 import jsonpojos.RegexStringList;
-import utils.JsonUtils;
 
 @Path("")
 public class Services {
@@ -186,32 +189,52 @@ public class Services {
 			respString = "{ \"documents\": " + respString + " }";
 			PPIResponseArray array = null;
 			try {
-				array = (PPIResponseArray) JsonUtils.deserializeJson(respString, PPIResponseArray.class);
+				array = (PPIResponseArray) utils.JsonUtils.deserializeJson(respString, PPIResponseArray.class);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			List<PPIResponse> docsExpanded = new ArrayList<PPIResponse>();
 			if (array != null) {
-				wasEmpty = array.getDocuments().isEmpty();
+				for (int ai = 0; ai < array.getDocuments().size(); ai++) {
+                    try {
+                        JsonLdOptions options = new JsonLdOptions();
+                        Object jsonObject = JsonUtils.fromString(utils.JsonUtils.serializeJson(array.getDocuments().get(ai)));
+                        Object result = JsonLdProcessor.expand(jsonObject, options);
+                        docsExpanded.add((PPIResponse) utils.JsonUtils.deserializeJson(JsonUtils.toPrettyString(result), PPIResponse.class));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+				}
+				wasEmpty = docsExpanded.isEmpty();
 				// Check dynamically on specified attributes
 				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
-				    array.getDocuments().removeIf(p -> 
+			    	docsExpanded.removeIf(p -> 
 				    	!getSubObject(p, pair.getKey()).isEmpty() && ((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
 			    }
 			    it = perm.getRetrieve().getAllowed().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
-				    array.getDocuments().removeIf(p -> 
+			    	docsExpanded.removeIf(p -> 
 				    	!getSubObject(p, pair.getKey()).isEmpty() && !((RegexStringList) pair.getValue()).contains(getSubObject(p, pair.getKey())));
 			    }
 				try {
+					List<PPIResponse> tmpDocs = new ArrayList<PPIResponse>();
+					tmpDocs.addAll(array.getDocuments());
+					for (int ai = 0; ai < array.getDocuments().size(); ai++) {
+						for (int aj = 0; aj < docsExpanded.size(); aj++) {
+							if (array.getDocuments().get(ai).getProperties().get("id").equals(docsExpanded.get(aj).getProperties().get("@id")))
+								tmpDocs.remove(ai);
+						}
+					}
+					array.setDocuments(tmpDocs);
 					if (!wasEmpty && array.getDocuments().isEmpty()) {
 						return Response.status(Status.FORBIDDEN)
 							.entity("{ \"code\": 403, \"reason\": \"Forbidden\", \"message\": \"Not enough permissions to access the requested data!\"}")
 							.build();
 					} else {
-						respString = JsonUtils.serializeJson(array.getDocuments());
+						respString = utils.JsonUtils.serializeJson(array.getDocuments());
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -220,7 +243,7 @@ public class Services {
 		} else if (respString.charAt(0) == '{') {
 			PPIResponse resp = null;
 			try {
-				resp = (PPIResponse) JsonUtils.deserializeJson(respString, PPIResponse.class);
+				resp = (PPIResponse) utils.JsonUtils.deserializeJson(respString, PPIResponse.class);
 				if (resp.getProperties().containsKey("code")) {
 					if (resp.getProperties().get("code").getClass() == Integer.class) {
 						code = (Integer) resp.getProperties().get("code");
@@ -239,6 +262,16 @@ public class Services {
 				e.printStackTrace();
 			}
 			if (resp != null) {
+				System.out.println(respString);
+				JsonLdOptions options = new JsonLdOptions();
+				try {
+	                Object jsonObject = JsonUtils.fromString(respString);
+	                Object result = JsonLdProcessor.expand(jsonObject, options);
+	                System.out.println(JsonUtils.toPrettyString(result));
+	                resp = (PPIResponse) utils.JsonUtils.deserializeJson(JsonUtils.toPrettyString(result), PPIResponse.class);
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
 				Iterator<Map.Entry<String, RegexStringList>> it = perm.getRetrieve().getDenied().entrySet().iterator();
 			    while (it.hasNext()) {
 			    	Map.Entry<String, RegexStringList> pair = it.next();
@@ -292,7 +325,7 @@ public class Services {
 						values.addAll(objs);
 				}
 				return values;
-			} else {;
+			} else {
 				inner = hey;
 			}
 		}
