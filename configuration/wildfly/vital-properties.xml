@@ -52,6 +52,11 @@
     <!--vital-core-filtering-->
 
     <!-- vital-core-cep -->
+    <entry key="vital-core-cep.mongo.uri">mongodb://localhost:27017</entry>
+    <entry key="vital-core-cep.mongo.db">vital-cep</entry>
+    <entry key="vital-core-cep-ppi.base-url">http://localhost:8080/cep</entry>
+    <entry key="vital-core-cep.mosquitto.uri">tcp://localhost:1883</entry>
+    <entry key="vital-core-cep.ucep.path">/home/ucep</entry>
 
     <!--vital-core-orchestrator-->
     <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
@@ -67,4 +72,3 @@
     <!--/.vital-management-->
 
 </properties>
-
