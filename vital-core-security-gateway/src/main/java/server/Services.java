@@ -86,8 +86,8 @@ public class Services {
 
 		URI uri = null;
 		try {
-			// Prepare to forward the request on the proxy
-			uri = new URI("https://" + client.getProxyHost() + "/vital/" + endpoint);
+			// Prepare to forward the request to the proxy
+			uri = new URI("https://" + client.getProxyHost() + ":" + client.getProxyPort() + client.getProxyPPIPath() + "/" + endpoint);
 		} catch (URISyntaxException e1) {
 			e1.printStackTrace();
 		}

@@ -38,7 +38,10 @@ public class OpenAMClient {
 	private ConfigReader configReader;
 	
 	private String proxyhost;
+    private int proxyport;
+    private String proxyPPIpath;
 	private String securityhost;
+    private int securityport;
 	private String username;
 	private String password;
 	private static String token;
@@ -48,13 +51,24 @@ public class OpenAMClient {
 		configReader = ConfigReader.getInstance();
 		
 		proxyhost = configReader.get(ConfigReader.PROXY_HOST);
+        proxyport = Integer.parseInt(configReader.get(ConfigReader.PROXY_PORT));
+        proxyPPIpath = configReader.get(ConfigReader.PROXY_PPI_PATH);
 		securityhost = configReader.get(ConfigReader.SECURITY_HOST);
+        securityport = Integer.parseInt(configReader.get(ConfigReader.SECURITY_PORT));
 		username = configReader.get(ConfigReader.USERNAME);
 		password = configReader.get(ConfigReader.PASSWORD);
 	}
 	
 	public String getProxyHost() {
 		return proxyhost;
+	}
+
+    public int getProxyPort() {
+		return proxyport;
+	}
+
+    public String getProxyPPIPath() {
+		return proxyPPIpath;
 	}
 	
 	public String getToken() {
@@ -147,7 +161,7 @@ public class OpenAMClient {
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setPort(443)
+			.setPort(securityport)
 			.setHost(securityhost)
 			.setPath("/securitywrapper/rest/authenticate")
 			.build();
@@ -198,7 +212,7 @@ public class OpenAMClient {
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setPort(443)
+			.setPort(securityport)
 			.setHost(securityhost)
 			.setPath("/securitywrapper/rest/user")
 			.setCustomQuery("testCookie=false")
@@ -238,7 +252,7 @@ public class OpenAMClient {
 		try {
 			uri = new URIBuilder()
 			.setScheme("https")
-			.setPort(443)
+			.setPort(securityport)
 			.setHost(securityhost)
 			.setPath("/securitywrapper/rest/permissions")
 			.setCustomQuery("testCookie=true")
