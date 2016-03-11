@@ -39,6 +39,13 @@
     <entry key="vital-core-security-snmp-exposer.snmp-port">8085</entry>
 
     <!--vital-core-security-gateway-->
+    <entry key="vital-core-security-gateway.proxy-host">local.vital-iot-test.com</entry>
+    <entry key="vital-core-security-gateway.proxy-port">443</entry>
+    <entry key="vital-core-security-gateway.proxy-ppi-path">/vital</entry>
+    <entry key="vital-core-security-gateway.security-host">local.vital-iot-test.com</entry>
+    <entry key="vital-core-security-gateway.security-port">8443</entry>
+    <entry key="vital-core-security-gateway.username">ppigateway</entry>
+    <entry key="vital-core-security-gateway.password">password</entry>
 
     <!--vital-core-discovery-->
 
@@ -60,6 +67,4 @@
     <!--/.vital-management-->
 
 </properties>
-
-
 
