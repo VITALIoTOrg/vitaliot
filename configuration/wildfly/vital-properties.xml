@@ -63,7 +63,7 @@
     <!--vital-management-->
     <entry key="vital-management.mongo">mongodb://localhost:27017</entry>
     <!-- URL of securitywrapper/rest service -->
-    <entry key="vital-management.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
+    <entry key="vital-management.security">https://local.vital-iot-test.com:8443/securitywrapper/rest</entry>
     <!--/.vital-management-->
 
 </properties>
