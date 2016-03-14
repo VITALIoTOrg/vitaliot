@@ -3,28 +3,31 @@
     "version": "1.0.0",
     "devDependencies": {},
     "dependencies": {
-        "jquery": "=2.1.4",
-        "lodash": "=3.9.3",
-        "bootstrap": "=3.3.5",
-        "fontawesome": "=4.4.0",
+        "jquery": "=2.2.1",
+        "lodash": "=4.6.1",
+        "bootstrap": "=3.3.6",
+        "fontawesome": "=4.5.0",
         "morrisjs": "=0.5.1",
-        "angular": "=1.4.6",
-        "angular-mocks": "=1.4.6",
-        "angular-cookies": "=1.4.6",
-        "angular-route": "=1.4.6",
-        "angular-animate": "=1.4.6",
-        "angular-sanitize": "=1.4.6",
-        "angular-bootstrap": "=0.13.4",
-        "angular-leaflet-directive": "=0.8.8",
+        "angular": "=1.5.0",
+        "angular-mocks": "=1.5.0",
+        "angular-cookies": "=1.5.0",
+        "angular-route": "=1.5.0",
+        "angular-animate": "=1.5.0",
+        "angular-sanitize": "=1.5.0",
+        "angular-bootstrap": "=0.14.3",
+        "angular-leaflet-directive": "=0.10.0",
         "Leaflet.awesome-markers": "=2.0.2",
         "leaflet.markercluster": "=0.4.0",
-        "gsap": "=1.18.0",
+        "gsap": "=1.18.2",
         "ngFx": "=1.1.0",
-        "admin-lte": "=2.3.0"
+        "admin-lte": "=2.3.2",
+        "hammerjs": "=2.0.6",
+        "jquery-hammerjs": "=2.0.0"
     },
     "resolutions": {
-        "angular": "1.4.6",
-        "angular-animate": "=1.4.6",
-        "gsap": "=1.18.0"
+        "angular": "=1.5.0",
+        "angular-animate": "=1.5.0",
+        "gsap": "=1.18.2",
+        "jquery": "=2.2.1"
     }
 }
