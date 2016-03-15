@@ -123,7 +123,7 @@ public class GetServices {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getUserGroups(
             @PathParam("id") String userId,
-            @HeaderParam("cookie") String cookie) {
+            @HeaderParam("Cookie") String cookie) {
 		
 		String answer;
 		
