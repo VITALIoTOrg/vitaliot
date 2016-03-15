@@ -1,12 +1,12 @@
 {
-    "name": "vital",
-    "title": "Vital Management Platform",
-    "author": "Vital",
+    "name": "vital-management",
+    "title": "VITAL Management Platform",
+    "author": "Lorenzo Bracco, Angelos Lenis",
     "copyright": "2016",
     "version": "1.0.0",
     "licenses": {
         "type": "GNU",
-        "url": "http://some.url"
+        "url": ""
     },
     "repository": {
         "type": "git",
