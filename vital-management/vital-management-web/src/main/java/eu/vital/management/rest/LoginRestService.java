@@ -6,8 +6,8 @@ import eu.vital.management.security.SecurityService;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -27,12 +27,15 @@ public class LoginRestService {
 	@GET
 	@Path("/logged-on")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getLoggedOnUser(@CookieParam(SecurityService.COOKIE_NAME) Cookie authCookie) throws Exception {
+	public Response getLoggedOnUser(@HeaderParam("Cookie") String cookie) throws Exception {
+        String authCookie = null;
+        if(cookie != null)
+            authCookie = cookie.replaceAll(".*" + securityService.getCookieName() + "=([^;]*).*", "$1");
 		if (authCookie == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
 
-		JsonNode user = securityService.getLoggedOnUser(authCookie.getValue());
+		JsonNode user = securityService.getLoggedOnUser(authCookie);
 		if (user == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
@@ -51,7 +54,7 @@ public class LoginRestService {
 		}
 
 		JsonNode userData = securityService.getLoggedOnUser(authToken);
-		Cookie authCookie = new Cookie(SecurityService.COOKIE_NAME, authToken, "/", null);
+		Cookie authCookie = new Cookie(securityService.getCookieName(), authToken, "/", null);
 
 		return Response.ok(userData)
 				.cookie(new NewCookie(authCookie))

@@ -24,31 +24,39 @@ import java.util.logging.Logger;
 @Stateless
 public class SecurityService {
 
-	public static final String COOKIE_NAME = "vitalAccessToken";
-
 	@Inject
 	private Logger log;
 
 	@Inject
 	VitalConfiguration vitalConfiguration;
 
+    public String getCookieName() {
+	    return vitalConfiguration.getProperty("vital-management.security.cookie-name");
+	}
+
 	public URL getSecurityProxyUrl() {
+        String url = "";
 		try {
-			return new URL(vitalConfiguration.getProperty("vital-management.security", "https://localhost:8080/securitywrapper/rest"));
+            url += "https://";
+            url += vitalConfiguration.getProperty("vital-management.security.host");
+            url += ":";
+            url += vitalConfiguration.getProperty("vital-management.security.port");
+            url += vitalConfiguration.getProperty("vital-management.security.path");
+            url += "/rest";
+			return new URL(url);
 		} catch (MalformedURLException e) {
-			log.warning("vital-management.security is malformed" + vitalConfiguration.getProperty("vital-management.security"));
+			log.warning("vital-management.security.* is malformed: " + url);
 			return null;
 		}
 	}
 
 	public JsonNode getLoggedOnUser(String authToken) {
 		Client client = ClientBuilder.newClient();
-		String securityUrl = vitalConfiguration.getProperty("vital-management.security");
 		try {
 			JsonNode userData = client
 					.target(getSecurityProxyUrl() + "/user")
 					.request(MediaType.APPLICATION_JSON_TYPE)
-					.cookie(new NewCookie(COOKIE_NAME, authToken))
+					.cookie(new NewCookie(getCookieName(), authToken))
 					.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(JsonNode.class);
 
@@ -73,7 +81,7 @@ public class SecurityService {
 					.request(MediaType.APPLICATION_JSON_TYPE)
 					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
 
-			Cookie cookie = response.getCookies().get(COOKIE_NAME);
+			Cookie cookie = response.getCookies().get(getCookieName());
 			return cookie.getValue();
 		} catch (WebApplicationException e) {
 			return null;

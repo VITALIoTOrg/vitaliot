@@ -34,12 +34,15 @@ public class VitalClient {
 	@Inject
 	VitalUserPrincipal userPrincipal;
 
+    @Inject
+    SecurityService securityService;
+
 	public JsonNode doGet(String url) throws Exception {
 		Client client = ClientBuilder.newClient();
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
 				.accept("*")
-				.cookie(new NewCookie(SecurityService.COOKIE_NAME, userPrincipal.getToken()))
+				.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()))
 				.get(JsonNode.class);
 		client.close();
 		if (jsonNode == null) {
@@ -54,7 +57,7 @@ public class VitalClient {
 		Client client = ClientBuilder.newClient();
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-				.cookie(new NewCookie(SecurityService.COOKIE_NAME, userPrincipal.getToken()))
+				.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()))
 				.accept("*")
 				.post(Entity.json(data), JsonNode.class);
 		client.close();
