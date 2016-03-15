@@ -1,25 +1,26 @@
 vital-management
 ================
 
-- Author: Angelos Lenis
-- Summary: This is the Vital Management Platform of vital
-- Target Project: Vital (<http://vital-iot.eu/>)
-- Source: <http://31.210.156.219/anglen/vital-management>
+- Author: Lorenzo Bracco, Angelos Lenis
+- Summary: This is the VITAL Management Platform
+- Target Project: VITAL (<http://vital-iot.eu>)
+- Source: <http://gitlab.atosresearch.eu/vital-iot/vital-management>
 
 System requirements
 -------------------
 
 For this project you need:
 
+- Git (<https://git-scm.com>)
 - Java 8.0 (Java SDK 1.8) (<http://openjdk.java.net> or <https://www.oracle.com/java/index.html>)
 - Maven 3.1 or better (<https://maven.apache.org/>)
-- Wildfly 9.0.X (<http://www.wildfly.org>)
+- WildFly (10.X.X or later recommended) (<http://www.wildfly.org>)
 - MongoDB 3.2 (<https://www.mongodb.org>)
 - Node.js (<https://nodejs.org/>)
 - Grunt (<http://gruntjs.com/>)
 - Bower (<http://bower.io/>)
 
-1. Follow installation instructions of Java, Maven, Wildfly, MongoDB and NodeJS for your system
+1. Follow installation instructions of Git, Java, Maven, WildFly, MongoDB and NodeJS for your system
 2. Install grunt and bower with the following commands:
 
         npm install -g grunt-cli
@@ -45,11 +46,32 @@ and add this property in system properties:
                 <property name="vital.mongodb.host" value="<host name or ip>"/>
          </system-properties>
 
-Start WildFly
--------------------------------------------
+Configure and Start WildFly
+---------------------------
 
-1. Open a command line and navigate to the root of the Wildfly server directory.
-2. The following shows the command line to start the server with the web profile:
+1. Open file **_WILDFLY_HOME/standalone/configuration/standalone.xml_** and perform the following changes:
+  1. In section **_management->security-realms_** add the following text (change the attributes values with those for your keystore):
+
+        ```xml
+        <security-realm name="UndertowRealm">
+            <server-identities>
+                <ssl>
+                    <keystore path="my.jks" relative-to="jboss.server.config.dir" keystore-password="password" alias="mycert" key-password="password"/>
+                </ssl>
+            </server-identities>
+        </security-realm>
+        ```
+
+  2. Under **_profile->subsystem (the undertow one)->server_** make sure to have:
+
+        ```xml
+        <http-listener name="default" redirect-socket="https" socket-binding="http"/>
+        <https-listener name="https" security-realm="UndertowRealm" socket-binding="https"/>
+        ```
+
+  3. HTTPS should now be enabled.
+2. Open a command line and navigate to the root of the WildFly server directory.
+3. The following shows the command line to start the server:
 
         For Linux:   WILDFLY_HOME/bin/standalone.sh
         For Windows: WILDFLY_HOME\bin\standalone.bat
@@ -87,7 +109,7 @@ Build and Deploy the Management Platform
 
 1. Checkout the code from the repository:
 
-        git clone http://31.210.156.219/anglen/vital-management.git
+        git clone http://gitlab.atosresearch.eu/vital-iot/vital-management.git
 
 2. Make sure you have started the JBoss Server as described above.
 3. Open a command line and navigate to the root directory of the project.
@@ -100,9 +122,9 @@ Build and Deploy the Management Platform
 Access the application 
 ---------------------
 
-The first time the application is started point to this URL: <http://localhost:8080/vital-management-web/api/admin/sync> to sync with other systems metadata
+The first time the application is started point to this URL: <https://localhost:8443/vital-management-web/api/admin/sync> to sync with other systems metadata
 
-Access the Management Platform at the following URL: <http://localhost:8080/vital-management-ui>
+Access the Management Platform at the following URL: <https://localhost:8443/vital-management-ui>
 
 
 Undeploy the Management Platform
