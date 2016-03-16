@@ -14,6 +14,9 @@ import org.apache.log4j.Logger;
 
 import org.bson.Document;
 import eu.vital.vitalcep.cep.CepProcess;
+import java.util.Arrays;
+import org.json.JSONArray;
+import static java.util.Arrays.asList;
 
 /**
  *
@@ -38,7 +41,8 @@ public class CEP {
     public CEPType type;
     final private CepProcess cp;
     
-    public CEP (CEPType type,String dolceSpecification,String mqin, String mqout)
+    public CEP (CEPType type,String dolceSpecification,String mqin, String mqout,
+            String sources)
             throws FileNotFoundException, IOException{
         
         Logger logger = Logger.getLogger(this.getClass().getName());
@@ -66,13 +70,37 @@ public class CEP {
             
             try{
                 
-                db.getCollection("cepinstances").insertOne(
-                    new Document("PID",PID).append("mqin",mqin )
-                                .append("mqout", mqout)
-                .append("dolceSpecification", dolceSpecification)
-                .append("dolcefile", cp.cepFolder+"/"+cp.fileName)
-                .append("cepType", T)
-                .append("clientId", fileName));
+                
+              
+                Document doc = new Document();
+                
+                doc.put("PID",PID);
+                doc.put("mqin",mqin );
+                doc.put("mqout", mqout);
+                doc.put("dolceSpecification", dolceSpecification);
+                doc.put("dolcefile", cp.cepFolder+"/"+cp.fileName);
+                doc.put("cepType", T);
+                doc.put("clientId", fileName);
+                
+                switch (T) {
+                    case "DATA":
+                        doc.put("data", sources);
+                        break;
+                    case "QUERY":
+                        doc.put("querys", sources);
+                        break;
+                    default:
+                        JSONArray aSources = new JSONArray(sources);
+                        String a[]= new String[10000];
+                        for (int i = 0; i < sources.length(); i++) {
+                            a[i] = aSources.getString(i);
+                            
+                        }   doc.put("sources",asList(a));
+                        break;    
+                }
+                
+                
+                db.getCollection("cepinstances").insertOne(doc);
 
             }catch(Exception ex){
                     String a= "";
