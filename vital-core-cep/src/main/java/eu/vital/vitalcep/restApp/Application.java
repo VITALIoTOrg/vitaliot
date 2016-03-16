@@ -1,5 +1,6 @@
 package eu.vital.vitalcep.restApp;
 
+import eu.vital.vitalcep.collector.Collector;
 import eu.vital.vitalcep.restApp.cepRESTApi.CEPIco;
 import eu.vital.vitalcep.restApp.filteringApi.ContinuosFiltering;
 import eu.vital.vitalcep.restApp.vuaippi.VUAIPPI;
@@ -27,17 +28,13 @@ public class Application extends javax.ws.rs.core.Application {
     
     public Application() throws FileNotFoundException, IOException {
         // ADD YOUR RESTFUL RESOURCES HERE
-        
+       // this.singletons.add(new Collector());
         this.singletons.add(new StaticFiltering());
         this.singletons.add(new VUAIPPI());
         this.singletons.add(new ContinuosFiltering());
         this.singletons.add(new CEPIco());
         this.singletons.add(new PusshingDMS());
-        
-        
-        
-
-
+   
     }
  
     public Set<Class<?>> getClasses()
