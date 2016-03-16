@@ -30,7 +30,10 @@ public class Application extends javax.ws.rs.core.Application {
         // ADD YOUR RESTFUL RESOURCES HERE
        // this.singletons.add(new Collector());
         this.singletons.add(new StaticFiltering());
-        this.singletons.add(new VUAIPPI());
+        this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.System());
+        this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.Service());
+        this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.Sensor());
+        this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.Observation());
         this.singletons.add(new ContinuosFiltering());
         this.singletons.add(new CEPIco());
         this.singletons.add(new PusshingDMS());
