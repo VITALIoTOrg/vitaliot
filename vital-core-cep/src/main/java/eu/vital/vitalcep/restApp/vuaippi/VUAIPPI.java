@@ -31,6 +31,9 @@ import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
+import org.bson.Document;
+
+
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,7 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
-import org.bson.Document;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -147,36 +149,51 @@ public class VUAIPPI {
         BasicDBObject fields = new BasicDBObject().append("_id",false);
         fields.append("dolceSpecification", false);
         
-        FindIterable<Document> coll = db.getCollection("filters")
+        FindIterable<Document> collStaticData = db.getCollection("staticdatafilters")
                 .find(query).projection(fields);
        
         
         final JSONArray sensors = new JSONArray(); 
         
-        coll.forEach(new Block<Document>() {
+        collStaticData.forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {
                 sensors.put(document.get("id"));
             }
         });
         
-//        try (DBCursor cursor = coll.find(query,fields)) {
-//            while(cursor.hasNext()) {
-//                 if (cursor.next().containsField("id")){
-//                     sensors.put(cursor.curr().get("id"));
-//                 }
-//            }
-//        }   
+        FindIterable<Document> collStaticQuery = db.getCollection("staticqueryfilters")
+                .find(query).projection(fields);
+            
+        
+        collStaticQuery.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                sensors.put(document.get("id"));
+            }
+        });
+        
+         FindIterable<Document> collContinuous = db.getCollection("staticqueryfilters")
+                .find(query).projection(fields);
+            
+        
+        collContinuous.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                sensors.put(document.get("id"));
+            }
+        });
+        
 
         BasicDBObject querycep = new BasicDBObject(); 
         BasicDBObject fieldscep = new BasicDBObject().append("_id",false)
                 .append("dolceSpecification", false);
         
-        FindIterable<Document> collcep = db.getCollection("ceps")
+        FindIterable<Document> collcepicos = db.getCollection("cepicos")
                 .find(querycep).projection(fieldscep);
         // create an empty query
         
-        collcep.forEach(new Block<Document>() {
+        collcepicos.forEach(new Block<Document>() {
             @Override
             public void apply(final Document document) {
                 sensors.put(document.get("id"));
