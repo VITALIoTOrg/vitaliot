@@ -171,7 +171,7 @@ public class VUAIPPI {
             }
         });
         
-         FindIterable<Document> collContinuous = db.getCollection("staticqueryfilters")
+         FindIterable<Document> collContinuous = db.getCollection("continuousfilters")
                 .find(query).projection(fields);
             
         
