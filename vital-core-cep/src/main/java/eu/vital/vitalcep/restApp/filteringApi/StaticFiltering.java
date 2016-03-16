@@ -331,15 +331,10 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
     public Response publish(String info,@Context HttpServletRequest req) throws IOException {
         
         ArrayList<MqttMsg> myMessage = getComplex("myTopic");
-     
-
                         
         return Response.status(Response.Status.OK)
                             .entity(myMessage.toString()).build();
 
-                    
-       
-         
     }
 
     private ArrayList<MqttMsg> getComplex(String subscribTopic) {
@@ -352,96 +347,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
         
         return mesagges;
     }
-    
-    private void pushToElasticDMS(JSONArray aOutput) throws IOException, ElasticsearchException, JSONException, RuntimeException {
-        Settings settings1 = ImmutableSettings.settingsBuilder()
-                .put("cluster.name", "vital").build();
-        
-        
-        Client esClient1 = new TransportClient(settings1)
-                .addTransportAddress
-                                    (new InetSocketTransportAddress
-                                    ("192.168.33.19",9300));
-        
-        //JSONArray aOutput = new JSONArray();
-        
-        //aOutput = aData;
-        
-        final BulkRequestBuilder bulkRequestBuilder=esClient1.prepareBulk();
-        
-        for (int ss=0;ss<aOutput.length();ss++){
-            
-            String id = aOutput.getJSONObject(ss).getString("id");
-            
-            XContentBuilder doc = XContentFactory.jsonBuilder()
-                    .startObject()
-                    .field("@context",aOutput.getJSONObject(ss)
-                            .getString("@context"))
-                    .field("id",id)
-                    //.field("ssn:featureOfInterest", aOutput.getJSONObject(ss).getString("ssn:featureOfInterest"))
-                    .field("type", aOutput.getJSONObject(ss)
-                            .getString("type"))
-                    .startObject("ssn:observationProperty")
-                    .field("type",aOutput.getJSONObject(ss)
-                            .getJSONObject("ssn:observationProperty")
-                            .getString("type"))
-                    .endObject()
-                    .startObject("ssn:observationResultTime")
-                    .field("type",aOutput.getJSONObject(ss)
-                            .getJSONObject("ssn:observationResultTime")
-                            .getString("time:inXSDDateTime"))
-                    .endObject()
-                    .startObject("ssn:observationResult")
-                    .field("type",aOutput.getJSONObject(ss)
-                            .getJSONObject("ssn:observationResult")
-                            .getString("type"))
-                    
-                    .startObject("ssn:hasValue")
-                    .field("type",aOutput
-                            .getJSONObject(ss)
-                                    .getJSONObject("ssn:observationResult")
-                                            .getJSONObject("ssn:hasValue")
-                                            .getString("type"))
-//                                            .startObject("value")
-//                                                    .field("complexEvent",aOutput.getJSONObject(ss)
-//                                                        .getJSONObject("ssn:observationResult")
-//                                                        .getJSONObject("ssn:hasValue")
-//                                                        .getJSONObject("value")
-//                                                        .getString("complexEvent"))
-//                                                    .field("ssn:observedBy",aOutput.getJSONObject(ss)
-//                                                        .getJSONObject("ssn:observationResult")
-//                                                        .getJSONObject("ssn:hasValue")
-//                                                        .getJSONObject("value")
-//                                                        .getString("ssn:observedBy"))
-//                                            .endObject()
-                                    .field("value",aOutput
-                                            .getJSONObject(ss)
-                                            .getJSONObject("ssn:observationResult")
-                                            .getJSONObject("ssn:hasValue")
-                                            .getString("value")
-                                    )
-//                                            .field("qudt:unit",aOutput
-//                                                    .getJSONObject(ss)
-//                                                    .getJSONObject("ssn:observationResult")
-//                                                    .getJSONObject("ssn:hasValue")
-                                            // .getDouble("qudt:unit")
-//                                            )
-                                            .endObject()
-                                            .endObject()
-                                            .endObject();
-                                    
-                                    bulkRequestBuilder.add(esClient1.prepareIndex
-                                        ("dms", "measurement")
-                                            .setSource(doc));
-                                    
-        }   
-        
-        BulkResponse bulkResponse=bulkRequestBuilder.execute().actionGet();
-        if (bulkResponse.hasFailures()) {
-            throw new RuntimeException("error " + bulkResponse.buildFailureMessage());
-        }
-    }
-
+   
     private JSONArray getPPIObservations() throws ParseException {
         JSONArray data = new JSONArray();
         HttpClientBuilder builder = HttpClientBuilder.create();
