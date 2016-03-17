@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -31,6 +31,7 @@ import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
+import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
 import java.io.FileInputStream;
@@ -43,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
+import javax.servlet.http.HttpServletRequest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -91,7 +93,7 @@ public class VUAIPPI {
     private int mongoPort;
     
     private String mongoDB;
-    
+    private String cookie;
 
     
    // @Context private javax.servlet.http.HttpServletRequest hsr;
@@ -136,9 +138,21 @@ public class VUAIPPI {
     @Path("metadata")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemMetadata(String info) throws FileNotFoundException,
+    public Response getSystemMetadata(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException,
             IOException {
-
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
+        
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
@@ -235,8 +249,19 @@ public class VUAIPPI {
     @Path("system/status")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSystemStatus(String info) throws FileNotFoundException,
+    public Response getSystemStatus(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException,
             IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
         
         JSONObject metadata = new JSONObject();
         
@@ -288,8 +313,19 @@ public class VUAIPPI {
     @Path("service/metadata")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getServiceMetadata(String info) throws FileNotFoundException,
+    public Response getServiceMetadata(String info
+            ,@Context HttpServletRequest req) throws FileNotFoundException,
             IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
       
         JSONObject monitoring = new JSONObject();
         
@@ -478,11 +514,19 @@ public class VUAIPPI {
         operation2.put("hrest:hasAddress","http://"+host.toString()
                 +"/cep/observation/stream/unsubscribe");
         operation2.put("hrest:hasMethod","hrest:POST");
+        
+        JSONObject operation3 = new JSONObject();
+              
+        operation3.put("type","vital:GetObservations");
+        operation3.put("hrest:hasAddress","http://"+host.toString()
+                +"/cep/observation");
+        operation3.put("hrest:hasMethod","hrest:POST");
 
         JSONArray observationOperations = new JSONArray();
         
         observationOperations.put(operation1);
         observationOperations.put(operation2);
+        observationOperations.put(operation3);
         
         observation.put("operations",observationOperations );
         
@@ -568,8 +612,19 @@ public class VUAIPPI {
     @Path("sensor/metadata")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSensorMetadata(String info) throws FileNotFoundException, 
+    public Response getSensorMetadata(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
         
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
 
@@ -1138,8 +1193,19 @@ public class VUAIPPI {
     @Path("observation/stream/subscribe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response subscribeToObservations(String info) throws FileNotFoundException, 
+    public Response subscribeToObservations(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
                   
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
 
@@ -1172,17 +1238,6 @@ public class VUAIPPI {
             return Response.status(Response.Status.BAD_REQUEST)
                     .build();
         }
-        
-//        WriteResult result = coll.insert(dbObject);
-//
-//        if (result.getLastError().getErrorMessage()!= null){
-//            return Response.status(Response.Status.BAD_REQUEST)
-//                    .build();
-//        }else{
-//            ObjectId id = (ObjectId)dbObject.get( "_id" );
-//             return Response.status(Response.Status.OK)
-//                .entity("{\"subscription\":\""+id+"\"}").build();
-//        }
          
     }
     
@@ -1190,8 +1245,19 @@ public class VUAIPPI {
     @Path("observation/stream/unsubscribe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response unSubscribeToObservations(String info) throws FileNotFoundException, 
+    public Response unSubscribeToObservations(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
 
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
 
@@ -1253,15 +1319,23 @@ public class VUAIPPI {
     @Path("sensor/status")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSensorStatus(String info) throws FileNotFoundException, 
+    public Response getSensorStatus(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
 
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
-        
-        
-
 
         final JSONArray sensorspool = new JSONArray();                 
 
@@ -2203,8 +2277,18 @@ public class VUAIPPI {
     @Path("system/performance")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPerformanceMetrics(String info) throws FileNotFoundException, 
+    public Response getPerformanceMetrics(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
         
         JSONObject metric1 = new JSONObject();
         
@@ -2284,8 +2368,19 @@ public class VUAIPPI {
     @GET
     @Path("system/performance")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSupportedPerformanceMetrics() throws FileNotFoundException, 
+    public Response getSupportedPerformanceMetrics(
+            @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
 
         JSONObject metric1 = new JSONObject();
         
@@ -2310,4 +2405,7 @@ public class VUAIPPI {
         return Response.status(Response.Status.OK)
                                 .entity(jObj.toString()).build();
     }
+    
+    
+   
 }
