@@ -51,11 +51,13 @@ import org.apache.http.util.EntityUtils;
 import javax.ws.rs.core.Cookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import javax.ws.rs.ServerErrorException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 
 
 import  javax.ws.rs.ServiceUnavailableException;
+import javax.ws.rs.NotAuthorizedException;
 
 
 
@@ -257,6 +259,10 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                 && statusCode != HttpStatus.SC_ACCEPTED){
            if (statusCode==503){
                throw new ServiceUnavailableException();
+           }else if (statusCode==502){
+                throw new ServerErrorException(502);
+           }else if (statusCode==401){
+               throw new NotAuthorizedException("could't Athorize the DMS");           
            }
         }
 
