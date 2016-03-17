@@ -191,8 +191,9 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 UUID uuid = UUID.randomUUID();
                 String randomUUIDString = uuid.toString();
 
-                DBObject dbObject = createCEPFilterStaticDataSensorJsonld
-    (info, host, randomUUIDString, jo, dsjo);
+                DBObject dbObject = createCEPFilterStaticSensorJsonld(info
+                        ,hostnameport, randomUUIDString, jo, dsjo
+                        ,"vital:CEPFilterStaticDataSensor");
                 Document doc = new Document(dbObject.toMap());
 
                 try{
@@ -510,14 +511,16 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
         return dbObject;
     }
     
- private DBObject createCEPFilterStaticDataSensorJsonld(String info,String host1, String randomUUIDString, JSONObject jo, JSONObject dsjo) throws JSONException {
+ private DBObject createCEPFilterStaticSensorJsonld(String info,
+         String host1, String randomUUIDString, JSONObject jo, JSONObject dsjo,
+         String type) throws JSONException {
         DBObject dbObject = (DBObject) JSON.parse(info);
 
         dbObject.removeField("id");
         dbObject.put("@context","http://vital-iot.eu/contexts/sensor.jsonld");
         dbObject.put("id", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString);
         dbObject.put("name",jo.getString("name") );
-        dbObject.put("type", "vital:CEPFilterStaticDataSensor");
+        dbObject.put("type", "vital:"+type);
         //dbObject.put("type", "vital:CEPSensor");
         dbObject.put("description",jo.getString("description") );
         //demo
@@ -652,8 +655,9 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 UUID uuid = UUID.randomUUID();
                 String randomUUIDString = uuid.toString();
 
-                DBObject dbObject = createCEPFilterStaticDataSensorJsonld
-    (info, host, randomUUIDString, jo, dsjo);
+                DBObject dbObject = createCEPFilterStaticSensorJsonld(info
+                    , hostnameport, randomUUIDString, jo, dsjo
+                    ,"vital:CEPFilterStaticQuerySensor");
                 Document doc = new Document(dbObject.toMap());
 
                 try{
@@ -748,16 +752,21 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                     DMSManager pDMS = new DMSManager(dmsURL,cookie);
         
                     if (!pDMS.pushObservations(aOutput.toString())){
-                        //log
+                        java.util.logging.Logger.getLogger
+        (StaticFiltering.class.getName())
+                                .log(Level.SEVERE, "coudn't save to the DMS" );
                     }
                 } catch (IOException | KeyManagementException 
                         | NoSuchAlgorithmException | KeyStoreException ex) {
                     java.util.logging.Logger.getLogger
-        (MessageProcessor_publisher.class.getName()).log(Level.SEVERE, null, ex);
+        (MessageProcessor_publisher.class.getName())
+                            .log(Level.SEVERE, null, ex);
                 }
                              
                 if (!cepProcess.cepDispose()){
-                    //TODO: log
+                     java.util.logging.Logger.getLogger
+        (StaticFiltering.class.getName()).log(Level.SEVERE, 
+                "bcep Instance not terminated" );
                 };
 ///////////////////////////////////////////////////////////////////////////////
                     //SENDING TO DMSManager
