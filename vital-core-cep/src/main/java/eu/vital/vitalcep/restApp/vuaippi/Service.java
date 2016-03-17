@@ -346,16 +346,20 @@ public class Service {
                         String type = types.getString(i);
                                                
                         switch (type) {
-                        case OBSERVATIONSERVICE_TYPE:  
+                        case OBSERVATIONSERVICE_TYPE: case "ObservationService":
+                        case "vital:ObservationService":
                             filteredServices.put(observation);
                             break;
-                        case MONITORINGSERVICE_TYPE:
+                        case MONITORINGSERVICE_TYPE: case "MonitoringService":
+                        case "vital:MonitoringService":
                             filteredServices.put(monitoring);
                                  break;
-                        case CEPFILTERINGSERVICE_TYPE:
+                        case CEPFILTERINGSERVICE_TYPE: case "CEPFitleringService":
+                        case "vital:CEPFitleringService":
                             filteredServices.put(filtering);
                                  break;
-                        case CEPICOMANAGEMENTSERVICE_TYPE:
+                        case CEPICOMANAGEMENTSERVICE_TYPE: case "CEPICOManagementService":
+                        case "vital:CEPICOManagementService":
                             filteredServices.put(cepico);
                                  break;
                         default: 
