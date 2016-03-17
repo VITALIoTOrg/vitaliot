@@ -715,7 +715,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                     
                     
                 } catch (KeyManagementException | KeyStoreException ex) {
-                    java.util.logging.Logger.getLogger(MessageProcessor_publisher
+                    java.util.logging.Logger.getLogger(StaticFiltering
                             .class.getName()).log(Level.SEVERE, null, ex);
                 }
 	
@@ -759,7 +759,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 } catch (IOException | KeyManagementException 
                         | NoSuchAlgorithmException | KeyStoreException ex) {
                     java.util.logging.Logger.getLogger
-        (MessageProcessor_publisher.class.getName())
+        (StaticFiltering.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
                              
