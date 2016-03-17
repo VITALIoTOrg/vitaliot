@@ -126,7 +126,7 @@ public class SecurityRestService extends HttpServlet {
 		String securityProxyUrl = securityService.getSecurityProxyUrl().toString();
 
 		// Handle the path given to the servlet
-		securityProxyUrl += httpServletRequest.getPathInfo();
+		securityProxyUrl += httpServletRequest.getPathInfo().replaceAll(" ","%20");
 		// Handle the query string
 		if (httpServletRequest.getQueryString() != null) {
 			securityProxyUrl += "?" + httpServletRequest.getQueryString();

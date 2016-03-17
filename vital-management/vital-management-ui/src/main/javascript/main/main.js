@@ -80,10 +80,6 @@ angular.module('main', [
                 securityResource.logout($scope, true);
             };
 
-            $scope.doFocus = function(data) {
-                $timeout(function() { document.getElementById('loginfoc').focus(); }, 100);
-            };
-
             $scope.isSignedIn = function() {
                 $scope.loggedUser = Shared.loggedUser;
                 return Shared.signedIn;
@@ -118,7 +114,7 @@ angular.module('main', [
                     $scope.title = '';
                     $scope.subtitile = '';
                     $scope.titlelink = '';
-                } 
+                }
                 // Management and Monitoring paths
                 if (path.substring(0, 7) === '/sensor') {
                     $scope.active1 = 'active';

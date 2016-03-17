@@ -379,7 +379,7 @@ angular.module('main.security', [
                 $scope.gotGroup = true;
                 $scope.gotUsers = true;
             }
-        }   
+        }
     ])
 
 /**
@@ -393,7 +393,7 @@ angular.module('main.security', [
             $scope.gotGroups = false;
             $scope.getGroupsError = false;
             $scope.creating = false;
- 
+
             $scope.nores = false;
             $scope.nogr = false;
             $scope.adderr = false;
@@ -451,7 +451,7 @@ angular.module('main.security', [
  */
     .controller('SecurityPolicyDetailsController', [
         '$scope', '$routeParams', 'securityResource',
-        function($scope, $routeParams, securityResource) { 
+        function($scope, $routeParams, securityResource) {
 
             $scope.gotPolicy = false;
             $scope.gotGroups = false;
@@ -538,7 +538,7 @@ angular.module('main.security', [
                         info.name = $scope.policy.name;
                         info.active = $scope.policy.active;
                         info.description = $scope.policy.description;
-                        info.nogr = false; 
+                        info.nogr = false;
                         info.nores = false;
                         info.noact = false;
                         if(info.groups.length === 0) {
@@ -668,7 +668,7 @@ angular.module('main.security', [
  */
     .controller('SecurityApplicationDetailsController', [
         '$scope', '$routeParams', 'securityResource',
-        function($scope, $routeParams, securityResource) { 
+        function($scope, $routeParams, securityResource) {
 
             $scope.gotApplication = false;
             $scope.gotApplicationPolicies = false;
@@ -811,7 +811,6 @@ angular.module('main.security', [
                     securityResource.register(formData, $scope);
                 };
             }
-            
         }
     ]);
 

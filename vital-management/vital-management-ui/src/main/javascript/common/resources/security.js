@@ -4,7 +4,7 @@ angular.module('common.resources.security', [])
         '$route', '$http', '$q', '$location', 'API_PATH', 'Shared',
         function ($route, $http, $q, $location, API_PATH, Shared) {
 
-            var basePath = API_PATH.replace('/api', '/security'); 
+            var basePath = API_PATH.replace('/api', '/security');
 
             // The public API of the service
             var service = {
@@ -13,7 +13,7 @@ angular.module('common.resources.security', [])
                     formData.testCookie = !genlog;
                     return $http({
                         method: 'POST',
-                        url: basePath+'/authenticate',
+                        url: basePath + '/authenticate',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -80,7 +80,7 @@ angular.module('common.resources.security', [])
                     formData.testCookie = !genlog;
                     return $http({
                         method: 'POST',
-                        url: basePath+'/logout',
+                        url: basePath + '/logout',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -116,7 +116,7 @@ angular.module('common.resources.security', [])
                     formData.foobar = new Date().getTime();
                     return $http({
                         method: 'GET',
-                        url: basePath+'/user',
+                        url: basePath + '/user',
                         params: formData,
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -179,7 +179,7 @@ angular.module('common.resources.security', [])
                     formData.foobar = new Date().getTime();
                     return $http({
                         method: 'GET',
-                        url: basePath+'/validate',
+                        url: basePath + '/validate',
                         params: formData,
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true
@@ -195,7 +195,7 @@ angular.module('common.resources.security', [])
                     formData.testCookie = true;
                     $http({
                         method: 'POST',
-                        url: basePath+'/evaluate',
+                        url: basePath + '/evaluate',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -251,7 +251,7 @@ angular.module('common.resources.security', [])
                 getUsers: function($scope) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/users',
+                        url: basePath + '/users',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -273,7 +273,7 @@ angular.module('common.resources.security', [])
                 getGroups: function($scope) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/groups',
+                        url: basePath + '/groups',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -295,7 +295,7 @@ angular.module('common.resources.security', [])
                 getPolicies: function($scope) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/policies',
+                        url: basePath + '/policies',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -317,7 +317,7 @@ angular.module('common.resources.security', [])
                 getApplications: function($scope, $routeParams) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/applications',
+                        url: basePath + '/applications',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -357,7 +357,7 @@ angular.module('common.resources.security', [])
                 getStats: function($scope) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/stats',
+                        url: basePath + '/stats',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -374,7 +374,7 @@ angular.module('common.resources.security', [])
                 getUserGroups: function($scope, name) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/user/'+name+'/groups',
+                        url: basePath + '/user/' + name + '/groups',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -387,7 +387,7 @@ angular.module('common.resources.security', [])
                 getApplicationPolicies: function($scope, name) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/application/'+name+'/policies',
+                        url: basePath + '/application/' + name + '/policies',
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -401,7 +401,7 @@ angular.module('common.resources.security', [])
                 getUser: function($scope, name) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/user/'+name,
+                        url: basePath + '/user/' + name,
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -440,7 +440,7 @@ angular.module('common.resources.security', [])
                 getGroup: function($scope, name) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/group/'+name,
+                        url: basePath + '/group/' + name,
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -463,7 +463,7 @@ angular.module('common.resources.security', [])
                 getPolicy: function($scope, name) {
                     $http({
                         method: 'GET',
-                        url: basePath+'/policy/'+name,
+                        url: basePath + '/policy/' + name,
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -517,7 +517,7 @@ angular.module('common.resources.security', [])
                 getApplication: function($scope, name) {
                     return $http({
                         method: 'GET',
-                        url: basePath+'/application/'+name,
+                        url: basePath + '/application/' + name,
                         withCredentials: true,
                         params: { 'foobar': new Date().getTime() }
                     })
@@ -611,7 +611,7 @@ angular.module('common.resources.security', [])
                 createUser: function(formData, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/user/create',
+                        url: basePath + '/user/create',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -635,7 +635,7 @@ angular.module('common.resources.security', [])
                 deleteUser: function(name, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/user/delete',
+                        url: basePath + '/user/delete',
                         data: $.param({'name': name}),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -660,7 +660,7 @@ angular.module('common.resources.security', [])
                 updateUser: function(name, formData, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/user/'+name,
+                        url: basePath + '/user/' + name,
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -693,7 +693,7 @@ angular.module('common.resources.security', [])
                 changePassword: function(formData, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/user/changePassword',
+                        url: basePath + '/user/changePassword',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -716,7 +716,7 @@ angular.module('common.resources.security', [])
                 createGroup: function(formData, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/group/create',
+                        url: basePath + '/group/create',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -740,7 +740,7 @@ angular.module('common.resources.security', [])
                 deleteGroup: function(name, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/group/delete',
+                        url: basePath + '/group/delete',
                         data: $.param({'name': name}),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -771,7 +771,7 @@ angular.module('common.resources.security', [])
                     }
                     $http({
                         method: 'POST',
-                        url: basePath+'/policy/create',
+                        url: basePath + '/policy/create',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -795,7 +795,7 @@ angular.module('common.resources.security', [])
                 deletePolicy: function(name, $scope) {
                     return $http({
                         method: 'POST',
-                        url: basePath+'/policy/delete',
+                        url: basePath + '/policy/delete',
                         data: $.param({'name': name}),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -822,7 +822,7 @@ angular.module('common.resources.security', [])
                 updatePolicy: function(name, formData, $scope, action) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/policy/'+name,
+                        url: basePath + '/policy/' + name,
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -950,7 +950,7 @@ angular.module('common.resources.security', [])
                     }
                     $http({
                         method: 'POST',
-                        url: basePath+'/application/create',
+                        url: basePath + '/application/create',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -974,7 +974,7 @@ angular.module('common.resources.security', [])
                 deleteApplication: function(name, $scope, $routeParams) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/application/delete',
+                        url: basePath + '/application/delete',
                         data: $.param({'name': name}),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -999,7 +999,7 @@ angular.module('common.resources.security', [])
                 updateApplication: function(name, formData, $scope, action) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/application/'+name,
+                        url: basePath + '/application/' + name,
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -1089,7 +1089,7 @@ angular.module('common.resources.security', [])
                 addUser2Group: function(group, user, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/group/'+group+'/addUser',
+                        url: basePath + '/group/' + group + '/addUser',
                         data: $.param({'user': user}),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -1097,7 +1097,7 @@ angular.module('common.resources.security', [])
                     })
                     .then(function(response) {
                         $scope.msgEvent = 'add';
-                        $scope.response = response; 
+                        $scope.response = response;
                         $scope.addedGroup = group;
                         $scope.addedUser = user;
                         $scope.group = response.data;
@@ -1119,7 +1119,7 @@ angular.module('common.resources.security', [])
                 delUserFromGroup: function(group, user, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/group/'+group+'/delUser',
+                        url: basePath + '/group/' + group + '/delUser',
                         data: $.param({'user': user}),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -1149,7 +1149,7 @@ angular.module('common.resources.security', [])
                 register: function(formData, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/user/register',
+                        url: basePath + '/user/register',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -1168,7 +1168,7 @@ angular.module('common.resources.security', [])
                 signup: function(formData, $scope) {
                     $http({
                         method: 'POST',
-                        url: basePath+'/user/signup',
+                        url: basePath + '/user/signup',
                         data: $.param(formData),
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true,
@@ -1190,7 +1190,7 @@ angular.module('common.resources.security', [])
                     formData.foobar = new Date().getTime();
                     return $http({
                         method: 'GET',
-                        url: basePath+'/permissions',
+                        url: basePath + '/permissions',
                         params: formData,
                         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                         withCredentials: true
