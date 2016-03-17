@@ -11,94 +11,31 @@ angular.module('common.authentication', [])
         $httpProvider.interceptors.push('authenticationInterceptor');
     }])
 
-    .run(['$rootScope', '$location', 'authentication',
-        function ($rootScope, $location, authentication) {
+    .run(['$rootScope', '$location', 'securityResource', 'Shared',
+        function ($rootScope, $location, securityResource, Shared) {
             $rootScope.$on('$locationChangeStart', function () {
-                if ($location.path() === '/login' || authentication.isAuthenticated()) {
-                    return;
-                } else {
-                    authentication.showLogin();
-                }
+                securityResource.getId($rootScope, true).then(function () {
+                    if ($location.path() === '/login' || Shared.signedIn) {
+                        return;
+                    } else {
+                        Shared.requestedPage = $location.path();
+                        $location.path('/login');
+                    }
+                });
             });
         }])
 
     .factory('authenticationInterceptor', [
-        '$q', '$injector',
-        function ($q, $injector) {
+        '$q', '$injector', '$location', 'Shared',
+        function ($q, $injector, $location, Shared) {
             return {
                 'responseError': function (rejection) {
-                    var $security = $injector.get('authentication');
                     if (rejection.status === 401) {
-                        $security.showLogin();
+                        Shared.requestedPage = $location.path();
+                        $location.path('/login');
                     }
                     return $q.reject(rejection);
                 }
             };
-        }])
+        }]);
 
-    /**
-     * Authentication Provider
-     */
-    .provider('authentication', [
-        function () {
-            var provider = this;
-            provider.$get = [
-                '$window', '$http', '$q', '$location', '$cookies', '$timeout', 'API_PATH',
-                function ($window, $http, $q, $location, $cookies, $timeout, API_PATH) {
-                    var service = {
-
-                        loggedOnUser: null,
-
-                        // Ask the backend to see if a user is already authenticated - this may be from a previous session.
-                        fetchLoggedOnUser: function () {
-                            if (service.isAuthenticated()) {
-                                return $q.when(service.loggedOnUser);
-                            } else {
-                                return $http.get(API_PATH + '/authentication/logged-on')
-                                    .then(function (user) {
-                                        service.loggedOnUser = user;
-                                        return service.loggedOnUser;
-                                    }, function (errResponse) {
-                                        service.showLogin();
-                                        return $q.reject(errResponse);
-                                    });
-                            }
-                        },
-
-                        // Ask the backend to see if a user is already authenticated - this may be from a previous session.
-                        login: function (loginData) {
-                            return $http({
-                                method: 'POST',
-                                url: API_PATH + '/authentication/login',
-                                withCredentials: true,
-                                data: $.param(loginData),
-                                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                            }).then(function (resp) {
-                                var user = resp.data;
-                                service.loggedOnUser = user;
-                                return user;
-                            });
-                        },
-
-                        // Is the current user authenticated?
-                        isAuthenticated: function () {
-                            return !!service.loggedOnUser;
-                        },
-
-                        showLogin: function () {
-                            $timeout(function () {
-                                service.loggedOnUser = null;
-                                $location.path('/login');
-                            });
-                        },
-
-                        // Logout the current user and redirect
-                        logout: function () {
-                            service.showLogin();
-                        }
-                    };
-                    return service;
-                }
-            ];
-        }
-    ]);

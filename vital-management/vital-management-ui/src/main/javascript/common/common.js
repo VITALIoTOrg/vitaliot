@@ -9,8 +9,8 @@ angular.module('common', [
         'common.templates',
         'common.resources',
         'common.route',
-        'common.authentication',
-        'common.widgets'
+        'common.widgets',
+        'common.authentication'
     ])
 
     /**

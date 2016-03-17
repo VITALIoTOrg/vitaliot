@@ -12,27 +12,27 @@ angular.module('main.login', [
     }])
 
     .controller('LoginController', [
-        '$scope', '$location', 'authentication',
-        function ($scope, $location, authentication) {
+        '$scope', '$location', 'securityResource', 'Shared', '$route',
+        function ($scope, $location, securityResource, Shared, $route) {
 
             $scope.data = {
                 username: null,
                 password: null
             };
-            $scope.errorMessage = null;
 
             $scope.login = function (ngFormController) {
                 if (ngFormController.$invalid) {
                     return;
                 }
-                $scope.errorMessage = null;
-                authentication.login($scope.data)
-                    .then(function (user) {
-                        $location.path('/');
-                    }, function (errorResponse) {
-                        $scope.errorMessage = errorResponse.data.error;
+                securityResource.authenticate($scope.data, $scope, true)
+                    .then(function () {
+                        if ($scope.respLogin.status != 400 && $scope.respLogin.status != 500) {
+                            if (Shared.requestedPage !== '') {
+                                console.log(Shared.requestedPage);
+                                $location.path(Shared.requestedPage);
+                            }
+                        }
                     });
             }
-
         }
     ]);

@@ -6,7 +6,8 @@ angular.module('common.route', [])
         function ($rootScope, $location) {
             $rootScope.$on('$routeChangeError', function () {
                 // When a route is rejected, for whatever reason, redirect to not-found
-                $location.path('/home');
+                //$location.path('/not-found');
+                // Temporary disabled since reject for 401 triggers this
             });
         }
     ])

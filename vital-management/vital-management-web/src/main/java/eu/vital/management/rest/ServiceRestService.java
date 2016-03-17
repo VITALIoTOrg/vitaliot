@@ -21,47 +21,47 @@ import java.util.logging.Logger;
 @Produces(MediaType.APPLICATION_JSON)
 public class ServiceRestService {
 
-	@Inject
-	SystemDAO systemDAO;
+    @Inject
+    SystemDAO systemDAO;
 
-	@Inject
-	ServiceDAO serviceDAO;
+    @Inject
+    ServiceDAO serviceDAO;
 
-	@Inject
-	private Logger log;
+    @Inject
+    private Logger log;
 
-	@GET
-	public Response list() throws Exception {
-		ArrayNode systemList = serviceDAO.list();
-		return Response.ok(systemList).build();
-	}
+    @GET
+    public Response list() throws Exception {
+        ArrayNode systemList = serviceDAO.list();
+        return Response.ok(systemList).build();
+    }
 
-	@POST
-	@Path("/metadata")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response get(JsonNode query) throws Exception {
-		//Query must contain a system URI
-		/*
-		{
+    @POST
+    @Path("/metadata")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response get(JsonNode query) throws Exception {
+        //Query must contain a system URI
+        /*
+        {
             "@context": "http://vital-iot.org/contexts/query.jsonld",
             "service" : "http://www.example.com",
             "system" : "http://www.example.com"
         }
-		*/
-		String serviceId = query.has("service") ? query.get("service").asText() : null;
-		String systemId = query.has("system") ? query.get("system").asText() : null;
+        */
+        String serviceId = query.has("service") ? query.get("service").asText() : null;
+        String systemId = query.has("system") ? query.get("system").asText() : null;
 
-		if (serviceId != null) {
-			JsonNode serviceJSON = serviceDAO.get(serviceId);
-			return Response.ok(serviceJSON).build();
-		}
-		if (systemId != null) {
-			ArrayNode services = serviceDAO.searchBySystem(systemDAO.get(systemId));
-			return Response.ok(services).build();
-		}
+        if (serviceId != null) {
+            JsonNode serviceJSON = serviceDAO.get(serviceId);
+            return Response.ok(serviceJSON).build();
+        }
+        if (systemId != null) {
+            ArrayNode services = serviceDAO.searchBySystem(systemDAO.get(systemId));
+            return Response.ok(services).build();
+        }
 
-		return Response.status(Response.Status.BAD_REQUEST).build();
-	}
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
 }
 

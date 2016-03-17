@@ -2,8 +2,10 @@
 <html ng-app="main">
 <head>
     <meta charset="UTF-8">
-    <title>Vital | Management Platform</title>
+    <title>VITAL | Management Platform</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <link rel="icon" href="vital-favicon.png">
 
     <!-- bower:css -->
     <!-- endbower -->
@@ -24,43 +26,43 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="#/home" class="logo">
+        <a href="#" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>V</b> IoT</span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>Vital-IoT</b> Management</span>
+            <span class="logo-lg"><b>VITAL-IoT</b> Management</span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account -->
-                    <li class="dropdown user user-menu" ng-if="isAuthenticated()">
+                    <li class="dropdown user user-menu" ng-if="isSignedIn()">
                         <a class="dropdown-toggle" data-toggle="dropdown">
                             <i class="glyphicon glyphicon-user"></i>
-                            <span>{{loggedOnUser.uid}} <i class="caret"></i></span>
+                            <span>{{loggedUser.uid}} <i class="caret"></i></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header text-light-blue">
-                                <img src="{{loggedOnUser.avatar}}" class="img-circle" alt="User Image"/>
+                                <img src="{{loggedUser.avatar}}" class="img-circle" alt="User Image"/>
                                 <p>
-                                    {{loggedOnUser.fullname}}
-                                    <small ng-if="loggedOnUser.creation != false">Registered since {{loggedOnUser.creation.day}} {{loggedOnUser.creation.month}} {{loggedOnUser.creation.year}}</small>
+                                    {{loggedUser.fullname}}
+                                    <small ng-if="loggedUser.creation != false">Registered since {{loggedUser.creation.day}} {{loggedUser.creation.month}} {{loggedUser.creation.year}}</small>
                                 </p>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a class="btn btn-default btn-flat" href="#/security/users/details?name={{loggedOnUser.uid}}">Profile</a>
+                                    <a class="btn btn-default btn-flat" href="#/security/users/details?name={{loggedUser.uid}}">Profile</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a class="btn btn-default btn-flat" ng-click="logout()">Sign out</a>
+                                    <a class="btn btn-default btn-flat" ng-click="signout()">Sign out</a>
                                 </div>
                             </li>
                         </ul>
@@ -75,16 +77,28 @@
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel" ng-if="isSignedIn()">
+                <div class="pull-left image">
+                    <img src="{{loggedUser.avatar}}" class="img-circle" alt="User Image"/>
+                </div>
+                <div class="pull-left info">
+                    <p>Hello, {{loggedUser.name}}</p>
+                    <p>
+                        <span style="font-size: smaller;"><i class="fa fa-circle text-success"></i> Online<span>
+                    </p>
+                </div>
+            </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu" ng-if="isAuthenticated()">
+            <ul class="sidebar-menu" ng-if="isSignedIn()">
                 <li>
                     <a href="#/system/list">
                         <i class="fa fa-dashboard"></i>
                         <span>Vital Systems</span>
                     </a>
                 </li>
-                <li class="treeview">
-                    <a href="#">
+                <li class="treeview {{active1}}">
+                    <a href="">
                         <i class="fa fa-bullseye"></i>
                         <span>ICOs/Sensors</span>
                         <i class="fa fa-angle-left pull-right"></i>
@@ -104,8 +118,8 @@
                         </li>
                     </ul>
                 </li>
-                <li class="treeview">
-                    <a href="#">
+                <li class="treeview {{active2}}">
+                    <a href="">
                         <i class="fa fa-lock"></i>
                         <span>Security</span>
                         <i class="fa fa-angle-left pull-right"></i>
@@ -156,7 +170,24 @@
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <section class="content" ng-view>Loading ...</section>
+        <section class="content-header">
+            <h1>
+                {{title}}
+                <small>{{subtitle}}</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li>
+                    <a ng-href="#">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="active" ng-if="title != ''"><a ng-href="{{titlelink}}">{{title}}</a></li>
+            </ol>
+        </section>
+        <div class="container-fluid" style="margin: 0px; padding: 0px; border: 0px;">
+            <section class="content" style="height: auto; overflow: auto;" ng-view>Loading...</section>
+        </div>
     </div>
     <!-- /.content-wrapper -->
 
