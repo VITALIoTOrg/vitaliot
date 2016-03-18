@@ -228,7 +228,7 @@ public class CEPIco {
         MongoDatabase db = mongo.getDatabase(mongoDB);
 
         try {
-           db.getCollection("ceps");
+           db.getCollection("cepicos");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
           mongo.close();
@@ -348,7 +348,7 @@ public class CEPIco {
         dbObject.removeField("id");
         dbObject.put("id", "http://"+ host.toString()+"/cep/sensor/"
                 +randomUUIDString);
-        dbObject.put("type", "CEPSensor");
+        dbObject.put("type", "vital:CEPSensor");
         dbObject.put("status", "vitalRunning");
         JSONArray observes =  new JSONArray();
         JSONArray compl = dsjo.getJSONArray("complex");
