@@ -41,11 +41,9 @@ public class PPIManager {
     
      public String ppi_URL,cookie ;
     
-    public PPIManager(String ppi_url, String cookie){
+    public PPIManager(String cookie){
         
-        this.ppi_URL = ppi_url;
         this.cookie = cookie;
-        
         
     }
     
