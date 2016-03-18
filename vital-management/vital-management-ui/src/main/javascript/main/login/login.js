@@ -20,6 +20,11 @@ angular.module('main.login', [
                 password: null
             };
 
+            securityResource.getId($scope, true)
+                .then(function () {
+                    $scope.signedIn = Shared.signedIn;
+                });
+
             $scope.login = function (ngFormController) {
                 if (ngFormController.$invalid) {
                     return;
@@ -32,6 +37,13 @@ angular.module('main.login', [
                                 $location.path(Shared.requestedPage);
                             }
                         }
+                    });
+            }
+
+            $scope.logout = function () {
+                securityResource.logout($scope, true)
+                    .then(function () {
+                        $route.reload();
                     });
             }
         }

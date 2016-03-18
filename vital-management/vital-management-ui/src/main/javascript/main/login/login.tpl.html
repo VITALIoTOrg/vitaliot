@@ -4,9 +4,14 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg">Sign in to start your session</p>
+        <p class="login-box-msg" ng-if="!signedIn">Sign in to start your session</p>
+        <p class="login-box-msg" ng-if="signedIn">
+            Already signed in!
+            <br />
+            Log out to use a different user
+        </p>
 
-        <form name="loginForm" ng-submit="login(loginForm)">
+        <form ng-if="!signedIn" name="loginForm" ng-submit="login(loginForm)">
             <div class="form-group">
                 <label for="name">
                     Username
@@ -30,6 +35,15 @@
                     Error {{respLogin.data.code}}! {{respLogin.data.message}}
                 </p>
                 <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+            </div>
+        </form>
+
+        <form ng-if="signedIn" name="logoutForm" ng-submit="logout()">
+            <div>
+                <p class="help-block" ng-if="respLogout.status == 400 || respLogout.status == 500">
+                    Error {{respLogout.data.code}}! {{respLogout.data.message}}
+                </p>
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Logout</button>
             </div>
         </form>
     </div>
