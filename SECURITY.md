@@ -10,8 +10,9 @@ The installation of these modules is needed in order for the VITAL platform to w
 Sources
 -------
 
-* https://backstage.forgerock.com/#!/docs/openam/13/install-guide
 * https://backstage.forgerock.com/#!/docs/opendj/3/install-guide
+* https://backstage.forgerock.com/#!/docs/openam/13/install-guide
+* https://backstage.forgerock.com/#!/docs/openam-policy-agents/3.3.0/web-install-guide
 
 Steps
 -----
@@ -108,7 +109,7 @@ Steps
 * Copy the OpenAM ".war" package to Tomcat to deploy it
 
 * Configure OpenAM from the web interface
-  * Go to https://local.vital-iot-test.com:8453/vital-openam
+  * Go to "https://local.vital-iot-test.com:8453/vital-openam"
   * Choose "Create New Configuration"
   * Choose to use OpenDJ for both configuration and user data: enter OpenDJ configuration info
     * Port 1389
@@ -139,8 +140,8 @@ Steps
 * Unzip the built package 
 
 * Create a web agent profile from OpenAM console. With the test configuration:
-  * OpenAM URL: https://local.vital-iot-test.com:8453/vital-openam
-  * Agent URL: https://local.vital-iot-test.com:443
+  * OpenAM URL: "https://local.vital-iot-test.com:8453/vital-openam"
+  * Agent URL: "https://local.vital-iot-test.com:443"
 
 * Go into "web_agents/apache24_agent/bin" and install the agent:
 
