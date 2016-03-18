@@ -5,18 +5,26 @@
  */
 package eu.vital.vitalcep.cep;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.util.JSON;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.apache.log4j.Logger;
 
 import org.bson.Document;
 import eu.vital.vitalcep.cep.CepProcess;
+import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import org.json.JSONArray;
 import static java.util.Arrays.asList;
+import java.util.Date;
+
 
 /**
  *
@@ -41,7 +49,7 @@ public class CEP {
     public CEPType type;
     final private CepProcess cp;
     
-    public CEP (CEPType type,String dolceSpecification,String mqin, String mqout,
+    public CEP (CEPType type,DolceSpecification dolceSpecification,String mqin, String mqout,
             String sources)
             throws FileNotFoundException, IOException{
         
@@ -55,7 +63,7 @@ public class CEP {
         mongoIp = props.getProperty("mongo.ip");
         mongoDB = props.getProperty("mongo.db");
         
-        CepProcess cp = new CepProcess(dolceSpecification, mqin, mqout);
+        CepProcess cp = new CepProcess(dolceSpecification.toString(), mqin, mqout);
         this.cp = cp;
         cp.startCEP();
         this.PID = cp.PID;
@@ -82,6 +90,9 @@ public class CEP {
                 doc.put("cepType", T);
                 doc.put("clientId", fileName);
                 
+                Date NOW = new Date();
+
+                
                 switch (T) {
                     case "DATA":
                         doc.put("data", sources);
@@ -89,13 +100,33 @@ public class CEP {
                     case "QUERY":
                         doc.put("querys", sources);
                         break;
+                        
+                    case "CEPICO":
+                        doc.put("lastRequest", getXSDDateTime(NOW));
+                                            
+                       // doc.put("requests",);
+                        
+                    case "CONTINUOUS":  
+
+                        BasicDBList sourcesB = (BasicDBList) JSON.parse(sources);
+
+                        BasicDBList propertiesB = (BasicDBList) JSON
+                               .parse(dolceSpecification.getEvents().toString());
+                        
+                        doc.put("sources", sourcesB);
+                        doc.put("properties", propertiesB);
+                        doc.put("lastRequest", getXSDDateTime(NOW));
+                        
+                        //add request to the jsonarray que maneja la lista de listeners en collector.add
+                        
                     default:
                         JSONArray aSources = new JSONArray(sources);
                         String a[]= new String[10000];
+                        
                         for (int i = 0; i < sources.length(); i++) {
                             a[i] = aSources.getString(i);
                             
-                        }   doc.put("sources",asList(a));
+                        }   doc.put("requests",asList(a));
                         break;    
                 }
                 
@@ -123,5 +154,11 @@ public class CEP {
         }
 
     }
+    
+     private String getXSDDateTime(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return  dateFormat.format(date);
+    }
+    
     
 }
