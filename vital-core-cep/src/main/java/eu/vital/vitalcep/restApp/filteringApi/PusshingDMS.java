@@ -5,6 +5,8 @@
  */
 package eu.vital.vitalcep.restApp.filteringApi;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.mqtt.MessageProcessor;
 import eu.vital.vitalcep.connectors.mqtt.MqttConnector;
@@ -24,13 +26,17 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
 
 import com.mongodb.util.JSON;
-import eu.vital.vitalcep.connectors.mqtt.MqttAllInOne;
-import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
-import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
-import eu.vital.vitalcep.decoder.Decoder;
-import eu.vital.vitalcep.encoder.Encoder;
+import eu.vital.vitalcep.collector.listener.DMSListener;
+import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
+import eu.vital.vitalcep.publisher.MessageProcessor_publisher;
+import eu.vital.vitalcep.connectors.mqtt.MqttConnectorContainer;
+import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
+import eu.vital.vitalcep.security.Security;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -45,9 +51,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 
-import org.elasticsearch.action.bulk.BulkRequestBuilder;
-import org.elasticsearch.action.bulk.BulkResponse;
-
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -55,13 +58,9 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
 
 import org.elasticsearch.index.query.QueryBuilders;
-
 import org.elasticsearch.search.SearchHit;
-
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -69,8 +68,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+//import org.apache.http.impl.client.CloseableHttpClient;
+//import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.ElasticsearchException;
@@ -93,6 +92,12 @@ import javax.net.ssl.SSLContext;
 //import trust.*;
 
 import java.io.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import javax.ws.rs.HeaderParam;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.bson.Document;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -130,7 +135,9 @@ public class PusshingDMS {
         mongoIp= props.getProperty("mongo.ip");
         mongoDB = props.getProperty("mongo.db");
                               
-         host = props.getProperty("cep.resourceshostname");                      
+        host = props.getProperty("cep.resourceshostname");     
+         
+        this.dmsURL= props.getProperty("dms.base_url");   
         
         if (host == null || host.isEmpty()){
              host = "localhost:8180";       
@@ -152,19 +159,14 @@ public class PusshingDMS {
     @Produces(MediaType.APPLICATION_JSON)
     public Response pushObservationsToDMS(@Context HttpServletRequest req) throws IOException {
         
-        
+        String name = req.getHeader("name");
+        String password = req.getHeader("password");
        // String remoteHost = req.getRemoteHost();
         String localAddr = "vital-integration.atosresearch.eu";
         int localPort = req.getLocalPort();
         
-        Properties config = new Properties();
-        config.load(new 
-        FileInputStream(System.getProperty("jboss.server.config.dir")
-                +"/rest_interface.conf"));
-        //String host = config.getProperty("cep-ip-address")
-          //      .concat(":"+ hsr.getServerPort());
         System.getenv("PORT");
-        String host =  localAddr.concat(":"+localPort);
+        String host =  "http"+this.host.concat(":"+localPort);
         
         String url = "http://vital-integration.atosresearch.eu:8180/hireplyppi/sensor/observation";
         String sensor ="http://vital-integration.atosresearch.eu:8180/hireplyppi/sensor/vital2-I_TrS_45";
@@ -173,9 +175,10 @@ public class PusshingDMS {
         JSONArray aData =  getPPIObservations(url,sensor,property);
         
         URL url2 = new URL
-        ("https://vitalsp.cloud.reply.eu:443/vital/dms/insertObservation");
+       ("https://vitalsp.cloud.reply.eu/vital/vital-core-dms/insertObservation");
+        // ("https://vitalsp.cloud.reply.eu:443/vital/dms/insertObservation");
 
-        if (pushPPIObservationsToMongoDMS(aData,url2)){
+        if (pushPPIObservationsToMongoDMS( name,password,aData,url2)){
               return Response.status(Response.Status.OK)
                             .entity(aData.toString()).build();
         }else{
@@ -219,13 +222,12 @@ public class PusshingDMS {
         URL url2 = new URL
         ("https://vitalsp.cloud.reply.eu:443/vital/dms/insertSensor");
 
-        if (pushPPIObservationsToMongoDMS(aData,url2)){
+        if (pushPPIObservationsToMongoDMS("elisa","elisotas1",aData,url2)){
               return Response.status(Response.Status.OK)
                             .entity(aData.toString()).build();
         }else{
              return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        
                     
                  
         
@@ -258,7 +260,7 @@ private JSONArray getPPIObservations( String url,
             bodyrequest.put("sensor", sensors);
             bodyrequest.put("property", property);
             bodyrequest.put("from", sfrom);
-            bodyrequest.put("to","2015-11-17T09:00:00+02:00");
+            bodyrequest.put("to","2016-11-17T09:00:00+02:00");
 
             HttpEntity entity = new StringEntity(bodyrequest.toString());
             post.setEntity(entity);
@@ -375,41 +377,6 @@ private JSONArray getPPIObservations( String url,
         return builder;
     }
 
-    private JSONArray getFromElasticDMS() throws ElasticsearchException, JSONException {
-        /////////////////////////////////////////////////////////////////////////
-        // GETTING DATA FROM elasticsearch DMS
-        
-        Settings settings = ImmutableSettings.settingsBuilder()
-                .put("cluster.name", "vital").build();
-        Client esClient = new TransportClient(settings)
-                .addTransportAddress
-                                (new InetSocketTransportAddress
-                                ("vital-integration.atosresearch.eu",9300));
-        JSONArray aData = new JSONArray();
-        int scrollSize = 1000;
-        List<Map<String,Object>> esData = new ArrayList<>();
-        SearchResponse response = null;
-        int z = 0;
-        // while( response == null || response.getHits().hits().length != 0){ // for demo to take just 1000 docs
-        response = esClient.prepareSearch("dms")
-                .setTypes("measurement")
-                .setQuery(QueryBuilders
-                        .matchQuery("ssn:observationProperty.type",
-                                "vital:Speed"))
-                .setSize(scrollSize)
-                .setFrom(z * scrollSize)
-                .execute()
-                .actionGet();
-        for(SearchHit hit : response.getHits()){
-                            esData.add(hit.getSource());
-                            JSONObject oDta = new JSONObject
-                                    (hit.getSourceAsString());
-                            aData.put(oDta);
-        }
-        z++;
-        //  }
-        return aData;
-    }
     
     private JSONObject createOperationalStateObservation(String host1, String randomUUIDString) throws JSONException {
         JSONObject opState = new JSONObject();
@@ -513,12 +480,10 @@ private JSONArray pushToMongoDMS(JSONArray aOutput) throws IOException, JSONExce
         return data;
 }
 
-private boolean pushPPIObservationsToMongoDMS(JSONArray aOutput, URL url) throws IOException, JSONException, RuntimeException {
+private boolean pushPPIObservationsToMongoDMS( String username,String pass,JSONArray aOutput, URL url) throws IOException, JSONException, RuntimeException {
      HttpClientBuilder builder = HttpClientBuilder.create();
         StringBuilder ck = new StringBuilder();
-        String username = "elisa";
-        String pass = "elisotas1";
-
+       
         String resp = login(username, pass, false, ck);
         String cookie = ck.toString(); // the SSO cookie used for users
         // Initializing connection variable (will be used throughout the code)
@@ -554,11 +519,9 @@ private boolean pushPPIObservationsToMongoDMS(JSONArray aOutput, URL url) throws
             connection.setRequestProperty("Content-Length", Integer.toString(postDataLength));
 
             connection.setRequestProperty("Cookie", cookie ); // Include cookies (permissions evaluated for normal user, advanced user has the rights to evaluate)
-            
-            
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.write(postData);
-            wr.close();
+         try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
+             wr.write(postData);
+         }
             
             
             // Get Response  
@@ -610,22 +573,7 @@ class mqttAllInOne{
       
      }
      
-//     public boolean sendMsg (MessageProcessor processor, String name, String simpleEvent){
-//      MessageProcessor msgProc = processor;
-//      MsgQueue queue = new MsgQueue(msgProc);
-//      //                                  ( name, msgQueue, cepInputTopicName, cepOutputTopicName, qos)
-//      MqttConnector connector = new MqttConnector("miCEP", queue, "mqin", "mqou", 2);
-//      
-//      if (connector!=null){
-//        connector.publishMsg(simpleEvent);
-//        connector.disconnect();
-//       
-//       return true;
-//      }else
-//       return false;
-//      
-//     }
-     
+    
     }
 
 
@@ -683,7 +631,7 @@ class mqttAllInOne{
                  }
             }
         } catch(Exception e) {
-            e.printStackTrace();
+            //log
         } finally {
             if(connection != null) {
                 connection.disconnect(); 
@@ -706,29 +654,77 @@ class mqttAllInOne{
     @Path("date")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response dataa(String obstime, @Context HttpServletRequest req) throws IOException,
-        java.text.ParseException {
+    public Response dataa(String data 
+            ,@Context HttpServletRequest req ) throws IOException,
+        java.text.ParseException,
+        UnsupportedEncodingException,
+        KeyManagementException,
+        NoSuchAlgorithmException,
+        KeyStoreException {
 
-
-        TMessageProc MsgProcc = new TMessageProc();//555
-
-        JSONObject name = new JSONObject(obstime);
+       
         
-        MsgQueue oQueue = new MsgQueue(MsgProcc);
-        MqttConnector connector = new MqttConnector(name.getString("name"), 
-                 oQueue,"mqin", "mqout", 2);
+//        MessageProcessor_publisher Publisher_MsgProcc = 
+//                new MessageProcessor_publisher(dmsURL,cookie);//555
+//        MQTT_connector_subscriper publisher = new MQTT_connector_subscriper
+//         ("mqout",Publisher_MsgProcc);
+//        MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
 
+        //TODO --> DESTROY DEL CONNECTOR.
 
-////////////////////////////////////////////////////////////////////////////
-                //RECEIVING FROM MOSQUITO
-        ArrayList<MqttMsg> message = MsgProcc.getMsgs();
-
-
-           
-      
-        return Response.status(Response.Status.OK)
-                            .entity(message).build();
+       // MqttConnectorContainer.deleteConnector(publisher.getClientName());
         
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+//        
+//        JSONObject jdata = new JSONObject(data);
+//        
+//        DMSListener dms = new DMSListener( ck.toString());
+//        
+//        
+//        
+//        JSONArray odata = dms.getObservations(jdata.getJSONArray("sources")
+//                , jdata.getJSONArray("properties"), jdata.getString("from") );
+//      
+//        return Response.status(Response.Status.OK).entity(odata.toString()).build();
+        
+        props = new PropertyLoader();
+        
+        props.getProperty("cep.ip");
+
+        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
+        mongoIp = props.getProperty("mongo.ip");
+        mongoDB = props.getProperty("mongo.db");
+        
+        JSONObject jo = new JSONObject(data);
+        JSONObject dsjo = jo.getJSONObject("dolceSpecification");
+        JSONArray sources = jo.getJSONArray("sources");
+        String str = dsjo.toString();
+        DolceSpecification ds = new DolceSpecification(str);
+
+        if(!(ds instanceof DolceSpecification)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+            MongoDatabase db = mongo.getDatabase(mongoDB);
+            
+        Document doc = new Document();
+        BasicDBList sourcesB = (BasicDBList) JSON.parse(sources.toString());
+                      doc.put("sources", sourcesB);
+        BasicDBList propertiesB = (BasicDBList) JSON
+                             .parse(ds.getEvents().toString());
+
+        doc.put("properties", propertiesB);
+                      //doc.put("lastRequest", getXSDDateTime(NOW));
+                      
+        db.getCollection("prueba").insertOne(doc);
+        return Response.status(Response.Status.OK).build();
     }
 
 }
