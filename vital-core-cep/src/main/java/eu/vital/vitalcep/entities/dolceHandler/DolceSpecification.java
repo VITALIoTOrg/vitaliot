@@ -45,6 +45,11 @@ public class DolceSpecification {
 
     /** The complex hm. */
     private HashMap<String, ComplexStatement> complexHM = new HashMap<>();
+    
+    /**
+     *
+     */
+    private JSONArray events = new JSONArray();
 
     // constructor form json as String
     /**
@@ -73,10 +78,13 @@ public class DolceSpecification {
         // get events
         if (jo.has("event")){
             JSONArray eventJA = jo.getJSONArray("event");
+            //this.events= jo.getJSONArray("event");
             for (int i = 0; i < eventJA.length(); i++) {
                 EventStatement evtDS = new EventStatement(
                                 (JSONObject) (eventJA.get(i)));
                 eventHM.put(evtDS.id, evtDS);
+                this.events.put(evtDS.id);
+                
             }
         }
 
@@ -199,5 +207,14 @@ public class DolceSpecification {
 
         return mainObject;
     }
+
+    /**
+     * @return the events
+     */
+    public JSONArray getEvents() {
+        return events;
+    }
+    
+    
 
 }
