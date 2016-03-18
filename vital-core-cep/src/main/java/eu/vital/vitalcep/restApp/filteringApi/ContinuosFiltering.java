@@ -19,7 +19,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-
+import javax.ws.rs.HeaderParam;
+        
 import org.json.JSONObject;
 import org.json.JSONArray;
 import com.mongodb.BasicDBObject;
@@ -36,16 +37,23 @@ import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Filters.gte;
 import com.mongodb.client.result.DeleteResult;
 import eu.vital.vitalcep.cep.CEP;
-import eu.vital.vitalcep.connectors.mqtt.MQTT_connector_subscriper;
-import eu.vital.vitalcep.connectors.mqtt.MessageProcessor_publisher;
+import eu.vital.vitalcep.collector.Collector;
+import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
+import eu.vital.vitalcep.publisher.MessageProcessor_publisher;
 import eu.vital.vitalcep.connectors.mqtt.MqttConnectorContainer;
+import eu.vital.vitalcep.security.Security;
 
 import java.util.logging.Level;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bson.Document;
 import org.json.JSONException;
@@ -61,38 +69,27 @@ public class ContinuosFiltering {
     /** The Constant logger. */
     final static Logger logger = Logger.getLogger(ContinuosFiltering.class);
     
-     private Properties config ;
-    
-    private PropertyLoader props;
+  private PropertyLoader props;
     
     private String host;
-    
+    private String hostname;
     private String mongoIp;
-    
     private int mongoPort;
-    
     private String mongoDB;
+    private String dmsURL;
+    private String cookie;
+    private String hostnameport;
     
     public ContinuosFiltering() throws IOException {
 
-        props = new PropertyLoader();
-
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp= props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
-                              
-        String filePath = System
-                .getProperty("jboss.server.config.dir")+"/rest_interface.conf";
-                      
-        Properties config2 = new Properties() ;
-        
-        try {
-            config2.load(new FileInputStream(filePath.toString()));
-            config = config2;
-            host = config.getProperty("cep-ip-address").concat(":8180");
-        } catch (IOException e) {
-              host = "localhost:8180";
-        }
+        this.props = new PropertyLoader();
+        this.mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
+        this.mongoIp= props.getProperty("mongo.ip");
+        this.mongoDB = props.getProperty("mongo.db");
+        this.dmsURL = props.getProperty("dms.base_url");
+        this.host = props.getProperty("cep.ip").concat(":8180");
+        this.hostname = props.getProperty("cep.resourceshostname");
+        this.dmsURL = props.getProperty("dms.base_url");
         
     }
     
@@ -107,8 +104,17 @@ public class ContinuosFiltering {
     @GET
     @Path("getcontinuousfilters")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response  getFilterings() {
+    public Response  getFilterings(@Context HttpServletRequest req) {
         
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
         
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
             MongoDatabase db = mongo.getDatabase(mongoDB);
@@ -159,8 +165,23 @@ public class ContinuosFiltering {
     @Path("createcontinuousfilter")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createcontinuousfilter(String filter) throws IOException {
+    public Response createcontinuousfilter(String filter
+            ,@HeaderParam("vitalAccessToken") String cookie,
+            @Context HttpServletRequest req) throws IOException {
         
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+                
+        int localPort = req.getLocalPort();
+        
+        this.hostnameport =  this.hostname.concat(":"+localPort);
        
         JSONObject jo = new JSONObject(filter);
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
@@ -175,7 +196,6 @@ public class ContinuosFiltering {
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     
             }
-        
 
         // create an empty query
         BasicDBObject query = new BasicDBObject(); 
@@ -196,7 +216,6 @@ public class ContinuosFiltering {
                 
                 if(ds instanceof DolceSpecification) {
                 
-
                     UUID uuid = UUID.randomUUID();
                     String randomUUIDString = uuid.toString();
                             
@@ -206,12 +225,9 @@ public class ContinuosFiltering {
                     String mqin = RandomStringUtils.randomAlphanumeric(8);
                     String mqout = RandomStringUtils.randomAlphanumeric(8);
                     
+                    CEP cepProcess = new CEP(CEP.CEPType.CONTINUOUS,ds
+                        ,mqin,mqout,jo.getJSONArray("source").toString());
                     
-
-                    CEP cepProcess = new CEP(CEP.CEPType.DATA,ds.toString()
-                        ,mqin,mqout);
-                
-                
                     String clientName = cepProcess.fileName;
 
                     if (cepProcess.PID<1){
@@ -219,33 +235,43 @@ public class ContinuosFiltering {
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
                
-                   
-                //MIGUEL
-                MessageProcessor_publisher Publisher_MsgProcc = new MessageProcessor_publisher();//555
-                MQTT_connector_subscriper publisher = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
-                MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
-                
-                //TODO --> DESTROY DEL CONNECTOR.
-                
-                MqttConnectorContainer.deleteConnector(publisher.getClientName());
-                
-                
-                //
-                   // String cepPath = "/home/a601149/workspace/BCEP/bcepCode/bcep/source";
-
-                    //Runtime r = Runtime.getRuntime();
-
-                    //Process p = r.exec(cepPath+"bcep -a");
+                    Collector collector = new Collector();
                     
+                    //MIGUEL
+                    MessageProcessor_publisher Publisher_MsgProcc 
+                            = new MessageProcessor_publisher(this.dmsURL
+                            ,cookie);//555
+                    MQTT_connector_subscriper publisher 
+                            = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
+                    MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
+
+                    //TODO --> DESTROY DEL CONNECTOR.
+
+                    MqttConnectorContainer.deleteConnector(publisher.getClientName());
                     Document doc = new Document(dbObject.toMap());
 
                     try{
-                        db.getCollection("filters").insertOne(doc);
-                        
+                        db.getCollection("continuousfilters").insertOne(doc);
                         
                         JSONObject aOutput = new JSONObject();
                         aOutput.put("id", "http://"+ host.toString()+"/cep/sensor/"
                             +randomUUIDString);
+                        
+                        JSONObject opState = createOperationalStateObservation(hostnameport
+                        ,randomUUIDString);
+
+                        DBObject oPut =  (DBObject)JSON.parse(opState.toString());
+                        Document doc1 = new Document(oPut.toMap());
+
+                        try{
+                            db.getCollection("staticdatafiltersobservations").insertOne(doc1);
+                            String id = doc1.get("_id").toString();
+
+                        }catch(MongoException ex
+                                ){
+                            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                                    .build();
+                        }
                         return Response.status(Response.Status.OK)
                             .entity(aOutput.toString()).build();
                        
@@ -254,20 +280,7 @@ public class ContinuosFiltering {
                         return Response.status(Response.Status.BAD_REQUEST)
                                 .build();
                     }
-
-//                    WriteResult result = coll.insert(dbObject);
-//                    
-//                    if (result.getLastError().getErrorMessage()!= null){
-//                        return Response.status(Response.Status.BAD_REQUEST)
-//                                .build();
-//                    }else{
-//                         return Response.status(Response.Status.OK)
-//                            .entity("{\"uri\":\"http://"+ host+"/cep/sensor/"
-//                            +randomUUIDString+"\"}").build();
-//                    }
-                   
-                   // String  id = dbObject.get("_id").toString();
-      
+                          
                 }else{
                     return Response.status(Response.Status.BAD_REQUEST).build();
                 }
@@ -285,7 +298,7 @@ public class ContinuosFiltering {
         dbObject.removeField("id");
         dbObject.put("id", "http://"+ host.toString()+"/cep/sensor/"
                 +randomUUIDString);
-        dbObject.put("type", "CEPFilterSensor");
+        dbObject.put("type", "vital:CEPFilterSensor");
         dbObject.put("status", "vitalRunning");
         JSONArray observes =  new JSONArray();
         JSONArray compl = dsjo.getJSONArray("complex");
@@ -321,8 +334,18 @@ public class ContinuosFiltering {
     @Path("getcontinuousfilter")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getcontinuousfilter(String filterId) {
+    public Response getcontinuousfilter(String filterId,
+            @Context HttpServletRequest req) {
         
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
         JSONObject jo = new JSONObject(filterId);
         String idjo = jo.getString("id");
              
@@ -330,13 +353,12 @@ public class ContinuosFiltering {
             MongoDatabase db = mongo.getDatabase(mongoDB);
             
             try {
-               db.getCollection("filters");
+               db.getCollection("continuousfilters");
             } catch (Exception e) {
               //System.out.println("Mongo is down");
               mongo.close();
               return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
-                    
             }
         
         BasicDBObject searchById = new BasicDBObject("id",idjo);
@@ -344,7 +366,7 @@ public class ContinuosFiltering {
         BasicDBObject fields = new BasicDBObject().append("_id",false)
                 .append("dolceSpecification", false);
 
-       FindIterable<Document> coll = db.getCollection("filters")
+       FindIterable<Document> coll = db.getCollection("continuousfilters")
                 .find(searchById).projection(fields);
         
         try {
@@ -360,7 +382,6 @@ public class ContinuosFiltering {
                     .entity(found.toString()).build();
         }
         
-         
     }
     
     /**
@@ -373,7 +394,19 @@ public class ContinuosFiltering {
     @Path("deletecontinuousfilter")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deletecontinuousfilter(String filterId) {
+    public Response deletecontinuousfilter(String filterId,
+            @Context HttpServletRequest req) {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
         
         JSONObject jo = new JSONObject(filterId);
         String idjo = jo.getString("id");
@@ -382,7 +415,7 @@ public class ContinuosFiltering {
             MongoDatabase db = mongo.getDatabase(mongoDB);
             
             try {
-               db.getCollection("filters");
+               db.getCollection("continuousfilters");
             } catch (Exception e) {
               //System.out.println("Mongo is down");
               mongo.close();
@@ -392,7 +425,7 @@ public class ContinuosFiltering {
             }
             
             
-        MongoCollection<Document> coll = db.getCollection("filters");
+        MongoCollection<Document> coll = db.getCollection("continuousfilters");
         DBObject searchById = new BasicDBObject("id",idjo);
         DBObject found = null;
         
@@ -408,5 +441,36 @@ public class ContinuosFiltering {
                     .build();
         }
     }
+    
+    private JSONObject createOperationalStateObservation(String host1, String randomUUIDString) throws JSONException {
+        JSONObject opState = new JSONObject();
+        opState.put("@context",
+                "http://vital-iot.eu/contexts/measurement.jsonld");
+        opState.put("id", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString + "/observation/1");
+        opState.put("type","ssn:Observation");
+        opState.put("ssn:featureOfInterest", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString);
+        JSONObject property = new JSONObject();
+        property.put("type","vital:OperationalState");
+        opState.put("ssn:observationProperty",property);
+        JSONObject resultTime = new JSONObject();
+        Date date = new Date();
+        resultTime.put("time:inXSDDateTime",getXSDDateTime(date));//check format
+        opState.put("ssn:observationResultTime",resultTime);
+        //"time:inXSDDateTime": "2015-10-14T11:59:11+02:00"
+        JSONObject hasValue = new JSONObject();
+        hasValue.put( "type","ssn:ObservationValue");
+        hasValue.put( "value","vital:Running");
+        JSONObject observationResult = new JSONObject();
+        observationResult.put("ssn:hasValue",hasValue);
+        observationResult.put("type","ssn:SensorOutput");
+        opState.put("ssn:observationResult",observationResult);
+        return opState;
+    }
+    
+    private String getXSDDateTime(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return  dateFormat.format(date);
+    }
+
 	
 }
