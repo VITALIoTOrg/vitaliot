@@ -26,39 +26,41 @@ angular.module('main', [
         '$location', '$scope', '$timeout', '$interval', '$route', 'securityResource', 'Shared',
         function ($location, $scope, $timeout, $interval, $route, securityResource, Shared) {
 
-            // Enable swipe gestures to show and hide the menu sidebar
-            $('body').hammer().on('swiperight', function(e) {
-                e.preventDefault();
-                // OPEN
-                console.log('swiperight');
-                if($(window).width() > (768 - 1)) {
-                    if($('body').hasClass('sidebar-collapse')) {
-                        $('body').removeClass('sidebar-collapse');
-                    }
-                } else {
-                    if(!$('body').hasClass('sidebar-open')) {
-                        $('body').addClass('sidebar-open');
-                    }
-                }
+            var is_touch_device = 'ontouchstart' in document.documentElement;
 
-            });
-
-            $('body').hammer().on('swipeleft', function(e) {
-                e.preventDefault();
-                // CLOSE
-                console.log('swipeleft');
-                if($(window).width() > (768 - 1)) {
-                    if(!$('body').hasClass('sidebar-collapse')) {
-                        $('body').addClass('sidebar-collapse');
+            if (is_touch_device) {
+                // Enable swipe gestures to show and hide the menu sidebar
+                $('body').hammer().on('swiperight', function(e) {
+                    e.preventDefault();
+                    // OPEN
+                    if($(window).width() > (768 - 1)) {
+                        if($('body').hasClass('sidebar-collapse')) {
+                            $('body').removeClass('sidebar-collapse');
+                        }
+                    } else {
+                        if(!$('body').hasClass('sidebar-open')) {
+                            $('body').addClass('sidebar-open');
+                        }
                     }
-                } else {
-                    if($('body').hasClass('sidebar-open')) {
-                        $('body').removeClass('sidebar-open');
-                        $('body').removeClass('sidebar-collapse');
-                    }
-                }
 
-            });
+                });
+
+                $('body').hammer().on('swipeleft', function(e) {
+                    e.preventDefault();
+                    // CLOSE
+                    if($(window).width() > (768 - 1)) {
+                        if(!$('body').hasClass('sidebar-collapse')) {
+                            $('body').addClass('sidebar-collapse');
+                        }
+                    } else {
+                        if($('body').hasClass('sidebar-open')) {
+                            $('body').removeClass('sidebar-open');
+                            $('body').removeClass('sidebar-collapse');
+                        }
+                    }
+
+                });
+            }
 
             $scope.title = '';
             $scope.subtitle = '';
