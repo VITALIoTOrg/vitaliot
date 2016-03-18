@@ -77,11 +77,11 @@ Steps
 
 * Install Apache Tomcat 8
     * Add admin user (in file "conf/tomcat-users.xml")
-        ```xml
+        ```
         <user username="admin" password="password" roles="manager-gui,admin-gui"/>
         ```
     * Activate and configure HTTPS connector ("conf/server.xml", an example file is provided)
-        ```xml
+        ```
         <Connector port="8443" protocol="HTTP/1.1" maxThreads="150" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" URIEncoding="UTF-8" keystoreFile="/opt/tomcat/conf/vital-test.jks" keystorePass="password" />
         ```
 * For testing local installation a certificate is provided to be used with Tomcat, WildFly and Apache. To add the self-signed certificate to your java trust store run:
