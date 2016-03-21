@@ -1,6 +1,7 @@
 'use strict';
 angular.module('main.security', [
-    'ngRoute'
+    'ngRoute',
+    'main.security.resource'
 ])
     .config(['$routeProvider', function($routeProvider) {
 

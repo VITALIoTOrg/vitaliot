@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="col-xs-12">
+        <form name="dmsQueryForm" novalidate autocomplete="off"
+              ng-submit="dmsCtrl.query(dmsQueryForm)">
+
+            <div class="form-group"
+                 ng-class="{'has-error': dmsQueryForm.resourceType.$invalid}">
+                <label>
+                    <span>Resource Type</span>
+                </label>
+
+                <select name="resourceType" ng-model="dmsCtrl.resourceType">
+                    <option value="system">SYSTEM</option>
+                    <option value="service">SERVICE</option>
+                    <option value="sensor">SENSOR</option>
+                    <option value="observation">OBSERVATION</option>
+                </select>
+
+            </div>
+
+            <div class="form-group"
+                 ng-class="{'has-error': dmsQueryForm.query.$invalid}">
+                <label>
+                    <span>Resource Type</span>
+                </label>
+
+                <textarea rows="10" name="query" ng-model="dmsCtrl.query">
+                </textarea>
+
+            </div>
+
+            <button class="btn btn-success" name="save" type="submit">
+                <i class="fa fa-question-circle"></i>
+                <span>Query</span>
+            </button>
+        </form>
+
+        <p>Result: </p>
+        <pre>{{dmsCtrl.result | json}}</pre>
+    </div>
+
+</div>

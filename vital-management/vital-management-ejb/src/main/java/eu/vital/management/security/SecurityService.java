@@ -16,6 +16,7 @@ import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -30,22 +31,15 @@ public class SecurityService {
 	@Inject
 	VitalConfiguration vitalConfiguration;
 
-    public String getCookieName() {
-	    return vitalConfiguration.getProperty("vital-management.security.cookie-name");
+	public String getCookieName() {
+		return vitalConfiguration.getProperty("vital-management.security.cookie-name", "vitalAccessToken");
 	}
 
 	public URL getSecurityProxyUrl() {
-        String url = "";
 		try {
-            url += "https://";
-            url += vitalConfiguration.getProperty("vital-management.security.host");
-            url += ":";
-            url += vitalConfiguration.getProperty("vital-management.security.port");
-            url += vitalConfiguration.getProperty("vital-management.security.path");
-            url += "/rest";
-			return new URL(url);
+			return new URL(vitalConfiguration.getProperty("vital-management.security", "https://localhost:8080/securitywrapper/rest"));
 		} catch (MalformedURLException e) {
-			log.warning("vital-management.security.* is malformed: " + url);
+			log.warning("vital-management.security is malformed" + vitalConfiguration.getProperty("vital-management.security"));
 			return null;
 		}
 	}
@@ -85,6 +79,21 @@ public class SecurityService {
 			return cookie.getValue();
 		} catch (WebApplicationException e) {
 			return null;
+		} finally {
+			client.close();
+		}
+	}
+
+	public void logout(String authToken) {
+		Client client = ClientBuilder.newClient();
+		try {
+			client.target(getSecurityProxyUrl() + "/logout")
+					.request(MediaType.APPLICATION_FORM_URLENCODED)
+					.cookie(new NewCookie(getCookieName(), authToken))
+					.get(JsonNode.class);
+
+		} catch (WebApplicationException e) {
+			log.log(Level.INFO, e.getMessage(), e);
 		} finally {
 			client.close();
 		}

@@ -6,13 +6,12 @@ angular.module('main', [
         'main.sensor',
         'main.system',
         'main.modules',
-        'main.security'
+        'main.security',
+        'main.dms'
     ])
 
-    .service('Shared', function () {
-    })
-
     .config(['$routeProvider', function ($routeProvider) {
+
         $routeProvider.otherwise({
             redirectTo: '/system/list'
         });
@@ -23,105 +22,30 @@ angular.module('main', [
      * MainController
      */
     .controller('MainController', [
-        '$location', '$scope', '$timeout', '$interval', '$route', 'securityResource', 'Shared',
-        function ($location, $scope, $timeout, $interval, $route, securityResource, Shared) {
-
-            var is_touch_device = 'ontouchstart' in document.documentElement;
-
-            if (is_touch_device) {
-                // Enable swipe gestures to show and hide the menu sidebar
-                $('body').hammer().on('swiperight', function(e) {
-                    e.preventDefault();
-                    // OPEN
-                    if($(window).width() > (768 - 1)) {
-                        if($('body').hasClass('sidebar-collapse')) {
-                            $('body').removeClass('sidebar-collapse');
-                        }
-                    } else {
-                        if(!$('body').hasClass('sidebar-open')) {
-                            $('body').addClass('sidebar-open');
-                        }
-                    }
-
-                });
-
-                $('body').hammer().on('swipeleft', function(e) {
-                    e.preventDefault();
-                    // CLOSE
-                    if($(window).width() > (768 - 1)) {
-                        if(!$('body').hasClass('sidebar-collapse')) {
-                            $('body').addClass('sidebar-collapse');
-                        }
-                    } else {
-                        if($('body').hasClass('sidebar-open')) {
-                            $('body').removeClass('sidebar-open');
-                            $('body').removeClass('sidebar-collapse');
-                        }
-                    }
-
-                });
-            }
+        '$location', '$scope', '$timeout', '$interval', '$route', 'authentication',
+        function ($location, $scope, $timeout, $interval, $route, authentication) {
 
             $scope.title = '';
             $scope.subtitle = '';
-            $scope.active1 = '';
-            $scope.active2 = '';
-            $scope.genloginLoading = false;
-            $scope.genlogoutLoading = false;
-            Shared.signedIn = false;
+            $scope.titlelink = '';
 
-            securityResource.getId($scope, true);
-
-            $scope.signin = function(data) {
-                $scope.genloginLoading = true;
-                securityResource.authenticate(data, $scope, true);
-            };
-
-            $scope.signout = function() {
-                $scope.genlogoutLoading = true;
-                securityResource.logout($scope, true);
-            };
-
-            $scope.isSignedIn = function() {
-                $scope.loggedUser = Shared.loggedUser;
-                return Shared.signedIn;
-            };
-
-            $scope.checkSession = function() {
-                securityResource.getId($scope, true)
-                .then(function(response) {
-                    if(response.data.hasOwnProperty('valid')) {
-                        if(!response.data.valid) {
-                            securityResource.forgetLogin();
-                        }
-                    }
-                }, function() {
-                });
-            };
-
-            $interval($scope.checkSession, 5 * 60 * 1000);
-
+            /** Title and subtitle **/
             $scope.$watch(function () {
                 return $location.path();
             }, function (path) {
                 // Login path
-                if (path.substring(0, 6) === '/login') {
+                if (path === '/login') {
                     $scope.title = '';
                     $scope.subtitile = '';
                     $scope.titlelink = '';
-                } else {
-                    Shared.requestedPage = path;
                 }
-                if (path.substring(0, 5) === '/home') {
+                else if (path === '/home') {
                     $scope.title = '';
                     $scope.subtitile = '';
                     $scope.titlelink = '';
                 }
                 // Management and Monitoring paths
-                if (path.substring(0, 7) === '/sensor') {
-                    $scope.active1 = 'active';
-                }
-                if (path === '/sensor/list') {
+                else if (path === '/sensor/list') {
                     $scope.title = 'List of ICOs/Sensors';
                     $scope.subtitile = '';
                     $scope.titlelink = '#/sensor/list';
@@ -146,16 +70,13 @@ angular.module('main', [
                     $scope.subtitile = '';
                     $scope.titlelink = '';
                 }
-
                 // Security paths
-                if (path.substring(0, 9) === '/security') {
-                    $scope.active2 = 'active';
-                }
-                if (path.substring(0, 18) === '/security/systconf') {
+                else if (path.substring(0, 18) === '/security/systconf') {
                     $scope.title = 'Guided System Configuration';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/systconf';
-                } else if (path.substring(0, 15) === '/security/users') {
+                }
+                else if (path.substring(0, 15) === '/security/users') {
                     $scope.title = 'Users Control Panel';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/users';
@@ -165,7 +86,8 @@ angular.module('main', [
                     if (path === '/security/users/details') {
                         $scope.subtitle = 'User Details';
                     }
-                } else if (path.substring(0, 16) === '/security/groups') {
+                }
+                else if (path.substring(0, 16) === '/security/groups') {
                     $scope.title = 'Groups Control Panel';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/groups';
@@ -175,7 +97,8 @@ angular.module('main', [
                     if (path === '/security/groups/details') {
                         $scope.subtitle = 'Group Details';
                     }
-                } else if (path.substring(0, 18) === '/security/policies') {
+                }
+                else if (path.substring(0, 18) === '/security/policies') {
                     $scope.title = 'Policies Control Panel';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/policies';
@@ -185,11 +108,13 @@ angular.module('main', [
                     if (path === '/security/policies/details') {
                         $scope.subtitle = 'Policy Details';
                     }
-                } else if (path.substring(0, 21) === '/security/datacontrol') {
+                }
+                else if (path.substring(0, 21) === '/security/datacontrol') {
                     $scope.title = 'Data Access Control';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/datacontrol';
-                } else if (path.substring(0, 22) === '/security/applications') {
+                }
+                else if (path.substring(0, 22) === '/security/applications') {
                     $scope.title = 'Applications Control Panel';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/applications';
@@ -199,24 +124,80 @@ angular.module('main', [
                     if (path === '/security/applications/details') {
                         $scope.subtitle = 'Application Details';
                     }
-                } else if (path === '/security/monitor') {
+                }
+                else if (path === '/security/monitor') {
                     $scope.title = 'Security Monitor';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/monitor';
-                } else if (path === '/security/access') {
+                }
+                else if (path === '/security/access') {
                     $scope.title = 'Access Control Test';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/access';
-                } else if (path === '/security/changepass') {
+                }
+                else if (path === '/security/changepass') {
                     $scope.title = 'Password Change';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/changepass';
-                } else if (path === '/security/register') {
+                }
+                else if (path === '/security/register') {
                     $scope.title = 'Sign up';
                     $scope.subtitle = '';
                     $scope.titlelink = '#/security/register';
                 }
             });
+            /** end: Title and subtitle **/
 
+            /** Security **/
+            $scope.isAuthenticated = function () {
+                return authentication.isAuthenticated();
+            };
+            $scope.logout = function () {
+                authentication.logout();
+            };
+            $scope.$watch(function () {
+                return authentication.loggedOnUser;
+            }, function (loggedOnUser) {
+                $scope.loggedOnUser = loggedOnUser;
+            });
+            /** end: Security **/
+
+
+            /** Touch Device **/
+            var is_touch_device = 'ontouchstart' in document.documentElement;
+            if (is_touch_device) {
+                // Enable swipe gestures to show and hide the menu sidebar
+                $('body').hammer().on('swiperight', function (e) {
+                    e.preventDefault();
+                    // OPEN
+                    if ($(window).width() > (768 - 1)) {
+                        if ($('body').hasClass('sidebar-collapse')) {
+                            $('body').removeClass('sidebar-collapse');
+                        }
+                    } else {
+                        if (!$('body').hasClass('sidebar-open')) {
+                            $('body').addClass('sidebar-open');
+                        }
+                    }
+
+                });
+
+                $('body').hammer().on('swipeleft', function (e) {
+                    e.preventDefault();
+                    // CLOSE
+                    if ($(window).width() > (768 - 1)) {
+                        if (!$('body').hasClass('sidebar-collapse')) {
+                            $('body').addClass('sidebar-collapse');
+                        }
+                    } else {
+                        if ($('body').hasClass('sidebar-open')) {
+                            $('body').removeClass('sidebar-open');
+                            $('body').removeClass('sidebar-collapse');
+                        }
+                    }
+
+                });
+            }
+            /** end: Touch Device **/
         }
     ]);

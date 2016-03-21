@@ -4,20 +4,15 @@
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg" ng-if="!signedIn">Sign in to start your session</p>
-        <p class="login-box-msg" ng-if="signedIn">
-            Already signed in!
-            <br />
-            Log out to use a different user
-        </p>
+        <p class="login-box-msg">Sign in to start your session</p>
 
-        <form ng-if="!signedIn" name="loginForm" ng-submit="login(loginForm)">
+        <form name="loginForm" ng-submit="login(loginForm)">
             <div class="form-group">
-                <label for="name">
+                <label for="username">
                     Username
                 </label>
-                <input type="text" id="name" name="name" class="form-control"
-                       ng-model="data.name"
+                <input type="text" id="username" name="username" class="form-control"
+                       ng-model="data.username"
                        ng-required="true">
             </div>
             <div class="form-group">
@@ -31,19 +26,8 @@
             </div>
 
             <div>
-                <p class="help-block" ng-if="respLogin.status == 400 || respLogin.status == 500">
-                    Error {{respLogin.data.code}}! {{respLogin.data.message}}
-                </p>
+                <p class="help-block" ng-if="errorMessage">{{errorMessage}}</p>
                 <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
-            </div>
-        </form>
-
-        <form ng-if="signedIn" name="logoutForm" ng-submit="logout()">
-            <div>
-                <p class="help-block" ng-if="respLogout.status == 400 || respLogout.status == 500">
-                    Error {{respLogout.data.code}}! {{respLogout.data.message}}
-                </p>
-                <button type="submit" class="btn btn-primary btn-block btn-flat">Logout</button>
             </div>
         </form>
     </div>
