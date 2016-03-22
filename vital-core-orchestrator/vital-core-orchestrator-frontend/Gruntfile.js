@@ -337,7 +337,7 @@ module.exports = function (grunt) {
             },
             proxies: [
                 {
-                    context: '/vital-orchestrator-web',
+                    context: '/vital-core-orchestrator-web',
                     host: 'localhost',
                     port: '8080',
                     https: false,

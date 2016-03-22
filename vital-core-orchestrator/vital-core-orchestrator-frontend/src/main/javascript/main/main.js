@@ -3,6 +3,7 @@ angular.module('main', [
     'common',
     'main.templates',
     'main.home',
+    'main.login',
     'main.operation',
     'main.workflow',
     'main.metaservice'
