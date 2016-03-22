@@ -67,9 +67,8 @@
 
     <!--vital-management-->
     <entry key="vital-management.mongo">mongodb://localhost:27017</entry>
-    <entry key="vital-management.security.host">local.vital-iot-test.com</entry>
-    <entry key="vital-management.security.port">8443</entry>
-    <entry key="vital-management.security.path">/securitywrapper</entry>
+    <entry key="vital-management.dms">http://localhost:8080/vital-core-dms</entry>
+    <entry key="vital-management.security">https://local.vital-iot-test.com:8443/securitywrapper/rest</entry>
     <entry key="vital-management.security.cookie-name">vitalAccessToken</entry>
     <!--/.vital-management-->
 
