@@ -60,6 +60,9 @@
 
     <!--vital-core-orchestrator-->
     <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
+    <entry key="vital-core-orchestrator.dms">http://localhost:8080/vital-core-dms</entry>
+    <entry key="vital-core-orchestrator.security">https://local.vital-iot-test.com:8443/securitywrapper/rest</entry>
+    <entry key="vital-core-orchestrator.cookie-name">vitalAccessToken</entry>
     <!--/.vital-core-orchestrator-->
 
 
