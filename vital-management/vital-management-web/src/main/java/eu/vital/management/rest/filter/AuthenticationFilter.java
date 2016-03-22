@@ -13,10 +13,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @Provider
 @PreMatching
 public class AuthenticationFilter implements ContainerRequestFilter {
+
+	@Inject
+	Logger logger;
 
 	@Inject
 	SecurityService securityService;

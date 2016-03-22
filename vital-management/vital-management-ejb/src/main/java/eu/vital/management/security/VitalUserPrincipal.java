@@ -11,7 +11,16 @@ import javax.enterprise.context.RequestScoped;
 public class VitalUserPrincipal {
 
 	private JsonNode user;
+
 	private String token;
+
+	public VitalUserPrincipal() {
+	}
+
+	public VitalUserPrincipal(JsonNode user, String token) {
+		this.user = user;
+		this.token = token;
+	}
 
 	public JsonNode getUser() {
 		return user;

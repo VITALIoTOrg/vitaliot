@@ -7,7 +7,7 @@ angular.module('main', [
         'main.system',
         'main.modules',
         'main.security',
-        'main.dms'
+        'main.query'
     ])
 
     .config(['$routeProvider', function ($routeProvider) {

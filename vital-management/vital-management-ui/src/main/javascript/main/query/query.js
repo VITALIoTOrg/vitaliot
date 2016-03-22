@@ -1,5 +1,5 @@
 'use strict';
-angular.module('main.dms', [
+angular.module('main.query', [
         'ngRoute'
     ])
 
@@ -7,10 +7,10 @@ angular.module('main.dms', [
         '$routeProvider',
         function ($routeProvider) {
 
-            $routeProvider.when('/dms', {
-                templateUrl: 'main/dms/dms.tpl.html',
-                controller: 'DmsController',
-                controllerAs: 'dmsCtrl'
+            $routeProvider.when('/query', {
+                templateUrl: 'main/query/query.tpl.html',
+                controller: 'QueryController',
+                controllerAs: 'queryCtrl'
             });
 
         }
@@ -19,19 +19,21 @@ angular.module('main.dms', [
     /**
      * SystemController
      */
-    .controller('DmsController', [
-        'dmsResource',
-        function (dmsResource) {
+    .controller('QueryController', [
+        'queryResource',
+        function (queryResource) {
             var ctrl = this;
 
             ctrl.resourceType = '';
             ctrl.query = '';
             ctrl.result = null;
 
-            ctrl.queryDms = function (resourceType, query, ngFormController) {
-
+            ctrl.submitQuery = function (ngFormController) {
+                if (ngFormController.$invalid) {
+                    return;
+                }
                 ctrl.result = null;
-                dmsResource(resourceType, query)
+                queryResource.query(ctrl.resourceType, ctrl.query)
                     .then(function (data) {
                         ctrl.result = data;
                     });
@@ -39,8 +41,7 @@ angular.module('main.dms', [
         }
     ])
 
-
-    .factory('dmsResource', [
+    .factory('queryResource', [
         '$http', '$q', 'API_PATH',
         function ($http, $q, API_PATH) {
 
@@ -48,7 +49,7 @@ angular.module('main.dms', [
 
                 query: function (resourceType, query) {
 
-                    return $http.post(API_PATH + '/dms/' + resourceType, query)
+                    return $http.post(API_PATH + '/query/' + resourceType, query)
                         .then(function (response) {
                             return response.data;
                         });
