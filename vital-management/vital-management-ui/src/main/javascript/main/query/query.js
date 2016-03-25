@@ -48,8 +48,7 @@ angular.module('main.query', [
             var service = {
 
                 query: function (resourceType, query) {
-
-                    return $http.post(API_PATH + '/query/' + resourceType, query)
+                    return $http.post(API_PATH + '/query/' + resourceType, angular.toJson(query))
                         .then(function (response) {
                             return response.data;
                         });

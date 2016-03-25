@@ -378,36 +378,6 @@ module.exports = function (grunt) {
                     './src/main/javascript/{app,origination}/**/*.mock.js'
                 ]
             }
-        },
-
-        /*********************
-         ** Testing targets **
-         *********************/
-
-        // Test settings
-        karma: {
-            unit: {
-                configFile: 'karma.conf.js',
-                singleRun: true
-            }
-        },
-        mochaTest: {
-            options: {
-                reporter: 'spec'
-            },
-            src: ['./**/*.spec.js']
-        },
-        protractor: {
-            options: {
-                configFile: 'protractor.conf.js'
-            },
-            chrome: {
-                options: {
-                    args: {
-                        browser: 'chrome'
-                    }
-                }
-            }
         }
 
     });
