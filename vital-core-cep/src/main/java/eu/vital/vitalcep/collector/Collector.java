@@ -8,33 +8,48 @@ package eu.vital.vitalcep.collector;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.mqtt.MqttAllInOne;
-import eu.vital.vitalcep.connectors.mqtt.MqttConnector;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
-import eu.vital.vitalcep.connectors.mqtt.MsgQueue;
 import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
 import eu.vital.vitalcep.collector.decoder.Decoder;
 import eu.vital.vitalcep.publisher.encoder.Encoder;
-import eu.vital.vitalcep.restApp.filteringApi.StaticFiltering;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
+import eu.vital.vitalcep.collector.listener.DMSListener;
+import eu.vital.vitalcep.collector.listener.PPIListener;
+import eu.vital.vitalcep.security.Security;
+import java.lang.reflect.Array;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.logging.Level;
+import org.json.JSONException;
 /**
  *
  * @author a601149
@@ -53,7 +68,7 @@ public class Collector {
     private int mongoPort; 
     private String mongoDB;
     private final ScheduledExecutorService scheduler;
-    private final JSONArray sensors = new JSONArray(); 
+    public final JSONArray sensors = new JSONArray(); 
     
     public Collector()  throws IOException {
 
@@ -65,34 +80,7 @@ public class Collector {
         host = props.getProperty("cep.ip").concat(":8180");
         hostname = props.getProperty("cep.resourceshostname");
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
-
-        MongoDatabase db = mongo.getDatabase(mongoDB);
-        
-        BasicDBObject clause1 = new BasicDBObject("cepType", "CONTINUOUS");  
-        BasicDBObject clause2 = new BasicDBObject("cepType", "CEPICO");    
-        BasicDBList or = new BasicDBList();
-        or.add(clause1);
-        or.add(clause2);
-        BasicDBObject query = new BasicDBObject("$or", or);
-   
-        
-        FindIterable<Document> coll;
-        coll = db.getCollection("cepinstances").find(query);
-        
-        coll.forEach(new Block<Document>() {
-            @Override
-            public void apply(final Document document) {
-                JSONObject oCollector = new JSONObject();
-
-                oCollector.append("mqin", document.getString("mqin"));
-                oCollector.append("mqout", document.getString("mqout"));
-                oCollector.append("requests", document.get("requests"));
-                oCollector.append("lastRequest", document.getString("lastRequest"));
-
-                sensors.put(oCollector);
-            }
-        });
+        getCollectorList();
         
       
         String hostnameport =  this.hostname.concat(":8180");
@@ -100,16 +88,117 @@ public class Collector {
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
         
-        Runnable drawRunnable;
-        drawRunnable = new Runnable() {
+        Runnable collectoRunnable;
+        collectoRunnable = new Runnable() {
+            @Override
             public void run() {
+                Date NOW = new Date();
+                for (int i = 0; i < sensors.length(); i++) {
+                    try {
+                        String cookie = getListenerCredentials(i);
+                        
+                        JSONArray aData = new JSONArray();
+                        String type = sensors.getJSONObject(i)
+                                .getString("cepType");
+                        if (type.equals("CONTINUOUS")){
+                            try {
+                                DMSListener oDMS = new DMSListener(cookie);
+                                
+                                aData = oDMS.getObservations(sensors
+                                    .getJSONArray(i)
+                                    .getJSONObject(0).optJSONArray("sources")
+                                    ,sensors.getJSONArray(i)
+                                    .getJSONObject(0).optJSONArray("properties")
+                                    ,sensors.getJSONArray(i)
+                                    .getJSONObject(0).getString("lastRequest"));
+                                              
+                            } catch (IOException | KeyManagementException 
+                                    | NoSuchAlgorithmException 
+                                    | KeyStoreException ex) {
+                                java.util.logging.Logger.getLogger(Collector
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, ex);
+                            }
+                            
+                            sendData2CEP(aData, i);
+                        
+                            
+                        }else{
+                            try {
+                                
+                                JSONObject sensor =new JSONObject();
+                                sensor = sensors.getJSONObject(i);
+                                JSONArray requests = new JSONArray();
+                                requests = sensor.getJSONArray("requests");
+                                PPIListener oPPI = new PPIListener(cookie);
+
+                                aData = oPPI.getObservations(requests
+                                    ,sensor
+                                    .getString("lastRequest"));
+
+
+                                sendData2CEP(aData, i);
+
+                            } catch (IOException | KeyManagementException 
+                                    | NoSuchAlgorithmException 
+                                    | KeyStoreException ex) {
+                                java.util.logging.Logger.getLogger(Collector
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, ex);
+                                }
+                            
+                        }
+                        
+                        sensors.getJSONArray(i)
+                                        .getJSONObject(0).put("lastRequest"
+                                                ,getXSDDateTime(NOW));
                 
-            //    draw();
+                    } catch (GeneralSecurityException | IOException 
+                            | ParseException ex) {
+                        java.util.logging.Logger
+                        .getLogger(Collector.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    }
+                    
+                }
+            }
+
+            private void sendData2CEP(JSONArray aData, int i) throws JSONException, ParseException {
+                Decoder decoder = new Decoder();
+                ArrayList<String> simpleEventAL = decoder
+                        .JsonldArray2DolceInput(aData);
+                MqttAllInOne oMqtt = new MqttAllInOne();
+                TMessageProc MsgProcc = new TMessageProc();
+                oMqtt.sendMsg(MsgProcc, "wildfly"
+                        , simpleEventAL
+                        ,sensors.getJSONObject(i).getString("mqin")
+                        ,sensors.getJSONObject(i).getString("mqout"));
+            }
+
+            private String getListenerCredentials(int i) throws IOException
+                    , GeneralSecurityException, JSONException {
+                StringBuilder ck = new StringBuilder();
+                Security slogin = new Security();
+                JSONObject credentials = new JSONObject();
+//                Boolean token = slogin.login(sensors.getJSONArray(i)
+//                        .getJSONObject(0)
+//                        .getString("username")
+//                        ,decrypt(sensors.getJSONArray(i)
+//                                .getJSONObject(0)
+//                                .getString("password")),false,ck);
+                Boolean token = slogin.login("elisa"
+                        ,"elisotas1",false,ck);
+                if (!token){
+                    //throw new
+                    
+                }
+                String cookie = ck.toString();
+                return cookie;
             }
         };
 
 
-        exec.scheduleAtFixedRate(drawRunnable , 0, 1, TimeUnit.MINUTES);
+        exec.scheduleAtFixedRate(collectoRunnable , 0, 1, TimeUnit.MINUTES);
 
         
 //        //obtener todos los valores de la base de datos la primera vez que inicia y cargarlos en memoria
@@ -139,7 +228,77 @@ public class Collector {
         
     }
 
-    private JSONArray getComplex(String subscribTopic, String hostnameport,String randomUUIDString) {
+    private void getCollectorList() {
+        try{
+        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        
+        final MongoDatabase db = mongo.getDatabase(mongoDB);
+        
+        BasicDBObject clause1 = new BasicDBObject("cepType", "CONTINUOUS");
+        BasicDBObject clause2 = new BasicDBObject("cepType", "CEPICO");
+        BasicDBList or = new BasicDBList();
+        or.add(clause1);
+        or.add(clause2);
+        BasicDBObject query = new BasicDBObject("$or", or);
+        
+        
+        FindIterable<Document> coll;
+        coll = db.getCollection("cepinstances").find(query);
+        
+        coll.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                
+                JSONObject oCollector = new JSONObject();
+                
+                oCollector.put("id",document.getObjectId("_id"));
+                oCollector.put("mqin", document.getString("mqin"));
+                oCollector.put("mqout", document.getString("mqout"));
+                oCollector.put("cepType", document.getString("cepType"));
+              
+
+                if (document.getString("cepType").equals("CONTINUOUS")){
+                    
+                    final Document doc = new Document("sources", document
+                            .get("sources"));
+                    final String jsonStringSources = doc.toJson();
+                    JSONObject sources = new JSONObject(jsonStringSources);
+                    
+                    final Document docproperties = new Document("properties", 
+                             document.get("properties"));
+                    final String jsonStringproperties = docproperties.toJson();
+                    JSONObject sourcesproperties 
+                            = new JSONObject(jsonStringproperties);
+                    
+                    oCollector.put("sources",sources.getJSONArray("sources"));
+                    oCollector.put("properties",sourcesproperties
+                            .getJSONArray("properties"));
+                    oCollector.put("username",document.getString("username"));
+                    oCollector.put("password",document.getString("password"));
+                    
+                }else{
+
+                    final Document doc = new Document( "requests",document.get("requests"));
+                    final String jsonStringRequests = doc.toJson();
+                    JSONObject requestsObject = new JSONObject(jsonStringRequests);
+                    
+                    
+                    oCollector.put("requests", requestsObject.getJSONArray("requests") );
+                    oCollector.put("username",document.getString("username"));
+                    oCollector.put("password",document.getString("password"));
+                }
+                oCollector.put("lastRequest",document.getString("lastRequest"));
+                sensors.put(oCollector);
+            }
+        });
+        
+        }catch (Exception e){
+        String a= "a";
+        }
+    }
+
+    private JSONArray getComplex(String subscribTopic, String hostnameport
+            ,String randomUUIDString) {
         //hacer algo
         MqttAllInOne oMqtt = new MqttAllInOne();
         TMessageProc MsgProcc = new TMessageProc();
@@ -170,7 +329,8 @@ public class Collector {
         System.out.println("Server Stopped.");
     }
     
-    public boolean start(String sensorId,String name, String mqin, String mqout,int qos){
+    public boolean start(String sensorId,String name, String mqin, 
+            String mqout,int qos){
         //add new values to the list
         return true;
     }
@@ -188,5 +348,37 @@ public class Collector {
     
     private boolean isStopped() {
         return this.isStopped;
+    }
+    
+     private String getXSDDateTime(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return  dateFormat.format(date);
+    }
+     
+    private static final char[] PASSWORD = "vital-Iot".toCharArray();
+    private static final byte[] SALT = {
+        (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
+        (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
+    };
+    private static String encrypt(String property) throws 
+            GeneralSecurityException, UnsupportedEncodingException {
+        SecretKeyFactory keyFactory = SecretKeyFactory
+                .getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
+        Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+        pbeCipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(SALT, 20));
+        return Base64.getEncoder().encodeToString(property
+                .getBytes(StandardCharsets.UTF_8));
+    }
+    
+    private static String decrypt(String property) throws 
+            GeneralSecurityException, IOException {
+        SecretKeyFactory keyFactory = SecretKeyFactory
+                .getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
+        Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+        pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(SALT, 20));
+        return  new String(Base64.getDecoder().decode(property)
+                ,StandardCharsets.UTF_8);
     }
 }
