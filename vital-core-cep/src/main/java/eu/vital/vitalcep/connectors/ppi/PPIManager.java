@@ -13,6 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.core.Cookie;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -39,7 +42,7 @@ import org.json.JSONObject;
  */
 public class PPIManager {
     
-     public String ppi_URL,cookie ;
+     public String cookie ;
     
     public PPIManager(String cookie){
         
@@ -119,7 +122,7 @@ public class PPIManager {
         URI uri = null;
         try {
                 // Prepare to forward the request to the proxy
-                uri = new URI(ppi_URL+"/"+ppi_endpoint);
+                uri = new URI(ppi_endpoint);
         } catch (URISyntaxException e1) {
             //log
         }
@@ -186,6 +189,21 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                 }
         }
 
+        int statusCode = response.getStatusLine().getStatusCode();
+        
+        if (statusCode != HttpStatus.SC_OK 
+                && statusCode != HttpStatus.SC_ACCEPTED){
+           if (statusCode==503){
+               throw new ServiceUnavailableException();
+           }else if (statusCode==502){
+                throw new ServerErrorException(502);
+           }else if (statusCode==401){
+               throw new NotAuthorizedException("could't Athorize the PPI");           
+           }else{
+                throw new ServiceUnavailableException();
+           }
+        }
+        
         HttpEntity entity;
         entity = response.getEntity();
         String respString = "";
