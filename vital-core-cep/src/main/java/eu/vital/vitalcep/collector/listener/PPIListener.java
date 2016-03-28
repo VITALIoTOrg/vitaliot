@@ -44,14 +44,11 @@ public class PPIListener {
         this.props = new PropertyLoader();
         //this.ppiURL = props.getProperty("dms.base_url");
         this.cookie= cookie; 
-        
-        
-        
-        
+                
     }
       
     
-    public JSONArray getObservations(JSONArray request,
+    public JSONArray getObservations(JSONArray requests,
             String from ) throws IOException, UnsupportedEncodingException,
             KeyManagementException, NoSuchAlgorithmException, KeyStoreException{
 
@@ -59,37 +56,29 @@ public class PPIListener {
 
         JSONArray aData = new JSONArray();
 
-        
-        String mongoquery="";
-        
-        if (from == null){
-            Date NOW = new Date();
-            from = getXSDDateTime(NOW);
-        }
              
-            for (int j = 0; j < request.length(); j++) {
-                
-                JSONObject simplequery = new JSONObject();
+        for (int j = 0; j < requests.length(); j++) {
 
-                simplequery = request.getJSONObject(j)
-                        .getJSONObject("body").put("from",from );
-                               
-                PPIManager oPPI = new PPIManager(cookie);
-        
-                aData = oPPI.getObservations(request.getJSONObject(j)
-                        .getString("getObservatioService"),simplequery
-                        .toString());
+            JSONObject simplequery = new JSONObject();
 
-            }
-            
+            simplequery = requests.getJSONObject(j)
+                    .getJSONObject("body").put("from",from);
+
+            PPIManager oPPI = new PPIManager(cookie);
+
+            aData = oPPI.getObservations(requests.getJSONObject(j)
+                    .getString("ppiURL"),simplequery
+                    .toString());
+
+        }
        
         return aData;
     
     }
     
+    
      
 
-    
     private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         return  dateFormat.format(date);
