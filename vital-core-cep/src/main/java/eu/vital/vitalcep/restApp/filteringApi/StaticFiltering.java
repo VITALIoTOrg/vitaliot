@@ -177,7 +177,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 JSONArray aData =  jo.getJSONArray("data");
 
                 CEP cepProcess = new CEP(CEP.CEPType.DATA,ds
-                        ,mqin,mqout,aData.toString());
+                        ,mqin,mqout,aData.toString(),null);
                 
                 
                 String clientName = cepProcess.fileName;
@@ -643,7 +643,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 String mqout = RandomStringUtils.randomAlphanumeric(8);
 
                 CEP cepProcess = new CEP(CEP.CEPType.QUERY,ds
-                        ,mqin,mqout,jo.getString("query"));
+                        ,mqin,mqout,jo.getString("query"),null);
 
                 String clientName = cepProcess.fileName;
 
