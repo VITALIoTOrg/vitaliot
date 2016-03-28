@@ -7,6 +7,7 @@ package eu.vital.vitalcep.restApp.filteringApi;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.mqtt.MessageProcessor;
 import eu.vital.vitalcep.connectors.mqtt.MqttConnector;
@@ -27,6 +28,7 @@ import org.json.JSONArray;
 
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 
 import com.mongodb.util.JSON;
@@ -92,8 +94,17 @@ import javax.net.ssl.SSLContext;
 //import trust.*;
 
 import java.io.*;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import javax.ws.rs.HeaderParam;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -660,7 +671,8 @@ class mqttAllInOne{
         UnsupportedEncodingException,
         KeyManagementException,
         NoSuchAlgorithmException,
-        KeyStoreException {
+        KeyStoreException,
+        GeneralSecurityException {
 
        
         
@@ -694,37 +706,113 @@ class mqttAllInOne{
 //      
 //        return Response.status(Response.Status.OK).entity(odata.toString()).build();
         
-        props = new PropertyLoader();
+//        props = new PropertyLoader();
+//        
+//        props.getProperty("cep.ip");
+//
+//        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
+//        mongoIp = props.getProperty("mongo.ip");
+//        mongoDB = props.getProperty("mongo.db");
+//        
+//        JSONObject jo = new JSONObject(data);
+//        JSONObject dsjo = jo.getJSONObject("dolceSpecification");
+//        JSONArray sources = jo.getJSONArray("sources");
+//        String str = dsjo.toString();
+//        DolceSpecification ds = new DolceSpecification(str);
+//
+//        if(!(ds instanceof DolceSpecification)) {
+//            return Response.status(Response.Status.BAD_REQUEST).build();
+//        }
+//        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+//            MongoDatabase db = mongo.getDatabase(mongoDB);
+//            
+//        Document doc = new Document();
+//        BasicDBList sourcesB = (BasicDBList) JSON.parse(sources.toString());
+//                      doc.put("sources", sourcesB);
+//        BasicDBList propertiesB = (BasicDBList) JSON
+//                             .parse(ds.getEvents().toString());
+//
+//        doc.put("properties", propertiesB);
+//                      //doc.put("lastRequest", getXSDDateTime(NOW));
+//                      
+//        db.getCollection("prueba").insertOne(doc);
         
-        props.getProperty("cep.ip");
-
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp = props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
+//        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+//
+//        MongoDatabase db = mongo.getDatabase(mongoDB);
+//        
+//        BasicDBObject clause1 = new BasicDBObject("cepType", "CONTINUOUS");  
+//        BasicDBObject clause2 = new BasicDBObject("cepType", "CEPICO");    
+//        BasicDBList or = new BasicDBList();
+//        or.add(clause1);
+//        or.add(clause2);
+//        BasicDBObject query = new BasicDBObject("$or", or);
+//   
+//        
+//        FindIterable<Document> coll;
+//        coll = db.getCollection("cepinstances").find(query);
+//        
+//       
+//        final JSONArray sensors = new JSONArray();
+//        
+////         CopyOnWriteArrayList<String> threadSafeList = new CopyOnWriteArrayList<String>();
+////         
+////         Iterator<String> failSafeIterator = threadSafeList.iterator();
+////        while(failSafeIterator.hasNext()){
+////            System.out.printf("Read from CopyOnWriteArrayList : %s %n", failSafeIterator.next());
+////            failSafeIterator.remove(); //not supported in CopyOnWriteArrayList in Java
+////        }
+//
+//
+//        coll.forEach(new Block<Document>() {
+//            @Override
+//            public void apply(final Document document) {
+//                JSONObject oCollector = new JSONObject();
+//
+//                oCollector.append("mqin", document.getString("mqin"));
+//                oCollector.append("mqout", document.getString("mqout"));
+//                if (document.getString("cepType").equals("CONTINUOUS")){
+//                    oCollector.append("sources", document.get("sources"));
+//                    oCollector.append("properties", document.get("properties"));
+//                }else{
+//                    oCollector.append("requests", document.get("requests"));
+//                }
+//                oCollector.append("lastRequest", document.getString("lastRequest"));
+//                sensors.put(oCollector);
+//            }
+//        });
         
-        JSONObject jo = new JSONObject(data);
-        JSONObject dsjo = jo.getJSONObject("dolceSpecification");
-        JSONArray sources = jo.getJSONArray("sources");
-        String str = dsjo.toString();
-        DolceSpecification ds = new DolceSpecification(str);
-
-        if(!(ds instanceof DolceSpecification)) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
-            MongoDatabase db = mongo.getDatabase(mongoDB);
-            
-        Document doc = new Document();
-        BasicDBList sourcesB = (BasicDBList) JSON.parse(sources.toString());
-                      doc.put("sources", sourcesB);
-        BasicDBList propertiesB = (BasicDBList) JSON
-                             .parse(ds.getEvents().toString());
-
-        doc.put("properties", propertiesB);
-                      //doc.put("lastRequest", getXSDDateTime(NOW));
-                      
-        db.getCollection("prueba").insertOne(doc);
-        return Response.status(Response.Status.OK).build();
+      JSONObject aData = new JSONObject(data);
+      String encripted = encrypt(aData.getString("password"));
+      aData.put("encripted",encripted );
+      aData.put("decripted",decrypt(encripted));
+//        
+      return Response.status(Response.Status.OK)
+                            .entity(aData.toString()).build();
     }
-
+    
+     private static final char[] PASSWORD = "vital-Iot".toCharArray();
+    private static final byte[] SALT = {
+        (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
+        (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
+    };
+    private static String encrypt(String property) throws GeneralSecurityException, UnsupportedEncodingException {
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
+        Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+        pbeCipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(SALT, 20));
+        return Base64.getEncoder().encodeToString(property.getBytes(StandardCharsets.UTF_8));
+    }
+    
+    private static String decrypt(String property) throws GeneralSecurityException, IOException {
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+        SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
+        Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+        pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(SALT, 20));
+        return  new String(Base64.getDecoder().decode(property),StandardCharsets.UTF_8);
+    }
+     
+        
+        
+   
 }
