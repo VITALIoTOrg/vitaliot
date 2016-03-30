@@ -624,7 +624,7 @@ public class CEPICO {
 
                 for (int k = 0; k<sources.length(); k++) {
                     if (sources.getString(k).contains(auxbaseURL)){
-                        sensor.put(auxbaseURL);
+                        sensor.put(sources.getString(k));
                     }                    
                 }
 
