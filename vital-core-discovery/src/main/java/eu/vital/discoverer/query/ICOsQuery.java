@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:27:04+02:00
+*/
+
+
+
 package eu.vital.discoverer.query;
 
 import java.io.IOException;
@@ -21,14 +31,14 @@ import eu.vital.discoverer.util.MapSelectionSquare;
 import eu.vital.discoverer.util.DMSManager.DMS_Index;
 
 public class ICOsQuery extends DiscoverQuery {
-	
+
 	final static Logger logger=Logger.getLogger(ICOsQuery.class);
 	private Discover_ICO_JSON_Object inputObject;
 	private final String OBSERVES_KEY="ssn:observes.type";
 	private final String TYPE_KEY="type";
 	private final String MOVEMENT_PATTERN_KEY="hasMovementPattern.type";
 	private final String CONNECTION_STABILITY_KEY="connectionstability";
-	
+
 	public ICOsQuery() {
 		super();
 	}
@@ -36,67 +46,67 @@ public class ICOsQuery extends DiscoverQuery {
 	@Override
 	public void setInputJSON(JSONObject inputJSON) {
 		this.inputJSON=inputJSON;
-		
+
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			inputObject = mapper.readValue(inputJSON.toString(), Discover_ICO_JSON_Object.class);
 		} catch (JsonParseException e) {
 			logger.error("Error unmarshaling input JSON object",e);
 			throw new DiscoveryApplicationException();
-			
+
 		} catch (JsonMappingException e) {
 			logger.error("Error mapping input JSON object",e);
 			throw new DiscoveryApplicationException();
-			
+
 		} catch (IOException e) {
 			logger.error("IO Error on input JSON object",e);
 			throw new DiscoveryApplicationException();
-			
+
 		}
-		
+
 		inputObject.setIncludedKeys(inputJSON);
-		
+
 	}
 
 	@Override
 	public void executeQuery() {
-		
+
 		DMSManager manager=new DMSManager(DMS_Index.SENSOR, this.cookie);
-		
+
 		LinkedList<JSONObject> result = null;
-		
+
 		if(this.inputObject.hasPosition()){
 			SelectionArea area=inputObject.getPosition();
 		 	GPSPoint areaCenter=new GPSPoint(area.getLatitude(), area.getLongitude());
 		 	MapSelectionSquare areaSelection=new MapSelectionSquare(areaCenter, area.getRadius());
 		 	result=combineResults(result, manager.searchInRegion(areaSelection));
-		 	
+
 		 	MapSelectionSquare predictionSelection=new MapSelectionSquare(areaCenter, 5*area.getRadius());
 		 	LinkedList<JSONObject> predictedICOs=manager.searchPredictedInRegion(predictionSelection);
-		 	
+
 		 	int timeWindow= inputObject.hasTimeWindow() ? inputObject.getTimeWindow() : 15;
-		 	LinkedList<JSONObject> predicted=computeMobility(predictedICOs,areaSelection, timeWindow);			 	
+		 	LinkedList<JSONObject> predicted=computeMobility(predictedICOs,areaSelection, timeWindow);
 		 	for(JSONObject mobile:predicted)
 		 		result.addLast(mobile);
 		}
-		
+
 		if(this.inputObject.hasType()){
 			result=combineResults(result, manager.getByField(TYPE_KEY, inputObject.getType()));
 		}
-		
+
 		if(this.inputObject.hasObserves()){
 			result=combineResults(result, manager.getByField(OBSERVES_KEY, inputObject.getObserves()));
 		}
-		
+
 		if(this.inputObject.hasMovementPattern()){
 			result=combineResults(result, manager.getByField(MOVEMENT_PATTERN_KEY, inputObject.getMovementPattern()));
 		}
-		
+
 		if(this.inputObject.hasConnectionStability()){
 			result=combineResults(result, manager.getByField(CONNECTION_STABILITY_KEY, inputObject.getConnectionStability()));
 		}
-		
-		
+
+
 		this.result_in_JSON=result;
 	}
 
@@ -108,18 +118,18 @@ public class ICOsQuery extends DiscoverQuery {
 		else
 			return true;
 	}
-	
-	
+
+
 private LinkedList<JSONObject> computeMobility(LinkedList<JSONObject> mobileICOs, MapSelectionSquare selectionArea, int timeWindow){
-	
+
 		LinkedList<JSONObject> mobilityResult=new LinkedList<JSONObject>();
 		int i=1;
 //	 	logger.debug("Data for prediction:\n");
 //	 	logger.debug("Selection Area:"+selectionArea.toString());
 //	 	logger.debug("timeWindow: "+timeWindow);
-	 	for(JSONObject obj:mobileICOs){		
+	 	for(JSONObject obj:mobileICOs){
 	 		GPSPoint position=DataExtractor.extractKnownLocation(obj);
-	 		GPSPoint prediction=DataExtractor.extractPredictedDirection(obj); 		
+	 		GPSPoint prediction=DataExtractor.extractPredictedDirection(obj);
 //	 		logger.debug("Predicted #"+i);
 //	 		logger.debug("Position: "+position.toString());
 //	 		logger.debug("Prediction direction: "+prediction.toString());
@@ -131,11 +141,11 @@ private LinkedList<JSONObject> computeMobility(LinkedList<JSONObject> mobileICOs
 	 			if(selectionArea.isPointInSelection(destination)){
 	 				logger.debug("new position in selection area");
 	 				mobilityResult.addLast(obj);
-	 			} 			
+	 			}
 	 		}
 	 		i++;
 	 	}
-		
+
 		return mobilityResult;
 	}
 

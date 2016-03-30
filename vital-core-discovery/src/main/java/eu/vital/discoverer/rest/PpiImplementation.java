@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:57+02:00
+*/
+
+
+
 package eu.vital.discoverer.rest;
 
 import java.io.IOException;
@@ -146,7 +156,7 @@ public class PpiImplementation {
 	}
 
 	private boolean checkObservationParams(JSONObject params){
-		boolean propertyCheck=false,sensorCheck=false;	
+		boolean propertyCheck=false,sensorCheck=false;
 		if(params.containsKey("property")){
 			String property=(String)params.get("property");
 			if(OntologyUtils.equals(property, "vital:OperationalState"))

@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:58+02:00
+*/
+
+
+
 package eu.vital.discoverer.rest;
 
 import java.util.HashSet;
@@ -19,7 +29,7 @@ public class DiscovererREST  extends Application {
 		singletons.add(new RestInterface());
 		singletons.add(new PpiImplementation());
 	}
-	
+
 	@Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<Class<?>>();

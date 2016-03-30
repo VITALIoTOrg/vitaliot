@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:54+02:00
+*/
+
+
+
 package eu.vital.discoverer.util;
 
 import java.util.HashMap;
@@ -6,9 +16,9 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 
 public class DataExtractor {
-	
+
 	static final Logger logger=Logger.getLogger(DataExtractor.class);
-	
+
 	// Map with convertion factor from qudt speed units to kilometer per hour
 	private static HashMap<String, Double> convertionFactors=new HashMap<String, Double>();
 	static{
@@ -26,10 +36,10 @@ public class DataExtractor {
 		convertionFactors.put("qudt:KilometerPerHour", 1.0);
 		convertionFactors.put("qudt:KilometerPerSecond", 3600.0);
 	}
-	
+
 	/**
 	 * Return an object containing latitude and longitude stored in hasLastKnownLocation of a VITAL ICO
-	 * 
+	 *
 	 * @param input JSONObject containing ICO data. Used to extract latitude and longitude of last known location
 	 * @return Object containing last known location. If info is not present returns null
 	 */
@@ -49,18 +59,18 @@ public class DataExtractor {
 			else{
 				return null;
 			}
-			
+
 			return new GPSPoint(latitude, longitude);
-				
+
 		}
 		else{
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Return an object containing latitude and longitude stored in hasPredictedDirection of a VITAL ICO
-	 * 
+	 *
 	 * @param input JSONObject containing ICO data. Used to extract latitude and longitude of predicted direction
 	 * @return Object containing predicted direction coordinates. If info is not present returns null
 	 */
@@ -68,7 +78,7 @@ public class DataExtractor {
 		double latitude, longitude;
 		if(input.containsKey("hasMovementPattern")){
 			JSONObject pattern=(JSONObject)input.get("hasMovementPattern");
-			
+
 			if(pattern.containsKey("hasPredictedDirection")){
 				JSONObject location=(JSONObject)pattern.get("hasPredictedDirection");
 				if(location.containsKey("geo:lat")){
@@ -83,24 +93,24 @@ public class DataExtractor {
 				else{
 					return null;
 				}
-				
+
 				return new GPSPoint(latitude, longitude);
 			}
 			else{
 				return null;
 			}
-				
+
 		}
 		else{
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Computes predicted traveled distance according
-	 * 
-	 * @param input JSON object describing an ICO 
+	 *
+	 * @param input JSON object describing an ICO
 	 * @param timeInMinutes time value used to compute distance
 	 * @return expected traveled distance
 	 */
@@ -108,11 +118,11 @@ public class DataExtractor {
 		double distance=0;
 		double speed=0;
 		double convertionFactor;
-		
-		
+
+
 		if(input.containsKey("hasMovementPattern")){
 			JSONObject pattern=(JSONObject)input.get("hasMovementPattern");
-			
+
 			if(pattern.containsKey("hasPredictedSpeed")){
 				JSONObject speedPrediction=(JSONObject)pattern.get("hasPredictedSpeed");
 				if(speedPrediction.containsKey("value")){
@@ -125,28 +135,28 @@ public class DataExtractor {
 					speed=speed*convertionFactor;
 					logger.debug("extracted unit: "+unit);
 					logger.debug("converted speed: "+speed);
-				}				
+				}
 				// compute traveled dinstance in kilometers using speed in kilometers per hour and time in minutes
 				distance=speed*((double)timeInMinutes/60);
 
 			}
-			
-				
+
+
 		}
-		
+
 		logger.debug("Predicted traveled distance: "+distance);
-		
+
 		return distance;
 	}
-	
+
 	/**
-	 * computes a conversion factor to pass from received speed unit to kilometers per hour	
-	 * 
+	 * computes a conversion factor to pass from received speed unit to kilometers per hour
+	 *
 	 * @param speedUnit received speed unit
 	 * @return convertion factor to kilometers per hour
 	 */
 	private static double getSpeedConvertionFactor(String speedUnit){
-	
+
 		if(convertionFactors.containsKey(speedUnit)){
 			logger.debug("speed conversion factor: "+convertionFactors.get(speedUnit));
 			return convertionFactors.get(speedUnit);
@@ -156,6 +166,6 @@ public class DataExtractor {
 			return 0;
 		}
 	}
-	
+
 
 }

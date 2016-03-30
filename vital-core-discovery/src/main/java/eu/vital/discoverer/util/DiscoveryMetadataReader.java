@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:52+02:00
+*/
+
+
+
 package eu.vital.discoverer.util;
 
 import java.io.BufferedReader;
@@ -6,15 +16,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class DiscoveryMetadataReader {
-	
-	
+
+
 	public enum MetadataSelector {
 		SYSTEM_METADATA("/sys_metadata.jsonld"),
 		SERVICE_METADATA("/ser_metadata.jsonld"),
 		SENSOR_METADATA("/sen_metadata.jsonld"),
 		STATUS_METADATA("/status.jsonld");
 
-	    private final String name;       
+	    private final String name;
 
 	    private MetadataSelector(String s) {
 	        name = s;
@@ -24,7 +34,7 @@ public class DiscoveryMetadataReader {
 	       return this.name;
 	    }
 	}
-	
+
 	public String getMetadata(MetadataSelector selector) throws IOException{
 		InputStream fis=this.getClass().getResourceAsStream(selector.getName());
 		StringBuilder sb=new StringBuilder();
@@ -33,8 +43,8 @@ public class DiscoveryMetadataReader {
 		while((line=reader.readLine())!=null){
 			sb.append(line);
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 }

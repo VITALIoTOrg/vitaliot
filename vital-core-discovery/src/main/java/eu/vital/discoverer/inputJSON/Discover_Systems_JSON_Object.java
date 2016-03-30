@@ -1,20 +1,30 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:27:08+02:00
+*/
+
+
+
 package eu.vital.discoverer.inputJSON;
 
 import org.json.simple.JSONObject;
 
 public class Discover_Systems_JSON_Object implements RequestJSONObjectInterface{
-	
+
 	private String type, serviceArea;
 	private boolean hasType, hasServiceArea;
-	
+
 	public String getType() {
 		return type;
 	}
-	
+
 	public void setType(String type){
 		this.type=type;
 	}
-		
+
 	public String getServiceArea() {
 		return serviceArea;
 	}
@@ -26,7 +36,7 @@ public class Discover_Systems_JSON_Object implements RequestJSONObjectInterface{
 	public boolean hasType(){
 		return this.hasType;
 	}
-	
+
 	public boolean hasServiseArea(){
 		return this.hasServiceArea;
 	}

@@ -1,10 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2013, 2016 Vital Consortium. All rights reserved. 
- * http://vital-iot.eu
- *
- * Contributors:
- *     riccardo.petrolo@inria.fr --- Inria Lille - Nord Europe
- *******************************************************************************/
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:59+02:00
+*/
+
 package eu.vital.discoverer.rest;
 
 import java.io.IOException;
@@ -15,14 +16,14 @@ import java.net.SocketAddress;
 
 
 public class ConnDMS {
-	
+
 	public boolean canConnect(String url, String port) {
 		return true;
 	}
-		
+
 	public boolean canConnect(InetAddress url, int port) {
 		Socket socket=new Socket();
-		
+
 		SocketAddress socketAddress = new InetSocketAddress(url, port);
 	    boolean connected=false;
 	    try {
@@ -32,11 +33,11 @@ public class ConnDMS {
 	        socket.close();
 	    }
 	    catch (IOException e) {
-	        // error during the connection 
+	        // error during the connection
 	        e.printStackTrace();
 	    }
 	    return connected;
 
 	}
-	
+
 }

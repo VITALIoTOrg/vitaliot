@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:44+02:00
+*/
+
+
+
 package eu.vital.discoverer.util;
 
 import java.math.RoundingMode;
@@ -5,29 +15,29 @@ import java.text.DecimalFormat;
 
 /**
  * This class is used to provide support for coordinate evaluation in a selection
- * process on a map.Starting from a center and a distance computes the coordinates 
- * for the four main cardinal directions (north, south, east, west). 
- * These points are then used to obtain boundary limits for the square area under 
- * analysis. 
- * 
+ * process on a map.Starting from a center and a distance computes the coordinates
+ * for the four main cardinal directions (north, south, east, west).
+ * These points are then used to obtain boundary limits for the square area under
+ * analysis.
+ *
  * @author Salvatore Guzzo Bonifacio <salvatore.guzzo_bonifacio@inria.fr>
  *
  */
 public class MapSelectionSquare {
-	
+
 	private GPSPoint center, north, south, east, west;
 	private double distance;
 	private final double R=6370;
 	private DecimalFormat formatter;
-	
+
 	/**
 	 * Create a new object to compute boundaries in a map region for selection purposes.
-	 *  
+	 *
 	 * @param center Central point coordinates
 	 * @param distance square side length
 	 */
 	public MapSelectionSquare(GPSPoint center, double distance){
-		
+
 		this.center=center;
 		this.distance=distance;
 		this.north=getDestinationPoint(center, 0d, distance/2);
@@ -37,7 +47,7 @@ public class MapSelectionSquare {
 		formatter=new DecimalFormat("#.######");
 		formatter.setRoundingMode(RoundingMode.HALF_DOWN);
 	}
-	
+
 	/**
 	 * The maximum latitude for selected area with 6 digit precision
 	 * @return Maximum Latitude
@@ -52,7 +62,7 @@ public class MapSelectionSquare {
 	public String getMinLatitude(){
 		return formatter.format(this.south.getLatitude());
 	}
-	
+
 	/**
 	 * The maximum longitude for selected area with 6 digit precision
 	 * @return Maximum Longitude
@@ -60,7 +70,7 @@ public class MapSelectionSquare {
 	public String getMaxLongitude(){
 		return formatter.format(this.east.getLongitude());
 	}
-	
+
 	/**
 	 * The minimum longitude for selected area with 6 digit precision
 	 * @return Minimum Longitude
@@ -68,7 +78,7 @@ public class MapSelectionSquare {
 	public String getMinLongitude(){
 		return formatter.format(this.west.getLongitude());
 	}
-	
+
 	/**
 	 * Computes if specified point is inside the selection area
 	 * @param point GPSPoint to test
@@ -90,36 +100,36 @@ public class MapSelectionSquare {
 			inside=false;
 		return inside;
 	}
-	
-	
+
+
 	/**
-	 * Produce a GPSPoint object residing at a distance "distance" from start_point 
-	 * along the radial direction with an angle bearing_angle. 
-	 *  
+	 * Produce a GPSPoint object residing at a distance "distance" from start_point
+	 * along the radial direction with an angle bearing_angle.
+	 *
 	 * @param start_point the center of the square region
 	 * @param bearing_angle the angle from start point for the radial direction. (increases clockwise from north)
-	 * @param distance the required distance in Km 
+	 * @param distance the required distance in Km
 	 * @return the destination point
 	 */
 	private GPSPoint getDestinationPoint(GPSPoint start_point, double bearing_angle, double distance){
 		double delta=distance/R;
-		
+
 		double src_lat=Math.toRadians(start_point.getLatitude());
 		double src_long=Math.toRadians(start_point.getLongitude());
 		double bearing =Math.toRadians(bearing_angle);
-		
+
 		double dst_lat= Math.asin( (Math.sin(src_lat)*Math.cos (delta)) + (Math.cos (src_lat)*Math.sin (delta) * Math.cos( bearing)) );
 		double dst_long= src_long+Math.atan2( Math.sin(bearing)*Math.sin(delta)*Math.cos(src_lat), Math.cos(delta)-(Math.sin(src_lat)*Math.sin(dst_lat)) );
-		
+
 		double dst_lat_deg=Math.toDegrees(dst_lat);
 		double dst_long_deg=Math.toDegrees(dst_long);
-		
+
 		GPSPoint destination= new GPSPoint(dst_lat_deg, dst_long_deg);
-		
+
 		return destination;
-		
+
 	}
-	
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
@@ -127,9 +137,9 @@ public class MapSelectionSquare {
 				+ "Maximum latitude: "+getMaxLatitude()+"\n"
 				+ "Minimum longitude: "+getMinLongitude()+"\n"
 				+ "Maximum longitude: "+getMaxLongitude()+"\n";
-				
-				
+
+
 	}
-	
-	
+
+
 }

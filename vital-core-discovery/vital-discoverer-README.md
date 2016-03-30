@@ -1,7 +1,7 @@
 VITAL-Discoverer
 ================
 
-- Author: Salvatore Guzzo Bonifacio
+- Author: Riccardo Petrolo - Salvatore Guzzo Bonifacio
 - Summary: This is the Discoverer module of VITAL
 - Target Project: Vital (<http://vital-iot.eu/>)
 - Source: <https://gitlab.atosresearch.eu/vital-iot/vital-core-discovery>
@@ -38,20 +38,20 @@ Build and Deploy Discoverer Module
 3. Open a command line and navigate to the root directory of the project.
 4. Open file **_src/main/resources/discovery.properties_** and set the values for the properties:
 
-	```	
+	```
 	DISCOVERER_ENDPOINT_ADDRESS=http://baseaddress.com
 	DISCOVERER_ENDPOINT_PORT=8080
 	DMS_ENDPOINT_ADDRESS=http://baseaddress.com/vital/dms
 	```
-	
-**Note:** if DMS endpoint address is not set to default port, include the port in the address (E.g. http://baseaddress.com:8180/vital/dms) 
+
+**Note:** if DMS endpoint address is not set to default port, include the port in the address (E.g. http://baseaddress.com:8180/vital/dms)
 5. Type this command to build and deploy the archive:
 
         mvn clean package wildfly:deploy
 
 6. This will deploy `vital-core-discovery/target/discoverer.war` to the running instance of the server.
 
-Access the module 
+Access the module
 ---------------------
 
 The deployed module is available at the active base address of the running Wildfly instance with path **_/discoverer_**

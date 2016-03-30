@@ -1,6 +1,6 @@
 {
-"@context": "http://IP_ADDRESS/discoverer/contexts/measurement.jsonld",
-"id": "http://IP_ADDRESS/discoverer/ppi/sensor/monitoring/IDENTIFIER",
+"@context": "IP_ADDRESS/discoverer/contexts/measurement.jsonld",
+"id": "IP_ADDRESS/discoverer/ppi/sensor/monitoring/IDENTIFIER",
 "type": "ssn:Observation",
 "ssn:observationProperty":
 {
@@ -10,7 +10,7 @@
 {
 "time:inXSDDateTime": "EXECUTION_TIME"
 },
-"ssn:featureOfInterest": "http://IP_ADDRESS/discoverer/",
+"ssn:featureOfInterest": "IP_ADDRESS/discoverer/",
 "ssn:observationResult":
 {
 "type": "ssn:SensorOutput",

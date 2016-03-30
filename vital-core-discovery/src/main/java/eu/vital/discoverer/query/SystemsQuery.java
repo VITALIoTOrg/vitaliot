@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:27:00+02:00
+*/
+
+
+
 package eu.vital.discoverer.query;
 
 import java.io.IOException;
@@ -33,13 +43,13 @@ public class SystemsQuery extends DiscoverQuery {
 			inputObject = mapper.readValue(inputJSON.toString(), Discover_Systems_JSON_Object.class);
 		} catch (JsonParseException e) {
 			logger.error("Error unmarshaling input JSON object",e);
-			throw new DiscoveryApplicationException();			
+			throw new DiscoveryApplicationException();
 		} catch (JsonMappingException e) {
 			logger.error("Error mapping input JSON object",e);
-			throw new DiscoveryApplicationException();			
+			throw new DiscoveryApplicationException();
 		} catch (IOException e) {
 			logger.error("IO Error on input JSON object",e);
-			throw new DiscoveryApplicationException();			
+			throw new DiscoveryApplicationException();
 		}
 		inputObject.setIncludedKeys(inputJSON);
 	}
@@ -50,7 +60,7 @@ public class SystemsQuery extends DiscoverQuery {
 		LinkedList<JSONObject> result = null;
 		if(this.inputObject.hasType()){
 			result=this.combineResults(result, manager.getByField(TYPE, this.inputObject.getType()));
-		}	
+		}
 		if(this.inputObject.hasServiseArea()){
 			result=this.combineResults(result, manager.getByField(SERVICE_AREA, this.inputObject.getServiceArea()));
 		}

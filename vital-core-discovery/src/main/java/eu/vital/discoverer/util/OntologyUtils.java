@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:43+02:00
+*/
+
+
+
 package eu.vital.discoverer.util;
 
 import java.util.HashMap;
@@ -38,8 +48,8 @@ public final class OntologyUtils {
 
 	}
 	/**
-	 * compares two Strings to verify if they are equals considering both expanded and compacted version of ontology 
-	 * 
+	 * compares two Strings to verify if they are equals considering both expanded and compacted version of ontology
+	 *
 	 * @param primary first object used for the equals method. Same as {@code this} in standard equals
 	 * @param comparison second object used for the equals
 	 * @return {@code true} if the two strings are equivalent
@@ -71,7 +81,7 @@ public final class OntologyUtils {
 
 	/**
 	 * Verifies if a string represents an ontology value in expanded version
-	 * 
+	 *
 	 * @param expanded value to verify
 	 * @return {@code true} if the received string is expanded
 	 */
@@ -88,8 +98,8 @@ public final class OntologyUtils {
 
 
 	/**
-	 * Verifies if a string represents an ontology value in compacted version 
-	 * 
+	 * Verifies if a string represents an ontology value in compacted version
+	 *
 	 * @param value value to verify
 	 * @return {@code true} if the received string is compacted
 	 */
@@ -116,10 +126,10 @@ public final class OntologyUtils {
 		return false;
 	}
 
-	
+
 	/**
 	 * Produce an expanded version of received string. If received string is not compacted returned value
-	 * is same as input 
+	 * is same as input
 	 * @param param String to expand
 	 * @return Expanded string. Same as input if non valid compacted input
 	 */
@@ -135,11 +145,11 @@ public final class OntologyUtils {
 			return param;
 	}
 
-	
+
 	/**
 	 * Produce a compacted version of received string. If received string is not expanded returned value
-	 * is same as input 
-	 * 
+	 * is same as input
+	 *
 	 * @param expanded string to compact
 	 * @return Compacted string. Same as input if non valid expanded input
 	 */
@@ -149,7 +159,7 @@ public final class OntologyUtils {
 			for(String s:abbreviations.keySet()){
 				if(expanded.contains(abbreviations.get(s))){
 
-					String compressed=s+":"+expanded.replace(abbreviations.get(s), "");					
+					String compressed=s+":"+expanded.replace(abbreviations.get(s), "");
 					return compressed;
 				}
 			}

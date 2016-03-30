@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- How to access the Discoverer -->
+
+	<entry key="DMS_ENDPOINT_ADDRESS">https://vitalsp.cloud.reply.eu/vital/vital-core-dms</entry>
+	<entry key="DISCOVERER_ENDPOINT_ADDRESS">http\://vital-integration.atosresearch.eu/vital-core-discovery</entry>
+	<entry key="DISCOVERER_ENDPOINT_PORT">8180</entry>
+
+
+</properties>

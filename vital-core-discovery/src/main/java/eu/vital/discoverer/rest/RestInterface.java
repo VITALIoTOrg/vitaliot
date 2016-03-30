@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:26:55+02:00
+*/
+
+
+
 package eu.vital.discoverer.rest;
 
 import java.io.BufferedReader;
@@ -84,7 +94,7 @@ public class RestInterface {
 		if(cookie==null){
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}else{
-			
+
 			String completeCookie="vitalAccessToken="+cookie;
 			DiscoverQuery query=QueryFactory.getQuery(QueryTypeEnum.ICOS_QUERY);
 			if(query.checkJSONInput(input))

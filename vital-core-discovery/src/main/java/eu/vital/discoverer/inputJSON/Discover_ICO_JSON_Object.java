@@ -1,3 +1,13 @@
+/**
+* @Author: Riccardo Petrolo <riccardo>
+* @Date:   2016-02-26T09:52:37+01:00
+* @Email:  riccardo.petrolo@inria.fr
+* @Last modified by:   riccardo
+* @Last modified time: 2016-03-30T18:27:10+02:00
+*/
+
+
+
 package eu.vital.discoverer.inputJSON;
 
 import java.util.HashMap;
@@ -7,16 +17,16 @@ import org.json.simple.JSONObject;
 
 
 public class Discover_ICO_JSON_Object implements RequestJSONObjectInterface {
-	
+
 	final static Logger logger=Logger.getLogger(Discover_ICO_JSON_Object.class);
 	private SelectionArea position;
 	private String system, observes, type, movementPattern, connectionStability;
 	private boolean hasLocalizer;
 	private int timeWindow;
-	
+
 	// boolean variables to keep track of defined keys in the input JSON object
 	private boolean hasSystem, hasPosition, hasObserves, hasType, hasMovementPattern, hasConnectionStability, hasHasLocalizer, hasTimeWindow;
-	
+
 	public SelectionArea getPosition() {
 		return position;
 	}
@@ -24,7 +34,7 @@ public class Discover_ICO_JSON_Object implements RequestJSONObjectInterface {
 	public void setPosition(SelectionArea position) {
 		this.position = position;
 	}
-	
+
 	public String getSystem() {
 		return system;
 	}
@@ -80,42 +90,42 @@ public class Discover_ICO_JSON_Object implements RequestJSONObjectInterface {
 	public void setTimeWindow(int timeWindow) {
 		this.timeWindow = timeWindow;
 	}
-	
+
 	public boolean hasSystem(){
-		
+
 	return this.hasSystem;
 	}
-	
+
 	public boolean hasPosition(){
 		return this.hasPosition;
 	}
-	
+
 	public boolean hasObserves(){
 		return this.hasObserves;
 	}
-	
+
 	public boolean hasType(){
 		return this.hasType;
 	}
-	
+
 	public boolean hasMovementPattern(){
 		return this.hasMovementPattern;
 	}
-	
+
 	public boolean hasConnectionStability(){
 		return this.hasConnectionStability;
 	}
-	
+
 	public boolean hasHasLocalizer(){
 		return this.hasHasLocalizer;
 	}
-	
+
 	public boolean hasTimeWindow(){
 		return this.hasTimeWindow;
 	}
-	
+
 	public void setIncludedKeys(JSONObject inputObject) {
-				
+
 		this.hasObserves=inputObject.containsKey("observes");
 		this.hasType=inputObject.containsKey("type");
 		this.hasMovementPattern=inputObject.containsKey("movementPattern");
@@ -123,21 +133,21 @@ public class Discover_ICO_JSON_Object implements RequestJSONObjectInterface {
 		this.hasTimeWindow=inputObject.containsKey("timeWindow");
 		this.hasHasLocalizer=inputObject.containsKey("hasLocalizer");
 		this.hasSystem=inputObject.containsKey("system");
-		
+
 		if(!inputObject.containsKey("position")){
 			this.hasPosition=false;
-		}else{			
+		}else{
 			HashMap receivedPosition=(HashMap) inputObject.get("position");
 			if(!receivedPosition.containsKey("latitude")||!receivedPosition.containsKey("longitude")||!receivedPosition.containsKey("radius"))
 				this.hasPosition=false;
 			else
 				this.hasPosition=true;
-			
+
 		}
-			
-		
+
+
 	}
 
-	
-	
+
+
 }
