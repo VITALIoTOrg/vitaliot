@@ -56,7 +56,6 @@ public class PPIManager {
             NoSuchAlgorithmException, KeyStoreException{
         
         String sbody = body;
-        
         String response = query(ppi_endpoint,sbody,"POST");
         JSONArray resp = new JSONArray(response);
 
@@ -68,8 +67,8 @@ public class PPIManager {
             NoSuchAlgorithmException, KeyStoreException{
         
         String sbody = body;
-        
-        String response = query(ppi_endpoint+"/metadata",sbody,"POST");
+        String ppi_url =ppi_endpoint+"/metadata";
+        String response = query(ppi_url,sbody,"POST");
         
 
         return new JSONArray(response);
@@ -80,8 +79,8 @@ public class PPIManager {
             NoSuchAlgorithmException, KeyStoreException{
         
         String sbody = body;
-        
-        String response = query(ppi_endpoint+"/service/metadata",sbody,"POST");
+        String ppi_url =ppi_endpoint+"/service/metadata";
+        String response = query(ppi_url,sbody,"POST");
         
         return new JSONArray(response);
     }
@@ -91,8 +90,8 @@ public class PPIManager {
             NoSuchAlgorithmException, KeyStoreException{
         
         String sbody ="[\"vital:ObservationService\"]" ;
-        
-        String response = query(ppi_endpoint+"/service/metadata",sbody,"POST");
+        String ppi_url = ppi_endpoint+"/service/metadata";
+        String response = query(ppi_url,sbody,"POST");
         
         return response;
     }
@@ -102,8 +101,8 @@ public class PPIManager {
             NoSuchAlgorithmException, KeyStoreException{
         
         String sbody = body;
-        
-        String response = query(ppi_endpoint+"/sensor/metadata",sbody,"POST");
+        String ppi_url = ppi_endpoint+"/sensor/metadata";
+        String response = query(ppi_url,sbody,"POST");
         
 
         return new JSONArray(response);
