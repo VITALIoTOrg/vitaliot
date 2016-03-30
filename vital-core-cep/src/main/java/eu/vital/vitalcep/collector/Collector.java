@@ -49,6 +49,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
+import javax.ejb.Singleton;
 import org.json.JSONException;
 /**
  *
@@ -69,8 +70,16 @@ public class Collector {
     private String mongoDB;
     private final ScheduledExecutorService scheduler;
     public final JSONArray sensors = new JSONArray(); 
+    private static Collector instance = null;
     
-    public Collector()  throws IOException {
+    public static Collector getInstance() throws IOException {
+      if(instance == null) {
+         instance = new Collector();
+      }
+      return instance;
+   }
+    
+    private Collector()  throws IOException {
 
         scheduler = Executors.newScheduledThreadPool(1);
         props = new PropertyLoader();
@@ -137,7 +146,9 @@ public class Collector {
                                     .getString("lastRequest"));
 
 
-                                sendData2CEP(aData, i);
+                                if (aData.length()>0){
+                                    sendData2CEP(aData, i);
+                                }
 
                             } catch (IOException | KeyManagementException 
                                     | NoSuchAlgorithmException 
@@ -149,9 +160,9 @@ public class Collector {
                             
                         }
                         
-                        sensors.getJSONArray(i)
-                                        .getJSONObject(0).put("lastRequest"
+                        sensors.getJSONObject(i).put("lastRequest"
                                                 ,getXSDDateTime(NOW));
+                        //save to mongo lastrequest
                 
                     } catch (GeneralSecurityException | IOException 
                             | ParseException ex) {
