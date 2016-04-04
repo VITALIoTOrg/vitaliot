@@ -27,7 +27,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import eu.vital.vitalcep.cep.CEP;
 import eu.vital.vitalcep.connectors.ppi.PPIManager;
-import eu.vital.vitalcep.restApp.filteringApi.ContinuosFiltering;
 import eu.vital.vitalcep.security.Security;
 
 import org.apache.log4j.PropertyConfigurator;
