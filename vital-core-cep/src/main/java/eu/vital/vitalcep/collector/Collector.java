@@ -11,6 +11,9 @@ import com.mongodb.Block;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.mqtt.MqttAllInOne;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
@@ -50,6 +53,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 import javax.ejb.Singleton;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 /**
  *
@@ -102,6 +107,7 @@ public class Collector {
             @Override
             public void run() {
                 Date NOW = new Date();
+                String nowString = getXSDDateTime(NOW);
                 for (int i = 0; i < sensors.length(); i++) {
                     try {
                         String cookie = getListenerCredentials(i);
@@ -114,12 +120,11 @@ public class Collector {
                                 DMSListener oDMS = new DMSListener(cookie);
                                 
                                 aData = oDMS.getObservations(sensors
-                                    .getJSONArray(i)
-                                    .getJSONObject(0).optJSONArray("sources")
-                                    ,sensors.getJSONArray(i)
-                                    .getJSONObject(0).optJSONArray("properties")
-                                    ,sensors.getJSONArray(i)
-                                    .getJSONObject(0).getString("lastRequest"));
+                                        .getJSONObject(i).getJSONArray("sources")
+                                    ,sensors
+                                        .getJSONObject(i).getJSONArray("properties")
+                                    ,sensors
+                                        .getJSONObject(i).getString("lastRequest"));
                                               
                             } catch (IOException | KeyManagementException 
                                     | NoSuchAlgorithmException 
@@ -129,7 +134,10 @@ public class Collector {
                                         .log(Level.SEVERE, null, ex);
                             }
                             
-                            sendData2CEP(aData, i);
+                            if (aData.length()>0){
+                                    sendData2CEP(aData, i);
+                            }
+                            
                         
                             
                         }else{
@@ -144,7 +152,6 @@ public class Collector {
                                 aData = oPPI.getObservations(requests
                                     ,sensor
                                     .getString("lastRequest"));
-
 
                                 if (aData.length()>0){
                                     sendData2CEP(aData, i);
@@ -161,9 +168,27 @@ public class Collector {
                         }
                         
                         sensors.getJSONObject(i).put("lastRequest"
-                                                ,getXSDDateTime(NOW));
+                                                ,nowString);
                         //save to mongo lastrequest
-                
+                        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        
+                        MongoDatabase db = mongo.getDatabase(mongoDB);
+                        
+                        Bson filter = Filters.eq("_id"
+                                , new ObjectId(sensors.getJSONObject(i)
+                                      .getString("id")));
+                        
+                        Bson update =  new Document("$set"
+                                ,new Document("lastRequest",nowString));
+                        
+                        UpdateOptions options = new UpdateOptions().upsert(false);
+
+                        UpdateResult updateDoc =  db.getCollection("cepinstances")
+                                .updateOne(filter,update,options);
+                          
+                      
+                        String a = "";
+                      
                     } catch (GeneralSecurityException | IOException 
                             | ParseException ex) {
                         java.util.logging.Logger
@@ -262,7 +287,7 @@ public class Collector {
                 
                 JSONObject oCollector = new JSONObject();
                 
-                oCollector.put("id",document.getObjectId("_id"));
+                oCollector.put("id",document.getObjectId("_id").toString());
                 oCollector.put("mqin", document.getString("mqin"));
                 oCollector.put("mqout", document.getString("mqout"));
                 oCollector.put("cepType", document.getString("cepType"));
@@ -300,6 +325,8 @@ public class Collector {
                 }
                 oCollector.put("lastRequest",document.getString("lastRequest"));
                 sensors.put(oCollector);
+                
+                
             }
         });
         
@@ -326,20 +353,7 @@ public class Collector {
         return aOutput;
     }
     
-    public void run(){
-                
-        while(!isStopped()){
-            try {
-               String a = "a";
-            } catch (Exception e) {
-                
-            }
-           
-        }
         
-        System.out.println("Server Stopped.");
-    }
-    
     public boolean start(String sensorId,String name, String mqin, 
             String mqout,int qos){
         //add new values to the list
