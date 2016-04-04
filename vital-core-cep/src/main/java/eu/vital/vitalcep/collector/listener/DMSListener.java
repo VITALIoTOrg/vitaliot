@@ -5,11 +5,7 @@
  */
 package eu.vital.vitalcep.collector.listener;
 
-import eu.vital.vitalcep.cep.CEP;
-import eu.vital.vitalcep.cep.CepProcess;
 import eu.vital.vitalcep.conf.PropertyLoader;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoDatabase;
 import eu.vital.vitalcep.connectors.dms.DMSManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,73 +63,87 @@ public class DMSListener {
         
         if (properties.length()+sources.length()==2){
           
-            String property1=properties.getString(0) ;
-            String sensor1=sources.getString(0) ;
-            mongoquery = "{\"http://purl.oclc.org/NET/ssnx/ssn#observationProperty\": "
-                    + "[{\"@type\": ["
-                    +"\""+property1 +"\"]}],"
-                    + "\"http://purl.oclc.org/NET/ssnx/ssn#observedBy\": ["
-                    + "{\"@value\": \""+sensor1 +"\"}],"
-                    + "\"http://purl.oclc.org/NET/ssnx/ssn#observationResultTime\": "
-                    + "{\"$elemMatch\":{ "
-                    + "\"http://www.w3.org/2006/time#inXSDDateTime\": "
-                    + "{\"$elemMatch\":{ \"@value\" : {\"$gt\": \""
-                    + from 
-                    +"\"}}}}}}";
-            
-             DMSManager oDMS = new DMSManager(dmsURL,cookie);
-        
-         aData = oDMS.getObservations(mongoquery);
-
-        }else if (properties.length()+sources.length()>2){
-           
-            JSONArray ors = new JSONArray();
-          
-            int x=0;
-             
-            for (int i = 0; i < properties.length(); i++) {
-                for (int j = 0; j < sources.length(); j++) {
-                    JSONObject simplequery = new JSONObject();
-                    String innerProperty = "[\""+properties.getString(i) +"\"]}]" ;
-                    String sensorvalue = sources.getString(j) ;
-                    String timeValue = " {\"$elemMatch\":{"
+            try{
+                String property1=properties.getString(0) ;
+                String sensor1=sources.getString(0) ;
+                mongoquery = "{\"http://purl.oclc.org/NET/ssnx/ssn#observationProperty\": "
+                        + "[{\"@type\": ["
+                        +"\""+property1 +"\"]}],"
+                        + "\"http://purl.oclc.org/NET/ssnx/ssn#observedBy\": ["
+                        + "{\"@value\": \""+sensor1 +"\"}],"
+                        + "\"http://purl.oclc.org/NET/ssnx/ssn#observationResultTime\": "
+                        + "{\"$elemMatch\":{ "
                         + "\"http://www.w3.org/2006/time#inXSDDateTime\": "
                         + "{\"$elemMatch\":{ \"@value\" : {\"$gt\": \""
                         + from 
-                        +"\"}}}}}" ;
-                    JSONArray propertyarrayInner = new JSONArray(innerProperty);
-                    //JSONArray sensorarrayInner = new JSONArray(sensorvalue);
-                    JSONObject timeObject = new JSONObject(timeValue);
+                        +"\"}}}}}}";
 
-                    JSONObject property= new JSONObject();
-                    JSONObject sensor = new JSONObject();
+                DMSManager oDMS = new DMSManager(dmsURL,cookie);
 
-                    sensor.put("@value",sensorvalue);
-                    property.put("@type",propertyarrayInner );
 
-                    JSONArray propertyArray = new JSONArray();
-                    JSONArray sensorArray = new JSONArray();
-
-                    propertyArray.put(property);
-                    sensorArray.put(sensor);
-
-                    simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationProperty",
-                            propertyArray);
-                    simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observedBy",
-                            sensorArray);
-                    simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationResultTime",
-                            timeObject);
-
-                    ors.put(simplequery);
-                    x++;
-                }
-            
+                aData = oDMS.getObservations(mongoquery);
+            }catch(Exception ex){
+                java.util.logging.Logger.getLogger(DMSListener
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, ex);
             }
-        
-        completequery.put("$or",ors);
-         DMSManager oDMS = new DMSManager(dmsURL,cookie);
-        
-         aData = oDMS.getObservations(completequery.toString());
+
+        }else if (properties.length()+sources.length()>2){
+            
+            try{
+           
+                JSONArray ors = new JSONArray();
+
+                int x=0;
+
+                for (int i = 0; i < properties.length(); i++) {
+                    for (int j = 0; j < sources.length(); j++) {
+                        JSONObject simplequery = new JSONObject();
+                        String innerProperty = "[\""+properties.getString(i) +"\"]}]" ;
+                        String sensorvalue = sources.getString(j) ;
+                        String timeValue = " {\"$elemMatch\":{"
+                            + "\"http://www.w3.org/2006/time#inXSDDateTime\": "
+                            + "{\"$elemMatch\":{ \"@value\" : {\"$gt\": \""
+                            + from 
+                            +"\"}}}}}" ;
+                        JSONArray propertyarrayInner = new JSONArray(innerProperty);
+                        //JSONArray sensorarrayInner = new JSONArray(sensorvalue);
+                        JSONObject timeObject = new JSONObject(timeValue);
+
+                        JSONObject property= new JSONObject();
+                        JSONObject sensor = new JSONObject();
+
+                        sensor.put("@value",sensorvalue);
+                        property.put("@type",propertyarrayInner );
+
+                        JSONArray propertyArray = new JSONArray();
+                        JSONArray sensorArray = new JSONArray();
+
+                        propertyArray.put(property);
+                        sensorArray.put(sensor);
+
+                        simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationProperty",
+                                propertyArray);
+                        simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observedBy",
+                                sensorArray);
+                        simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationResultTime",
+                                timeObject);
+
+                        ors.put(simplequery);
+                        x++;
+                    }
+
+                }
+
+                completequery.put("$or",ors);
+                DMSManager oDMS = new DMSManager(dmsURL,cookie);
+
+                aData = oDMS.getObservations(completequery.toString());
+            }catch(Exception ex){
+                java.util.logging.Logger.getLogger(DMSListener
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, ex);
+            }
         }
         
         return aData;
