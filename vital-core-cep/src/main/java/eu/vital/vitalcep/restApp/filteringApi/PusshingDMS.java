@@ -127,15 +127,10 @@ public class PusshingDMS {
      private Properties config ;
     
     private PropertyLoader props;
-    
     private String host;
-    
     private String mongoIp;
-    
     private int mongoPort;
-    
     private String mongoDB;
-    
     private String dmsURL;
     
     public PusshingDMS() throws IOException {
