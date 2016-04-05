@@ -1,9 +1,10 @@
 package eu.vital.management.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import eu.vital.management.service.SystemDAO;
-import eu.vital.management.util.OntologyParser;
+import org.bson.BsonDocument;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -27,9 +28,22 @@ public class SystemRestService {
 	@Inject
 	private Logger log;
 
+	@Inject
+	private ObjectMapper objectMapper;
+
 	@GET
 	public Response list() throws Exception {
 		ArrayNode systemList = systemDAO.list();
+		return Response.ok(systemList).build();
+	}
+
+	@POST
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response search(JsonNode searchData) throws Exception {
+		BsonDocument bsonQuery = BsonDocument.parse(objectMapper.writeValueAsString(searchData));
+		ArrayNode systemList = systemDAO.search(bsonQuery);
+
 		return Response.ok(systemList).build();
 	}
 
@@ -66,7 +80,6 @@ public class SystemRestService {
 
 		return Response.ok(statusJSON).build();
 	}
-
 
 }
 

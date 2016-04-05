@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.management.storage.DocumentManager;
 import eu.vital.management.util.OntologyParser;
 import eu.vital.management.util.VitalClient;
+import org.bson.conversions.Bson;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -41,6 +42,12 @@ public class SensorDAO {
 	public ObjectNode get(String uri) throws Exception {
 		// Connect to ES and retrieve result
 		ObjectNode document = documentManager.get(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), uri);
+		return document;
+	}
+
+	public ArrayNode search(Bson query) throws Exception {
+		// Connect to ES and retrieve result
+		ArrayNode document = documentManager.search(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), query);
 		return document;
 	}
 

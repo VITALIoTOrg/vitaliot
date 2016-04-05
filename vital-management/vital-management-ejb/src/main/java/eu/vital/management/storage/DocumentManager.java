@@ -58,7 +58,7 @@ public class DocumentManager implements Serializable {
 	@PostConstruct
 	public void produceMongoClient() {
 		log.info("produceMongoClient");
-		String url = vitalConfiguration.getProperty("vital-core-orchestrator.mongo", "mongodb://localhost:27017");
+		String url = vitalConfiguration.getProperty("vital-management.mongo", "mongodb://localhost:27017");
 		this.mongoClient = new MongoClient(new MongoClientURI(url));
 		this.mongoDatabase = mongoClient.getDatabase(MAIN_INDEX);
 		log.info("produceMongoClient:done");

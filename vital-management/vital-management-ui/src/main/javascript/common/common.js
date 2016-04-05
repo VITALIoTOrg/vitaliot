@@ -5,6 +5,7 @@ angular.module('common', [
         'ngSanitize',
         'ngAnimate',
         'ngFx',
+        'ui.bootstrap',
         'leaflet-directive',
         'common.templates',
         'common.resources',

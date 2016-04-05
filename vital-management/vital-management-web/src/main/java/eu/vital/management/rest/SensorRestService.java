@@ -1,8 +1,10 @@
 package eu.vital.management.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import eu.vital.management.service.SensorDAO;
+import org.bson.BsonDocument;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -25,10 +27,23 @@ public class SensorRestService {
 	@Inject
 	private Logger log;
 
+	@Inject
+	private ObjectMapper objectMapper;
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response list() throws Exception {
 		ArrayNode sensorList = sensorDAO.list();
+
+		return Response.ok(sensorList).build();
+	}
+
+	@POST
+	@Path("/search")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response search(JsonNode searchData) throws Exception {
+		BsonDocument bsonQuery = BsonDocument.parse(objectMapper.writeValueAsString(searchData));
+		ArrayNode sensorList = sensorDAO.search(bsonQuery);
 
 		return Response.ok(sensorList).build();
 	}

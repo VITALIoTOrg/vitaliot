@@ -2,7 +2,7 @@
 angular.module('common.resources.system', [])
     .factory('systemResource', [
         '$http', '$q', 'API_PATH',
-        function($http, $q, API_PATH) {
+        function ($http, $q, API_PATH) {
             var systemDefaults = {
                 '@id': '',
                 '@type': 'http://vital-iot.eu/ontology/ns/IotSystem',
@@ -43,29 +43,40 @@ angular.module('common.resources.system', [])
             // The public API of the service
             var service = {
 
-                fetchList: function() {
+                fetchList: function () {
                     return $http.get(API_PATH + '/system')
-                        .then(function(response) {
+                        .then(function (response) {
                             var systems = [];
-                            angular.forEach(response.data, function(system) {
+                            angular.forEach(response.data, function (system) {
                                 systems.push(system);
                             });
                             return systems;
                         });
                 },
 
-                fetch: function(system_id) {
+                search: function (query) {
+                    return $http.post(API_PATH + '/system/search', query)
+                        .then(function (response) {
+                            var systems = [];
+                            angular.forEach(response.data, function (system) {
+                                systems.push(system);
+                            });
+                            return systems;
+                        });
+                },
+
+                fetch: function (system_id) {
                     defaultQuery.system = system_id;
                     return $http.post(API_PATH + '/system/metadata', defaultQuery)
-                        .then(function(response) {
+                        .then(function (response) {
                             return angular.extend(angular.copy(systemDefaults), response.data);
                         });
                 },
 
-                fetchStatus: function(system_id) {
+                fetchStatus: function (system_id) {
                     defaultQuery.system = system_id;
                     return $http.post(API_PATH + '/system/metadata/status', defaultQuery)
-                        .then(function(response) {
+                        .then(function (response) {
                             return response.data;
                         });
                 }

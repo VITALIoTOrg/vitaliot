@@ -95,6 +95,17 @@ angular.module('common.resources.sensor', [])
                         });
                 },
 
+                search: function (query) {
+                    return $http.post(API_PATH + '/sensor/search', query)
+                        .then(function (response) {
+                            var sensors = [];
+                            angular.forEach(response.data, function (sensor) {
+                                sensors.push(sensor);
+                            });
+                            return sensors;
+                        });
+                },
+
                 fetch: function (sensor_id) {
                     defaultQuery.sensor = sensor_id;
                     return $http.post(API_PATH + '/sensor/metadata', defaultQuery)

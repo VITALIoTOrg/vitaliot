@@ -1,7 +1,7 @@
 'use strict';
 angular.module('main.sensor', [
-    'ngRoute'
-])
+        'ngRoute'
+    ])
     .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider.when('/sensor/list', {
@@ -51,8 +51,56 @@ angular.module('main.sensor', [
         function ($scope, $compile, sensorResource, sensorList) {
             $scope.sensors = sensorList;
 
-            angular.forEach(sensorList, function (sensor) {
-            });
+            $scope.search = {
+                label: null,
+                comment: null,
+                status: null,
+                clear: function () {
+                    $scope.search.label = null;
+                    $scope.search.comment = null;
+                    $scope.search.status = null;
+                },
+                submit: function (ngFormController) {
+                    if (ngFormController.$invalid) {
+                        return;
+                    }
+                    var query = {
+                        '$and': []
+                    };
+                    if ($scope.search.label) {
+                        query['$and'].push({
+                            'rdfs:label': {
+                                $regex: $scope.search.label
+                            }
+                        });
+                    }
+                    if ($scope.search.comment) {
+                        query['$and'].push({
+                            'rdfs:comment': {
+                                $regex: $scope.search.comment
+                            }
+                        });
+                    }
+                    if ($scope.search.status) {
+                        query['$and'].push({
+                            'http://vital-iot\\u002eeu/ontology/ns/status.@id': {
+                                $regex: $scope.search.status
+                            }
+                        });
+                    }
+                    if (query['$and'].length === 0) {
+                        query = {};
+                    }
+
+                    $scope.sensors.length = 0;
+                    return sensorResource.search(query)
+                        .then(function (sensorList) {
+                            angular.forEach(sensorList, function (sensor) {
+                                $scope.sensors.push(sensor);
+                            });
+                        });
+                }
+            };
         }
     ])
 

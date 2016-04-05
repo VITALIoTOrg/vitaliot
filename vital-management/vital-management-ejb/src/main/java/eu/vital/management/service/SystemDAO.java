@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.management.storage.DocumentManager;
 import eu.vital.management.util.OntologyParser;
 import eu.vital.management.util.VitalClient;
+import org.bson.conversions.Bson;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,11 +30,16 @@ public class SystemDAO {
 	@Inject
 	VitalClient vitalClient;
 
-
 	public ArrayNode list() throws Exception {
 		// Connect to ES and retrieve result
 		ArrayNode documents = documentManager.getList(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString());
 		return documents;
+	}
+
+	public ArrayNode search(Bson query) throws Exception {
+		// Connect to ES and retrieve result
+		ArrayNode document = documentManager.search(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), query);
+		return document;
 	}
 
 	public ObjectNode get(String systemId) throws Exception {
@@ -42,13 +48,11 @@ public class SystemDAO {
 		return document;
 	}
 
-
 	public ObjectNode save(ObjectNode systemData) throws Exception {
 		String systemId = systemData.get("@id").asText();
 		documentManager.update(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), systemId, systemData);
 		return get(systemId);
 	}
-
 
 	public ObjectNode fetchStatus(String systemId) throws Exception {
 		// Connect to ES and retrieve result

@@ -1,7 +1,7 @@
 'use strict';
 angular.module('main.system', [
-    'ngRoute'
-])
+        'ngRoute'
+    ])
     .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider.when('/system/list', {
@@ -59,13 +59,64 @@ angular.module('main.system', [
 
     }])
 
-/**
- * SystemController
- */
+    /**
+     * SystemController
+     */
     .controller('SystemListController', [
         '$scope', 'systemResource', 'systemList',
         function ($scope, systemResource, systemList) {
             $scope.systems = systemList;
+
+            $scope.search = {
+                label: null,
+                comment: null,
+                status: null,
+                clear: function () {
+                    $scope.search.label = null;
+                    $scope.search.comment = null;
+                    $scope.search.status = null;
+                },
+                submit: function (ngFormController) {
+                    if (ngFormController.$invalid) {
+                        return;
+                    }
+                    $scope.systems.length = 0;
+                    var query = {
+                        '$and': []
+                    };
+                    if ($scope.search.label) {
+                        query['$and'].push({
+                            'http://www\\u002ew3\\u002eorg/2000/01/rdf-schema#label': {
+                                $regex: $scope.search.label
+                            }
+                        });
+                    }
+                    if ($scope.search.comment) {
+                        query['$and'].push({
+                            'http://www\\u002ew3\\u002eorg/2000/01/rdf-schema#comment': {
+                                $regex: $scope.search.comment
+                            }
+                        });
+                    }
+                    if ($scope.search.status) {
+                        query['$and'].push({
+                            'http://vital-iot\\u002eeu/ontology/ns/status.@id': {
+                                $regex: $scope.search.status
+                            }
+                        });
+                    }
+                    if (query['$and'].length === 0) {
+                        query = {};
+                    }
+
+                    return systemResource.search(query)
+                        .then(function (systemList) {
+                            angular.forEach(systemList, function (system) {
+                                $scope.systems.push(system);
+                            });
+                        });
+                }
+            }
         }
     ])
 
