@@ -26,24 +26,24 @@
     <entry key="vital-core-iot-data-adapter-ppi.base-url">http://localhost:8080/iot-data-adapter-ppi</entry>
 
     <!--vital-core-security-adapter-->
-    <entry key="vital-core-security-adapter.idp-host">local.vital-iot-test.com</entry>
-    <entry key="vital-core-security-adapter.idp-path">/vital-openam</entry>
-    <entry key="vital-core-security-adapter.idp-port">8453</entry>
-    <entry key="vital-core-security-adapter.proxy-host">local.vital-iot-test.com</entry>
+    <entry key="vital-core-security-adapter.idp-host">vitalgateway.cloud.reply.eu</entry>
+    <entry key="vital-core-security-adapter.idp-path">/idp</entry>
+    <entry key="vital-core-security-adapter.idp-port">443</entry>
+    <entry key="vital-core-security-adapter.proxy-host">vitalsp.cloud.reply.eu</entry>
     <entry key="vital-core-security-adapter.proxy-port">443</entry>
     <entry key="vital-core-security-adapter.sso-token">vitalAccessToken</entry>
     <entry key="vital-core-security-adapter.alt-token">vitalTestToken</entry>
 
     <!--vital-core-security-snmp-exposer-->
     <entry key="vital-core-security-snmp-exposer.snmp-host">localhost</entry>
-    <entry key="vital-core-security-snmp-exposer.snmp-port">8085</entry>
+    <entry key="vital-core-security-snmp-exposer.snmp-port">8080</entry>
 
     <!--vital-core-security-gateway-->
-    <entry key="vital-core-security-gateway.proxy-host">local.vital-iot-test.com</entry>
+    <entry key="vital-core-security-gateway.proxy-host">vitalsp.cloud.reply.eu</entry>
     <entry key="vital-core-security-gateway.proxy-port">443</entry>
     <entry key="vital-core-security-gateway.proxy-ppi-path">/vital</entry>
-    <entry key="vital-core-security-gateway.security-host">local.vital-iot-test.com</entry>
-    <entry key="vital-core-security-gateway.security-port">8443</entry>
+    <entry key="vital-core-security-gateway.security-host">vitalgateway.cloud.reply.eu</entry>
+    <entry key="vital-core-security-gateway.security-port">443</entry>
     <entry key="vital-core-security-gateway.username">ppigateway</entry>
     <entry key="vital-core-security-gateway.password">password</entry>
 
@@ -61,7 +61,7 @@
     <!--vital-core-orchestrator-->
     <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
     <entry key="vital-core-orchestrator.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-core-orchestrator.security">https://local.vital-iot-test.com:8443/securitywrapper/rest</entry>
+    <entry key="vital-core-orchestrator.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
     <entry key="vital-core-orchestrator.cookie-name">vitalAccessToken</entry>
     <!--/.vital-core-orchestrator-->
 
@@ -71,7 +71,7 @@
     <!--vital-management-->
     <entry key="vital-management.mongo">mongodb://localhost:27017</entry>
     <entry key="vital-management.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-management.security">https://local.vital-iot-test.com:8443/securitywrapper/rest</entry>
+    <entry key="vital-management.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
     <entry key="vital-management.security.cookie-name">vitalAccessToken</entry>
     <!--/.vital-management-->
 
