@@ -29,13 +29,16 @@ angular.module('common.authentication', [])
     ])
 
     .factory('authenticationInterceptor', [
-        '$q', '$injector',
-        function ($q, $injector) {
+        '$window', '$q', '$injector',
+        function ($window, $q, $injector) {
             return {
                 'responseError': function (rejection) {
                     var $security = $injector.get('authentication');
                     if (rejection.status === 401) {
                         $security.showLogin();
+                    }
+                    if (rejection.status === 403) {
+                        $window.alert("Forbidden: User is not allowed to access this resource")
                     }
                     return $q.reject(rejection);
                 }

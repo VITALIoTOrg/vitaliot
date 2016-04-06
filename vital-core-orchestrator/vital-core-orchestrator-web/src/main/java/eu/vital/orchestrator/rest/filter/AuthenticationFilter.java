@@ -45,13 +45,19 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 		// Check if cookie is valid
 		Cookie authCookie = requestContext.getCookies().get(securityService.getCookieName());
 		JsonNode user = securityService.getLoggedOnUser(authCookie.getValue());
-
-		userPrincipal.setUser(user);
-		userPrincipal.setToken(authCookie.getValue());
-
 		if (user == null) {
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
 			return;
 		}
+
+		// Authorize User for this URL:
+		if (!securityService.canUserAccessResource(authCookie.getValue(), uriInfo.getAbsolutePath(), requestContext.getMethod())) {
+			requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
+			return;
+		}
+
+		// Update user principal
+		userPrincipal.setUser(user);
+		userPrincipal.setToken(authCookie.getValue());
 	}
 }

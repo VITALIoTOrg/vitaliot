@@ -19,7 +19,7 @@
 
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" ng-controller="MainController">
 <div class="wrapper">
 
     <header class="main-header">
@@ -34,43 +34,38 @@
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
             <!-- Sidebar toggle button-->
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="" class="sidebar-toggle" data-toggle="offcanvas" role="button">
                 <span class="sr-only">Toggle navigation</span>
             </a>
             <!-- Navbar Right Menu -->
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
                     <!-- User Account: style can be found in dropdown.less -->
-                    <li class="dropdown user user-menu">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="vendor/admin-lte/dist/img/user1-128x128.jpg" class="user-image" alt="User Image"/>
-                            <span class="hidden-xs">Orchestrator User</span>
+                    <li class="dropdown user user-menu" ng-if="isAuthenticated()">
+                        <a class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-user"></i>
+                            <span>{{loggedOnUser.uid}} <i class="caret"></i></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->
-                            <li class="user-header">
-                                <img src="vendor/admin-lte/dist/img/user1-128x128.jpg" class="img-circle"
-                                     alt="User Image"/>
-
+                            <li class="user-header text-light-blue">
+                                <img ng-src="{{loggedOnUser.avatar}}" class="img-circle" alt="User Image"/>
                                 <p>
-                                    Orch Estrator
-                                    <small>user</small>
+                                    {{loggedOnUser.fullname}}
+                                    <small ng-if="loggedOnUser.creation != false">Registered since {{loggedOnUser.creation.day}} {{loggedOnUser.creation.month}} {{loggedOnUser.creation.year}}</small>
                                 </p>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
-                                <div class="pull-left">
-                                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                </div>
                                 <div class="pull-right">
-                                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                    <a class="btn btn-default btn-flat" ng-click="logout()">Sign out</a>
                                 </div>
                             </li>
                         </ul>
                     </li>
+                    <!-- end: User Account -->
                 </ul>
             </div>
-
         </nav>
     </header>
 
@@ -78,8 +73,20 @@
     <aside class="main-sidebar">
         <!-- sidebar: style can be found in sidebar.less -->
         <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel" ng-if="isAuthenticated()">
+                <div class="pull-left image">
+                    <img ng-src="{{loggedOnUser.avatar}}" class="img-circle" alt="User Image"/>
+                </div>
+                <div class="pull-left info">
+                    <p>Hello, {{loggedOnUser.name}}</p>
+                    <p>
+                        <span style="font-size: smaller;"><i class="fa fa-circle text-success"></i> Online</span>
+                    </p>
+                </div>
+            </div>
             <!-- sidebar menu: : style can be found in sidebar.less -->
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu" ng-if="isAuthenticated()">
                 <li class="active treeview">
                     <a>
                         <i class="fa fa-gear"></i> <span>Operations</span> <i class="fa fa-angle-left pull-right"></i>

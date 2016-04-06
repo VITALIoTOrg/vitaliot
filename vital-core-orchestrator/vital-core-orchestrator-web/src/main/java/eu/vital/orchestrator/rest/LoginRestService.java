@@ -15,10 +15,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Path("/authentication/")
 @RequestScoped
@@ -27,8 +27,10 @@ public class LoginRestService {
 	@Inject
 	SecurityService securityService;
 
+	@Inject
+	Logger logger;
+
 	private Cookie readAuthCookie(@Context HttpHeaders hh) {
-		MultivaluedMap<String, String> headerParams = hh.getRequestHeaders();
 		Map<String, Cookie> pathParams = hh.getCookies();
 		return pathParams.get(securityService.getCookieName());
 	}
@@ -57,17 +59,18 @@ public class LoginRestService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response login(@FormParam("username") String username, @FormParam("password") String password) throws Exception {
+		// Login
 		String authToken = securityService.login(username, password);
 		if (authToken == null) {
 			return Response.status(Response.Status.FORBIDDEN).build();
 		}
 
+		// Get User Data
 		JsonNode userData = securityService.getLoggedOnUser(authToken);
-		Cookie authCookie = new Cookie(securityService.getCookieName(), authToken, "/", null);
 
-		return Response.ok(userData)
-				.cookie(new NewCookie(authCookie))
-				.build();
+		// Return response with auth-cookie
+		NewCookie authCookie = new NewCookie(securityService.getCookieName(), authToken, "/", null, "Vital Cookie", NewCookie.DEFAULT_MAX_AGE, false);
+		return Response.ok(userData).cookie(authCookie).build();
 	}
 
 	@POST
@@ -80,10 +83,13 @@ public class LoginRestService {
 		if (authCookie == null) {
 			return Response.status(Response.Status.UNAUTHORIZED).build();
 		}
+
+		// Notify Security Service
 		securityService.logout(authCookie.getValue());
-		return Response.ok()
-				.cookie(new NewCookie(securityService.getCookieName(), "", "/", null, null, 0, true))
-				.build();
+
+		// Remove cookie from client
+		NewCookie authRemoveCookie = new NewCookie(securityService.getCookieName(), null, "/", null, "Vital Cookie Remove", 0, false);
+		return Response.ok().cookie(authRemoveCookie).build();
 	}
 
 }
