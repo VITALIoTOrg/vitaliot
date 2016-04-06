@@ -36,6 +36,8 @@ angular.module('main.query', [
                 queryResource.query(ctrl.resourceType, ctrl.query)
                     .then(function (data) {
                         ctrl.result = data;
+                    }, function (error) {
+                        ctrl.result = error.data;
                     });
             }
         }

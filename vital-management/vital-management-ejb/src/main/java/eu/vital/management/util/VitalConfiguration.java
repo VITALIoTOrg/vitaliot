@@ -32,7 +32,7 @@ public class VitalConfiguration {
 			return;
 		}
 		try {
-			log.warning("Loading configuration from " + path);
+			log.info("Loading configuration from " + path);
 			final File file = new File(path);
 			final Properties properties = new Properties();
 			properties.loadFromXML(new FileInputStream(file));

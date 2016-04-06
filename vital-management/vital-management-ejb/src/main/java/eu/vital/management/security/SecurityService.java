@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,10 @@ public class SecurityService {
 		return vitalConfiguration.getProperty("vital-management.security.cookie-name", "vitalAccessToken");
 	}
 
+	public String getTestCookieName() {
+		return vitalConfiguration.getProperty("vital-management.security.cookie-system-name", "vitalTestToken");
+	}
+
 	public URL getSecurityProxyUrl() {
 		try {
 			return new URL(vitalConfiguration.getProperty("vital-management.security", "https://localhost:8080/securitywrapper/rest"));
@@ -44,19 +49,68 @@ public class SecurityService {
 		}
 	}
 
+	public String getSystemAuthenticationToken() {
+		// Do a login of the platform
+		String user = vitalConfiguration.getProperty("vital-management.system.user", "manplatform");
+		String password = vitalConfiguration.getProperty("vital-management.system.password", "password");
+		return login(user, password);
+	}
+
 	public JsonNode getLoggedOnUser(String authToken) {
 		Client client = ClientBuilder.newClient();
+
+		NewCookie cookie = new NewCookie(getCookieName(), authToken);
 		try {
 			JsonNode userData = client
 					.target(getSecurityProxyUrl() + "/user")
-					.request(MediaType.APPLICATION_JSON_TYPE)
-					.cookie(new NewCookie(getCookieName(), authToken))
+					.request()
+					.cookie(cookie)
 					.accept(MediaType.APPLICATION_JSON_TYPE)
 					.get(JsonNode.class);
-
+			if (userData.has("valid") && !userData.get("valid").asBoolean()) {
+				return null;
+			}
 			return userData;
 		} catch (WebApplicationException e) {
 			return null;
+		} finally {
+			client.close();
+		}
+	}
+
+	public boolean canUserAccessResource(String authToken, URI requestUrl, String method) {
+		Client client = ClientBuilder.newClient();
+
+		String systemAuthToken = getSystemAuthenticationToken();
+
+		NewCookie systemAuthCookie = new NewCookie(getTestCookieName(), authToken);
+		NewCookie userAuthCookie = new NewCookie(getCookieName(), systemAuthToken);
+
+		Form form = new Form();
+		form.param("resources[]", requestUrl.toString());
+
+		try {
+			JsonNode evaluation = client
+					.target(getSecurityProxyUrl() + "/evaluate")
+					.request(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+					.cookie(systemAuthCookie)
+					.cookie(userAuthCookie)
+					.accept(MediaType.APPLICATION_JSON_TYPE)
+					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), JsonNode.class);
+
+			JsonNode actions = evaluation.get("responses").get(0).get("actions");
+			boolean canAccess = actions.has(method) && actions.get(method).booleanValue();
+
+			// For development only
+			boolean isLocalhost = requestUrl.getHost().equals("127.0.0.1") || requestUrl.getHost().equals("localhost");
+			if (isLocalhost) {
+				return true;
+			}
+			// end:For development only
+
+			return canAccess;
+		} catch (WebApplicationException e) {
+			return false;
 		} finally {
 			client.close();
 		}
