@@ -71,7 +71,7 @@ public class SyncSystemsJob implements Job {
 					ArrayNode serviceList = syncServices(systemJSON);
 					log.info("SyncSystem/Services: " + serviceList.size());
 				} catch (Exception e) {
-					log.info("SyncSystem " + systemURL + " failed");
+					log.info("SyncSystem " + systemURL + " failed: " +  e.getMessage());
 				}
 			}
 		} catch (Exception e) {

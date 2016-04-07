@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import java.util.HashMap;
@@ -34,16 +35,18 @@ public class VitalClient {
 	@Inject
 	VitalUserPrincipal userPrincipal;
 
-    @Inject
-    SecurityService securityService;
+	@Inject
+	SecurityService securityService;
 
 	public JsonNode doGet(String url) throws Exception {
 		Client client = ClientBuilder.newClient();
-		JsonNode jsonNode = client.target(url)
+		Invocation.Builder builder = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-				.accept("*")
-				.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()))
-				.get(JsonNode.class);
+				.accept("*");
+		if (userPrincipal.getToken() != null) {
+			builder = builder.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()));
+		}
+		JsonNode jsonNode = builder.get(JsonNode.class);
 		client.close();
 		if (jsonNode == null) {
 			return null;
@@ -55,11 +58,15 @@ public class VitalClient {
 
 	public JsonNode doPost(String url, JsonNode data) throws Exception {
 		Client client = ClientBuilder.newClient();
-		JsonNode jsonNode = client.target(url)
+
+		Invocation.Builder builder = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
-				.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()))
-				.accept("*")
-				.post(Entity.json(data), JsonNode.class);
+				.accept("*");
+		if (userPrincipal.getToken() != null) {
+			builder = builder.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()));
+		}
+		JsonNode jsonNode = builder.post(Entity.json(data), JsonNode.class);
+
 		client.close();
 		if (jsonNode == null) {
 			return null;
