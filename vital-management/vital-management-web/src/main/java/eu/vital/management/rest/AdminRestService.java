@@ -1,6 +1,6 @@
 package eu.vital.management.rest;
 
-import eu.vital.management.job.SyncSystemsJob;
+import eu.vital.management.service.AdminService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -16,12 +16,12 @@ import javax.ws.rs.core.Response;
 public class AdminRestService {
 
 	@Inject
-	SyncSystemsJob syncSystemsJob;
+	AdminService adminService;
 
 	@GET
 	@Path("/sync")
 	public Response executeSync() throws Exception {
-		syncSystemsJob.launch();
+		adminService.syncSystems();
 
 		return Response.ok().build();
 	}
