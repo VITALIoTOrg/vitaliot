@@ -6,14 +6,14 @@
 
     <!-- vital-core-dms -->
     <entry key="vital-dms.mongo">mongodb://localhost:27017</entry>
-    <entry key="vital-dms.security">https://localhost:8443/securitywrapper/rest</entry>
+    <entry key="vital-dms.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
     <entry key="vital-dms.system.user">dmsuser</entry>
     <entry key="vital-dms.system.password">password</entry>
     <!-- /.vital-core-dms -->
 
     <!--vital-core-iot-data-adapter-->
     <!-- How to access the IoT data adapter. -->
-    <entry key="vital-core-iot-data-adapter.base-url">http://localhost:8080/iot-data-adapter</entry>
+    <entry key="vital-core-iot-data-adapter.base-url">http://vital-integration.atosresearch.eu:8280/iot-data-adapter</entry>
     <!-- How to access the DMS. -->
     <!-- NOTE: This may later be replaced by some DMS-defined property. -->
     <entry key="vital-core-iot-data-adapter.vital-core-dms.base-url">https://vmvital03.deri.ie:8011</entry>
@@ -26,7 +26,7 @@
 
     <!--vital-core-iot-data-adapter-ppi-->
     <!-- How to access the IoT data adapter PPI. -->
-    <entry key="vital-core-iot-data-adapter-ppi.base-url">http://localhost:8080/iot-data-adapter-ppi</entry>
+    <entry key="vital-core-iot-data-adapter-ppi.base-url">http://vital-integration.atosresearch.eu:8280/iot-data-adapter-ppi</entry>
     <!--/.vital-core-iot-data-adapter-ppi-->
 
     <!--vital-core-security-adapter-->
@@ -42,6 +42,7 @@
     <!--vital-core-security-snmp-exposer-->
     <entry key="vital-core-security-snmp-exposer.snmp-host">localhost</entry>
     <entry key="vital-core-security-snmp-exposer.snmp-port">8080</entry>
+    <!--/.vital-core-security-snmp-exposer-->
 
     <!--vital-core-security-gateway-->
     <entry key="vital-core-security-gateway.proxy-host">vitalsp.cloud.reply.eu</entry>
@@ -62,15 +63,15 @@
     <!--vital-core-cep-->
     <entry key="vital-core-cep.mongo.uri">mongodb://localhost:27017</entry>
     <entry key="vital-core-cep.mongo.db">vital-cep</entry>
-    <entry key="vital-core-cep-ppi.base-url">http://localhost:8080/cep</entry>
+    <entry key="vital-core-cep-ppi.base-url">http://vital-integration.atosresearch.eu:8280/cep</entry>
     <entry key="vital-core-cep.mosquitto.uri">tcp://localhost:1883</entry>
     <entry key="vital-core-cep.ucep.path">/home/ucep</entry>
     <!--/.vital-core-cep-->
 
     <!--vital-core-orchestrator-->
     <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
-    <entry key="vital-core-orchestrator.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-core-orchestrator.security">http://localhost:8080/securitywrapper/rest</entry>
+    <entry key="vital-core-orchestrator.dms">http://vital-integration.atosresearch.eu:8280/vital-core-dms</entry>
+    <entry key="vital-core-orchestrator.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
     <entry key="vital-core-orchestrator.sso-token">vitalAccessToken</entry>
     <entry key="vital-core-orchestrator.alt-token">vitalTestToken</entry>
     <entry key="vital-core-orchestrator.system.user">manplatform</entry>
@@ -84,9 +85,9 @@
 
     <!--vital-management-->
     <entry key="vital-management.mongo">mongodb://localhost:27017</entry>
-    <entry key="vital-management.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-management.iot-data-adapter">http://localhost:8080/vital-core-iot-data-adapter/rest</entry>
-    <entry key="vital-management.security">http://localhost:8080/securitywrapper/rest</entry>
+    <entry key="vital-management.dms">http://vital-integration.atosresearch.eu:8280/vital-core-dms</entry>
+    <entry key="vital-management.iot-data-adapter">http://vital-integration.atosresearch.eu:8280/vital-core-iot-data-adapter/rest</entry>
+    <entry key="vital-management.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
     <entry key="vital-management.security.sso-token">vitalAccessToken</entry>
     <entry key="vital-management.security.alt-token">vitalTestToken</entry>
     <entry key="vital-management.system.user">manplatform</entry>
