@@ -35,7 +35,6 @@ import eu.vital.discoverer.query.QueryFactory;
 import eu.vital.discoverer.query.QueryTypeEnum;
 import eu.vital.discoverer.util.DiscoveryMetadataReader;
 import eu.vital.discoverer.util.DiscoveryProperties;
-import eu.vital.discoverer.util.DiscoveryProperties.DiscoveryProperty;
 
 
 
@@ -63,9 +62,9 @@ public class RestInterface {
 		String value="OFF";
 		InetAddress DMS_URL;
 		try {
-			DMS_URL = InetAddress.getByName(props.getProperty(DiscoveryProperty.DMS_ENDPOINT_ADDRESS));
+			DMS_URL = InetAddress.getByName(props.getProperty(DiscoveryProperties.DMS_ENDPOINT_ADDRESS));
 
-			final int DMS_Port = Integer.parseInt(props.getProperty(DiscoveryProperty.DMS_ENDPOINT_PORT));
+			final int DMS_Port = Integer.parseInt(props.getProperty(DiscoveryProperties.DMS_ENDPOINT_PORT));
 			ConnDMS connection = new ConnDMS ();
 
 			if (connection.canConnect(DMS_URL, DMS_Port)){

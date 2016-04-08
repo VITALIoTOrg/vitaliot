@@ -25,7 +25,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import eu.vital.discoverer.exception.ConnectionErrorException;
-import eu.vital.discoverer.util.DiscoveryProperties.DiscoveryProperty;
 
 public class DMSManager {
 
@@ -58,8 +57,8 @@ public class DMSManager {
 
 	public DMSManager(DMS_Index index, String cookie){
 		DiscoveryProperties props=new DiscoveryProperties();
-		String DMS_Address=props.getProperty(DiscoveryProperty.DMS_ENDPOINT_ADDRESS);
-		String DMS_Port=props.getProperty(DiscoveryProperty.DMS_ENDPOINT_PORT);
+		String DMS_Address=props.getProperty(DiscoveryProperties.DMS_ENDPOINT_ADDRESS);
+		String DMS_Port=props.getProperty(DiscoveryProperties.DMS_ENDPOINT_PORT);
 		this.endpoint=DMS_Address+index.getAddress();
 		this.cookie=cookie;
 	}

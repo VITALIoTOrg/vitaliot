@@ -32,7 +32,6 @@ import org.json.simple.parser.ParseException;
 import eu.vital.discoverer.util.DiscoveryMetadataReader;
 import eu.vital.discoverer.util.DiscoveryProperties;
 import eu.vital.discoverer.util.OntologyUtils;
-import eu.vital.discoverer.util.DiscoveryProperties.DiscoveryProperty;
 
 
 @Path("/ppi")
@@ -48,7 +47,7 @@ public class PpiImplementation {
 	public PpiImplementation() {
 		props=new DiscoveryProperties();
 		metadataReader=new DiscoveryMetadataReader();
-		DISCOVERER_BASE_ADDRESS=props.getProperty(DiscoveryProperty.DISCOVERER_ENDPOINT_ADDRESS)+":"+props.getProperty(DiscoveryProperty.DISCOVERER_ENDPOINT_PORT);
+		DISCOVERER_BASE_ADDRESS=props.getProperty(DiscoveryProperties.DISCOVERER_ENDPOINT_ADDRESS)+":"+props.getProperty(DiscoveryProperties.DISCOVERER_ENDPOINT_PORT);
 	}
 
 	@POST

@@ -16,7 +16,6 @@ import org.jboss.resteasy.logging.Logger;
 import org.json.simple.JSONObject;
 
 import eu.vital.discoverer.util.DiscoveryProperties;
-import eu.vital.discoverer.util.DiscoveryProperties.DiscoveryProperty;
 
 
 public abstract class DiscoverQuery {
@@ -37,8 +36,8 @@ public abstract class DiscoverQuery {
 		DiscoveryProperties props=new DiscoveryProperties();
 
 		//this.DMS_ADDRESS="http://"+props.getProperty(DiscoveryProperty.DMS_ENDPOINT_ADDRESS);
-		this.DMS_ADDRESS=props.getProperty(DiscoveryProperty.DMS_ENDPOINT_ADDRESS);
-		this.DMS_PORT=props.getProperty(DiscoveryProperty.DMS_ENDPOINT_PORT);
+		this.DMS_ADDRESS=props.getProperty(DiscoveryProperties.DMS_ENDPOINT_ADDRESS);
+		this.DMS_PORT=props.getProperty(DiscoveryProperties.DMS_ENDPOINT_PORT);
 		result_in_JSON=new LinkedList<JSONObject>();
 	}
 
