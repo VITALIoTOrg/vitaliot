@@ -33,11 +33,11 @@ public class SecurityService {
 	VitalConfiguration vitalConfiguration;
 
 	public String getCookieName() {
-		return vitalConfiguration.getProperty("vital-management.security.cookie-name", "vitalAccessToken");
+		return vitalConfiguration.getProperty("vital-management.security.sso-token", "vitalAccessToken");
 	}
 
 	public String getTestCookieName() {
-		return vitalConfiguration.getProperty("vital-management.security.cookie-system-name", "vitalTestToken");
+		return vitalConfiguration.getProperty("vital-management.security.alt-token", "vitalTestToken");
 	}
 
 	public URL getSecurityProxyUrl() {

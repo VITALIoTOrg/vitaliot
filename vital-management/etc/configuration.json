@@ -9,13 +9,6 @@
     "http://vital-integration.atosresearch.eu:8180/vital-core-orchestrator-web/rest/ppi",
     "http://vital-integration.atosresearch.eu:8180/discoverer/ppi",
     "http://vital-integration.atosresearch.eu:8180/filtering/ppi",
-    "http://vital-integration.atosresearch.eu:8180/cep",
-    "http://vital-integration.atosresearch.eu:8180/vital-ppi-camden-footfall/ppi/system",
-    "http://vital-integration.atosresearch.eu:8180/hireplyppi",
-    "http://vital-integration.atosresearch.eu:8180/vital-ppi-london-air-quality/ppi/system",
-    "http://vital-integration.atosresearch.eu:8280/vital-ppi-citybikes",
-    "http://vital-integration.atosresearch.eu:8280/vital-ppi-citybikes/to-bike",
-    "http://vital-integration.atosresearch.eu:8280/vital-ppi-citybikes/galway",
-    "http://vital-integration.atosresearch.eu:8280/vital-ppi-citybikes/velib"
+    "http://vital-integration.atosresearch.eu:8180/cep"
   ]
 }
