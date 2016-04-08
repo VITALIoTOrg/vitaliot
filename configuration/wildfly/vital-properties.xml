@@ -5,6 +5,10 @@
     <!-- Core Services -->
 
     <!-- vital-core-dms -->
+    <entry key="vital-dms.mongo">mongodb://localhost:27017</entry>
+    <entry key="vital-dms.security">https://localhost:8443/securitywrapper/rest</entry>
+    <entry key="vital-dms.system.user">dmsuser</entry>
+    <entry key="vital-dms.system.password">password</entry>
     <!-- /.vital-core-dms -->
 
     <!--vital-core-iot-data-adapter-->
@@ -66,12 +70,14 @@
     <!--vital-core-orchestrator-->
     <entry key="vital-core-orchestrator.mongo">mongodb://localhost:27017</entry>
     <entry key="vital-core-orchestrator.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-core-orchestrator.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
-    <entry key="vital-core-orchestrator.cookie-name">vitalAccessToken</entry>
-    <entry key="vital-core-orchestrator.security.cookie-system-name">vitalTestToken</entry>
-    <entry key="vital-core-orchestrator.system.user">orchplatform</entry>
-    <entry key="vital-core-orchestrator.system.password">*</entry>
+    <entry key="vital-core-orchestrator.security">http://localhost:8080/securitywrapper/rest</entry>
+    <entry key="vital-core-orchestrator.sso-token">vitalAccessToken</entry>
+    <entry key="vital-core-orchestrator.alt-token">vitalTestToken</entry>
+    <entry key="vital-core-orchestrator.system.user">manplatform</entry>
+    <entry key="vital-core-orchestrator.system.password">password</entry>
     <!--/.vital-core-orchestrator-->
+
+    <!-- /. Core Services -->
 
 
     <!-- Governance and Management -->
@@ -79,11 +85,14 @@
     <!--vital-management-->
     <entry key="vital-management.mongo">mongodb://localhost:27017</entry>
     <entry key="vital-management.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-management.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
-    <entry key="vital-management.security.cookie-name">vitalAccessToken</entry>
-    <entry key="vital-management.security.cookie-system-name">vitalTestToken</entry>
+    <entry key="vital-management.iot-data-adapter">http://localhost:8080/vital-core-iot-data-adapter/rest</entry>
+    <entry key="vital-management.security">http://localhost:8080/securitywrapper/rest</entry>
+    <entry key="vital-management.security.sso-token">vitalAccessToken</entry>
+    <entry key="vital-management.security.alt-token">vitalTestToken</entry>
     <entry key="vital-management.system.user">manplatform</entry>
-    <entry key="vital-management.system.password">*</entry>
+    <entry key="vital-management.system.password">password</entry>
     <!--/.vital-management-->
+
+    <!-- /.Governance and Management -->
 
 </properties>
