@@ -1,16 +1,5 @@
 package util;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.cookie.BasicClientCookie;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -19,14 +8,24 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class DMSPermission {
 
-	final static String authURL = "https://vitalgateway.cloud.reply.eu/securitywrapper/rest/authenticate";
-	final static String permissionURL = "https://vitalgateway.cloud.reply.eu/securitywrapper/rest/permissions";
+	final static String authURL = VitalConfiguration.getProperty("vital-dms.security") + "/authenticate";
+	final static String permissionURL = VitalConfiguration.getProperty("vital-dms.security") + "/permissions";
 
-	final static String user = "dmsuser";
-	final static String password = "password";
+	final static String user = VitalConfiguration.getProperty("vital-dms.system.user", "dmsuser");
+	final static String password = VitalConfiguration.getProperty("vital-dms.system.password", "password");
 
 	static DBObject permission;
 	final public static int unsuccessful = -1;
