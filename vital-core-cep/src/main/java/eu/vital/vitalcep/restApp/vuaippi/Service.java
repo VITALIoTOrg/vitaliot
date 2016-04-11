@@ -69,6 +69,8 @@ public class Service {
 
     private final String MONITORINGSERVICE_TYPE = ONTOLOGY+"MonitoringService";
 
+    private final String ALERTINGMANAGEMENTSERVICE_TYPE = ONTOLOGY+"AlertingService";
+        
     private PropertyLoader props;
     
     private String host;
@@ -227,6 +229,51 @@ public class Service {
         
         cepico.put("msm:hasOperation",cepicosOperations );
         
+        JSONObject alert = new JSONObject();
+        
+        alert.put("@context", 
+                "http://vital-iot.eu/contexts/service.jsonld");
+        
+        alert.put("id", 
+                "http://"+host.toString()+"/cep/service/alertingmanagement");
+        
+        alert.put("type","vital:AlertingManagementService");
+        
+        JSONObject getAlerts = new JSONObject();
+        JSONObject getAlert = new JSONObject();
+        JSONObject createAlert = new JSONObject();
+        JSONObject deleteAlert = new JSONObject();
+
+        
+        getAlerts.put("type","vital:GetAlerts");
+        getAlerts.put("hrest:hasAddress","http://"+host.toString()
+                +"/cep/getalerts");
+        getAlerts.put("hrest:hasMethod","hrest:GET");
+
+        getAlert.put("type","vital:GetCEPICO");
+        getAlert.put("hrest:hasAddress","http://"+host.toString()
+                +"/cep/getcepico");
+        getAlert.put("hrest:hasMethod","hrest:POST");
+        
+        createAlert.put("type","vital:CreateCEPICO");
+        createAlert.put("hrest:hasAddress",
+                "http://"+host.toString()+"/cep/createcepico");
+        createAlert.put("hrest:hasMethod","hrest:PUT");
+
+        deleteAlert.put("type","vital:DeleteCEPICO");
+        deleteAlert.put("hrest:hasAddress","http://"
+                +host.toString()+"/cep/deletecepico");
+        deleteAlert.put("hrest:hasMethod","hrest:DELETE");
+
+        JSONArray AlertsOperations = new JSONArray();
+        
+        AlertsOperations.put(getAlerts);
+        AlertsOperations.put(getAlert);
+        AlertsOperations.put(createAlert);
+        AlertsOperations.put(deleteAlert);
+        
+        alert.put("msm:hasOperation",AlertsOperations );
+        
         JSONObject filtering = new JSONObject();
         
         filtering.put("@context", 
@@ -331,7 +378,8 @@ public class Service {
         services.put(cepico);
         services.put(filtering);         
         services.put(observation);  
-        
+        services.put(alert);  
+         
         if(!info.equals("")){
 
             try{
@@ -360,6 +408,10 @@ public class Service {
                                  break;
                         case CEPICOMANAGEMENTSERVICE_TYPE: case "CEPICOManagementService":
                         case "vital:CEPICOManagementService":
+                            filteredServices.put(cepico);
+                                 break;
+                        case ALERTINGMANAGEMENTSERVICE_TYPE: case "AlertingManagementService":
+                        case "vital:AlertingManagementService":
                             filteredServices.put(cepico);
                                  break;
                         default: 
