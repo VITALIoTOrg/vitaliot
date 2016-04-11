@@ -212,13 +212,20 @@ public class System {
             }
         });
         
-//        try (DBCursor cursor2 = collcep.find(querycep,fieldscep)) {
-//            while(cursor2.hasNext()) {
-//                 if (cursor2.next().containsField("id")){
-//                     sensors.put(cursor2.curr().get("id"));
-//                 }
-//            }
-//        }
+        BasicDBObject queryalert = new BasicDBObject(); 
+        BasicDBObject fieldsalert = new BasicDBObject().append("_id",false)
+                .append("dolceSpecification", false);
+        
+        FindIterable<Document> collalerts = db.getCollection("alerts")
+                .find(queryalert).projection(fieldsalert);
+        // create an empty query
+        
+        collalerts.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                sensors.put(document.get("id"));
+            }
+        });
         
         sensors.put("http://"+host.toString()+"/cep/sensor/1");
                 JSONObject metadata = new JSONObject();
@@ -227,6 +234,7 @@ public class System {
         services.put("http://"+host.toString()+"/cep/service/monitoring");
         services.put("http://"+host.toString()+"/cep/service/cepicosmanagement");
         services.put("http://"+host.toString()+"/cep/service/filtering");
+        services.put("http://"+host.toString()+"/cep/service/alertingmanagement");
         services.put("http://"+host.toString()+"/cep/service/observation");
                 
         metadata.put("@context","http://vital-iot.eu/contexts/system.jsonld");
