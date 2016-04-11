@@ -57,7 +57,13 @@ public class PPIManager {
         
         String sbody = body;
         String response = query(ppi_endpoint,sbody,"POST");
-        JSONArray resp = new JSONArray(response);
+        JSONArray resp;
+        
+        if (!(response=="")){        
+            resp = new JSONArray(response);
+        }else{
+            resp = new JSONArray();
+        }
 
         return resp;
 }
@@ -165,14 +171,18 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                         .setConnectTimeout(7000).setSocketTimeout(7000).build());
                         response = httpclient.execute(httpaction);
                 } catch (ClientProtocolException ea) {
+                    
                         ea.printStackTrace();
+                        return "";
                 } catch (IOException ea) {
                         try {
                                 // Try again with a higher timeout
                                 try {
                                         Thread.sleep(1000); // do not retry immediately
                                 } catch (InterruptedException e1) {
+                                    
                                         e1.printStackTrace();
+                                        return "";
                                 }
                         httpaction.setConfig(RequestConfig.custom()
                                 .setConnectionRequestTimeout(12000)
@@ -180,10 +190,14 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                                 .setSocketTimeout(12000).build());
                                 response = httpclient.execute(httpaction);
                         } catch (ClientProtocolException eaa) {
+                            
                                 ea.printStackTrace();
+                                return "";
                         } catch (IOException eaa) {
+                            
                                 ea.printStackTrace();
-                                return eaa.getMessage();
+                                return "";
+                                //return eaa.getMessage();
                         }
                 }
         }
@@ -193,13 +207,15 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
         if (statusCode != HttpStatus.SC_OK 
                 && statusCode != HttpStatus.SC_ACCEPTED){
            if (statusCode==503){
+
                throw new ServiceUnavailableException();
            }else if (statusCode==502){
                 throw new ServerErrorException(502);
            }else if (statusCode==401){
                throw new NotAuthorizedException("could't Athorize the PPI");           
            }else{
-                throw new ServiceUnavailableException();
+               return "";
+                //throw new ServiceUnavailableException();
            }
         }
         
@@ -219,6 +235,7 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
         return respString;
     
     }
+    
     private JSONArray getPPIObservations(String ppi_url
             ,String body) throws ParseException {
         JSONArray data = new JSONArray();
