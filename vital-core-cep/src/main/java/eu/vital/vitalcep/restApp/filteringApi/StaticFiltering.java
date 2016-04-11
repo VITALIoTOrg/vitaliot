@@ -5,6 +5,8 @@
  */
 package eu.vital.vitalcep.restApp.filteringApi;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
@@ -26,6 +28,7 @@ import org.json.JSONArray;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 import java.io.IOException;
@@ -64,6 +67,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.http.HttpEntity;
@@ -249,14 +253,31 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 //RECEIVING FROM MOSQUITO               
                 ArrayList<MqttMsg> mesagges = MsgProcc.getMsgs();
 
-                //FORMATTING OBSERVATIONS OUTPUT
-                JSONArray aOutput ;
+                ArrayList<Document> outputL;
+                outputL = new ArrayList<>();
                 
                  Encoder encoder = new Encoder();
 
-                aOutput= encoder.dolceOutputList2JsonldArray
+                outputL= encoder.dolceOutputList2ListDBObject
                     (mesagges, hostnameport, randomUUIDString);
                 
+                
+                
+                //String sOutput = encoder.dolceOutputList2JsonldArray
+                //    (mesagges, hostnameport, randomUUIDString).toString();
+                
+                String sOutput = "[";
+                for (int i = 0; i < outputL.size(); i++) {
+                    Document element = outputL.get(i);
+                    
+                    if(i==0){
+                        sOutput = sOutput + element.toJson();
+                    }
+                     sOutput = sOutput + ","+element.toJson();
+                }
+                
+                sOutput = sOutput + "]";
+                                
                 StringBuilder ck = new StringBuilder();
                 
                  try {
@@ -271,14 +292,20 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                     cookie = ck.toString(); 
                     
                     DMSManager oDMS = new DMSManager(dmsURL,cookie);
-        
-                    if (!oDMS.pushObservations(aOutput.toString())){
-                           //
-                    } else {
+                    
+                    MongoCollection<Document> collection = 
+                            db.getCollection("staticdatafiltersobservations");
+                    //BasicDBList outputB = (BasicDBList) JSON.parse(aOutput.toString());
+                    
+                    if (outputL.size()>0){
+                        collection.insertMany(outputL);
+                        if (!oDMS.pushObservations(sOutput)){
+                           java.util.logging.Logger.getLogger
+                           (StaticFiltering.class.getName())
+                                   .log(Level.SEVERE, "coudn't save to the DMS" );
+                       }
                     }
-                    
-                    
-                    
+                  
                     
                 } catch (KeyManagementException | KeyStoreException ex) {
                     java.util.logging.Logger.getLogger(MessageProcessor_publisher
@@ -288,7 +315,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 
                 if (!cepProcess.cepDispose()){
                     //TODO: log
-                };
+                }
 ///////////////////////////////////////////////////////////////////////////////
                     //SENDING TO DMSManager
 
@@ -297,7 +324,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
 //                        }
 
                     return Response.status(Response.Status.OK)
-                        .entity(aOutput.toString()).build();
+                        .entity(sOutput).build();
 
 
             }catch(IOException | JSONException | java.text.ParseException e){
@@ -313,6 +340,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
     return Response.status(Response.Status.BAD_REQUEST).build();
 
 }
+
 
  
 
@@ -694,6 +722,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 TMessageProc MsgProcc = new TMessageProc();
                 
                 JSONArray aData =  new JSONArray();
+                
                 StringBuilder ck = new StringBuilder();
                 
                  try {
@@ -744,28 +773,55 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 //FORMATTING OBSERVATIONS OUTPUT
                 JSONArray aOutput ;
                 Encoder encoder = new Encoder();
-                aOutput= encoder.dolceOutputList2JsonldArray
+                
+                ArrayList<Document> outputL;
+                outputL = new ArrayList<>();
+                
+                outputL= encoder.dolceOutputList2ListDBObject
                     (mesagges, hostnameport, randomUUIDString);
+                
+//                aOutput= encoder.dolceOutputList2JsonldArray
+//                    (mesagges, hostnameport, randomUUIDString);
+                String sOutput = "[";
+                for (int i = 0; i < outputL.size(); i++) {
+                    Document element = outputL.get(i);
+                    
+                    if(i==0){
+                        sOutput = sOutput + element.toJson();
+                    }
+                     sOutput = sOutput + ","+element.toJson();
+                }
+                
+                sOutput = sOutput + "]";
                
                 try {
 
                     DMSManager pDMS = new DMSManager(dmsURL,cookie);
-        
-                    if (!pDMS.pushObservations(aOutput.toString())){
+                    
+                     MongoCollection<Document> collection = 
+                            db.getCollection("staticqueryfiltersobservations");
+                    //BasicDBList outputB = (BasicDBList) JSON.parse(aOutput.toString());
+                    
+                    if (outputL.size()>0){
+                     collection.insertMany(outputL);
+                     if (!pDMS.pushObservations(sOutput)){
                         java.util.logging.Logger.getLogger
-        (StaticFiltering.class.getName())
+                        (StaticFiltering.class.getName())
                                 .log(Level.SEVERE, "coudn't save to the DMS" );
+                        }
                     }
+        
+                    
                 } catch (IOException | KeyManagementException 
                         | NoSuchAlgorithmException | KeyStoreException ex) {
                     java.util.logging.Logger.getLogger
-        (StaticFiltering.class.getName())
+                        (StaticFiltering.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
                              
                 if (!cepProcess.cepDispose()){
                      java.util.logging.Logger.getLogger
-        (StaticFiltering.class.getName()).log(Level.SEVERE, 
+                    (StaticFiltering.class.getName()).log(Level.SEVERE, 
                 "bcep Instance not terminated" );
                 };
 ///////////////////////////////////////////////////////////////////////////////
@@ -775,7 +831,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
 //                            //pushToElasticDMS(aOutput);
 //                        }
                     return Response.status(Response.Status.OK)
-                        .entity(aOutput.toString()).build();
+                        .entity(sOutput).build();
 
             }catch(IOException | JSONException | NoSuchAlgorithmException 
                     | java.text.ParseException e){
@@ -792,10 +848,10 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
     return Response.status(Response.Status.BAD_REQUEST).build();
     
 }
+
+
  
     
    
-
-
 
 }
