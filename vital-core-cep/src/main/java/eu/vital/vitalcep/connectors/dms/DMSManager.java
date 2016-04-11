@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.net.ConnectException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
@@ -58,6 +60,7 @@ import org.apache.http.client.methods.HttpGet;
 
 import  javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.NotAuthorizedException;
+import org.apache.http.conn.ConnectTimeoutException;
 
 
 
@@ -132,9 +135,13 @@ public class DMSManager {
         
         String response = query("queryObservation",sbody,"POST");
         
-                
-        JSONArray resp = new JSONArray(response);
-
+        JSONArray resp;
+        
+        if (!(response=="")){        
+            resp = new JSONArray(response);
+        }else{
+            resp = new JSONArray();
+        }
         return resp;
 }
   
@@ -173,7 +180,7 @@ public class DMSManager {
         return new JSONArray(response);
     }
     
-    private String query(String dms_endpoint, String body, String method){
+    private String query(String dms_endpoint, String body, String method) throws SocketTimeoutException, ConnectException, IOException{
         Cookie ck;
         //String internalToken;
         CloseableHttpClient httpclient;
@@ -225,31 +232,45 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                         } catch (InterruptedException e1) {
                                // e1.printStackTrace();
                         }
-                httpaction.setConfig(RequestConfig.custom()
+                        httpaction.setConfig(RequestConfig.custom()
                         .setConnectionRequestTimeout(7000)
                         .setConnectTimeout(7000).setSocketTimeout(7000).build());
                         response = httpclient.execute(httpaction);
                 } catch (ClientProtocolException ea) {
                         ea.printStackTrace();
+                        return "";
                 } catch (IOException ea) {
+                    try {
+                        // Try again with a higher timeout
                         try {
-                                // Try again with a higher timeout
-                                try {
-                                        Thread.sleep(1000); // do not retry immediately
-                                } catch (InterruptedException e1) {
-                                        e1.printStackTrace();
-                                }
-                        httpaction.setConfig(RequestConfig.custom()
-                                .setConnectionRequestTimeout(12000)
-                                .setConnectTimeout(12000)
-                                .setSocketTimeout(12000).build());
-                                response = httpclient.execute(httpaction);
-                        } catch (ClientProtocolException eaa) {
-                                //ea.printStackTrace();
-                        } catch (IOException eaa) {
-                               // ea.printStackTrace();
-                                //return eaa.getMessage();
+                                Thread.sleep(1000); // do not retry immediately
+                        } catch (InterruptedException e1) {
+                                e1.printStackTrace();
+                                return "";
                         }
+                    httpaction.setConfig(RequestConfig.custom()
+                            .setConnectionRequestTimeout(12000)
+                            .setConnectTimeout(12000)
+                            .setSocketTimeout(12000).build());
+                            response = httpclient.execute(httpaction);
+                    } catch (ClientProtocolException eaa) {
+                            //ea.printStackTrace();
+                        String a= "";
+                    } catch (SocketTimeoutException eaa) {
+                           // ea.printStackTrace();
+                            //return eaa.getMessage();
+                          throw new SocketTimeoutException();
+                    }catch (ConnectException eaa) {
+                           ea.printStackTrace();
+                           return "";
+                            //return eaa.getMessage();
+                          //throw new ConnectException();
+                    }catch (ConnectTimeoutException eaa) {
+                           // ea.printStackTrace();
+                            //return eaa.getMessage();
+                        //revisar ...hay mas exceptions connection timedout
+                           return "";
+                    }
                 }
         }
         
@@ -413,40 +434,7 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
             .getEntity(), StandardCharsets.UTF_8);
 
     return sdata;
-//        CloseableHttpResponse response = httpclient.execute(post);
-//        try {
-//            
-//            HttpEntity entity = response.getEntity();
-//            EntityUtils.consume(entity);
-//        }
-//        finally {
-//            response.close();
-//        }
-//
-//        
-//  
-//            //final CloseableHttpClient client = builder.build();
-//            
-//            String url =  this.dms_URL+"/"+dms_endpoint;
-//         
-//            HttpPost post = new HttpPost(url);
-//
-//            post.setHeader(HTTP.CONTENT_TYPE, "application/json");
-//            post.addHeader("vitalAccessToken", cookie);
-//            
-//         
-//            HttpEntity entity = new StringEntity(body,StandardCharsets.UTF_8);
-//            post.setEntity(entity);
-//            HttpResponse clientresponse = client.execute(post);
-//            
-//            if (clientresponse.getStatusLine()
-//                    .getStatusCode() != HttpStatus.SC_OK){
-//                return null;
-//            }
-//            sdata = EntityUtils.toString(clientresponse
-//                    .getEntity(), StandardCharsets.UTF_8);
-//        
-//        return sdata;
+//       
     }
     
     private String query2(String DMS_endpoint, String postObject) throws NoSuchAlgorithmException, KeyStoreException, IOException, KeyManagementException{
