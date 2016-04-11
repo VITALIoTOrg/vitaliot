@@ -185,9 +185,6 @@ public class Collector {
 
                         UpdateResult updateDoc =  db.getCollection("cepinstances")
                                 .updateOne(filter,update,options);
-                          
-                      
-                        String a = "";
                       
                     } catch (GeneralSecurityException | IOException 
                             | ParseException ex) {
@@ -236,32 +233,6 @@ public class Collector {
 
         exec.scheduleAtFixedRate(collectoRunnable , 0, 1, TimeUnit.MINUTES);
 
-        
-//        //obtener todos los valores de la base de datos la primera vez que inicia y cargarlos en memoria
-//        // add 4 different values to list
-//		cepSensorSubscribeTopicList.add("1");
-//		cepSensorSubscribeTopicList.add("2");
-//		cepSensorSubscribeTopicList.add("3");
-//		cepSensorSubscribeTopicList.add("4");
-//        //lista de los procesos a recolectar
-        
-        //leer from mongo y poner en la lista
-//        
-//        TMessageProc MsgProcc = new TMessageProc();//555
-//
-//        MsgQueue oQueue = new MsgQueue(MsgProcc);
-//        MqttConnector connector = new MqttConnector("wildfly", 
-//                 oQueue,mqin, mqout, 2);
-//        
-        
-////////////////////////////////////////////////////////////////////////////
-                //RECEIVING FROM MOSQUITO
-//        ArrayList<MqttMsg> mesagges = MsgProcc.getMsgs();
-
-      
-        
-       
-        
     }
 
     private void getCollectorList() {
@@ -325,7 +296,6 @@ public class Collector {
                 }
                 oCollector.put("lastRequest",document.getString("lastRequest"));
                 sensors.put(oCollector);
-                
                 
             }
         });
