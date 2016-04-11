@@ -180,7 +180,6 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                                 try {
                                         Thread.sleep(1000); // do not retry immediately
                                 } catch (InterruptedException e1) {
-                                    
                                         e1.printStackTrace();
                                         return "";
                                 }
@@ -190,11 +189,9 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                                 .setSocketTimeout(12000).build());
                                 response = httpclient.execute(httpaction);
                         } catch (ClientProtocolException eaa) {
-                            
                                 ea.printStackTrace();
                                 return "";
                         } catch (IOException eaa) {
-                            
                                 ea.printStackTrace();
                                 return "";
                                 //return eaa.getMessage();
@@ -207,7 +204,6 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
         if (statusCode != HttpStatus.SC_OK 
                 && statusCode != HttpStatus.SC_ACCEPTED){
            if (statusCode==503){
-
                throw new ServiceUnavailableException();
            }else if (statusCode==502){
                 throw new ServerErrorException(502);
@@ -235,7 +231,6 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
         return respString;
     
     }
-    
     private JSONArray getPPIObservations(String ppi_url
             ,String body) throws ParseException {
         JSONArray data = new JSONArray();
