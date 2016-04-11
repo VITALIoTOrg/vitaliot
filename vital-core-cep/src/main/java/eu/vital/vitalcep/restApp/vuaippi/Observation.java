@@ -10,41 +10,29 @@ import eu.vital.vitalcep.conf.PropertyLoader;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Context;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
 
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.util.JSON;
 import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.ThreadLocalRandom;
 import javax.servlet.http.HttpServletRequest;
+import org.bson.types.ObjectId;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -179,6 +167,20 @@ public class Observation {
     public Response unSubscribeToObservations(String info,
             @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
+         JSONObject jObject = new JSONObject();
+        try{
+            jObject = new JSONObject(info);
+            if (!jObject.has("subscription")){
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .build();
+            }
+           
+        }catch(Exception e){
+             return Response.status(Response.Status.BAD_REQUEST)
+                    .build();
+        }
+        
+               
         
         StringBuilder ck = new StringBuilder();
         Security slogin = new Security();
@@ -189,117 +191,22 @@ public class Observation {
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         this.cookie = ck.toString(); 
-
+        
         MongoClient mongo = new MongoClient(mongoIp, mongoPort);
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
         
-        BasicDBObject query = new BasicDBObject(); 
-        BasicDBObject fields = new BasicDBObject().append("_id",false);
-        fields.append("dolceSpecification", false);
-                 
-//        coll.findOneAndDelete(query);
-//       
-//        
-//        final JSONArray sensors = new JSONArray(); 
-//        
-//        coll.forEach(new Block<Document>() {
-//            @Override
-//            public void apply(final Document document) {
-//                sensors.put(document.get("id"));
-//            }
-//        });
-//        
-//        DBObject body = (DBObject) JSON.parse(info);
-//        
-//        if (!body.containsField("subscription")){
-//            return Response.status(Response.Status.BAD_REQUEST)
-//                    .build();
-//        }
-//               
-//        //DB db = mongo.getDB("vital");
-//       // DBCollection coll = db.getCollection("subscriptions");
-//        
-//        String sub = body.get("subscription").toString();
-//        Document findDocument = new Document("_id", body.get("subscription").toString());
-//        MongoCollection<Document>  coll = db.getCollection("subscriptions");
-//      
-//        ObjectId ob1 = new ObjectId(sub);
-//    
-//        DBObject findSubscription = new BasicDBObject("_id", ob1);
-//        
-//        DBObject doc = coll.findOne(findSubscription);
-//                
-//        if (doc == null){
-//            return Response.status(Response.Status.NOT_FOUND)
-//                    .build();
-//        }
-// 
-//        coll.remove(doc);
+        Document doc = new Document("_id",
+                new ObjectId(jObject.getString("subscription")));
+        
+        DeleteResult deleted =  db.getCollection("subscriptions")
+                                .deleteOne(doc);
+        
+        if (deleted.wasAcknowledged()!= true || deleted.getDeletedCount()!=1 ){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .build();
+        }
+        
         return Response.status(Response.Status.OK).build();
     }
-    
-    
-    
-    /**
-     * Gets sensors metadata .
-     *
-     * @return the metadata of the sensors 
-     * @throws java.io.FileNotFoundException 
-     */
-    @POST
-    @Path("sensor/observation")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getObservations(String info,
-            @Context HttpServletRequest req) throws FileNotFoundException, 
-            IOException {
-        
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        this.cookie = ck.toString(); 
-                  
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
-
-        MongoDatabase db = mongo.getDatabase(mongoDB);
-                
-        DBObject dbObject = (DBObject) JSON.parse(info);
-        
-        if (!dbObject.containsField("sensor")){
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .build();
-        }
-        if (!dbObject.containsField("property")){
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .build();
-        }
-        
-        
-        Document doc = new Document(dbObject.toMap());
-
-        try{
-            db.getCollection("subscriptions").insertOne(doc);
-            String id = doc.get("_id").toString();
-            
-            
-            
-            
-            
-            
-            return Response.status(Response.Status.OK)
-                .entity("{\"subscription\":\""+id+"\"}").build();
-        }catch(MongoException ex
-                ){
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .build();
-        }
-         
-    }
-    
 }
