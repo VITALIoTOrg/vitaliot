@@ -5,19 +5,18 @@
  */
 package eu.vital.vitalcep.restApp.vuaippi;
 
+import com.mongodb.BasicDBList;
 import eu.vital.vitalcep.conf.PropertyLoader;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Context;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -27,23 +26,26 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
 import com.mongodb.util.JSON;
+import eu.vital.vitalcep.collector.listener.DMSListener;
 import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 
 // TODO: Auto-generated Javadoc
@@ -1499,6 +1501,261 @@ public class Sensor {
          
     }
     
+
+      /**
+     * Gets sensors metadata .
+     *
+     * @return the metadata of the sensors 
+     * @throws java.io.FileNotFoundException 
+     */
+    @POST
+    @Path("observation")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSensorsObservations(String info,
+            @Context HttpServletRequest req) throws FileNotFoundException, 
+            IOException {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        
+        this.cookie = ck.toString(); 
+                  
+        DBObject request = (DBObject) JSON.parse(info);
+        BasicDBList sensors;
+        String property;
+        
+        if (!request.containsField("sensor")||!request.containsField("property")){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }else{
+            
+            try {
+                sensors = (BasicDBList) request.get("sensor");
+                property = (String)request.get("property");
+            }catch(Exception e){
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            
+        }
+        
+        if (request.containsField("from") && request.containsField("to")){
+            
+           if(!isDateValid((String)request.get("from"))|| 
+                   !isDateValid((String)request.get("to"))){
+                 return Response.status(Response.Status.BAD_REQUEST)
+                    .build();
+           }
+        }
+        
+        JSONArray observations ;
+        
+        if (request.containsField("from") && request.containsField("to")){
+
+            observations = getObservations(sensors,"cepicosobservations",property
+                    ,(String)request.get("from"),(String)request.get("to"));
+        
+        }else if(request.containsField("from")){
+            //now
+            
+            Date NOW = new Date();
+            
+            observations = getObservations(sensors,"cepicosobservations",property
+                    ,(String)request.get("from"),getXSDDateTime(NOW));
+            
+        }else{
+            
+            observations = getObservations(sensors,"cepicosobservations",property
+                    ,null,null);
+        
+        }
+                 
+        return Response.status(Response.Status.OK)
+                .entity (observations.toString()).build();
+                
+    }
+
     
+    private JSONArray getObservations(BasicDBList sensor, String collection
+    , String property,String from, String to) {
+        
+        JSONArray aData = new JSONArray();
+             
+        BasicDBObject query = new BasicDBObject();
+        
+        final JSONArray oObservations = new JSONArray();
+            
+        if (!(to == null) && !(from == null)){
+            try{
+                String queryS = createQuery(sensor, property, from, to);
+                Object queryO = com.mongodb.util.JSON
+                        .parse(queryS);
+                query = (BasicDBObject) queryO;
+                
+                MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+                final MongoDatabase db = mongo.getDatabase(mongoDB);
+
+
+                Block<Document> block = new Block<Document>() {
+                    @Override
+                    public void apply(final Document document) {
+                        JSONObject oCollector = new JSONObject(document.toJson());
+                        oObservations.put(oCollector);
+
+                    }
+                };
+
+                db.getCollection("cepicosobservations").find(query)
+                        .projection(fields(excludeId())).forEach(block);
+                db.getCollection("continuosfiltersobservations").find(query)
+                        .projection(fields(excludeId())).forEach(block);
+                db.getCollection("alertsobservations").find(query)
+                        .projection(fields(excludeId())).forEach(block);
+                db.getCollection("staticdatafiltersobservations").find(query)
+                        .projection(fields(excludeId())).forEach(block);
+                db.getCollection("staticqueryfiltersobservations").find(query)
+                        .projection(fields(excludeId())).forEach(block);
+               
+            }catch (Exception e){
+                String a= "a";
+            }
+                            
+        }else{
+            try{
+                Object queryO = com.mongodb.util.JSON
+                            .parse(createQuery(sensor, property,null,null));
+                query = (BasicDBObject) queryO;
+
+                MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+                final MongoDatabase db = mongo.getDatabase(mongoDB);
+
+
+                Block<Document> block = new Block<Document>() {
+                    @Override
+                    public void apply(final Document document) {
+                        JSONObject oCollector = new JSONObject(document.toJson());
+                        oObservations.put(oCollector);
+
+                    }
+                };
+
+                BasicDBObject sortObject = new BasicDBObject().append("_id", -1);
+
+                db.getCollection("cepicosobservations").find(query)
+                        .projection(fields(excludeId())).sort(sortObject)
+                        .limit(1).forEach(block);
+                db.getCollection("continuosfiltersobservations").find(query)
+                        .projection(fields(excludeId()))
+                        .sort(sortObject).limit(1).forEach(block);
+                db.getCollection("alertsobservations").find(query)
+                        .projection(fields(excludeId()))
+                        .sort(sortObject).limit(1).forEach(block);
+                db.getCollection("staticdatafiltersobservations").find(query)
+                        .projection(fields(excludeId()))
+                        .sort(sortObject).limit(1).forEach(block);
+                db.getCollection("staticqueryfiltersobservations").find(query)
+                        .projection(fields(excludeId()))
+                        .sort(sortObject).limit(1).forEach(block);  
+
+            }catch (Exception e){
+               String a= "a";
+            }
+                  
+        }
+         
+        return oObservations;
+        
+    }
+
+    private JSONObject createQueryOr(String sensor, String property
+            , String from, String to) throws JSONException {
+        
+        JSONObject simplequery = new JSONObject();
+
+        //JSONObject propertyJ= new JSONObject();
+       // propertyJ.put("type",property );
+
+        simplequery.put("ssn:observationProperty.type",property);
+        simplequery.put("ssn:observedBy",sensor);
+        
+        if (!(from==null)&&!(to==null)){
+            
+            String timeValue =  " {\"$gt\": \""
+                + from
+                +"\", \"$lt\": \""
+                + to
+                +"\"}" ;
+            JSONObject timeObject = new JSONObject(timeValue);
+            simplequery.put("ssn:observationResultTime.time:inXSDDateTime",timeObject);
+        }
+                
+        return simplequery;
+    }
     
+    private String createQuery(BasicDBList sensor, String property, String from
+                                ,String to) {
+        
+        String mongoquery ="";
+        JSONObject completequery = new JSONObject();
+        
+        if (sensor.size()<=1){
+          
+            try{
+                String sensor1=(String)sensor.get(0);
+                JSONObject cQO = createQueryOr(sensor1, property,from,to);
+                mongoquery = cQO.toString();
+                return  mongoquery; 
+                
+            }catch(Exception ex){
+                java.util.logging.Logger.getLogger(DMSListener
+                        .class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+
+        }else{
+            
+            try{
+           
+                JSONArray ors = new JSONArray();
+
+                for (Object sensor1 : sensor) {
+                    ors.put(createQueryOr((String) sensor1, property,from,to));
+                }
+
+                completequery.put("$or",ors);
+                // DMSManager oDMS = new DMSManager(dmsURL,cookie);
+                
+                // aData = oDMS.getObservations(completequery.toString());
+                return completequery.toString();
+            }catch(Exception ex){
+                java.util.logging.Logger.getLogger(DMSListener
+                        .class.getName())
+                        .log(Level.SEVERE, null, ex);
+            }
+        }
+        return mongoquery;
+    }
+  
+    final static String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+
+    public static boolean isDateValid(String date) 
+    {
+            try {
+                DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+                df.setLenient(false);
+                df.parse(date);
+                return true;
+            } catch (ParseException e) {
+                return false;
+            }
+    }
+     private String getXSDDateTime(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return  dateFormat.format(date);
+     }
 }
