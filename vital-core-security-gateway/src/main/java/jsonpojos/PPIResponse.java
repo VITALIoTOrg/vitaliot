@@ -23,20 +23,20 @@ public class PPIResponse {
     private Map<String, Object> properties = new HashMap<String, Object>();
 
     public PPIResponse() {
-	}
+    }
     
     public PPIResponse(PPIResponse resp) {
-    	if(resp != null)
-    		properties.putAll(resp.properties);
-	}
+        if(resp != null)
+            properties.putAll(resp.properties);
+    }
     
     @SuppressWarnings("unchecked")
-	public PPIResponse(Object map) {
-    	if(map != null && map instanceof LinkedHashMap<?, ?>)
-    		properties.putAll((LinkedHashMap<String, Object>) map);
-	}
+    public PPIResponse(Object map) {
+        if(map != null && map instanceof LinkedHashMap<?, ?>)
+            properties.putAll((LinkedHashMap<String, Object>) map);
+    }
 
-	@Override
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }

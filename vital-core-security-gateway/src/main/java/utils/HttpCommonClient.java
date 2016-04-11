@@ -16,9 +16,9 @@ public class HttpCommonClient
 
     private HttpCommonClient()
     {
-    	cm = new PoolingHttpClientConnectionManager();
-    	cm.setMaxTotal(200);
-    	cm.setDefaultMaxPerRoute(100);
+        cm = new PoolingHttpClientConnectionManager();
+        cm.setMaxTotal(200);
+        cm.setDefaultMaxPerRoute(100);
         httpc = HttpClientBuilder.create().setConnectionManager(cm).build();
     }
 

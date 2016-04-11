@@ -8,14 +8,14 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class HeaderFilter implements ContainerResponseFilter {
 
-	@Override
+    @Override
     public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext cres) throws IOException {
-		String allowedOrigin;
+        String allowedOrigin;
 
-		if((allowedOrigin = requestContext.getHeaderString("Origin")) == null) {
-			allowedOrigin = "*";
-		}
-		cres.getHeaders().add("Access-Control-Allow-Origin", allowedOrigin);
+        if((allowedOrigin = requestContext.getHeaderString("Origin")) == null) {
+            allowedOrigin = "*";
+        }
+        cres.getHeaders().add("Access-Control-Allow-Origin", allowedOrigin);
         cres.getHeaders().add("Access-Control-Allow-Credentials", "true");
         cres.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
     }
