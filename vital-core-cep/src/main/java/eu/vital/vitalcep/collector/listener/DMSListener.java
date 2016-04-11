@@ -167,9 +167,13 @@ public class DMSListener {
           
             String property1=properties.getString(0) ;
             String sensor1=sources.getString(0) ;
+//             {"$elemMatch" : {"@type" : {"$regex" : "Speed"
+//			}}}
+             
             mongoquery = "{\"http://purl.oclc.org/NET/ssnx/ssn#observationProperty\": "
-                    + "[{\"@type\": ["
-                    +"\""+property1 +"\"]}],"
+                    + "{\"$elemMatch\" : {\"@type\" : {\"$regex\" :"
+                    +"\""+property1 +"\"}}}"
+                    + ","
                     + "\"http://purl.oclc.org/NET/ssnx/ssn#observedBy\": ["
                     + "{\"@value\": \""+sensor1 +"\"}],"
                     + "\"http://purl.oclc.org/NET/ssnx/ssn#observationResultTime\": "
@@ -194,14 +198,16 @@ public class DMSListener {
             for (int i = 0; i < properties.length(); i++) {
                 for (int j = 0; j < sources.length(); j++) {
                     JSONObject simplequery = new JSONObject();
-                    String innerProperty = "[\""+properties.getString(i) +"\"]}]" ;
+                    String innerProperty = "{\"$elemMatch\" : {\"@type\" "
+                            + ": {\"$regex\" :\""
+                            +properties.getString(i) +"\"}}}" ;
                     String sensorvalue = sources.getString(j) ;
                     String timeValue = " {\"$elemMatch\":{"
                         + "\"http://www.w3.org/2006/time#inXSDDateTime\": "
                         + "{\"$elemMatch\":{ \"@value\" : {\"$gt\": \""
                         + from 
                         +"\"}}}}}" ;
-                    JSONArray propertyarrayInner = new JSONArray(innerProperty);
+                    //JSONArray propertyarrayInner = new JSONArray(innerProperty);
                     //JSONArray sensorarrayInner = new JSONArray(sensorvalue);
                     JSONObject timeObject = new JSONObject(timeValue);
 
@@ -209,16 +215,16 @@ public class DMSListener {
                     JSONObject sensor = new JSONObject();
 
                     sensor.put("@value",sensorvalue);
-                    property.put("@type",propertyarrayInner );
+                   // property.put("@type",propertyarrayInner );
 
-                    JSONArray propertyArray = new JSONArray();
+                   // JSONArray propertyArray = new JSONArray();
                     JSONArray sensorArray = new JSONArray();
 
-                    propertyArray.put(property);
+                    //propertyArray.put(property);
                     sensorArray.put(sensor);
 
                     simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationProperty",
-                            propertyArray);
+                            innerProperty);
                     simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observedBy",
                             sensorArray);
                     simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationResultTime",
