@@ -19,28 +19,28 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-	"responses"
+    "responses"
 })
 public class DecisionArray {
 
-	@JsonProperty("responses")
-	private List<DecisionResponse> responses = new ArrayList<DecisionResponse>();
+    @JsonProperty("responses")
+    private List<DecisionResponse> responses = new ArrayList<DecisionResponse>();
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
-	 * @return the responses
-	 */
-	public List<DecisionResponse> getResponses() {
-		return responses;
-	}
+     * @return the responses
+     */
+    public List<DecisionResponse> getResponses() {
+        return responses;
+    }
 
-	/**
-	 * @param responses the responses to set
-	 */
-	public void setResponses(List<DecisionResponse> responses) {
-		this.responses = responses;
-	}
+    /**
+     * @param responses the responses to set
+     */
+    public void setResponses(List<DecisionResponse> responses) {
+        this.responses = responses;
+    }
 
     @Override
     public String toString() {

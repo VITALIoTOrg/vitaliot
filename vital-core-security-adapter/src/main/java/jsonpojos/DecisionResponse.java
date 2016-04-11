@@ -17,8 +17,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({
-	"resource",
-	"actions"
+    "resource",
+    "actions"
 })
 public class DecisionResponse {
 
