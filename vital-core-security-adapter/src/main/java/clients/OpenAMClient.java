@@ -756,7 +756,7 @@ public class OpenAMClient {
                 }
             }
         } else {
-            respString = "{ \"code\": 400, \"message\": \"Missing or invalid token!\"}";
+            respString = "{ \"code\": 401, \"message\": \"Missing or invalid token!\"}";
         }
         
         Monitor values = new Monitor();
