@@ -30,8 +30,8 @@ angular.module('main.login', [
                     .then(function (user) {
                         $location.path('/');
                     }, function (errorResponse) {
-                        if (errorResponse.status === 400)
-                            $scope.errorMessage = 'Wrong username or password';
+                        if (errorResponse.status === 401)
+                            $scope.errorMessage = 'Bad login';
                         else
                             $scope.errorMessage = errorResponse.data.error;
                     });
