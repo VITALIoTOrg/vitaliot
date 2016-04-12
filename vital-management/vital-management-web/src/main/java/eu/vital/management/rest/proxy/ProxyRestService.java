@@ -66,7 +66,11 @@ public abstract class ProxyRestService extends HttpServlet {
 				}
 			}
 			// Send the content to the client httpProxyRequest => httpServletResponse
-			InputStream httpProxyRequestInputStream = httpProxyRequest.getInputStream();
+            InputStream httpProxyRequestInputStream;
+            if (responseStatus >= 200 && responseStatus <= 299)
+    			httpProxyRequestInputStream = httpProxyRequest.getInputStream();
+            else
+                httpProxyRequestInputStream = httpProxyRequest.getErrorStream();
 			OutputStream httpServletResponseOutputStream = httpServletResponse.getOutputStream();
 			IOUtils.copy(httpProxyRequestInputStream, httpServletResponseOutputStream);
 
