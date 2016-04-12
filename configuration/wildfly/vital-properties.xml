@@ -16,7 +16,7 @@
     <entry key="vital-core-iot-data-adapter.base-url">http://localhost:8080/iot-data-adapter</entry>
     <!-- How to access the DMS. -->
     <!-- NOTE: This may later be replaced by some DMS-defined property. -->
-    <entry key="vital-core-iot-data-adapter.vital-core-dms.base-url">https://vmvital03.deri.ie:8011</entry>
+    <entry key="vital-core-iot-data-adapter.vital-core-dms.base-url">http://localhost:8080/vital-core-dms</entry>
     <!-- How to connect to MongoDB. -->
     <entry key="vital-core-iot-data-adapter.mongo.uri">mongodb://localhost:27017</entry>
     <entry key="vital-core-iot-data-adapter.mongo.db">vital-iot-data-adapter</entry>
@@ -56,8 +56,8 @@
 
     <!--vital-core-discovery-->
     <entry key="vital-core-discovery.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-core-discovery.endpoint-address">http\://vital-integration.atosresearch.eu/vital-core-discovery</entry>
-    <entry key="vital-core-discovery.endpoint-port">8180</entry>
+    <entry key="vital-core-discovery.endpoint-address">http\://localhost:8080/vital-core-discovery</entry>
+    <entry key="vital-core-discovery.endpoint-port">8080</entry>
     <!--/.vital-core-discovery-->
 
     <!--vital-core-filtering-->
