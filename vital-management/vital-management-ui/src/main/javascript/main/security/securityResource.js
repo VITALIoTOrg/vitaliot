@@ -1,9 +1,6 @@
 'use strict';
 angular.module('main.security.resource', [])
 
-    .service('Shared', function () {
-    })
-
     .factory('securityResource', [
         '$route', '$http', '$q', '$location', 'API_PATH', 'authentication',
         function ($route, $http, $q, $location, API_PATH, authentication) {
@@ -12,108 +9,92 @@ angular.module('main.security.resource', [])
 
             // The public API of the service
             var service = {
-                /*
-                 authenticate: function (formData, $scope, genlog) {
-                 formData.testCookie = !genlog;
-                 return $http({
-                 method: 'POST',
-                 url: basePath + '/authenticate',
-                 data: $.param(formData),
-                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                 withCredentials: true,
-                 params: {'foobar': new Date().getTime()}
-                 })
-                 .then(function (response) {
-                 if (genlog === true) {
-                 $scope.respLogin = response;
-                 $scope.loggedUser = {};
-                 $scope.loggedUser.uid = response.data.uid;
-                 if (response.data.hasOwnProperty('name')) {
-                 $scope.loggedUser.name = response.data.name;
-                 }
-                 else {
-                 $scope.loggedUser.name = response.data.uid;
-                 }
-                 if (response.data.hasOwnProperty('fullname')) {
-                 $scope.loggedUser.fullname = response.data.fullname;
-                 }
-                 else {
-                 $scope.loggedUser.fullname = response.data.uid;
-                 }
-                 $scope.loggedUser.avatar = 'https://www.gravatar.com/avatar/';
-                 if (response.data.hasOwnProperty('mailhash')) {
-                 $scope.loggedUser.avatar = $scope.loggedUser.avatar + response.data.mailhash;
-                 }
-                 if (response.data.hasOwnProperty('creation')) {
-                 $scope.loggedUser.creation = response.data.creation;
-                 }
-                 else {
-                 $scope.loggedUser.creation = false;
-                 }
-                 Shared.signedIn = true;
-                 Shared.loggedUser = $scope.loggedUser;
-                 $scope.genloginLoading = false;
-                 }
-                 else {
-                 $scope.response = response;
-                 $scope.username = response.data.uid;
-                 $scope.getIdError = false;
-                 $scope.loggedIn = true;
-                 $scope.loginLoading = false;
-                 service.permissions($scope);
-                 }
-                 }, function (response) {
-                 if (genlog === true) {
-                 $scope.respLogin = response;
-                 $scope.genloginLoading = false;
-                 }
-                 else {
-                 $scope.response = response;
-                 $scope.loginLoading = false;
-                 }
-                 });
-                 },
+                authenticate: function (formData, $scope, genlog) {
+                    formData.testCookie = !genlog;
+                    return $http({
+                        method: 'POST',
+                        url: basePath + '/authenticate',
+                        data: $.param(formData),
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        withCredentials: true,
+                        params: {'foobar': new Date().getTime()}
+                    })
+                    .then(function (response) {
+                        if (genlog === true) {
+                            $scope.respLogin = response;
+                            $scope.loggedUser = {};
+                            $scope.loggedUser.uid = response.data.uid;
+                            if (response.data.hasOwnProperty('name')) {
+                                $scope.loggedUser.name = response.data.name;
+                            } else {
+                                $scope.loggedUser.name = response.data.uid;
+                            }
+                            if (response.data.hasOwnProperty('fullname')) {
+                                $scope.loggedUser.fullname = response.data.fullname;
+                            } else {
+                                $scope.loggedUser.fullname = response.data.uid;
+                            }
+                            $scope.loggedUser.avatar = 'https://www.gravatar.com/avatar/';
+                            if (response.data.hasOwnProperty('mailhash')) {
+                                $scope.loggedUser.avatar = $scope.loggedUser.avatar + response.data.mailhash;
+                            }
+                            if (response.data.hasOwnProperty('creation')) {
+                                $scope.loggedUser.creation = response.data.creation;
+                            }
+                            else {
+                                $scope.loggedUser.creation = false;
+                            }
+                            $scope.genloginLoading = false;
+                        } else {
+                            $scope.response = response;
+                            $scope.username = response.data.uid;
+                            $scope.getIdError = false;
+                            $scope.loggedIn = true;
+                            $scope.loginLoading = false;
+                            service.permissions($scope);
+                        }
+                    }, function (response) {
+                        if (genlog === true) {
+                            $scope.respLogin = response;
+                            $scope.genloginLoading = false;
+                        } else {
+                            $scope.response = response;
+                            $scope.loginLoading = false;
+                        }
+                    });
+                },
 
-                 forgetLogin: function () {
-                 Shared.signedIn = false;
-                 $location.path('/login');
-                 },
-
-                 logout: function ($scope, genlog) {
-                 var formData = {};
-                 formData.testCookie = !genlog;
-                 return $http({
-                 method: 'POST',
-                 url: basePath + '/logout',
-                 data: $.param(formData),
-                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                 withCredentials: true,
-                 params: {'foobar': new Date().getTime()}
-                 })
-                 .then(function (response) {
-                 if (genlog === true) {
-                 $scope.respLogout = response;
-                 authentication.showLogin();
-                 $scope.genlogoutLoading = false;
-                 }
-                 else {
-                 $scope.response = response;
-                 $scope.loggedIn = false;
-                 $scope.reset();
-                 $scope.logoutLoading = false;
-                 }
-                 }, function (response) {
-                 if (genlog === true) {
-                 $scope.respLogout = response;
-                 $scope.genlogoutLoading = false;
-                 }
-                 else {
-                 $scope.response = response;
-                 $scope.logoutLoading = false;
-                 }
-                 });
-                 },
-                 */
+                logout: function ($scope, genlog) {
+                    var formData = {};
+                    formData.testCookie = !genlog;
+                    return $http({
+                        method: 'POST',
+                        url: basePath + '/logout',
+                        data: $.param(formData),
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        withCredentials: true,
+                        params: {'foobar': new Date().getTime()}
+                    })
+                    .then(function (response) {
+                        if (genlog === true) {
+                            $scope.respLogout = response;
+                            $scope.genlogoutLoading = false;
+                        } else {
+                            $scope.response = response;
+                            $scope.loggedIn = false;
+                            $scope.reset();
+                            $scope.logoutLoading = false;
+                        }
+                    }, function (response) {
+                        if (genlog === true) {
+                            $scope.respLogout = response;
+                            $scope.genlogoutLoading = false;
+                        } else {
+                            $scope.response = response;
+                            $scope.logoutLoading = false;
+                        }
+                    });
+                },
 
                 getId: function ($scope, genlog) {
                     var formData = {};
@@ -153,8 +134,6 @@ angular.module('main.security.resource', [])
                                     else {
                                         $scope.loggedUser.creation = false;
                                     }
-                                    Shared.signedIn = true;
-                                    Shared.loggedUser = $scope.loggedUser;
                                 }
                                 else {
                                     $scope.loggedIn = true;
@@ -162,7 +141,6 @@ angular.module('main.security.resource', [])
                                     service.permissions($scope);
                                 }
                             } else if (genlog) {
-                                Shared.signedIn = false
                             }
                             $scope.gotId = true;
                             return response;
