@@ -69,14 +69,14 @@ angular.module('main.sensor', [
                     };
                     if ($scope.search.label) {
                         query['$and'].push({
-                            'rdfs:label': {
+                            'http://www.w3.org/2000/01/rdf-schema#label': {
                                 $regex: $scope.search.label
                             }
                         });
                     }
                     if ($scope.search.comment) {
                         query['$and'].push({
-                            'rdfs:comment': {
+                            'http://www.w3.org/2000/01/rdf-schema#comment': {
                                 $regex: $scope.search.comment
                             }
                         });
