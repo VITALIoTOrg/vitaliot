@@ -373,6 +373,11 @@ angular.module('main.security.resource', [])
                             $scope.getStatsError = true;
                             $scope.getStatsResponse = response;
                             $scope.gotStats = true;
+                            if (response.hasOwnProperty('data') && response.data !== null) {
+                                if (response.data.code === 401) {
+                                    authentication.showLogin();
+                                }
+                            }
                         });
                 },
 
