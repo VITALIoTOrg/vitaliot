@@ -131,7 +131,9 @@ public class SecurityService {
 					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
 
 			Cookie cookie = response.getCookies().get(getCookieName());
-			return cookie.getValue();
+            if (cookie != null)
+    			return cookie.getValue();
+            return null;
 		} catch (WebApplicationException e) {
 			return null;
 		} finally {

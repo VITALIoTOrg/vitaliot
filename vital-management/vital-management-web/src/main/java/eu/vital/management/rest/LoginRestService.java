@@ -62,7 +62,7 @@ public class LoginRestService {
 		// Login
 		String authToken = securityService.login(username, password);
 		if (authToken == null) {
-			return Response.status(Response.Status.FORBIDDEN).build();
+			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 
 		// Get User Data
