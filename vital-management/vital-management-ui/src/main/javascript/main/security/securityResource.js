@@ -5,8 +5,8 @@ angular.module('main.security.resource', [])
     })
 
     .factory('securityResource', [
-        '$route', '$http', '$q', '$location', 'API_PATH', 'Shared',
-        function ($route, $http, $q, $location, API_PATH, Shared) {
+        '$route', '$http', '$q', '$location', 'API_PATH', 'authentication',
+        function ($route, $http, $q, $location, API_PATH, authentication) {
 
             var basePath = API_PATH.replace('/api', '/security');
 
@@ -93,7 +93,7 @@ angular.module('main.security.resource', [])
                  .then(function (response) {
                  if (genlog === true) {
                  $scope.respLogout = response;
-                 service.forgetLogin();
+                 authentication.showLogin();
                  $scope.genlogoutLoading = false;
                  }
                  else {
@@ -172,7 +172,7 @@ angular.module('main.security.resource', [])
                             $scope.gotId = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -246,7 +246,7 @@ angular.module('main.security.resource', [])
                             $scope.gotEvaluation = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.evaluating = false;
@@ -269,7 +269,7 @@ angular.module('main.security.resource', [])
                             $scope.gotUsers = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -291,7 +291,7 @@ angular.module('main.security.resource', [])
                             $scope.gotGroups = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -313,7 +313,7 @@ angular.module('main.security.resource', [])
                             $scope.gotPolicies = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -353,7 +353,7 @@ angular.module('main.security.resource', [])
                             $scope.gotApplications = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -426,7 +426,7 @@ angular.module('main.security.resource', [])
                             $scope.gotUser = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -459,7 +459,7 @@ angular.module('main.security.resource', [])
                             $scope.gotGroup = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -513,7 +513,7 @@ angular.module('main.security.resource', [])
                             $scope.gotPolicy = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -558,7 +558,7 @@ angular.module('main.security.resource', [])
                             $scope.gotApplication = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             return response;
@@ -582,7 +582,7 @@ angular.module('main.security.resource', [])
                             $scope.gotApplicationType = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             return response;
@@ -606,7 +606,7 @@ angular.module('main.security.resource', [])
                             $scope.gotApplicationsTypes = true;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             return response;
@@ -630,7 +630,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.creating = false;
@@ -655,7 +655,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.deleting = false;
@@ -688,7 +688,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.saving = false;
@@ -711,7 +711,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.changing = false;
@@ -735,7 +735,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.creating = false;
@@ -760,7 +760,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.deleting = false;
@@ -790,7 +790,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.creating = false;
@@ -817,7 +817,7 @@ angular.module('main.security.resource', [])
                             $scope.msgEvent = 'deletePolicy';
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.deleting = false;
@@ -940,7 +940,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -969,7 +969,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.creating = false;
@@ -994,7 +994,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.deleting = false;
@@ -1085,7 +1085,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                         });
@@ -1114,7 +1114,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.adding = false;
@@ -1144,7 +1144,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
                                 if (response.data.code === 401) {
-                                    service.forgetLogin();
+                                    authentication.showLogin();
                                 }
                             }
                             $scope.removing = false;
