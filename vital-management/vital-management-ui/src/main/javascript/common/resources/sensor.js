@@ -16,8 +16,8 @@ angular.module('common.resources.sensor', [])
             {
                 '@id': 'http://104.131.128.70:8080/istanbul-traffic/sensor/36-F',
                 '@type': 'http://vital-iot.eu/ontology/ns/VitalSensor',
-                'rdfs:comment': 'A traffic sensor in Istanbul.',
-                'rdfs:label': 'Yenikapı Sahil Yolu ( Forward Direction )',
+                'http://www.w3.org/2000/01/rdf-schema#comment': 'A traffic sensor in Istanbul.',
+                'http://www.w3.org/2000/01/rdf-schema#label': 'Yenikapı Sahil Yolu ( Forward Direction )',
                 'http://purl.oclc.org/NET/ssnx/ssn#observes': [
                     {
                         '@id': 'http://104.131.128.70:8080/istanbul-traffic/sensor/36-F/speed',

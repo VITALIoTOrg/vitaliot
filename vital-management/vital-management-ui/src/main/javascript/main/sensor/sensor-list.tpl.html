@@ -39,8 +39,8 @@
             <thead>
             <tr>
                 <th>#</th>
-                <th>Name <i uib-tooltip="rdfs:label" class="fa fa-question-circle"></i></th>
-                <th>Description <i uib-tooltip="rdfs:comment" class="fa fa-question-circle"></i></th>
+                <th>Name <i uib-tooltip="http://www.w3.org/2000/01/rdf-schema#label" class="fa fa-question-circle"></i></th>
+                <th>Description <i uib-tooltip="http://www.w3.org/2000/01/rdf-schema#comment" class="fa fa-question-circle"></i></th>
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -49,10 +49,10 @@
             <tr ng-repeat="sensor in sensors track by sensor['@id']">
                 <td>{{$index + 1}}</td>
                 <td>
-                    {{sensor['rdfs:label']}}
+                    {{sensor['http://www.w3.org/2000/01/rdf-schema#label']}}
                 </td>
                 <td>
-                    {{sensor['rdfs:comment']}}
+                    {{sensor['http://www.w3.org/2000/01/rdf-schema#comment']}}
                 </td>
                 <td>
                     <span class="badge bg-green" ng-class="{

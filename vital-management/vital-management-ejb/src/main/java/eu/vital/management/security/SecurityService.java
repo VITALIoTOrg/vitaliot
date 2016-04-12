@@ -79,6 +79,14 @@ public class SecurityService {
 	}
 
 	public boolean canUserAccessResource(String authToken, URI requestUrl, String method) {
+
+		// For development only
+		boolean isLocalhost = requestUrl.getHost().equals("127.0.0.1") || requestUrl.getHost().equals("localhost");
+		if (isLocalhost) {
+			return true;
+		}
+		// end:For development only
+
 		Client client = ClientBuilder.newClient();
 
 		String systemAuthToken = getSystemAuthenticationToken();
@@ -100,13 +108,6 @@ public class SecurityService {
 
 			JsonNode actions = evaluation.get("responses").get(0).get("actions");
 			boolean canAccess = actions.has(method) && actions.get(method).booleanValue();
-
-			// For development only
-			boolean isLocalhost = requestUrl.getHost().equals("127.0.0.1") || requestUrl.getHost().equals("localhost");
-			if (isLocalhost) {
-				return true;
-			}
-			// end:For development only
 
 			return canAccess;
 		} catch (WebApplicationException e) {
