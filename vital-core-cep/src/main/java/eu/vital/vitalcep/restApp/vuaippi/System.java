@@ -27,10 +27,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
+import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
@@ -88,28 +90,19 @@ public class System {
     
     private String host;
     
-    private String mongoIp;
+    private String mongoURL;
     
-    private int mongoPort;
     
     private String mongoDB;
     private String cookie;
-
     
-   // @Context private javax.servlet.http.HttpServletRequest hsr;
+    public System()  throws IOException {
     
-    public System() throws IOException {
-
-        props = new PropertyLoader();
-
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp= props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
-        host = props.getProperty("cep.resourceshostname");                      
+        ConfigReader configReader = ConfigReader.getInstance();
         
-        if (host == null || host.isEmpty()){
-             host = "localhost:8180";       
-        }
+        mongoURL = configReader.get(ConfigReader.MONGO_URL);
+        mongoDB = configReader.get(ConfigReader.MONGO_DB);
+        host = configReader.get(ConfigReader.CEP_BASE_URL);
 
     }
     
@@ -153,8 +146,7 @@ public class System {
         this.cookie = ck.toString(); 
         
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
-
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
         MongoDatabase db = mongo.getDatabase(mongoDB);
         
         BasicDBObject query = new BasicDBObject(); 
@@ -227,18 +219,18 @@ public class System {
             }
         });
         
-        sensors.put("http://"+host.toString()+"/cep/sensor/1");
+        sensors.put(host+"/sensor/1");
                 JSONObject metadata = new JSONObject();
                  
         JSONArray services = new JSONArray(); 
-        services.put("http://"+host.toString()+"/cep/service/monitoring");
-        services.put("http://"+host.toString()+"/cep/service/cepicosmanagement");
-        services.put("http://"+host.toString()+"/cep/service/filtering");
-        services.put("http://"+host.toString()+"/cep/service/alertingmanagement");
-        services.put("http://"+host.toString()+"/cep/service/observation");
+        services.put(host+"/service/monitoring");
+        services.put(host+"/service/cepicosmanagement");
+        services.put(host+"/service/filtering");
+        services.put(host+"/service/alertingmanagement");
+        services.put(host+"/service/observation");
                 
         metadata.put("@context","http://vital-iot.eu/contexts/system.jsonld");
-        metadata.put("id","http://"+ host+"/cep");
+        metadata.put("id",host);
         metadata.put("type","vital:VitalSystem");
         metadata.put("name","CEP IoT system");
         metadata.put("description","This is a VITAL compliant IoT system.");
@@ -274,7 +266,7 @@ public class System {
         JSONObject metadata = new JSONObject();
         
         metadata.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-        metadata.put("id","http://"+ host+"/cep/sensor/1/observation/1");
+        metadata.put("id", host+"/sensor/1/observation/1");
         metadata.put("type","ssn:Observation");
         
         JSONObject obsProp = new JSONObject();
@@ -291,7 +283,7 @@ public class System {
         obsResultTime.put("time:inXSDDateTime",dateFormat.format(date));
         
         metadata.put("ssn:observationResultTime",obsResultTime);
-        metadata.put( "ssn:featureOfInterest", "http://"+ host+"/cep");
+        metadata.put( "ssn:featureOfInterest", host);
         
         JSONObject observationResult = new JSONObject();
         
@@ -338,7 +330,7 @@ public class System {
         JSONObject metric1 = new JSONObject();
         
         metric1.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-        metric1.put("id","http://"+ host+"/cep/sensor/1/observation/3");
+        metric1.put("id", host+"/sensor/1/observation/3");
         metric1.put("type","ssn:Observation");
         
         JSONObject property = new JSONObject();
@@ -354,7 +346,7 @@ public class System {
        
         resultTime.put("time:inXSDDateTime",dateFormat.format(date));//check format
         metric1.put("ssn:observationResultTime",resultTime);
-        metric1.put("ssn:featureOfInterest","http://"+ host+"/cep");
+        metric1.put("ssn:featureOfInterest",host);
         
         JSONObject hasValue = new JSONObject();
         hasValue.put( "type","ssn:ObservationValue");
@@ -368,7 +360,7 @@ public class System {
         JSONObject metric2 = new JSONObject();
         
         metric2.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-        metric2.put("id","http://"+ host+"/cep/sensor/1/observation/2");
+        metric2.put("id", host+"/sensor/1/observation/2");
         metric2.put("type","ssn:Observation");
         
         JSONObject property2 = new JSONObject();
@@ -381,7 +373,7 @@ public class System {
        
         resultTime2.put("time:inXSDDateTime",dateFormat2.format(date2));//check format
         metric2.put("ssn:observationResultTime",resultTime2);
-        metric2.put("ssn:featureOfInterest","http://"+ host+"/cep");
+        metric2.put("ssn:featureOfInterest",host);
         
         JSONObject hasValue2 = new JSONObject();
         hasValue2.put( "type","ssn:ObservationValue");
@@ -429,14 +421,13 @@ public class System {
 
         JSONObject metric1 = new JSONObject();
         
-        metric1.put("id","http://"+ host+"/cep/sensor/1/sysUptime");
+        metric1.put("id",host+"/sensor/1/sysUptime");
         metric1.put("type","http://vital-iot.eu/ontology/ns/SysUptime");
                
         JSONObject metric2 = new JSONObject();
         
-        metric2.put("id","http://"+ host+"/cep/sensor/1/sysLoad");
+        metric2.put("id",host+"/sensor/1/sysLoad");
         metric2.put("type","http://vital-iot.eu/ontology/ns/SysLoad");
-        
                 
         JSONArray metrics = new JSONArray();
              
