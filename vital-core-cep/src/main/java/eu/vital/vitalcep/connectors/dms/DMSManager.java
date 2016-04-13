@@ -53,6 +53,7 @@ import org.apache.http.util.EntityUtils;
 import javax.ws.rs.core.Cookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
 import javax.ws.rs.ServerErrorException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -144,6 +145,27 @@ public class DMSManager {
         }
         return resp;
 }
+    
+public JSONArray getObservationsWithExceptions(String body) throws IOException,
+            UnsupportedEncodingException, KeyManagementException, 
+            NoSuchAlgorithmException, KeyStoreException, SocketTimeoutException
+        , ConnectException, InterruptedException{
+        
+        String sbody = body;
+        
+        //String response = queryDMSTest("queryObservation",sbody);
+        
+        String response = queryWithExceptions("queryObservation",sbody,"POST");
+        
+        JSONArray resp;
+        
+        if (!(response=="")){        
+            resp = new JSONArray(response);
+        }else{
+            resp = new JSONArray();
+        }
+        return resp;
+}
   
     public JSONArray getSystems(String body) throws IOException,
             UnsupportedEncodingException, KeyManagementException, 
@@ -192,10 +214,12 @@ public class DMSManager {
 
         URI uri = null;
         try {
-                // Prepare to forward the request to the proxy
-                uri = new URI(dms_URL+"/"+dms_endpoint);
+            // Prepare to forward the request to the proxy
+            uri = new URI(dms_URL+"/"+dms_endpoint);
         } catch (URISyntaxException e1) {
-            //log
+            java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e1);
         }
 
         if (method.equals("GET")) {
@@ -210,9 +234,11 @@ public class DMSManager {
         ck = new Cookie("vitalAccessToken", cookie.substring(17));
 
         httpaction.setHeader("Cookie", ck.toString());
-httpaction.setConfig(RequestConfig.custom().setConnectionRequestTimeout(5000)
+        httpaction.setConfig(RequestConfig.custom()
+                .setConnectionRequestTimeout(5000)
         .setConnectTimeout(5000).setSocketTimeout(5000).build());
-httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON);
+        httpaction.setHeader("Content-Type", 
+                javax.ws.rs.core.MediaType.APPLICATION_JSON);
         StringEntity strEntity = new StringEntity(body, StandardCharsets.UTF_8);
         if (method.equals("POST")) {
                 ((HttpPost) httpaction).setEntity(strEntity);
@@ -223,21 +249,28 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
         try {
                 response = httpclient.execute(httpaction);
         } catch (ClientProtocolException e) {
-                //e.printStackTrace();
+                java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e);
         } catch (IOException e) {
                 try {
                         // Try again with a higher timeout
                         try {
                                 Thread.sleep(1000); // do not retry immediately
                         } catch (InterruptedException e1) {
-                               // e1.printStackTrace();
+                               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e1);
+                                return "";
                         }
                         httpaction.setConfig(RequestConfig.custom()
                         .setConnectionRequestTimeout(7000)
                         .setConnectTimeout(7000).setSocketTimeout(7000).build());
                         response = httpclient.execute(httpaction);
                 } catch (ClientProtocolException ea) {
-                        ea.printStackTrace();
+                        java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, ea);
                         return "";
                 } catch (IOException ea) {
                     try {
@@ -245,7 +278,9 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                         try {
                                 Thread.sleep(1000); // do not retry immediately
                         } catch (InterruptedException e1) {
-                                e1.printStackTrace();
+                                java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e1);
                                 return "";
                         }
                     httpaction.setConfig(RequestConfig.custom()
@@ -254,22 +289,178 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                             .setSocketTimeout(12000).build());
                             response = httpclient.execute(httpaction);
                     } catch (ClientProtocolException eaa) {
-                            //ea.printStackTrace();
-                        String a= "";
+                        java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, eaa);
+                        return "";
                     } catch (SocketTimeoutException eaa) {
-                           // ea.printStackTrace();
-                            //return eaa.getMessage();
-                          throw new SocketTimeoutException();
+                        java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, eaa);
+                        return "";
                     }catch (ConnectException eaa) {
-                           ea.printStackTrace();
-                           return "";
-                            //return eaa.getMessage();
-                          //throw new ConnectException();
+                        java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, eaa);
+                        return "";
                     }catch (ConnectTimeoutException eaa) {
-                           // ea.printStackTrace();
-                            //return eaa.getMessage();
-                        //revisar ...hay mas exceptions connection timedout
-                           return "";
+                        java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, eaa);
+                        return "";
+                    }
+                }
+        }
+        
+        int statusCode = response.getStatusLine().getStatusCode();
+         String respString = "";
+        
+        HttpEntity entity = null;
+         
+        if (statusCode == HttpStatus.SC_OK 
+                || statusCode == HttpStatus.SC_ACCEPTED){
+            
+             entity = response.getEntity();
+
+        }else{
+            if (statusCode==503){
+               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "httpStatusCode 503");
+           }else if (statusCode==502){
+               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "httpStatusCode 502");
+           }else if (statusCode==401){
+               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "httpStatusCode 401");          
+           }
+            
+        }
+
+        if (entity != null) {
+                try {
+                        respString = EntityUtils.toString(entity);
+                        response.close();
+                } catch (ParseException | IOException e) {
+                        java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e);
+                } 
+        }
+        return respString;
+    
+    }
+    
+    private String queryWithExceptions(String dms_endpoint, String body, String method) 
+            throws SocketTimeoutException, ConnectException, IOException, InterruptedException{
+        Cookie ck;
+        //String internalToken;
+        CloseableHttpClient httpclient;
+        HttpRequestBase httpaction;
+        //boolean wasEmpty;
+        //int code;
+
+        httpclient = HttpClients.createDefault();
+
+        URI uri = null;
+        try {
+                // Prepare to forward the request to the proxy
+            uri = new URI(dms_URL+"/"+dms_endpoint);
+        } catch (URISyntaxException e1) {
+            java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e1);
+        }
+
+        if (method.equals("GET")) {
+                httpaction = new HttpGet(uri);
+        }
+        else {
+                httpaction = new HttpPost(uri);
+        }
+
+        // Get token or authenticate if null or invalid
+        //internalToken = client.getToken();
+        ck = new Cookie("vitalAccessToken", cookie.substring(17));
+
+        httpaction.setHeader("Cookie", ck.toString());
+        httpaction.setConfig(RequestConfig.custom()
+                .setConnectionRequestTimeout(5000)
+        .setConnectTimeout(5000).setSocketTimeout(5000).build());
+        httpaction.setHeader("Content-Type", 
+                javax.ws.rs.core.MediaType.APPLICATION_JSON);
+        
+        StringEntity strEntity = new StringEntity(body, StandardCharsets.UTF_8);
+        
+        if (method.equals("POST")) {
+                ((HttpPost) httpaction).setEntity(strEntity);
+        }
+
+        // Execute and get the response.
+        CloseableHttpResponse response = null;
+        try {
+                response = httpclient.execute(httpaction);
+        } catch (ClientProtocolException e) {
+            throw new ClientProtocolException(); 
+        } catch (IOException e) {
+                try {
+                        // Try again with a higher timeout
+                        try {
+                                Thread.sleep(1000); // do not retry immediately
+                        } catch (InterruptedException e1) {
+                            throw new InterruptedException();
+                               // e1.printStackTrace();
+                        }
+                        httpaction.setConfig(RequestConfig.custom()
+                        .setConnectionRequestTimeout(7000)
+                        .setConnectTimeout(7000).setSocketTimeout(7000).build());
+                        response = httpclient.execute(httpaction);
+                } catch (ClientProtocolException ea) {
+                    java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, ea);
+                    throw new ClientProtocolException();
+                } catch (IOException ea) {
+                    try {
+                        // Try again with a higher timeout
+                        try {
+                                Thread.sleep(1000); // do not retry immediately
+                        } catch (InterruptedException e1) {
+                            java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, e1);
+                            throw new InterruptedException(); 
+                        }
+                    httpaction.setConfig(RequestConfig.custom()
+                            .setConnectionRequestTimeout(12000)
+                            .setConnectTimeout(12000)
+                            .setSocketTimeout(12000).build());
+                            response = httpclient.execute(httpaction);
+                    } catch (ClientProtocolException eaa) {
+                         java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, eaa);
+                        throw new ClientProtocolException();
+                    } catch (SocketTimeoutException eaa) {
+                        java.util.logging.Logger.getLogger(DMSManager
+                            .class.getName())
+                            .log(Level.SEVERE, null, eaa);
+                        throw new SocketTimeoutException();
+                    }catch (ConnectException eaa) {
+                            java.util.logging.Logger.getLogger(DMSManager
+                            .class.getName())
+                            .log(Level.SEVERE, null, eaa);
+                        throw new ConnectException();
+                    }catch (ConnectTimeoutException eaa) {
+                        java.util.logging.Logger.getLogger(DMSManager
+                            .class.getName())
+                            .log(Level.SEVERE, null, eaa);
+                        throw new ConnectTimeoutException();
                     }
                 }
         }
@@ -279,11 +470,29 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
         if (statusCode != HttpStatus.SC_OK 
                 && statusCode != HttpStatus.SC_ACCEPTED){
            if (statusCode==503){
+                java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "httpStatusCode 503");
                throw new ServiceUnavailableException();
            }else if (statusCode==502){
+               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "httpStatusCode 502");
                 throw new ServerErrorException(502);
            }else if (statusCode==401){
+               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "could't Athorize the DMS");
                throw new NotAuthorizedException("could't Athorize the DMS");           
+           }else{
+               java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                "httpStatusCode 500");
+               throw new ServiceUnavailableException();
            }
         }
 
@@ -296,13 +505,16 @@ httpaction.setHeader("Content-Type", javax.ws.rs.core.MediaType.APPLICATION_JSON
                         respString = EntityUtils.toString(entity);
                         response.close();
                 } catch (ParseException | IOException e) {
-                        //e.printStackTrace();
+                       java.util.logging.Logger.getLogger(DMSManager
+                                    .class.getName())
+                                        .log(Level.SEVERE, null, 
+                                                e);
                 } 
         }
         return respString;
     
     }
-    
+   
     private String queryDMSTest(String dms_endpoint, String body) throws UnsupportedEncodingException, IOException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException{   
         
    
