@@ -6,7 +6,6 @@
 package eu.vital.vitalcep.collector.listener;
 
 import eu.vital.vitalcep.conf.ConfigReader;
-import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.dms.DMSManager;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -208,20 +207,15 @@ public class DMSListener {
                         + "{\"$elemMatch\":{ \"@value\" : {\"$gt\": \""
                         + from 
                         +"\"}}}}}" ;
-                    //JSONArray propertyarrayInner = new JSONArray(innerProperty);
-                    //JSONArray sensorarrayInner = new JSONArray(sensorvalue);
+
                     JSONObject timeObject = new JSONObject(timeValue);
 
-                    JSONObject property= new JSONObject();
                     JSONObject sensor = new JSONObject();
 
                     sensor.put("@value",sensorvalue);
-                   // property.put("@type",propertyarrayInner );
 
-                   // JSONArray propertyArray = new JSONArray();
                     JSONArray sensorArray = new JSONArray();
 
-                    //propertyArray.put(property);
                     sensorArray.put(sensor);
 
                     simplequery.put("http://purl.oclc.org/NET/ssnx/ssn#observationProperty",
