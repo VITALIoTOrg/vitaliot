@@ -43,26 +43,5 @@ public class MqttAllInOne {
        return false;
       
      }
-     
-     
-     
-    
-     
-//     public boolean sendMsg (MessageProcessor processor, String name, String simpleEvent){
-//      MessageProcessor msgProc = processor;
-//      MsgQueue queue = new MsgQueue(msgProc);
-//      //                                  ( name, msgQueue, cepInputTopicName, cepOutputTopicName, qos)
-//      MqttConnector connector = new MqttConnector("miCEP", queue, "mqin", "mqou", 2);
-//      
-//      if (connector!=null){
-//        connector.publishMsg(simpleEvent);
-//        connector.disconnect();
-//       
-//       return true;
-//      }else
-//       return false;
-//      
-//     }
-     
-    
+
 }
