@@ -5,8 +5,6 @@
  */
 package eu.vital.vitalcep.restApp.vuaippi;
 
-import eu.vital.vitalcep.conf.PropertyLoader;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
@@ -17,26 +15,20 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Context;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
 import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -44,7 +36,6 @@ import java.lang.management.RuntimeMXBean;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.servlet.http.HttpServletRequest;
 
@@ -84,17 +75,11 @@ public class System {
     private final String CEPFILTERSENSOR_TYPE = 
             ONTOLOGY+"CEPFilterSensor";
 
-    private Properties config ;
+    private final String host;
     
-    private PropertyLoader props;
-    
-    private String host;
-    
-    private String mongoURL;
-    
-    
-    private String mongoDB;
-    private String cookie;
+    private final String mongoURL;
+        
+    private final String mongoDB;
     
     public System()  throws IOException {
     
@@ -142,9 +127,7 @@ public class System {
                 ,req.getHeader("password"),false,ck);
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        this.cookie = ck.toString(); 
-        
+        }      
         
         MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
         MongoDatabase db = mongo.getDatabase(mongoDB);
@@ -261,7 +244,6 @@ public class System {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
         
         JSONObject metadata = new JSONObject();
         
@@ -325,7 +307,6 @@ public class System {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
         
         JSONObject metric1 = new JSONObject();
         
@@ -417,7 +398,6 @@ public class System {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
 
         JSONObject metric1 = new JSONObject();
         
