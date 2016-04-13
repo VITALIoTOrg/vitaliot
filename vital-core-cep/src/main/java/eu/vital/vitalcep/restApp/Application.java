@@ -4,7 +4,6 @@ import eu.vital.vitalcep.collector.Collector;
 import eu.vital.vitalcep.restApp.cepRESTApi.CEPICO;
 import eu.vital.vitalcep.restApp.filteringApi.ContinuosFiltering;
 import eu.vital.vitalcep.restApp.filteringApi.StaticFiltering;
-import eu.vital.vitalcep.restApp.filteringApi.PusshingDMS;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +35,6 @@ public class Application extends javax.ws.rs.core.Application {
         this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.Observation());
         this.singletons.add(new ContinuosFiltering());
         this.singletons.add(new CEPICO());
-        this.singletons.add(new PusshingDMS());
    
     }
  
