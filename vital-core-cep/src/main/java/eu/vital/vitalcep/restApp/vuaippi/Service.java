@@ -5,46 +5,26 @@
  */
 package eu.vital.vitalcep.restApp.vuaippi;
 
-import eu.vital.vitalcep.conf.PropertyLoader;
+import eu.vital.vitalcep.conf.ConfigReader;
+import eu.vital.vitalcep.security.Security;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Context;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.Block;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoException;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.util.JSON;
-import eu.vital.vitalcep.security.Security;
-import org.bson.Document;
-
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
-import java.util.concurrent.ThreadLocalRandom;
-import javax.servlet.http.HttpServletRequest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -70,33 +50,15 @@ public class Service {
     private final String MONITORINGSERVICE_TYPE = ONTOLOGY+"MonitoringService";
 
     private final String ALERTINGMANAGEMENTSERVICE_TYPE = ONTOLOGY+"AlertingService";
-        
-    private PropertyLoader props;
-    
-    private String host;
-    
-    private String mongoIp;
-    
-    private int mongoPort;
-    
-    private String mongoDB;
-    private String cookie;
-
-    
-   // @Context private javax.servlet.http.HttpServletRequest hsr;
-    
+          
+    private final String host;
+   
+           
     public Service() throws IOException {
 
-        props = new PropertyLoader();
-
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp= props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
-        host = props.getProperty("cep.resourceshostname");                      
-        
-        if (host == null || host.isEmpty()){
-             host = "localhost:8180";       
-        }
+        ConfigReader configReader = ConfigReader.getInstance();
+              
+        host = configReader.get(ConfigReader.CEP_BASE_URL);
 
     }
     
@@ -122,15 +84,13 @@ public class Service {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
       
         JSONObject monitoring = new JSONObject();
         
         monitoring.put("@context", 
                 "http://vital-iot.eu/contexts/service.jsonld");
         
-        monitoring.put("id", 
-                "http://"+host.toString()+"/cep/service/monitoring");
+        monitoring.put("id", host+"/service/monitoring");
         
         monitoring.put("type","vital:MonitoringService");
         
@@ -142,34 +102,29 @@ public class Service {
         JSONObject GetSLAParameters = new JSONObject();
         
         GetSystemStatus.put("type","vital:GetSystemStatus");
-        GetSystemStatus.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/system/status");
+        GetSystemStatus.put("hrest:hasAddress", host+"/system/status");
         GetSystemStatus.put("hrest:hasMethod","hrest:POST");
 
         GetSensorStatus.put("type","vital:GetSensorStatus");
-        GetSensorStatus.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/sensor/status");
+        GetSensorStatus.put("hrest:hasAddress",host+"/sensor/status");
         GetSensorStatus.put("hrest:hasMethod","hrest:POST");
         
         GetSupportedPerformanceMetrics
                 .put("type","vital:GetSupportedPerformanceMetrics");
         GetSupportedPerformanceMetrics.put("hrest:hasAddress",
-                "http://"+host.toString()+"/cep/system/performance");
+                host+"/system/performance");
         GetSupportedPerformanceMetrics.put("hrest:hasMethod","hrest:GET");
 
         GetPerformanceMetrics.put("type","vital:GetPerformanceMetrics");
-        GetPerformanceMetrics.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/system/performance");
+        GetPerformanceMetrics.put("hrest:hasAddress",host+"/system/performance");
         GetPerformanceMetrics.put("hrest:hasMethod","hrest:POST");
         
         GetSupportedSLAParameters.put("type","vital:GetSupportedSLAParameters");
-        GetSupportedSLAParameters.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/system/sla");
+        GetSupportedSLAParameters.put("hrest:hasAddress",host+"/system/sla");
         GetSupportedSLAParameters.put("hrest:hasMethod","hrest:GET");
         
         GetSLAParameters.put("type","vital:GetSLAParameters");
-        GetSLAParameters.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/system/sla");
+        GetSLAParameters.put("hrest:hasAddress",host+"/system/sla");
         GetSLAParameters.put("hrest:hasMethod","hrest:POST");
 
         JSONArray monitoringOperations = new JSONArray();
@@ -189,8 +144,7 @@ public class Service {
         cepico.put("@context", 
                 "http://vital-iot.eu/contexts/service.jsonld");
         
-        cepico.put("id", 
-                "http://"+host.toString()+"/cep/service/cepicosmanagement");
+        cepico.put("id", host+"/service/cepicosmanagement");
         
         cepico.put("type","vital:CEPICOManagementService");
         
@@ -201,23 +155,20 @@ public class Service {
 
         
         getCepicos.put("type","vital:GetCEPICOs");
-        getCepicos.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/getcepicos");
+        getCepicos.put("hrest:hasAddress",host+"/getcepicos");
         getCepicos.put("hrest:hasMethod","hrest:GET");
 
         getCepico.put("type","vital:GetCEPICO");
-        getCepico.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/getcepico");
+        getCepico.put("hrest:hasAddress",host+"/getcepico");
         getCepico.put("hrest:hasMethod","hrest:POST");
         
         createCepico.put("type","vital:CreateCEPICO");
         createCepico.put("hrest:hasAddress",
-                "http://"+host.toString()+"/cep/createcepico");
+                host+"/createcepico");
         createCepico.put("hrest:hasMethod","hrest:PUT");
 
         deleteCepico.put("type","vital:DeleteCEPICO");
-        deleteCepico.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/deletecepico");
+        deleteCepico.put("hrest:hasAddress",host+"/deletecepico");
         deleteCepico.put("hrest:hasMethod","hrest:DELETE");
 
         JSONArray cepicosOperations = new JSONArray();
@@ -234,8 +185,7 @@ public class Service {
         alert.put("@context", 
                 "http://vital-iot.eu/contexts/service.jsonld");
         
-        alert.put("id", 
-                "http://"+host.toString()+"/cep/service/alertingmanagement");
+        alert.put("id", host+"/service/alertingmanagement");
         
         alert.put("type","vital:AlertingManagementService");
         
@@ -246,23 +196,20 @@ public class Service {
 
         
         getAlerts.put("type","vital:GetAlerts");
-        getAlerts.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/getalerts");
+        getAlerts.put("hrest:hasAddress",host+"/getalerts");
         getAlerts.put("hrest:hasMethod","hrest:GET");
 
         getAlert.put("type","vital:GetCEPICO");
-        getAlert.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/getcepico");
+        getAlert.put("hrest:hasAddress",host+"/getcepico");
         getAlert.put("hrest:hasMethod","hrest:POST");
         
         createAlert.put("type","vital:CreateCEPICO");
         createAlert.put("hrest:hasAddress",
-                "http://"+host.toString()+"/cep/createcepico");
+                host+"/createcepico");
         createAlert.put("hrest:hasMethod","hrest:PUT");
 
         deleteAlert.put("type","vital:DeleteCEPICO");
-        deleteAlert.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/deletecepico");
+        deleteAlert.put("hrest:hasAddress",host+"/deletecepico");
         deleteAlert.put("hrest:hasMethod","hrest:DELETE");
 
         JSONArray AlertsOperations = new JSONArray();
@@ -280,7 +227,7 @@ public class Service {
                 "http://vital-iot.eu/contexts/service.jsonld");
         
         filtering.put("id", 
-                "http://"+host.toString()+"/cep/service/filtering");
+                host+"/service/filtering");
         
         filtering.put("type","vital:CEPFitleringService");
         
@@ -292,33 +239,33 @@ public class Service {
         JSONObject FilterStaticQuery = new JSONObject();
         
         CreateContinuousFilter.put("type","vital:CreateContinuousFilter");
-        CreateContinuousFilter.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/filtering/createcontinuousfilter");
+        CreateContinuousFilter.put("hrest:hasAddress",
+                host+"/filtering/createcontinuousfilter");
         CreateContinuousFilter.put("hrest:hasMethod","hrest:GET");
 
         GetContinuousFilters.put("type","vital:GetContinuousFilters");
-        GetContinuousFilters.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/filtering/getcontinuousfilters");
+        GetContinuousFilters.put("hrest:hasAddress",
+                host+"/filtering/getcontinuousfilters");
         GetContinuousFilters.put("hrest:hasMethod","hrest:GET");
         
         GetContinuousFilter.put("type","vital:GetContinuousFilter");
         GetContinuousFilter.put("hrest:hasAddress",
-                "http://"+host.toString()+"/cep/filtering/getcontinuousfilter");
+                host+"/filtering/getcontinuousfilter");
         GetContinuousFilter.put("hrest:hasMethod","hrest:POST");
 
         DeleteContinuousFilter.put("type","vital:DeleteContinuousFilter");
-        DeleteContinuousFilter.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/filtering/deletecontinuousfilter");
+        DeleteContinuousFilter.put("hrest:hasAddress",
+                host+"/filtering/deletecontinuousfilter");
         DeleteContinuousFilter.put("hrest:hasMethod","hrest:DELETE");
 
         FilterStaticData.put("type","vital:FilterStaticData");
         FilterStaticData.put("hrest:hasAddress",
-                "http://"+host.toString()+"/cep/filtering/filterstaticdata");
+                host+"/filtering/filterstaticdata");
         FilterStaticData.put("hrest:hasMethod","hrest:POST");
 
         FilterStaticQuery.put("type","vital:FilterStaticQuery");
-        FilterStaticQuery.put("hrest:hasAddress","http://"
-                +host.toString()+"/cep/filtering/filterstaticquery");
+        FilterStaticQuery.put("hrest:hasAddress",
+                host+"p/filtering/filterstaticquery");
         FilterStaticQuery.put("hrest:hasMethod","hrest:POST");
 
         JSONArray filteringOperations = new JSONArray();
@@ -339,29 +286,28 @@ public class Service {
                 "http://vital-iot.eu/contexts/service.jsonld");
         
         observation.put("id", 
-                "http://"+host.toString()+"/cep/service/observation");
+                host+"/service/observation");
         
         observation.put("type","vital:ObservationService");
         
         JSONObject operation1 = new JSONObject();
               
         operation1.put("type","vital:SubscribeToObservationStream");
-        operation1.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/observation/stream/subscribe");
+        operation1.put("hrest:hasAddress",
+                host+"/observation/stream/subscribe");
         operation1.put("hrest:hasMethod","hrest:POST");
 
         JSONObject operation2 = new JSONObject();
               
         operation2.put("type","vital:UnsubscribeFromObservationStream");
-        operation2.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/observation/stream/unsubscribe");
+        operation2.put("hrest:hasAddress",
+                host+"/observation/stream/unsubscribe");
         operation2.put("hrest:hasMethod","hrest:POST");
         
         JSONObject operation3 = new JSONObject();
               
         operation3.put("type","vital:GetObservations");
-        operation3.put("hrest:hasAddress","http://"+host.toString()
-                +"/cep/observation");
+        operation3.put("hrest:hasAddress",host+"/observation");
         operation3.put("hrest:hasMethod","hrest:POST");
 
         JSONArray observationOperations = new JSONArray();
