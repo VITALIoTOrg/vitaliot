@@ -9,6 +9,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -43,16 +44,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import eu.vital.vitalcep.collector.listener.DMSListener;
 import eu.vital.vitalcep.collector.listener.PPIListener;
+import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.security.Security;
-import java.lang.reflect.Array;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.logging.Level;
-import javax.ejb.Singleton;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.json.JSONException;
@@ -64,16 +62,10 @@ public class Collector {
     
       /** The Constant logger. */
     final static Logger logger = Logger.getLogger(Collector.class);
-   // @Context private javax.servlet.http.HttpServletRequest hsr;
     
-    private PropertyLoader props;
     protected boolean      isStopped    = false;
-    private String host;
-    private String hostname;
-    private String mongoIp;
-    private int mongoPort; 
+    private String mongoURL;
     private String mongoDB;
-    private final ScheduledExecutorService scheduler;
     public final JSONArray sensors = new JSONArray(); 
     private static Collector instance = null;
     
@@ -86,21 +78,14 @@ public class Collector {
     
     private Collector()  throws IOException {
 
-        scheduler = Executors.newScheduledThreadPool(1);
-        props = new PropertyLoader();
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp= props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
-        host = props.getProperty("cep.ip").concat(":8180");
-        hostname = props.getProperty("cep.resourceshostname");
+        ConfigReader configReader = ConfigReader.getInstance();
+        
+        mongoURL = configReader.get(ConfigReader.MONGO_URL);
+        mongoDB = configReader.get(ConfigReader.MONGO_DB);
         
         getCollectorList();
-        
-      
-        String hostnameport =  this.hostname.concat(":8180");
-        Date date = new Date();
 
-        ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
         
         Runnable collectoRunnable;
         collectoRunnable = new Runnable() {
@@ -169,8 +154,7 @@ public class Collector {
                         
                         sensors.getJSONObject(i).put("lastRequest"
                                                 ,nowString);
-                        //save to mongo lastrequest
-                        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+                        MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
         
                         MongoDatabase db = mongo.getDatabase(mongoDB);
                         
@@ -202,6 +186,8 @@ public class Collector {
                         .JsonldArray2DolceInput(aData);
                 MqttAllInOne oMqtt = new MqttAllInOne();
                 TMessageProc MsgProcc = new TMessageProc();
+                
+                //TODO: check the client name. see from cep instances and what happen when if the topic exist 
                 oMqtt.sendMsg(MsgProcc, "wildfly"
                         , simpleEventAL
                         ,sensors.getJSONObject(i).getString("mqin")
@@ -231,13 +217,13 @@ public class Collector {
         };
 
 
-        exec.scheduleAtFixedRate(collectoRunnable , 0, 1, TimeUnit.MINUTES);
+        exec.scheduleAtFixedRate(collectoRunnable , 0, 10, TimeUnit.MINUTES);
 
     }
 
     private void getCollectorList() {
         try{
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
         
         final MongoDatabase db = mongo.getDatabase(mongoDB);
         
@@ -304,25 +290,6 @@ public class Collector {
         String a= "a";
         }
     }
-
-    private JSONArray getComplex(String subscribTopic, String hostnameport
-            ,String randomUUIDString) {
-        //hacer algo
-        MqttAllInOne oMqtt = new MqttAllInOne();
-        TMessageProc MsgProcc = new TMessageProc();
-        ArrayList<MqttMsg> mesagges = MsgProcc.getMsgs();
-        
-        //FORMATTING OBSERVATIONS OUTPUT
-        JSONArray aOutput ;
-        
-        Encoder encoder = new Encoder();
-        
-        aOutput= encoder.dolceOutputList2JsonldArray
-                                (mesagges, hostnameport, randomUUIDString );
-        
-        return aOutput;
-    }
-    
         
     public boolean start(String sensorId,String name, String mqin, 
             String mqout,int qos){
@@ -331,7 +298,6 @@ public class Collector {
     }
     
     public boolean stop(){
-                
         //delete the values to the list
         return true;
     }
