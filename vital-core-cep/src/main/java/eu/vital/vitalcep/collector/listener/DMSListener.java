@@ -5,6 +5,7 @@
  */
 package eu.vital.vitalcep.collector.listener;
 
+import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.dms.DMSManager;
 import java.io.FileNotFoundException;
@@ -27,7 +28,6 @@ import org.json.JSONObject;
  */
 public class DMSListener {
 
-    private final  PropertyLoader props;
     private final String dmsURL;
     private final String cookie;
 
@@ -39,8 +39,9 @@ public class DMSListener {
         
         Logger logger = Logger.getLogger(this.getClass().getName());
         
-        this.props = new PropertyLoader();
-        this.dmsURL = props.getProperty("dms.base_url");
+        ConfigReader configReader = ConfigReader.getInstance();
+
+        this.dmsURL = configReader.get(ConfigReader.DMS_URL);
         this.cookie= cookie; 
                     
     }
