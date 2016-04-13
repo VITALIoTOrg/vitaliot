@@ -5,6 +5,7 @@
  */
 package eu.vital.vitalcep.security;
 
+import eu.vital.vitalcep.conf.ConfigReader;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -22,6 +23,10 @@ public class Security {
     
     public  Boolean login(String user, String password, boolean testCookie, StringBuilder cookie) {
         
+        ConfigReader configReader = ConfigReader.getInstance();
+        
+        String securityURL = configReader.get(ConfigReader.AUTH_URL);
+          
         URL url;
         InputStream is;
         BufferedReader rd;
@@ -44,7 +49,7 @@ public class Security {
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
         int postDataLength = postData.length;
         try {
-            url = new URL("https://vitalgateway.cloud.reply.eu/securitywrapper/rest/authenticate");
+            url = new URL(securityURL+"/authenticate");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
 
