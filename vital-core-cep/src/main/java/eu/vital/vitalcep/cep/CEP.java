@@ -248,13 +248,4 @@ public class CEP {
         return Base64.getEncoder().encodeToString(property.getBytes(StandardCharsets.UTF_8));
     }
     
-    private static String decrypt(String property) throws GeneralSecurityException, IOException {
-        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
-        SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
-        Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
-        pbeCipher.init(Cipher.DECRYPT_MODE, key, new PBEParameterSpec(SALT, 20));
-        return  new String(Base64.getDecoder().decode(property),StandardCharsets.UTF_8);
-    }
-     
-    
 }
