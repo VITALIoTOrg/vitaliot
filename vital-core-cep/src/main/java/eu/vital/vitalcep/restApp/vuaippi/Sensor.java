@@ -92,7 +92,7 @@ public class Sensor {
   
     public Sensor() throws IOException {
 
-         ConfigReader configReader = ConfigReader.getInstance();
+        ConfigReader configReader = ConfigReader.getInstance();
         
         mongoURL = configReader.get(ConfigReader.MONGO_URL);
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
@@ -594,6 +594,7 @@ public class Sensor {
      * Gets sensors status .
      *
      * @param info
+     * @param req
      * @return the metadata of the sensors 
      * @throws java.io.FileNotFoundException 
      */
@@ -1316,6 +1317,7 @@ public class Sensor {
       /**
      * Gets sensors metadata .
      *
+     * @param req
      * @return the metadata of the sensors 
      * @throws java.io.FileNotFoundException 
      */
