@@ -21,10 +21,12 @@ import org.json.JSONObject;
 
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.util.JSON;
+import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
@@ -38,7 +40,7 @@ import org.bson.types.ObjectId;
 /**
  * The Class FilteringRestREST.
  */
-@Path("")
+@Path("observation")
 public class Observation {
 
     /** The Constant logger. */
@@ -74,31 +76,23 @@ public class Observation {
     
     private PropertyLoader props;
     
-    private String host;
+    private final String host;
     
-    private String mongoIp;
-    
-    private int mongoPort;
-    
-    private String mongoDB;
-    private String cookie;
+    private final String mongoURL;
+       
+    private final String mongoDB;
 
     
    // @Context private javax.servlet.http.HttpServletRequest hsr;
     
     public Observation() throws IOException {
 
-        props = new PropertyLoader();
-
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp= props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
-        host = props.getProperty("cep.resourceshostname");                      
+        ConfigReader configReader = ConfigReader.getInstance();
         
-        if (host == null || host.isEmpty()){
-             host = "localhost:8180";       
-        }
-
+        mongoURL = configReader.get(ConfigReader.MONGO_URL);
+        mongoDB = configReader.get(ConfigReader.MONGO_DB);
+        host = configReader.get(ConfigReader.CEP_BASE_URL);
+        
     }
    
     
@@ -109,7 +103,7 @@ public class Observation {
      * @throws java.io.FileNotFoundException 
      */
     @POST
-    @Path("observation/stream/subscribe")
+    @Path("stream/subscribe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response subscribeToObservations(String info,
@@ -124,9 +118,8 @@ public class Observation {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
                   
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
                 
@@ -161,7 +154,7 @@ public class Observation {
     }
     
     @POST
-    @Path("observation/stream/unsubscribe")
+    @Path("stream/unsubscribe")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response unSubscribeToObservations(String info,
@@ -190,9 +183,8 @@ public class Observation {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
         
