@@ -6,7 +6,6 @@
 package eu.vital.vitalcep.restApp.vuaippi;
 
 import com.mongodb.BasicDBList;
-import eu.vital.vitalcep.conf.PropertyLoader;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
@@ -15,6 +14,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Context;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.json.JSONException;
@@ -26,12 +26,14 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
 import com.mongodb.util.JSON;
 import eu.vital.vitalcep.collector.listener.DMSListener;
+import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.security.Security;
 import org.bson.Document;
 
@@ -43,10 +45,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
-import javax.servlet.http.HttpServletRequest;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -84,34 +84,19 @@ public class Sensor {
     private final String CEPFILTERSENSOR_TYPE = 
             ONTOLOGY+"CEPFilterSensor";
 
-    private Properties config ;
+    private final String host;
     
-    private PropertyLoader props;
+    private final String mongoURL;
     
-    private String host;
-    
-    private String mongoIp;
-    
-    private int mongoPort;
-    
-    private String mongoDB;
-    private String cookie;
-
-    
-   // @Context private javax.servlet.http.HttpServletRequest hsr;
-    
+    private final String mongoDB;
+  
     public Sensor() throws IOException {
 
-        props = new PropertyLoader();
-
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp= props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
-        host = props.getProperty("cep.resourceshostname");                      
+         ConfigReader configReader = ConfigReader.getInstance();
         
-        if (host == null || host.isEmpty()){
-             host = "localhost:8180";       
-        }
+        mongoURL = configReader.get(ConfigReader.MONGO_URL);
+        mongoDB = configReader.get(ConfigReader.MONGO_DB);
+        host = configReader.get(ConfigReader.CEP_BASE_URL);
 
     }
     
@@ -139,9 +124,8 @@ public class Sensor {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
                   
@@ -244,7 +228,7 @@ public class Sensor {
             JSONObject monSensor = new JSONObject();
 
             monSensor.put("@context","http://vital-iot.eu/contexts/sensor.jsonld");
-            monSensor.put("id","http://"+ host+"/cep/sensor/1");
+            monSensor.put("id",host+"/sensor/1");
             monSensor.put("type","vital:MonitoringSensor");
             monSensor.put("name","CEP System Monitoring Sensor");
             monSensor.put("description",
@@ -253,24 +237,24 @@ public class Sensor {
             JSONObject observesItem1 = new JSONObject();
 
             observesItem1.put("type","vital:OperationalState");
-            observesItem1.put("id","http://"+host+"/cep/sensor/1/operationalState");
+            observesItem1.put("id",host+"/sensor/1/operationalState");
 
 
             JSONObject observesItem2 = new JSONObject();
 
             observesItem2.put("type","vital:SysUptime");
-            observesItem2.put("id","http://"+host+"/cep/sensor/1/sysUptime");
+            observesItem2.put("id",host+"/sensor/1/sysUptime");
 
 
             JSONObject observesItem3 = new JSONObject();
 
             observesItem3.put("type","vital:SysLoad");
-            observesItem3.put("id","http://"+host+"/cep/sensor/1/sysLoad");
+            observesItem3.put("id",host+"/sensor/1/sysLoad");
 
             JSONObject observesItem4 = new JSONObject();
 
             observesItem4.put("type","vital:errors");
-            observesItem4.put("id","http://"+host+"/cep/sensor/1/errors");
+            observesItem4.put("id",host+"/sensor/1/errors");
 
             JSONArray observes = new JSONArray();
 
@@ -325,7 +309,7 @@ public class Sensor {
                     JSONObject monSensor = new JSONObject();
 
                     monSensor.put("@context","http://vital-iot.eu/contexts/sensor.jsonld");
-                    monSensor.put("id","http://"+ host+"/cep/sensor/1");
+                    monSensor.put("id",host+"/sensor/1");
                     monSensor.put("type","vital:MonitoringSensor");
                     monSensor.put("name","CEP System Monitoring Sensor");
                     monSensor.put("description",
@@ -334,24 +318,24 @@ public class Sensor {
                     JSONObject observesItem1 = new JSONObject();
 
                     observesItem1.put("type","vital:OperationalState");
-                    observesItem1.put("id","http://"+host+"/cep/sensor/1/operationalState");
+                    observesItem1.put("id",host+"/sensor/1/operationalState");
 
 
                     JSONObject observesItem2 = new JSONObject();
 
                     observesItem2.put("type","vital:SysUptime");
-                    observesItem2.put("id","http://"+host+"/cep/sensor/1/sysUptime");
+                    observesItem2.put("id",host+"/sensor/1/sysUptime");
 
 
                     JSONObject observesItem3 = new JSONObject();
 
                     observesItem3.put("type","vital:SysLoad");
-                    observesItem3.put("id","http://"+host+"/cep/sensor/1/sysLoad");
+                    observesItem3.put("id",host+"/sensor/1/sysLoad");
 
                     JSONObject observesItem4 = new JSONObject();
 
                     observesItem4.put("type","vital:errors");
-                    observesItem4.put("id","http://"+host+"/cep/sensor/1/errors");
+                    observesItem4.put("id",host+"/sensor/1/errors");
 
                     JSONArray observes = new JSONArray();
 
@@ -543,11 +527,11 @@ public class Sensor {
                         }
                 });
                 
-                if (id.equals("http://"+ host+"/cep/sensor/1")){
+                if (id.equals(host+"/sensor/1")){
                     JSONObject monSensor = new JSONObject();
 
                     monSensor.put("@context","http://vital-iot.eu/contexts/sensor.jsonld");
-                    monSensor.put("id","http://"+ host+"/cep/sensor/1");
+                    monSensor.put("id",host+"/sensor/1");
                     monSensor.put("type","vital:MonitoringSensor");
                     monSensor.put("name","CEP System Monitoring Sensor");
                     monSensor.put("description",
@@ -556,24 +540,24 @@ public class Sensor {
                     JSONObject observesItem1 = new JSONObject();
 
                     observesItem1.put("type","vital:OperationalState");
-                    observesItem1.put("id","http://"+host+"/cep/sensor/1/operationalState");
+                    observesItem1.put("id",host+"/sensor/1/operationalState");
 
 
                     JSONObject observesItem2 = new JSONObject();
 
                     observesItem2.put("type","vital:SysUptime");
-                    observesItem2.put("id","http://"+host+"/cep/sensor/1/sysUptime");
+                    observesItem2.put("id",host+"/sensor/1/sysUptime");
 
 
                     JSONObject observesItem3 = new JSONObject();
 
                     observesItem3.put("type","vital:SysLoad");
-                    observesItem3.put("id","http://"+host+"/cep/sensor/1/sysLoad");
+                    observesItem3.put("id",host+"/sensor/1/sysLoad");
 
                     JSONObject observesItem4 = new JSONObject();
 
                     observesItem4.put("type","vital:errors");
-                    observesItem4.put("id","http://"+host+"/cep/sensor/1/errors");
+                    observesItem4.put("id",host+"/sensor/1/errors");
 
                     JSONArray observes = new JSONArray();
 
@@ -629,9 +613,8 @@ public class Sensor {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
 
@@ -733,17 +716,17 @@ public class Sensor {
                     
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
                     
-                    if (id.equals("http://"+ host+"/cep/sensor/1")){
+                    if (id.equals(host+"/sensor/1")){
                         JSONObject opState = new JSONObject();
                         
                         opState.put("@context",
                                 "http://vital-iot.eu/contexts/measurement.jsonld");
                         
-                        opState.put("id","http://"+host+"/cep/sensor/1/observation/1" );
+                        opState.put("id",host+"/sensor/1/observation/1" );
                         
                         opState.put("type","ssn:Observation");
                         
-                        opState.put("ssn:featureOfInterest","http://"+host+"/cep/sensor/1");
+                        opState.put("ssn:featureOfInterest",host+"/sensor/1");
                         
                         JSONObject property = new JSONObject();
                         property.put("type","vital:OperationalState");
@@ -770,7 +753,7 @@ public class Sensor {
                         JSONObject sysUpTime = new JSONObject();
                         
                         sysUpTime.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-                        sysUpTime.put("id","http://"+ host+"/cep/sensor/1/observation/2");
+                        sysUpTime.put("id",host+"/sensor/1/observation/2");
                         sysUpTime.put("type","ssn:Observation");
                         
                         JSONObject property2 = new JSONObject();
@@ -782,7 +765,7 @@ public class Sensor {
                         
                         resultTime2.put("time:inXSDDateTime",dateFormat.format(date2));//check format
                         sysUpTime.put("ssn:observationResultTime",resultTime2);
-                        sysUpTime.put("ssn:featureOfInterest","http://"+ host+"/cep/sensor/1");
+                        sysUpTime.put("ssn:featureOfInterest",host+"/sensor/1");
                         
                         JSONObject hasValue2 = new JSONObject();
                         hasValue2.put( "type","ssn:ObservationValue");
@@ -799,7 +782,7 @@ public class Sensor {
                         JSONObject sysLoad = new JSONObject();
                         
                         sysLoad.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-                        sysLoad.put("id","http://"+ host+"/cep/sensor/1/observation/3");
+                        sysLoad.put("id",host+"/sensor/1/observation/3");
                         sysLoad.put("type","ssn:Observation");
                         
                         JSONObject property3 = new JSONObject();
@@ -812,7 +795,7 @@ public class Sensor {
                         
                         resultTime3.put("time:inXSDDateTime",dateFormat.format(date3));//check format
                         sysLoad.put("ssn:observationResultTime",resultTime3);
-                        sysLoad.put("ssn:featureOfInterest","http://"+ host+"/cep/sensor/1");
+                        sysLoad.put("ssn:featureOfInterest",host+"/sensor/1");
                         
                         JSONObject hasValue3 = new JSONObject();
                         hasValue3.put( "type","ssn:ObservationValue");
@@ -869,11 +852,11 @@ public class Sensor {
                     opState.put("@context",
                             "http://vital-iot.eu/contexts/measurement.jsonld");
 
-                    opState.put("id","http://"+host+"/cep/sensor/1/observation/1" );
+                    opState.put("id",host+"/sensor/1/observation/1" );
 
                     opState.put("type","ssn:Observation");
 
-                    opState.put("ssn:featureOfInterest","http://"+host+"/cep/sensor/1");
+                    opState.put("ssn:featureOfInterest",host+"/sensor/1");
 
                     JSONObject property = new JSONObject();
                     property.put("type","vital:OperationalState");
@@ -900,7 +883,7 @@ public class Sensor {
                     JSONObject sysUpTime = new JSONObject();
 
                     sysUpTime.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-                    sysUpTime.put("id","http://"+ host+"/cep/sensor/1/observation/2");
+                    sysUpTime.put("id",host+"/sensor/1/observation/2");
                     sysUpTime.put("type","ssn:Observation");
 
                     JSONObject property2 = new JSONObject();
@@ -912,7 +895,7 @@ public class Sensor {
 
                     resultTime2.put("time:inXSDDateTime",dateFormat.format(date2));//check format
                     sysUpTime.put("ssn:observationResultTime",resultTime2);
-                    sysUpTime.put("ssn:featureOfInterest","http://"+ host+"/cep/sensor/1");
+                    sysUpTime.put("ssn:featureOfInterest",host+"/sensor/1");
 
                     JSONObject hasValue2 = new JSONObject();
                     hasValue2.put( "type","ssn:ObservationValue");
@@ -929,7 +912,7 @@ public class Sensor {
                     JSONObject sysLoad = new JSONObject();
 
                     sysLoad.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-                    sysLoad.put("id","http://"+ host+"/cep/sensor/1/observation/3");
+                    sysLoad.put("id",host+"/sensor/1/observation/3");
                     sysLoad.put("type","ssn:Observation");
 
                     JSONObject property3 = new JSONObject();
@@ -942,7 +925,7 @@ public class Sensor {
 
                     resultTime3.put("time:inXSDDateTime",dateFormat.format(date3));//check format
                     sysLoad.put("ssn:observationResultTime",resultTime3);
-                    sysLoad.put("ssn:featureOfInterest","http://"+ host+"/cep/sensor/1");
+                    sysLoad.put("ssn:featureOfInterest",host+"/sensor/1");
 
                     JSONObject hasValue3 = new JSONObject();
                     hasValue3.put( "type","ssn:ObservationValue");
@@ -1077,48 +1060,6 @@ public class Sensor {
                     sensorspool.put(curr);
                     }
                 });
-//                try (DBCursor cursor = coll.find(query,fields)) {
-//                    while(cursor.hasNext()) {
-//                        JSONObject curr = new JSONObject();
-//                        
-//                        curr.put("@context",
-//                                "http://vital-iot.eu/contexts/measurement.jsonld");
-//                        
-//                        curr.put("id",cursor.curr().get("id"));
-//                        
-//                        curr.put("type","ssn:Observation");
-//                        
-//                        curr.put("ssn:featureOfInterest",cursor.curr().get("id"));
-//                        
-//                        JSONObject property = new JSONObject();
-//                        property.put("type","vital:ComplexEvent");
-//                        curr.put("ssn:observationProperty",property);
-//                        
-//                        JSONObject resultTime = new JSONObject();
-//                        
-//                        DateFormat dateFormat = new SimpleDateFormat
-//                                ("yyyy-MM-dd'T'HH:mm:ssXXX");
-//                        Date date = new Date();
-//                        
-//                        resultTime.put("time:inXSDDateTime",dateFormat.format(date));//check format
-//                        
-//                        curr.put("ssn:observationResultTime",resultTime);
-//                        //"time:inXSDDateTime": "2015-10-14T11:59:11+02:00"
-//                        
-//                        JSONObject hasValue = new JSONObject();
-//                        hasValue.put( "type","ssn:ObservationValue");
-//                        hasValue.put( "value","vital:Running");
-//                        JSONObject observationResult = new JSONObject();
-//                        observationResult.put("ssn:hasValue",hasValue);
-//                        observationResult.put("type","ssn:SensorOutput");
-//                        curr.put("ssn:observationResult",observationResult);
-//                        
-//                        sensorspool.put(curr);
-//                    }
-//
-//                }
-
-                //DBCollection coll3 = db.getCollection("staticdatafiltersobservations");
                 
                 BasicDBObject fields3 = new BasicDBObject().append("_id", false);
                 FindIterable<Document> coll3 = db
@@ -1166,50 +1107,6 @@ public class Sensor {
                         sensorspool.put(curr);
                     }
                 });
-//                try (DBCursor cursor3 = coll3.find(query, fields3)) {
-//                    while (cursor3.hasNext()) {
-//                        JSONObject curr = new JSONObject();
-//                        
-//                        curr.put("@context",
-//                                "http://vital-iot.eu/contexts/measurement.jsonld");
-//                        
-//                        curr.put("id",cursor3.curr().get("id"));
-//                        
-//                        curr.put("type","ssn:Observation");
-//                        
-//                        curr.put("ssn:featureOfInterest",cursor3.curr()
-//                                .get("ssn:featureOfInterest"));
-//                        
-//                        JSONObject property = new JSONObject();
-//                        property.put("type","vital:ComplexEvent");
-//                        curr.put("ssn:observationProperty",property);
-//                        
-//                        JSONObject resultTime = new JSONObject();
-//                        
-//                        DateFormat dateFormat = new SimpleDateFormat
-//                                ("yyyy-MM-dd'T'HH:mm:ssXXX");
-//                        Date date = new Date();
-//                        
-//                        resultTime.put("time:inXSDDateTime",dateFormat.format(date));//check format
-//                        
-//                        curr.put("ssn:observationResultTime",resultTime);
-//                        //"time:inXSDDateTime": "2015-10-14T11:59:11+02:00"
-//                        
-//                        JSONObject hasValue = new JSONObject();
-//                        hasValue.put( "type","ssn:ObservationValue");
-//                        hasValue.put( "value","vital:Running");
-//                        JSONObject observationResult = new JSONObject();
-//                        observationResult.put("ssn:hasValue",hasValue);
-//                        observationResult.put("type","ssn:SensorOutput");
-//                        curr.put("ssn:observationResult",observationResult);
-//                        
-//                        sensorspool.put(curr);
-//                    }
-//
-//                }
-
-                
-                //DBCollection coll4 = db.getCollection("staticqueryfiltersobservations");
 
                 BasicDBObject fields4 = new BasicDBObject().append("_id", false)
                         .append("query", false).append("data", false)
@@ -1261,50 +1158,7 @@ public class Sensor {
                         sensorspool.put(curr);
                     }
                 });
-//////                try (DBCursor cursor4 = coll4.find(query, fields4)) {
-//////                    while (cursor4.hasNext()) {
-//////                        JSONObject curr = new JSONObject();
-//////                        
-//////                        curr.put("@context",
-//////                                "http://vital-iot.eu/contexts/measurement.jsonld");
-//////                        
-//////                        curr.put("id",cursor4.curr().get("id"));
-//////                        
-//////                        curr.put("type","ssn:Observation");
-//////                        
-//////                        curr.put("ssn:featureOfInterest",cursor4.curr()
-//////                                .get("ssn:featureOfInterest"));
-//////                        
-//////                        JSONObject property = new JSONObject();
-//////                        property.put("type","vital:ComplexEvent");
-//////                        curr.put("ssn:observationProperty",property);
-//////                        
-//////                        JSONObject resultTime = new JSONObject();
-//////                        
-//////                        DateFormat dateFormat = new SimpleDateFormat
-//////                                ("yyyy-MM-dd'T'HH:mm:ssXXX");
-//////                        Date date = new Date();
-//////                        
-//////                        resultTime.put("time:inXSDDateTime",dateFormat.format(date));//check format
-//////                        
-//////                        curr.put("ssn:observationResultTime",resultTime);
-//////                        //"time:inXSDDateTime": "2015-10-14T11:59:11+02:00"
-//////                        
-//////                        JSONObject hasValue = new JSONObject();
-//////                        hasValue.put( "type","ssn:ObservationValue");
-//////                        hasValue.put( "value","vital:Running");
-//////                        JSONObject observationResult = new JSONObject();
-//////                        observationResult.put("ssn:hasValue",hasValue);
-//////                        observationResult.put("type","ssn:SensorOutput");
-//////                        curr.put("ssn:observationResult",observationResult);
-//////                        
-//////                        sensorspool.put(curr);
-//////                    }
-//////                    
-//////                }
 
-                //DBCollection coll2 = db.getCollection("cepsobservations");
-                // create an empty query
                 BasicDBObject fieldscep = new BasicDBObject().append("_id",false);
                 FindIterable<Document> coll2 = db
                        .getCollection("cepsobservations")
@@ -1353,60 +1207,17 @@ public class Sensor {
                         }
                     }
                 });
-
-//                try (DBCursor cursor2 = coll2.find(query,fieldscep)) {
-//                    while(cursor2.hasNext()) {
-//                        if (cursor2.next().containsField("id")){
-//                            JSONObject curr = new JSONObject();
-//                            
-//                            curr.put("@context",
-//                                    "http://vital-iot.eu/contexts/measurement.jsonld");
-//                            
-//                            curr.put("id",cursor2.curr().get("id"));
-//                            
-//                            curr.put("type","ssn:Observation");
-//                            
-//                            curr.put("ssn:featureOfInterest",cursor2.curr()
-//                                    .get("ssn:featureOfInterest"));//ver
-//                            
-//                            JSONObject property = new JSONObject();
-//                            property.put("type","vital:ComplexEvent");
-//                            curr.put("ssn:observationProperty",property);
-//                            
-//                            JSONObject resultTime = new JSONObject();
-//                            
-//                            DateFormat dateFormat = new SimpleDateFormat
-//                                ("yyyy-MM-dd'T'HH:mm:ssXXX");
-//                            Date date = new Date();
-//                            
-//                            resultTime.put("time:inXSDDateTime",dateFormat.format(date));//check format
-//                            
-//                            curr.put("ssn:observationResultTime",resultTime);
-//                            //"time:inXSDDateTime": "2015-10-14T11:59:11+02:00"
-//                            
-//                            JSONObject hasValue = new JSONObject();
-//                            hasValue.put( "type","ssn:ObservationValue");
-//                            hasValue.put( "value","vital:Running");
-//                            JSONObject observationResult = new JSONObject();
-//                            observationResult.put("ssn:hasValue",hasValue);
-//                            observationResult.put("type","ssn:SensorOutput");
-//                            curr.put("ssn:observationResult",observationResult);
-//                            
-//                            sensorspool.put(curr);
-//                        }
-//                    }
-                //}
-                
+               
                 JSONObject opState = new JSONObject();
                 
                 opState.put("@context",
                         "http://vital-iot.eu/contexts/measurement.jsonld");
                 
-                opState.put("id","http://"+host+"/cep/sensor/1/observation/1" );
+                opState.put("id",host+"/sensor/1/observation/1" );
                 
                 opState.put("type","ssn:Observation");
                 
-                opState.put("ssn:featureOfInterest","http://"+host+"/cep/sensor/1");
+                opState.put("ssn:featureOfInterest",host+"/sensor/1");
                 
                 JSONObject property = new JSONObject();
                 property.put("type","vital:OperationalState");
@@ -1433,7 +1244,7 @@ public class Sensor {
                 JSONObject sysUpTime = new JSONObject();
                 
                 sysUpTime.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-                sysUpTime.put("id","http://"+ host+"/cep/sensor/1/observation/2");
+                sysUpTime.put("id",host+"/sensor/1/observation/2");
                 sysUpTime.put("type","ssn:Observation");
                 
                 JSONObject property2 = new JSONObject();
@@ -1445,7 +1256,7 @@ public class Sensor {
                 
                 resultTime2.put("time:inXSDDateTime",dateFormat.format(date2));//check format
                 sysUpTime.put("ssn:observationResultTime",resultTime2);
-                sysUpTime.put("ssn:featureOfInterest","http://"+ host+"/cep/sensor/1");
+                sysUpTime.put("ssn:featureOfInterest",host+"/sensor/1");
                 
                 JSONObject hasValue2 = new JSONObject();
                 hasValue2.put( "type","ssn:ObservationValue");
@@ -1462,7 +1273,7 @@ public class Sensor {
                 JSONObject sysLoad = new JSONObject();
 
                 sysLoad.put("@context","http://vital-iot.eu/contexts/measurement.jsonld");
-                sysLoad.put("id","http://"+ host+"/cep/sensor/1/observation/3");
+                sysLoad.put("id",host+"/sensor/1/observation/3");
                 sysLoad.put("type","ssn:Observation");
 
                 JSONObject property3 = new JSONObject();
@@ -1475,7 +1286,7 @@ public class Sensor {
 
                 resultTime3.put("time:inXSDDateTime",dateFormat.format(date3));//check format
                 sysLoad.put("ssn:observationResultTime",resultTime3);
-                sysLoad.put("ssn:featureOfInterest","http://"+ host+"/cep/sensor/1");
+                sysLoad.put("ssn:featureOfInterest",host+"/sensor/1");
 
                 JSONObject hasValue3 = new JSONObject();
                 hasValue3.put( "type","ssn:ObservationValue");
@@ -1524,9 +1335,7 @@ public class Sensor {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        
-        this.cookie = ck.toString(); 
-                  
+                         
         DBObject request = (DBObject) JSON.parse(info);
         BasicDBList sensors;
         String property;
@@ -1597,7 +1406,7 @@ public class Sensor {
                         .parse(queryS);
                 query = (BasicDBObject) queryO;
                 
-                MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+                MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
                 final MongoDatabase db = mongo.getDatabase(mongoDB);
 
 
@@ -1631,7 +1440,7 @@ public class Sensor {
                             .parse(createQuery(sensor, property,null,null));
                 query = (BasicDBObject) queryO;
 
-                MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+                MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
                 final MongoDatabase db = mongo.getDatabase(mongoDB);
 
 
