@@ -51,6 +51,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.logging.Level;
+import org.apache.commons.lang.RandomStringUtils;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.json.JSONException;
@@ -188,7 +189,9 @@ public class Collector {
                 TMessageProc MsgProcc = new TMessageProc();
                 
                 //TODO: check the client name. see from cep instances and what happen when if the topic exist 
-                oMqtt.sendMsg(MsgProcc, "wildfly"
+                String clientName = "collector_"+RandomStringUtils.randomAlphanumeric(4);
+                
+                oMqtt.sendMsg(MsgProcc, clientName
                         , simpleEventAL
                         ,sensors.getJSONObject(i).getString("mqin")
                         ,sensors.getJSONObject(i).getString("mqout"));
@@ -307,11 +310,7 @@ public class Collector {
         return true;
     }
     
-    private boolean isStopped() {
-        return this.isStopped;
-    }
-    
-     private String getXSDDateTime(Date date) {
+    private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         return  dateFormat.format(date);
     }
@@ -321,16 +320,6 @@ public class Collector {
         (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
         (byte) 0xde, (byte) 0x33, (byte) 0x10, (byte) 0x12,
     };
-    private static String encrypt(String property) throws 
-            GeneralSecurityException, UnsupportedEncodingException {
-        SecretKeyFactory keyFactory = SecretKeyFactory
-                .getInstance("PBEWithMD5AndDES");
-        SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
-        Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
-        pbeCipher.init(Cipher.ENCRYPT_MODE, key, new PBEParameterSpec(SALT, 20));
-        return Base64.getEncoder().encodeToString(property
-                .getBytes(StandardCharsets.UTF_8));
-    }
     
     private static String decrypt(String property) throws 
             GeneralSecurityException, IOException {
