@@ -6,7 +6,6 @@
 package eu.vital.vitalcep.restApp.filteringApi;
 
 
-import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
@@ -391,17 +390,17 @@ public class ContinuosFiltering {
         String idjo = jo.getString("id");
              
         MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
-            MongoDatabase db = mongo.getDatabase(mongoDB);
-            
-            try {
-               db.getCollection("continuousfilters");
-            } catch (Exception e) {
-              //System.out.println("Mongo is down");
-              mongo.close();
-              return Response.status(Response
-                                .Status.INTERNAL_SERVER_ERROR).build();
-                    
-            }
+        MongoDatabase db = mongo.getDatabase(mongoDB);
+
+        try {
+           db.getCollection("continuousfilters");
+        } catch (Exception e) {
+          //System.out.println("Mongo is down");
+          mongo.close();
+          return Response.status(Response
+                            .Status.INTERNAL_SERVER_ERROR).build();
+
+        }
             
         MongoCollection<Document> coll = db.getCollection("continuousfilters");
         
