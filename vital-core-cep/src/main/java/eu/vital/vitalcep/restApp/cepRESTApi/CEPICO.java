@@ -5,8 +5,12 @@
  */
 package eu.vital.vitalcep.restApp.cepRESTApi;
 
-import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
+
+import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.conf.ConfigReader;
+import eu.vital.vitalcep.connectors.ppi.PPIManager;
+import eu.vital.vitalcep.security.Security;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
@@ -16,48 +20,43 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import eu.vital.vitalcep.cep.CEP;
-import eu.vital.vitalcep.connectors.ppi.PPIManager;
-import eu.vital.vitalcep.security.Security;
+import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.result.DeleteResult;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.RandomStringUtils;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.bson.Document;
+import org.json.JSONException;
 
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
-import java.text.DateFormat.Field;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
-import java.util.Properties;
 import java.util.UUID;
 import java.util.logging.Level;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Context;
-import org.bson.Document;
-import org.json.JSONException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -68,30 +67,19 @@ public class CEPICO {
 
     /** The Constant logger. */
     final static Logger logger = Logger.getLogger(CEPICO.class);
-      
-    private PropertyLoader props;
-    
+        
     private String host;
-    private String hostname;
-    private String mongoIp;
-    private int mongoPort;
-    private String mongoDB;
+    private final String mongoURL;
+    private final String mongoDB;
     private String cookie;
-    private String hostnameport;
-    
-
-    
-   // @Context private javax.servlet.http.HttpServletRequest hsr;
     
     public CEPICO() throws IOException {
-
-        props = new PropertyLoader();
-         this.props = new PropertyLoader();
-        this.mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        this.mongoIp= props.getProperty("mongo.ip");
-        this.mongoDB = props.getProperty("mongo.db");
-        this.host = props.getProperty("cep.ip").concat(":8180");
-        this.hostname = props.getProperty("cep.resourceshostname");
+       
+        ConfigReader configReader = ConfigReader.getInstance();
+        
+        mongoURL = configReader.get(ConfigReader.MONGO_URL);
+        mongoDB = configReader.get(ConfigReader.MONGO_DB);
+        host = configReader.get(ConfigReader.CEP_BASE_URL);
     }
     
     
@@ -105,7 +93,7 @@ public class CEPICO {
     @Produces(MediaType.APPLICATION_JSON)
     public String getCEPICOs() {
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
 
         MongoDatabase db = mongo.getDatabase(mongoDB);
         
@@ -116,7 +104,6 @@ public class CEPICO {
         FindIterable<Document> coll = db.getCollection("ceps")
                 .find(query).projection(fields);
        
-        
         final JSONArray AllJson = new JSONArray(); 
         
         coll.forEach(new Block<Document>() {
@@ -129,67 +116,7 @@ public class CEPICO {
         return AllJson.toString();
 
     }
-    
-    /**
-     * instantiate cep.
-     *
-     * @return the filters
-     */
-    @POST
-    @Path("ceps")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response startCEP(String dolce) throws FileNotFoundException, IOException {
-        
-        JSONObject body = new JSONObject(dolce);
-        
-        Properties props = new Properties();
-        InputStream is = new FileInputStream(getClass().
-                getProtectionDomain().getCodeSource().getLocation()
-                .getPath() +"/conf/cep.properties");
-        try {
-            props.load(is);
-        }
-        finally {
-            try {
-                is.close();
-            }
-            catch (Exception e) {
-                // ignore this exception
-            }
-        }
-        PropertyConfigurator.configure(props);      
-        
-        if( !body.has("dolceSpecification")){
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        
-        String fileName = RandomStringUtils.randomAlphanumeric(8);
-        
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(props.getProperty("cep.path")
-                                +"/"+fileName+"_dolce"), "utf-8"))) {
-            writer.write(body.getString("dolceSpecification"));
-            writer.close();
-        } catch (IOException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        } 
-        
-        int pid;
-
-        
-        try {
-            Process pr = Runtime.getRuntime().exec("/lastCep/bcep -d /lastCep/pp -mi mqin -mo mqou nohop &");
-            pid = getPid(pr);
-        } catch (IOException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-
-        }
-        
-        return Response.status(Response.Status.OK).entity("{\"PID\":\""+
-                pid+"\",\"file\":\""+fileName+"\"}").build();
-    }
-
+   
     public static int getPid(Process process) {
         try {
             Class<?> cProcessImpl = process.getClass();
@@ -229,19 +156,14 @@ public class CEPICO {
         if (!token){
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        this.cookie = ck.toString(); 
-                
-        int localPort = req.getLocalPort();
-        
-        this.hostnameport =  this.hostname.concat(":"+localPort);
-       
+        this.cookie = ck.toString();    
         
         JSONObject jo = new JSONObject(cepico);
         if(!jo.has("source") ){
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         
-        MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
         MongoDatabase db = mongo.getDatabase(mongoDB);
 
         try {
@@ -253,11 +175,6 @@ public class CEPICO {
                             .Status.INTERNAL_SERVER_ERROR).build();
 
         }
-        
-        // create an empty query
-        BasicDBObject query = new BasicDBObject(); 
-        BasicDBObject fields = new BasicDBObject().append("_id",false);
-        fields.append("dolceSpecification", false);
                
         if ( jo.has("dolceSpecification")) {
             
@@ -300,8 +217,6 @@ public class CEPICO {
                     CEP cepProcess = new CEP(CEP.CEPType.CEPICO,ds
                         ,mqin,mqout,requestArray.toString(),credentials);
                     
-                    String clientName = cepProcess.fileName;
-
                     if (cepProcess.PID<1){
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
@@ -310,8 +225,8 @@ public class CEPICO {
                     try{
                         db.getCollection("cepicos").insertOne(doc);
                         
-                         JSONObject opState = createOperationalStateObservation(host
-                            ,randomUUIDString);
+                         JSONObject opState = createOperationalStateObservation
+                            (randomUUIDString);
 
                         DBObject oPut =  (DBObject)JSON.parse(opState.toString());
                         Document doc1 = new Document(oPut.toMap());
@@ -325,10 +240,9 @@ public class CEPICO {
                             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                                     .build();
                         }
-
                    
                         JSONObject aOutput = new JSONObject();
-                        aOutput.put("id", "http://"+ host.toString()+"/cep/sensor/"
+                        aOutput.put("id", host+"/sensor/"
                             +randomUUIDString);
                         return Response.status(Response.Status.OK)
                             .entity(aOutput.toString()).build();
@@ -357,13 +271,13 @@ public class CEPICO {
         return  dateFormat.format(date);
     }
 
-    private JSONObject createOperationalStateObservation(String host1, String randomUUIDString) throws JSONException {
+    private JSONObject createOperationalStateObservation(String randomUUIDString) throws JSONException {
         JSONObject opState = new JSONObject();
         opState.put("@context",
                 "http://vital-iot.eu/contexts/measurement.jsonld");
-        opState.put("id", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString + "/observation/1");
+        opState.put("id", host+"/sensor/" + randomUUIDString + "/observation/1");
         opState.put("type","ssn:Observation");
-        opState.put("ssn:featureOfInterest", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString);
+        opState.put("ssn:featureOfInterest", host+"/sensor/" + randomUUIDString);
         JSONObject property = new JSONObject();
         property.put("type","vital:OperationalState");
         opState.put("ssn:observationProperty",property);
@@ -385,8 +299,9 @@ public class CEPICO {
 
     private DBObject createCEPSensor(String cepico, String randomUUIDString, JSONObject dsjo) throws JSONException {
         DBObject dbObject = (DBObject) JSON.parse(cepico);
-        dbObject.removeField("id");
-        dbObject.put("id", "http://"+ host.toString()+"/cep/sensor/"
+         dbObject.put("@context",
+                "http://vital-iot.eu/contexts/sensor.jsonld");
+        dbObject.put("id", host+"/sensor/"
                 +randomUUIDString);
         dbObject.put("type", "vital:CEPSensor");
         dbObject.put("status", "vitalRunning");
@@ -401,8 +316,7 @@ public class CEPICO {
             //oObserves.put("uri", "http://"+ host.toString()
             //        +"/cep/sensor/"+randomUUIDString
             //        +"/"+oComplex.getString("id").toString());
-            oObserves.put("id", "http://"+ host.toString()
-                    +"/cep/sensor/"+randomUUIDString
+            oObserves.put("id", host+"/sensor/"+randomUUIDString
                     +"/"+oComplex.getString("id").toString());
             
             observes.put(oObserves);
@@ -413,30 +327,7 @@ public class CEPICO {
         dbObject.put("ssn:observes",dbObject2);
         return dbObject;
     }
-    
-    private void createCEPICOObject(DBObject dbObject, String host1, String randomUUIDString, JSONObject dsjo) throws JSONException {
-        dbObject.put("@context",
-                "http://vital-iot.eu/contexts/sensor.jsonld");
-        dbObject.put("id", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString);
-        dbObject.put("uri", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString);
-        dbObject.removeField("type");
-        dbObject.put("type","vital:CEPSensor");
-        dbObject.put("status", "vital:Running");
-        JSONArray observes =  new JSONArray();
-        JSONArray compl = dsjo.getJSONArray("complex");
-        for (int i = 0; i < compl.length(); i++) {
-            JSONObject oComplex = new JSONObject(
-                    compl.get(i).toString());
-            JSONObject oObserves = new JSONObject();
-            oObserves.put("type", "vital:ComplexEvent");
-            oObserves.put("uri", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString + "/" + oComplex.getString("id").toString());
-            oObserves.put("id", "http://" + host1.toString() + "/cep/sensor/" + randomUUIDString + "/" + oComplex.getString("id").toString());
-            observes.put(oObserves);
-        }
-        DBObject dbObject2 = (DBObject)JSON.parse(observes.toString());
-        dbObject.put("ssn:observes",dbObject2);
-    }
-    
+      
     /**
      * Gets a filter.
      *
@@ -451,18 +342,18 @@ public class CEPICO {
         JSONObject jo = new JSONObject(id);
         String idjo = jo.getString("id");
           
-       MongoClient mongo = new MongoClient(mongoIp, mongoPort);
-            MongoDatabase db = mongo.getDatabase(mongoDB);
-            
-            try {
-               db.getCollection("ceps");
-            } catch (Exception e) {
-              //System.out.println("Mongo is down");
-              mongo.close();
-              return Response.status(Response
-                                .Status.INTERNAL_SERVER_ERROR).build();
-                    
-            }
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
+        MongoDatabase db = mongo.getDatabase(mongoDB);
+
+        try {
+           db.getCollection("ceps");
+        } catch (Exception e) {
+          //System.out.println("Mongo is down");
+          mongo.close();
+          return Response.status(Response
+                            .Status.INTERNAL_SERVER_ERROR).build();
+
+        }
         
         BasicDBObject searchById = new BasicDBObject("id",idjo);
         String found = null;
@@ -489,51 +380,57 @@ public class CEPICO {
     /**
      * Gets a filter.
      *
+     * @param filterId
+     * @param req
      * @return the filter 
      */
-//    @POST
-//    @Path("deletecepico")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response deleteCEPICO(String filterId) {
-//        
-//        JSONObject jo = new JSONObject(filterId);
-//        String idjo = jo.getString("id");
-//             
-//        MongoClient mongo = null;
-//        
-//        try {
-//            mongo = new MongoClient(mongoIp,mongoPort);
-//        } catch (UnknownHostException ex) {
-//            java.util.logging.Logger.getLogger(CEPICO.class.getName())
-//                    .log(Level.SEVERE, null, ex);
-//        }
-//        
-//        DB db = mongo.getDB("vital");
-//        DBCollection coll = db.getCollection("ceps");
-//        DBObject searchById = new BasicDBObject("id",idjo);
-//        DBObject found = null;
-//        found = coll.findOne(searchById);
-//        
-//        
-//        
-//        if (found == null){
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }else{
-//             WriteResult result = coll.remove(searchById);
-//            if (result.getN()==(int)1){
-//                return Response.status(Response.Status.OK)
-//                    .build();
-//            }else{
-//                return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-//                    .build();
-//            }
-//        }
-//    }
+    @POST
+    @Path("deletecepico")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCEPICO(String filterId,
+            @Context HttpServletRequest req) {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
+        
+        JSONObject jo = new JSONObject(filterId);
+        String idjo = jo.getString("id");
+             
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
+        MongoDatabase db = mongo.getDatabase(mongoDB);
+
+        try {
+           db.getCollection("ceps");
+        } catch (Exception e) {
+          //System.out.println("Mongo is down");
+          mongo.close();
+          return Response.status(Response
+                            .Status.INTERNAL_SERVER_ERROR).build();
+
+        }
+        
+        MongoCollection<Document> coll = db.getCollection("ceps");
+        
+        DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
+        
+        if (deleteResult.getDeletedCount() < 1){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }else{
+            
+                return Response.status(Response.Status.OK)
+                    .build();
+        }
+    }
 	
-    
-    
-    
     
     private JSONArray createCEPICORequests (JSONArray sources,
             JSONArray propeties,String from)
