@@ -414,8 +414,6 @@
         <socket-binding name="ajp" port="${jboss.ajp.port:8209}"/>
         <socket-binding name="http" port="${jboss.http.port:8280}"/>
         <socket-binding name="https" port="${jboss.https.port:8843}"/>
-        <socket-binding name="iiop" interface="unsecure" port="3628"/>
-        <socket-binding name="iiop-ssl" interface="unsecure" port="3629"/>
         <socket-binding name="txn-recovery-environment" port="4812"/>
         <socket-binding name="txn-status-manager" port="4813"/>
         <outbound-socket-binding name="mail-smtp">
