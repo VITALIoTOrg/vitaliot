@@ -69,6 +69,8 @@
     <entry key="vital-core-cep-ppi.base-url">http://vital-integration.atosresearch.eu:8280/cep</entry>
     <entry key="vital-core-cep.mosquitto.uri">tcp://localhost:1883</entry>
     <entry key="vital-core-cep.ucep.path">/home/ucep</entry>
+    <entry key="vital-core-cep.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
+    <entry key="vital-core-cep.dms">http://vital-integration.atosresearch.eu:8280/vital-core-dms</entry>
     <!--/.vital-core-cep-->
 
     <!--vital-core-orchestrator-->
