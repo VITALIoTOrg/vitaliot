@@ -25,8 +25,8 @@ import java.util.logging.Logger;
  */
 public class MessageProcessor_publisher  implements MessageProcessor {
     
-    private String cookie;
-    private String dms_URL;
+    private final String cookie;
+    private final String dms_URL;
    
     
     public MessageProcessor_publisher(String dms_url, String cookie){
@@ -37,10 +37,7 @@ public class MessageProcessor_publisher  implements MessageProcessor {
         
     @Override
      public boolean processMsg(MqttMsg mqttMsg) {
-           
-        //encoder and emitter
 
- 
 	Encoder encoder = new Encoder();
         
         JSONObject observation = encoder.dolceOutput2Jsonld
@@ -58,14 +55,10 @@ public class MessageProcessor_publisher  implements MessageProcessor {
             } else{
                 return true;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(MessageProcessor_publisher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (KeyManagementException ex) {
-            Logger.getLogger(MessageProcessor_publisher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(MessageProcessor_publisher.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (KeyStoreException ex) {
-            Logger.getLogger(MessageProcessor_publisher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | KeyManagementException 
+                | NoSuchAlgorithmException | KeyStoreException ex) {
+            Logger.getLogger(MessageProcessor_publisher.class.getName())
+                    .log(Level.SEVERE, null, ex);
         }
 	
         return true;
