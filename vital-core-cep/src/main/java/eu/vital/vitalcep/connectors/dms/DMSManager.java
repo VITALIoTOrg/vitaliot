@@ -202,7 +202,8 @@ public JSONArray getObservationsWithExceptions(String body) throws IOException,
         return new JSONArray(response);
     }
     
-    private String query(String dms_endpoint, String body, String method) throws SocketTimeoutException, ConnectException, IOException{
+    private String query(String dms_endpoint, String body, String method) 
+            throws SocketTimeoutException, ConnectException, IOException{
         Cookie ck;
         //String internalToken;
         CloseableHttpClient httpclient;
@@ -328,16 +329,24 @@ public JSONArray getObservationsWithExceptions(String body) throws IOException,
                                     .class.getName())
                                         .log(Level.SEVERE, null, 
                                                 "httpStatusCode 503");
+                return "";
            }else if (statusCode==502){
                java.util.logging.Logger.getLogger(DMSManager
                                     .class.getName())
                                         .log(Level.SEVERE, null, 
                                                 "httpStatusCode 502");
+                return "";
            }else if (statusCode==401){
                java.util.logging.Logger.getLogger(DMSManager
                                     .class.getName())
                                         .log(Level.SEVERE, null, 
-                                                "httpStatusCode 401");          
+                                                "httpStatusCode 401");      
+                return "";
+           }else{
+               java.util.logging.Logger.getLogger(DMSManager
+                    .class.getName()).log(Level.SEVERE, null, "PPI 500");
+               return "";
+                //throw new ServiceUnavailableException();
            }
             
         }
@@ -348,8 +357,8 @@ public JSONArray getObservationsWithExceptions(String body) throws IOException,
                         response.close();
                 } catch (ParseException | IOException e) {
                         java.util.logging.Logger.getLogger(DMSManager
-                                    .class.getName())
-                                        .log(Level.SEVERE, null, e);
+                    .class.getName()).log(Level.SEVERE, null, "PPI 401");
+                    return "";
                 } 
         }
         return respString;
