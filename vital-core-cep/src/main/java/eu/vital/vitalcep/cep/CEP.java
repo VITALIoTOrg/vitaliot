@@ -8,6 +8,7 @@ package eu.vital.vitalcep.cep;
 import com.mongodb.BasicDBList;
 import eu.vital.vitalcep.conf.PropertyLoader;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import org.bson.Document;
 import eu.vital.vitalcep.collector.Collector;
+import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -46,9 +48,7 @@ public class CEP {
         DATA, QUERY, CEPICO, CONTINUOUS
     }
     
-    private  PropertyLoader props;
-    private  String mongoIp;
-    private  int mongoPort;
+    private  String mongoURL;
     private  String mongoDB;
     public String path;
     public String fileName;
@@ -63,19 +63,13 @@ public class CEP {
             ,String mqin, String mqout,
             String sources, JSONObject credentials)
             throws FileNotFoundException, IOException{
-        
-        Logger logger = Logger.getLogger(this.getClass().getName());
-        
-        props = new PropertyLoader();
-        
-        props.getProperty("cep.ip");
 
-        mongoPort = Integer.parseInt(props.getProperty("mongo.port"));
-        mongoIp = props.getProperty("mongo.ip");
-        mongoDB = props.getProperty("mongo.db");
+        ConfigReader configReader = ConfigReader.getInstance();
         
-        CepProcess cp = new CepProcess(dolceSpecification.toString(), mqin, mqout);
-        this.cp = cp;
+        mongoURL = configReader.get(ConfigReader.MONGO_URL);
+        mongoDB = configReader.get(ConfigReader.MONGO_DB);
+        
+        cp = new CepProcess(dolceSpecification.toString(), mqin, mqout);
         cp.startCEP();
         this.PID = cp.PID;
                
@@ -84,7 +78,7 @@ public class CEP {
         if (cp.PID>0){
             
             this.fileName = cp.fileName;         
-            MongoClient mongo = new MongoClient(mongoIp, mongoPort);
+            MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
             MongoDatabase db = mongo.getDatabase(mongoDB);
             
             try{
@@ -144,8 +138,6 @@ public class CEP {
                      throw new ServerErrorException(500);
                 }
                
-                
-
             }catch(JSONException | 
                     GeneralSecurityException | 
                     UnsupportedEncodingException | ServerErrorException ex){
@@ -166,7 +158,6 @@ public class CEP {
             oCollector.put("mqin", doc.getString("mqin"));
             oCollector.put("mqout", doc.getString("mqout"));
             oCollector.put("cepType", doc.getString("cepType"));
-
 
             if (doc.getString("cepType").equals("CONTINUOUS")){
 
@@ -209,12 +200,9 @@ public class CEP {
             
             
             return true;
-        }catch( JSONException ee ){
+        }catch( JSONException | IOException ee ){
             java.util.logging.Logger.getLogger(CEP.class.getName())
                     .log(Level.SEVERE, null, ee);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(CEP.class.getName())
-                    .log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -222,12 +210,7 @@ public class CEP {
     public boolean cepDispose() throws IOException{
         
         this.cp.stopCEP();
-        
-        if(this.cp.PID==0){
-             return true;
-        }else{
-            return false;
-        }
+        return this.cp.PID==0;
 
     }
     
