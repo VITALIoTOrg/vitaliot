@@ -5,7 +5,7 @@
  */
 package eu.vital.vitalcep.cep;
 
-import eu.vital.vitalcep.conf.PropertyLoader;
+import eu.vital.vitalcep.conf.ConfigReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,9 +26,7 @@ public class CepProcess {
     public String dolce;
     
     public String cepFolder;
-    
-    private PropertyLoader props; 
-    
+      
     public boolean isUp;
     
     public String mqin;
@@ -48,25 +46,18 @@ public class CepProcess {
     public CepProcess(String dolce, String mqin, String mqout) 
             throws IOException{
         
-        props = new PropertyLoader();
+        ConfigReader configReader = ConfigReader.getInstance();
+        cepFolder = configReader.get(ConfigReader.UCEP_PATH);
         
-        props.getProperty("cep.ip");
-        
-        cepFolder = props.getProperty("cep.path");
-                
         this.dolce = dolce;
-        
         this.mqin = mqin;
-        
         this.mqout = mqout;
 
     }
     
     public void startCEP() throws FileNotFoundException, IOException {
-                       
-        String fileName = RandomStringUtils.randomAlphanumeric(8);
-        
-        this.fileName = fileName;
+                              
+        this.fileName = RandomStringUtils.randomAlphanumeric(8);
         
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream(cepFolder//+"/"+dolceFile
