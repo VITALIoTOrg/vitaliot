@@ -27,15 +27,16 @@ public class MQTT_connector_subscriper implements MQTT_conn_interface{
             this.queueName = queueName;
             clientName = "publisher_"+RandomStringUtils.randomAlphanumeric(4);
             MsgQueue oQueue = new MsgQueue(MsgProcc);
-            MqttConnector connector = new MqttConnector(clientName, 
+            connector = new MqttConnector(clientName, 
                      oQueue,"", queueName, 2);
-            this.connector = connector;
        }
     }
     
+    @Override
     public String getClientName(){
         return clientName;
     }
+    @Override
     public String getQueuename(){
         return queueName;
     }
