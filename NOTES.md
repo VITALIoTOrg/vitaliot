@@ -18,7 +18,7 @@ https://git-scm.com/book/en/v2/Git-Tools-Submodules
 	git submodule add http://gitlab.atosresearch.eu/vital-iot/vital-core-iot-data-adapter-ppi.git
 	git submodule add http://gitlab.atosresearch.eu/vital-iot/vital-core-iot-data-adapter.git
 
-	git submodule add http://gitlab.atosresearch.eu/vital-iot/vital-core-cep.git
+	git submodule add http://gitlab.atosresearch.eu/ari/vital-core-cep.git
 
 	git submodule add http://gitlab.atosresearch.eu/vital-iot/vital-core-security-snmp-exposer.git
 
