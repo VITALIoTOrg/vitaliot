@@ -214,7 +214,7 @@ public class Collector {
         };
 
 
-        exec.scheduleAtFixedRate(collectoRunnable , 0, 10, TimeUnit.MINUTES);
+        exec.scheduleAtFixedRate(collectoRunnable , 0, 1, TimeUnit.MINUTES);
 
     }
 
