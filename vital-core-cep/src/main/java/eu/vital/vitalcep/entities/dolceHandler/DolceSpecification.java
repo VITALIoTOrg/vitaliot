@@ -35,21 +35,21 @@ public class DolceSpecification {
     final static Logger logger = Logger.getLogger(DolceSpecification.class);
 
     /** The id. */
-    private String id;
+    private final String id;
 
     /** The external hm. */
-    private HashMap<String, ExternalDolceStatement> externalHM = new HashMap<>();
+    private final HashMap<String, ExternalDolceStatement> externalHM = new HashMap<>();
 
     /** The event hm. */
-    private HashMap<String, EventStatement> eventHM = new HashMap<>();
+    private final HashMap<String, EventStatement> eventHM = new HashMap<>();
 
     /** The complex hm. */
-    private HashMap<String, ComplexStatement> complexHM = new HashMap<>();
+    private final HashMap<String, ComplexStatement> complexHM = new HashMap<>();
     
     /**
      *
      */
-    private JSONArray events = new JSONArray();
+    private final JSONArray events = new JSONArray();
 
     // constructor form json as String
     /**
