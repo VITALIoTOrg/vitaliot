@@ -17,8 +17,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -29,17 +29,11 @@ public class DMSListener {
 
     private final String dmsURL;
     private final String cookie;
-
- 
     
     public DMSListener (String cookie)
-            
         throws FileNotFoundException, IOException{
         
-        Logger logger = Logger.getLogger(this.getClass().getName());
-        
         ConfigReader configReader = ConfigReader.getInstance();
-
         this.dmsURL = configReader.get(ConfigReader.DMS_URL);
         this.cookie= cookie; 
                     
@@ -52,7 +46,6 @@ public class DMSListener {
         JSONObject completequery = new JSONObject();
 
         JSONArray aData = new JSONArray();
-
         
         String mongoquery="";
         
@@ -80,9 +73,9 @@ public class DMSListener {
 
                 DMSManager oDMS = new DMSManager(dmsURL,cookie);
 
-
                 aData = oDMS.getObservations(mongoquery);
-            }catch(Exception ex){
+            }catch(JSONException | IOException | KeyManagementException 
+                    | NoSuchAlgorithmException | KeyStoreException ex){
                 java.util.logging.Logger.getLogger(DMSListener
                                     .class.getName())
                                         .log(Level.SEVERE, null, ex);
@@ -91,10 +84,7 @@ public class DMSListener {
         }else if (properties.length()+sources.length()>2){
             
             try{
-           
                 JSONArray ors = new JSONArray();
-
-                int x=0;
 
                 for (int i = 0; i < properties.length(); i++) {
                     for (int j = 0; j < sources.length(); j++) {
@@ -130,7 +120,6 @@ public class DMSListener {
                                 timeObject);
 
                         ors.put(simplequery);
-                        x++;
                     }
 
                 }
@@ -139,7 +128,8 @@ public class DMSListener {
                 DMSManager oDMS = new DMSManager(dmsURL,cookie);
 
                 aData = oDMS.getObservations(completequery.toString());
-            }catch(Exception ex){
+            }catch(JSONException | IOException | KeyManagementException 
+                    | NoSuchAlgorithmException | KeyStoreException ex){
                 java.util.logging.Logger.getLogger(DMSListener
                                     .class.getName())
                                         .log(Level.SEVERE, null, ex);
@@ -167,8 +157,6 @@ public class DMSListener {
           
             String property1=properties.getString(0) ;
             String sensor1=sources.getString(0) ;
-//             {"$elemMatch" : {"@type" : {"$regex" : "Speed"
-//			}}}
              
             mongoquery = "{\"http://purl.oclc.org/NET/ssnx/ssn#observationProperty\": "
                     + "{\"$elemMatch\" : {\"@type\" : {\"$regex\" :"
@@ -183,7 +171,7 @@ public class DMSListener {
                     + from 
                     +"\"}}}}}}";
             
-             DMSManager oDMS = new DMSManager(dmsURL,cookie);
+            DMSManager oDMS = new DMSManager(dmsURL,cookie);
         
             JSONObject  completequeryAux = new JSONObject(mongoquery);
             
@@ -192,9 +180,7 @@ public class DMSListener {
         }else if (properties.length()+sources.length()>2){
            
             JSONArray ors = new JSONArray();
-          
-            int x=0;
-             
+                
             for (int i = 0; i < properties.length(); i++) {
                 for (int j = 0; j < sources.length(); j++) {
                     JSONObject simplequery = new JSONObject();
@@ -226,16 +212,12 @@ public class DMSListener {
                             timeObject);
 
                     ors.put(simplequery);
-                    x++;
                 }
-            
             }
         
             completequery.put("$or",ors);
         }
         return completequery;
-
-    
     }
     
     public JSONObject createRequest(JSONArray sources, JSONArray properties,
@@ -266,9 +248,7 @@ public class DMSListener {
                     + "{\"$elemMatch\":{ \"@value\" : {\"$gt\": \""
                     + from 
                     +"\"}}}}}}";
-            
-             DMSManager oDMS = new DMSManager(dmsURL,cookie);
-        
+                   
             JSONObject  completequeryAux = new JSONObject(mongoquery);
             
             completequery = completequeryAux;
@@ -276,9 +256,7 @@ public class DMSListener {
         }else if (properties.length()+sources.length()>2){
            
             JSONArray ors = new JSONArray();
-          
-            int x=0;
-             
+                      
             for (int i = 0; i < properties.length(); i++) {
                 for (int j = 0; j < sources.length(); j++) {
                     JSONObject simplequery = new JSONObject();
@@ -313,16 +291,11 @@ public class DMSListener {
                             timeObject);
 
                     ors.put(simplequery);
-                    x++;
                 }
-            
             }
-        
             completequery.put("$or",ors);
         }
-        return completequery;
-
-    
+        return completequery;   
     }
       
     private String getXSDDateTime(Date date) {
