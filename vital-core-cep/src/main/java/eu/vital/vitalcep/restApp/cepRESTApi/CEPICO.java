@@ -514,7 +514,7 @@ public class CEPICO {
                 
                 JSONObject request = new JSONObject();
                                          
-                request.put("ppiURL",auxbaseURL);           
+                request.put("ppiURL",getObservationAddress);           
                
                 JSONArray sensor = new JSONArray();
 
