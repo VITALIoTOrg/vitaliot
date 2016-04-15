@@ -3,11 +3,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.atos</groupId>
-    <artifactId>vitalcep</artifactId>
+    <groupId>eu.vital-iot</groupId>
+    <artifactId>vital-core-cep</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>vitalcep</name>
+    <name>Vital Core: CEP</name>
 
     <build>
         <finalName>cep</finalName>
@@ -21,6 +21,11 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>1.1.0.Alpha7</version>
             </plugin>
         </plugins>
     </build>
@@ -49,10 +54,6 @@
            <groupId>com.sun.xml.bind</groupId>
            <artifactId>jaxb-impl</artifactId>
           </exclusion>
-            <exclusion>
-               <groupId>stax</groupId>
-               <artifactId>stax-api</artifactId>
-            </exclusion>
          </exclusions>
         </dependency>
         <dependency>
@@ -90,14 +91,8 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.6</version>
+            <version>4.5.1</version>
             <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.elasticsearch</groupId>
@@ -132,24 +127,6 @@
             <artifactId>jboss-ejb-api_3.2_spec</artifactId>
             <scope>provided</scope>
             <version>1.0.0.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.4</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>jaxrs-api</artifactId>
-            <version>3.0.12.Final</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
     <properties>
