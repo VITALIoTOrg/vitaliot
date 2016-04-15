@@ -55,8 +55,8 @@ public class DMSManager {
 	}
 
 	public DMSManager(DMS_Index index, String cookie){
-		FilteringProperties propertires=new FilteringProperties();
-		String DMS_Address=propertires.getProperty(FilteringProperty.DMS_ENDPOINT_ADDRESS);
+		FilteringProperties props=new FilteringProperties();
+		String DMS_Address=props.getProperty(FilteringProperty.DMS_ENDPOINT_ADDRESS);
 		this.endpoint=DMS_Address+index.getAddress();
 		this.cookie=cookie;
 		formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");

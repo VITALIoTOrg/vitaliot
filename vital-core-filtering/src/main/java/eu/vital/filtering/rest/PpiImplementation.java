@@ -22,7 +22,7 @@ import org.json.simple.parser.ParseException;
 import eu.vital.filtering.util.FilteringMetadataReader;
 import eu.vital.filtering.util.FilteringProperties;
 import eu.vital.filtering.util.OntologyUtils;
-import eu.vital.filtering.util.FilteringProperties.FilteringProperty;
+//import eu.vital.filtering.util.FilteringProperties.FilteringProperty;
 
 
 
@@ -37,7 +37,9 @@ public class PpiImplementation {
 	public PpiImplementation() {
 		props=new FilteringProperties();
 		metadataReader=new FilteringMetadataReader();
-		FILTERING_BASE_ADDRESS=props.getProperty(FilteringProperty.FILTERING_ENDPOINT_ADDRESS)+":"+props.getProperty(FilteringProperty.FILTERING_ENDPOINT_PORT);
+		FILTERING_BASE_ADDRESS=props.getProperty(FilteringProperties.FILTERING_ENDPOINT_ADDRESS)+":"+props.getProperty(FilteringProperties.FILTERING_ENDPOINT_PORT);
+
+		//FILTERING_BASE_ADDRESS=props.getProperty(FilteringProperty.FILTERING_ENDPOINT_ADDRESS)+":"+props.getProperty(FilteringProperty.FILTERING_ENDPOINT_PORT);
 	}
 
 	@POST
