@@ -24,7 +24,7 @@ import eu.vital.filtering.inputJSON.Resampling_JSON_Object;
 import eu.vital.filtering.inputJSON.Resampling_JSON_Object.TIME_UNIT;
 import eu.vital.filtering.util.DMSManager;
 import eu.vital.filtering.util.DMSManager.DMS_Index;
-import eu.vital.filtering.util.FilteringProperties.FilteringProperty;
+import eu.vital.filtering.util.FilteringProperties;
 
 
 public class ResamplingQuery extends FilteringQuery {
@@ -32,7 +32,7 @@ public class ResamplingQuery extends FilteringQuery {
 	final static Logger logger=Logger.getLogger(ResamplingQuery.class);
 	private Resampling_JSON_Object inputObject;
 	
-	private final String OBSERVED_BY_RESULT=properties.getProperty(FilteringProperty.FILTERING_ENDPOINT_ADDRESS)+":"+properties.getProperty(FilteringProperty.FILTERING_ENDPOINT_PORT)+"/filtering";
+	private final String OBSERVED_BY_RESULT=properties.getProperty(FilteringProperties.FILTERING_ENDPOINT_ADDRESS)+":"+properties.getProperty(FilteringProperties.FILTERING_ENDPOINT_PORT)+"/filtering";
 
 	@Override
 	public void setInputJSON(JSONObject inputJSON) {

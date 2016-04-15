@@ -19,7 +19,7 @@ import org.json.simple.parser.JSONParser;
 
 import eu.vital.filtering.exception.ConnectionErrorException;
 import eu.vital.filtering.inputJSON.Threshold_JSON_Object.INEQUALITY_TYPE;
-import eu.vital.filtering.util.FilteringProperties.FilteringProperty;
+import eu.vital.filtering.util.FilteringProperties;
 
 public class DMSManager {
 
@@ -56,7 +56,7 @@ public class DMSManager {
 
 	public DMSManager(DMS_Index index, String cookie){
 		FilteringProperties props=new FilteringProperties();
-		String DMS_Address=props.getProperty(FilteringProperty.DMS_ENDPOINT_ADDRESS);
+		String DMS_Address=props.getProperty(FilteringProperties.DMS_ENDPOINT_ADDRESS);
 		this.endpoint=DMS_Address+index.getAddress();
 		this.cookie=cookie;
 		formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");

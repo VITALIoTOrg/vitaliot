@@ -58,8 +58,8 @@ public class FilteringProperties {
 	}
 
 
-	public String getProperty(FilteringProperty property){
-		return properties.getProperty(property.toString());
+	public String getProperty(String property){
+		return properties.getProperty(property);
 	}
 
 }
