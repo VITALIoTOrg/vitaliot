@@ -28,6 +28,7 @@ public class Decoder {
      *
      * @param input the json array
      * @return  the dolce input string 
+     * @throws java.text.ParseException 
      */
      public  ArrayList<String> JsonldArray2DolceInput
         (JSONArray input) throws ParseException {
@@ -84,11 +85,11 @@ public class Decoder {
                 stringValue = "string value "+ value;
             }
             
-//            if(aObj instanceof Boolean){
-//                Boolean value = oResoult.getJSONObject("ssn:hasValue")
-//                    .getBoolean("value");
-//                stringValue = "boolean" + Boolean.toString(value);
-//            }
+            if(aObj instanceof Boolean){
+                Boolean value = oResoult.getJSONObject("ssn:hasValue")
+                    .getBoolean("value");
+                stringValue = "int " + (value ? "1": "0");
+            }
             
             if(aObj instanceof JSONObject ){
                 JSONObject value = oResoult.getJSONObject("ssn:hasValue")
@@ -101,7 +102,6 @@ public class Decoder {
                     .getJSONArray("value");
                 stringValue = "string value "+value.toString();
             }
-            
             
             String location = "";
             if (input.getJSONObject(i)
@@ -138,7 +138,7 @@ public class Decoder {
                 + " " + location
                 +" string id "+ id 
                 + " "+ stringValue 
-                +" "+ observationResultTime   ;
+                +" "+ observationResultTime;
                // +" "+" int value "+(long)Math.floor(value + 0.5d);
             dolceInputs.add(dolceInput);
             
@@ -148,72 +148,6 @@ public class Decoder {
       
     }
     
-    /**
-     * Transform the observations in JSONLD array into dolce inputs
-     *
-     * @param input the json array
-     * @return  the dolce input string 
-     */
-    static public  ArrayList<String> speedJsonldArray2DolceInput
-        (JSONArray input) {
-        
-        ArrayList<String> dolceInputs = new ArrayList<>();
-        
-        for(int i = 0; i < input.length(); i++){
-            
-            String dolceInput;
-            
-            String number = "1";
-
-            // get sensor
-            String id = input.getJSONObject(i).getString("ssn:observedBy");
-
-            String oType = input.getJSONObject(i)
-                    .getJSONObject("ssn:observationProperty")
-                    .getString("type");
-
-            String observationType="";
-            if (oType.contains(":")) {
-                String[] vect = oType.split(":");
-                 observationType= vect[vect.length-1];
-            } else if (oType.contains("#")) {
-                String[] vect = oType.split("#");
-                observationType = vect[vect.length-1];
-            }else{
-                observationType =oType; 
-            }
-            
-            String oResoultTime = input.getJSONObject(i)
-                    .getJSONObject("ssn:observationResultTime")
-                    .getString("time:inXSDDateTime");
-            
-            JSONObject oResoult = input.getJSONObject(i)
-                    .getJSONObject("ssn:observationResult");
-
-            Double value = oResoult.getJSONObject("ssn:hasValue")
-                    .getDouble("value");
-            
-            JSONObject oLoc = input.getJSONObject(i)
-                    .getJSONObject("dul:hasLocation");
-
-            Double glat = oLoc.getDouble("geo:lat");
-            Double glong = oLoc.getDouble("geo:long");
-            
-
-            dolceInput = number +" "+observationType
-                +" pos location "+glong.toString()+"\\"+glat.toString()
-                +" string id "+id
-                +" float value "+value.toString()+""
-                +" string observationTime "+oResoultTime+"";
-               // +" int value "+(long)Math.floor(value + 0.5d);
-            dolceInputs.add(dolceInput);
-            
-        }
-        
-        return dolceInputs;
-      
-    }
-
     private String getDolceDateTime(String observationTime) throws ParseException {
         
         SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
