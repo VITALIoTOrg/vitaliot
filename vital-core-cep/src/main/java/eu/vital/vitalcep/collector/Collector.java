@@ -15,14 +15,10 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.UpdateResult;
-import eu.vital.vitalcep.conf.PropertyLoader;
 import eu.vital.vitalcep.connectors.mqtt.MqttAllInOne;
-import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
 import eu.vital.vitalcep.collector.decoder.Decoder;
-import eu.vital.vitalcep.publisher.encoder.Encoder;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
@@ -123,8 +119,6 @@ public class Collector {
                             if (aData.length()>0){
                                     sendData2CEP(aData, i);
                             }
-                            
-                        
                             
                         }else{
                             try {
