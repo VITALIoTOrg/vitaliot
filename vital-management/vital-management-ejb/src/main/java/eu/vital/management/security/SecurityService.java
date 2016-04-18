@@ -91,11 +91,12 @@ public class SecurityService {
 
 		String systemAuthToken = getSystemAuthenticationToken();
 
-		NewCookie systemAuthCookie = new NewCookie(getTestCookieName(), authToken);
-		NewCookie userAuthCookie = new NewCookie(getCookieName(), systemAuthToken);
+		NewCookie userAuthCookie = new NewCookie(getTestCookieName(), authToken);
+		NewCookie systemAuthCookie = new NewCookie(getCookieName(), systemAuthToken);
 
 		Form form = new Form();
 		form.param("resources[]", requestUrl.toString());
+		form.param("testCookie", "true");
 
 		try {
 			JsonNode evaluation = client
