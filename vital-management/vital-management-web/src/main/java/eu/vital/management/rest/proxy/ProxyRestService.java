@@ -15,6 +15,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public abstract class ProxyRestService extends HttpServlet {
 
 	public void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
@@ -35,7 +38,6 @@ public abstract class ProxyRestService extends HttpServlet {
 	}
 
 	private void executeProxyRequest(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
-
 		// Create a default HttpClient
 		URL url = new URL(getProxyURL(httpServletRequest));
 		HttpURLConnection httpProxyRequest = (HttpURLConnection) url.openConnection();
@@ -61,8 +63,18 @@ public abstract class ProxyRestService extends HttpServlet {
 			Map<String, List<String>> headerArrayResponse = httpProxyRequest.getHeaderFields();
 			for (String headerName : headerArrayResponse.keySet()) {
 				if (headerName != null) {
-					List<String> headerValues = headerArrayResponse.get(headerName);
-					httpServletResponse.addHeader(headerName, headerValues.toString());
+                    List<String> headerValues = headerArrayResponse.get(headerName);
+                    if (headerName.toLowerCase().equals("set-cookie")) {
+                        String domain = httpServletRequest.getRequestURL().toString();
+                        Pattern pattern = Pattern.compile("^[^:]*:[^.]*(.[^:/]*).*$");
+                        Matcher matcher = pattern.matcher(domain);
+                        if (matcher.find()) {
+                            domain = matcher.group(1);
+                        }
+                        httpServletResponse.addHeader(headerName, headerValues.toString().replaceAll("Domain=[^;]*", "Domain=" + domain));
+                    } else {
+                        httpServletResponse.addHeader(headerName, headerValues.toString());
+                    }
 				}
 			}
 			// Send the content to the client httpProxyRequest => httpServletResponse
