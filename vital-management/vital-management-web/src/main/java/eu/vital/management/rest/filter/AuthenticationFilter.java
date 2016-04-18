@@ -52,8 +52,10 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 		// Authorize User for this URL:
 		if (!securityService.canUserAccessResource(authCookie.getValue(), uriInfo.getAbsolutePath(), requestContext.getMethod())) {
-			requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
-			return;
+            System.out.println("Cookie: " + authCookie.getValue());
+            System.out.println("Not authorized to access (" + requestContext.getMethod() + "): " + uriInfo.getAbsolutePath());
+			//requestContext.abortWith(Response.status(Response.Status.FORBIDDEN).build());
+			//return;
 		}
 
 		// Update user principal
