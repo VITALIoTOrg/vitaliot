@@ -258,11 +258,11 @@ angular.module('main.security', [
  * SecurityChangePassController
  */
     .controller('SecurityChangePassController', [
-        '$scope', 'securityResource', 'Shared',
-        function($scope, securityResource, Shared) {
+        '$scope', 'securityResource', 'authentication',
+        function($scope, securityResource, authentication) {
             $scope.changing = false;
             $scope.isSignedIn = function() {
-                return Shared.signedIn;
+                return authentication.isAuthenticated();
             };
             $scope.changePass = function(data) {
                 $scope.changing = true;
@@ -289,8 +289,8 @@ angular.module('main.security', [
  * SecurityUserDetailsController
  */
     .controller('SecurityUserDetailsController', [
-        '$scope', '$routeParams', 'securityResource',
-        function($scope, $routeParams, securityResource) {
+        '$scope', '$routeParams', 'securityResource', 'authentication',
+        function($scope, $routeParams, securityResource, authentication) {
             $scope.gotUser = false;
             $scope.gotGroups = false;
             $scope.wrongpars = true;
@@ -300,6 +300,12 @@ angular.module('main.security', [
             $scope.saving = false;
             $scope.adding = false;
             $scope.removing = false;
+
+            $scope.$watch(function () {
+                return authentication.loggedOnUser;
+            }, function (loggedOnUser) {
+                $scope.loggedOnUser = loggedOnUser;
+            });
 
             if($routeParams.hasOwnProperty('name') && $routeParams.name !== '' && $routeParams.name !== null && (typeof $routeParams.name === 'string')) {
                 $scope.wrongpars = false;

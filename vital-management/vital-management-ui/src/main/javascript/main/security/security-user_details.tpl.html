@@ -10,7 +10,7 @@
                     <span ng-if="saving == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
                 </button>
                 <input ng-if="edit == true" class="btn btn-default" type="button" value="Cancel" ng-click="disableEdit()">
-                <a ng-if="user.username == loggedUser.uid" class="btn btn-default" href="#/security/changepass" role="button" style="margin-left: 15px;">Change password</a>
+                <a ng-if="user.username == loggedOnUser.uid" class="btn btn-default" href="#/security/changepass" role="button" style="margin-left: 15px;">Change password</a>
             </p>
             <div ng-if="msgEvent == 'update'">
                 <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully updated user details!</p>
