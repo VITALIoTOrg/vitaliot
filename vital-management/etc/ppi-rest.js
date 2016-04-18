@@ -1,6 +1,6 @@
 // 1. System (IoT)
 var system = {
-
+    // Metadata
     'PPI_BASE_URL/metadata': {
         action: 'POST',
         request: {},
@@ -23,18 +23,6 @@ var system = {
                       "http://example.com/service/3"
                     ]
                   }
-    },
-    '/status': {
-        action: 'POST',
-        request: {
-            "@context": "http://vital-iot.org/contexts/query.jsonld",
-            "type": "vital:iotSystem"
-        },
-        response: {
-            "@context": "http://vital-iot.org/contexts/system.jsonld",
-            "uri": "http://www.example.com",
-            "status": "vital:Running"
-        }
     },
     'PPI_BASE_URL/service/metadata': {
         action: 'POST',
@@ -100,7 +88,6 @@ var system = {
             }]
         }]
     },
-
     'PPI_BASE_URL/sensor/metadata': {
         action: 'POST',
         request: {},
@@ -142,36 +129,50 @@ var system = {
         }]
     },
 
-    'PPI_BASE_URL/sensor/status': {
-        action: 'POST',
-        request: {
-            "id": [
-                "http://example.com/sensor/2"
-            ]
-        },
-        response: [{
-            "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
-            "id": "http://example.com/sensor/1/observation/2",
-            "type": "ssn:Observation",
-            "ssn:observationProperty": {
-                "type": "vital:OperationalState"
+    // Status
+    'PPI_BASE_URL/status': {
+            action: 'POST',
+            request: {
+                "@context": "http://vital-iot.org/contexts/query.jsonld",
+                "type": "vital:iotSystem"
             },
-            "ssn:observationResultTime": {
-                "inXSDDateTime": "2014-08-20T16:47:32+01:00"
-            },
-            "ssn:featureOfInterest": "http://example.com/sensor/2",
-            "ssn:observationResult": {
-                "type": "ssn:SensorOutput",
-                "ssn:hasValue": {
-                    "type": "ssn:ObservationValue",
-                    "value": "vital:Running"
-                }
+            response: {
+                "@context": "http://vital-iot.org/contexts/system.jsonld",
+                "uri": "http://www.example.com",
+                "status": "vital:Running"
             }
-        }]
-    }
+        },
+    'PPI_BASE_URL/sensor/status': {
+                action: 'POST',
+                request: {
+                    "id": [
+                        "http://example.com/sensor/2"
+                    ]
+                },
+                response: [{
+                    "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
+                    "id": "http://example.com/sensor/1/observation/2",
+                    "type": "ssn:Observation",
+                    "ssn:observationProperty": {
+                        "type": "vital:OperationalState"
+                    },
+                    "ssn:observationResultTime": {
+                        "inXSDDateTime": "2014-08-20T16:47:32+01:00"
+                    },
+                    "ssn:featureOfInterest": "http://example.com/sensor/2",
+                    "ssn:observationResult": {
+                        "type": "ssn:SensorOutput",
+                        "ssn:hasValue": {
+                            "type": "ssn:ObservationValue",
+                            "value": "vital:Running"
+                        }
+                    }
+                }]
+            }
 };
 
 var observationService = {
+    // Data
     'PPI_BASE_URL/sensor/observation': {
         action: 'POST',
         request: {
@@ -202,6 +203,7 @@ var observationService = {
     }
 };
 
+// Optional
 var configurationService = {
     'PPI_BASE_URL/management/configuration': [{
         action: 'GET',
@@ -233,7 +235,6 @@ var configurationService = {
         response: {}
     }]
 };
-
 var monitoringService = {
     'PPI_BASE_URL/management/performance/supported': {
         action: 'GET',

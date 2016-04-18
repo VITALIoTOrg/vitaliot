@@ -6,6 +6,7 @@ angular.module('common', [
         'ngAnimate',
         'ngFx',
         'ui.bootstrap',
+        'angular-loading-bar',
         'leaflet-directive',
         'common.templates',
         'common.resources',
