@@ -12,7 +12,9 @@ import eu.vital.management.util.VitalConfiguration;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,32 +55,41 @@ public class AdminService {
 	@Inject
 	SecurityService securityService;
 
-	public void syncSystems() {
-		log.info("Starting SyncSystemsJob");
+	public List<String> syncSystems() {
+
+		List<String> result = new ArrayList<>();
+
+		result.add("Starting SyncSystemsJob");
 
 		// Login as platform to get authToken:
 		String systemAuthToken = securityService.getSystemAuthenticationToken();
 		userPrincipal.setToken(systemAuthToken);
 		userPrincipal.setUser(securityService.getLoggedOnUser(systemAuthToken));
-		log.info("SyncSystemsJob: Login success");
+		result.add("SyncSystemsJob: Login success");
 		try {
 			for (String systemURL : getSystemUrls()) {
+				result.add("----------");
+				result.add("Syncing System " + systemURL);
 				try {
-					log.info("SyncSystem " + systemURL);
+					result.add("1. Connecting to: " + systemURL + "/metadata");
 					JsonNode systemJSON = syncSystem(systemURL);
-					log.info("SyncSystem: " + systemJSON.get("@id").asText());
+					result.add("Retrieved system: " + systemJSON.get("@id").asText());
+					result.add("2. Connecting to: " + systemURL + "/sensor/metadata");
 					ArrayNode sensorList = syncSensors(systemJSON);
-					log.info("SyncSystem/Sensors: " + sensorList.size());
+					result.add("Retrieved system/sensors: " + sensorList.size());
+					result.add("3. Connecting to: " + systemURL + "/service/metadata");
 					ArrayNode serviceList = syncServices(systemJSON);
-					log.info("SyncSystem/Services: " + serviceList.size());
+					result.add("4. Retrieved system/services: " + serviceList.size());
 				} catch (Exception e) {
-					log.info("SyncSystem " + systemURL + " failed: " + e.getMessage());
+					result.add("Failure: " + e.getMessage());
 				}
 			}
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Failed to sync", e);
 		}
-		log.info("Finished SyncSystemsJob");
+		result.add("Finished SyncSystemsJob");
+
+		return result;
 	}
 
 	private Set<String> getSystemUrls() throws Exception {

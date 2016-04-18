@@ -78,6 +78,17 @@ angular.module('main.governance.registry', [
                     .then(function () {
                         $route.reload();
                     });
+            };
+
+            ctrl.syncResults = null;
+            ctrl.sync = function () {
+                ctrl.syncResults = null;
+                registryResource.sync(ctrl.system)
+                    .then(function (syncResults) {
+                        ctrl.syncResults = syncResults;
+                    }, function (errorResponse) {
+                        ctrl.syncResults = errorResponse;
+                    });
             }
         }
     ])
@@ -105,7 +116,7 @@ angular.module('main.governance.registry', [
                             $location.path("/governance/registry/list");
                         });
                 }
-            }
+            };
         }
     ])
 
@@ -169,6 +180,13 @@ angular.module('main.governance.registry', [
                             return response.data;
                         });
 
+                },
+
+                sync: function () {
+                    return $http.get(API_PATH + '/admin/sync')
+                        .then(function (response) {
+                            return response.data;
+                        });
                 }
             };
 

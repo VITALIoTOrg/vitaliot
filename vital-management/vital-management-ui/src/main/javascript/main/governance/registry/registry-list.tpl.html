@@ -1,6 +1,8 @@
 <div>
     <div class="panel panel-default">
-        <div class="panel-heading">Registered IoT systems</div>
+        <div class="panel-heading">
+            <h2>Registered IoT systems</h2>
+        </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-10">
@@ -59,6 +61,31 @@
             </div>
         </div>
         <div class="panel-footer">
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Synchronize System Metadata
+                <button class="btn btn-warning" ng-click="regCtrl.sync()">
+                    <i class="fa fa-key"></i> <span>Sync</span>
+                </button>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            <div ng-if="regCtrl.syncResults">
+                <ul class="list-unstyled">
+                    <li ng-repeat="result in regCtrl.syncResults track by $index">
+                        {{result}}
+                    </li>
+                </ul>
+                <button class="btn btn-default" ng-click="regCtrl.syncResults = null">
+                    <i class="fa fa-times-circle"></i> <span>Close</span>
+                </button>
+
+            </div>
         </div>
     </div>
 </div>
