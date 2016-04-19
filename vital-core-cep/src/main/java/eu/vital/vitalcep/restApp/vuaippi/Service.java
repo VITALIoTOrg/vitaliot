@@ -66,7 +66,9 @@ public class Service {
     /**
      * Gets service metadata .
      *
+     * @param req
      * @return the metadata of the services
+     * @throws java.io.IOException
      */
     @POST
     @Path("metadata")
@@ -76,14 +78,14 @@ public class Service {
             ,@Context HttpServletRequest req) throws FileNotFoundException,
             IOException {
         
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
       
         JSONObject monitoring = new JSONObject();
         
@@ -199,17 +201,17 @@ public class Service {
         getAlerts.put("hrest:hasAddress",host+"/getalerts");
         getAlerts.put("hrest:hasMethod","hrest:GET");
 
-        getAlert.put("type","vital:GetCEPICO");
-        getAlert.put("hrest:hasAddress",host+"/getcepico");
+        getAlert.put("type","vital:GetAlert");
+        getAlert.put("hrest:hasAddress",host+"/getalert");
         getAlert.put("hrest:hasMethod","hrest:POST");
         
-        createAlert.put("type","vital:CreateCEPICO");
+        createAlert.put("type","vital:CreateAlert");
         createAlert.put("hrest:hasAddress",
-                host+"/createcepico");
+                host+"/createalert");
         createAlert.put("hrest:hasMethod","hrest:PUT");
 
-        deleteAlert.put("type","vital:DeleteCEPICO");
-        deleteAlert.put("hrest:hasAddress",host+"/deletecepico");
+        deleteAlert.put("type","vital:DeleteAlert");
+        deleteAlert.put("hrest:hasAddress",host+"/deletealert");
         deleteAlert.put("hrest:hasMethod","hrest:DELETE");
 
         JSONArray AlertsOperations = new JSONArray();
