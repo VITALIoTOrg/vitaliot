@@ -25,6 +25,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -111,15 +114,21 @@ public class PPIManager {
         return new JSONArray(response);
     }
     
-    private String query(String ppi_endpoint, String body, String method){
+    private String query(String ppi_endpoint, String body, String method) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException{
         Cookie ck;
         //String internalToken;
         CloseableHttpClient httpclient;
         HttpRequestBase httpaction;
         //boolean wasEmpty;
         //int code;
-
-        httpclient = HttpClients.createDefault();
+        SSLContextBuilder builder = new SSLContextBuilder();
+        builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+            builder.build());
+        
+        httpclient = HttpClients.custom().setSSLSocketFactory(
+            sslsf).build();
+        //httpclient = HttpClients.createDefault();
 
         URI uri = null;
         try {
