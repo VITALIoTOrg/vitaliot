@@ -156,8 +156,7 @@ public class Encoder {
             Date date = new Date();
            
             JSONObject item = this.dolceOutput2Jsonld(sOutput,
-                    randomObservsUUIDString, "http://" 
-                    + hostnameport.toString() 
+                    randomObservsUUIDString, hostnameport
                     + "/cep/sensor/" 
                     + randomUUIDString
                     , this.getXSDDateTime(date));
@@ -188,8 +187,7 @@ public class Encoder {
                                   
            
             Document item = this.dolceOutput2Document(sOutput,
-                    randomObservsUUIDString, "http://" 
-                    + hostnameport.toString() 
+                    randomObservsUUIDString, hostnameport 
                     + "/cep/sensor/" 
                     + randomUUIDString
                     , this.getXSDDateTime(date));
