@@ -335,7 +335,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                     compl.get(i).toString());
             JSONObject oObserves = new JSONObject();
             oObserves.put("type", "vital:ComplexEvent");
-            //oObserves.put("uri", "http://"+ host.toString()
+            //oObserves.put("uri",  host.toString()
             //        +"/cep/sensor/"+randomUUIDString
             //        +"/"+oComplex.getString("id").toString());
             oObserves.put("id", host+"/sensor/" + randomUUIDString + "/" 
@@ -365,8 +365,22 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
  
     JSONObject jo = new JSONObject(info);
 
-    if ( jo.has("dolceSpecification")&& jo.has("query")) { // && jo.has("data") for demo
-
+    if ( jo.has("dolceSpecification")&& jo.has("query")) {
+        // && jo.has("data") for demo
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+        
+        JSONObject credentials = new JSONObject();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+            credentials.put("username", req.getHeader("name"));
+            credentials.put("password", req.getHeader("password"));
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
         MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
         MongoDatabase db = mongo.getDatabase(mongoDB);
 
@@ -449,21 +463,9 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 TMessageProc MsgProcc = new TMessageProc();
                 
                 JSONArray aData =  new JSONArray();
-                
-                StringBuilder ck = new StringBuilder();
-                
+                                
                  try {
-                    Security slogin = new Security();
-                  
-
-                    
-                    Boolean token = slogin.login(req.getHeader("name")
-                            ,req.getHeader("password"),false,ck);
-                    if (!token){
-                          return Response.status(Response.Status.UNAUTHORIZED).build();
-                    }
-                    cookie = ck.toString(); 
-                    
+                                        
                     DMSManager oDMS = new DMSManager(dmsURL,cookie);
         
                     aData = oDMS.getObservations(jo.getString("query"));
