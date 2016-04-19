@@ -116,14 +116,14 @@ public class Sensor {
             @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
         
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
         
         MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
 
@@ -606,14 +606,14 @@ public class Sensor {
             @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
 
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
         
         MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
 
@@ -1328,15 +1328,15 @@ public class Sensor {
     public Response getSensorsObservations(String info,
             @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
-        
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
                          
         DBObject request = (DBObject) JSON.parse(info);
         BasicDBList sensors;
@@ -1364,27 +1364,81 @@ public class Sensor {
            }
         }
         
-        JSONArray observations ;
+//        JSONArray observationsCEPICOS= new JSONArray() ;
+//        JSONArray observationsStaticQuery= new JSONArray();
+//        JSONArray observationsStaticData= new JSONArray() ;
+//        JSONArray observationsContinuous= new JSONArray() ;
+//         JSONArray observationsAlerts= new JSONArray() ;
+        JSONArray observations = new JSONArray();
         
         if (request.containsField("from") && request.containsField("to")){
-
-            observations = getObservations(sensors,"cepicosobservations",property
+            
+            observations = getObservations(sensors,property
                     ,(String)request.get("from"),(String)request.get("to"));
+
+//            observationsCEPICOS = getObservations(sensors,"cepicosobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsStaticQuery = getObservations(sensors,"staticqueryfiltersobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsStaticData = getObservations(sensors,"staticdatafiltersobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsContinuous = getObservations(sensors,"continuosfiltersobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsAlerts = getObservations(sensors,"alertsobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
         
         }else if(request.containsField("from")){
             //now
             
             Date NOW = new Date();
             
-            observations = getObservations(sensors,"cepicosobservations",property
+            observations = getObservations(sensors,property
                     ,(String)request.get("from"),getXSDDateTime(NOW));
+            
+//            observationsCEPICOS = getObservations(sensors,"cepicosobservations",property
+//                    ,(String)request.get("from"),getXSDDateTime(NOW));
+//            observationsStaticQuery = getObservations(sensors,"staticqueryfiltersobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsStaticData = getObservations(sensors,"staticdatafiltersobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsContinuous = getObservations(sensors,"continuosfiltersobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
+//            observationsAlerts = getObservations(sensors,"alertsobservations",property
+//                    ,(String)request.get("from"),(String)request.get("to"));
             
         }else{
             
-            observations = getObservations(sensors,"cepicosobservations",property
+            observations = getObservations(sensors,property
                     ,null,null);
+            
+//            observationsCEPICOS = getObservations(sensors,"cepicosobservations",property
+//                    ,null,null);
+//            observationsStaticQuery = getObservations(sensors,"staticqueryfiltersobservations",property
+//                    ,null,null);
+//            observationsStaticData = getObservations(sensors,"staticdatafiltersobservations",property
+//                    ,null,null);
+//            observationsContinuous = getObservations(sensors,"continuosfiltersobservations",property
+//                    ,null,null);
+//            observationsAlerts = getObservations(sensors,"alertsobservations",property
+//                    ,null,null);
         
         }
+        
+//        for (int i = 0; i < observationsCEPICOS.length(); i++) {
+//            observations.put(observationsCEPICOS.get(i));
+//        }
+//        for (int i = 0; i < observationsStaticQuery.length(); i++) {
+//            observations.put(observationsStaticQuery.get(i));
+//        }
+//        for (int i = 0; i < observationsStaticData.length(); i++) {
+//            observations.put(observationsStaticData.get(i));
+//        }
+//        for (int i = 0; i < observationsContinuous.length(); i++) {
+//            observations.put(observationsContinuous.get(i));
+//        }
+//        for (int i = 0; i < observationsAlerts.length(); i++) {
+//            observations.put(observationsAlerts.get(i));
+//        }
                  
         return Response.status(Response.Status.OK)
                 .entity (observations.toString()).build();
@@ -1392,8 +1446,8 @@ public class Sensor {
     }
 
     
-    private JSONArray getObservations(BasicDBList sensor, String collection
-    , String property,String from, String to) {
+    private JSONArray getObservations(BasicDBList sensor, 
+            String property,String from, String to) {
         
         JSONArray aData = new JSONArray();
              
