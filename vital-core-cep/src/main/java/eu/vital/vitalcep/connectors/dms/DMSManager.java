@@ -203,15 +203,20 @@ public JSONArray getObservationsWithExceptions(String body) throws IOException,
     }
     
     private String query(String dms_endpoint, String body, String method) 
-            throws SocketTimeoutException, ConnectException, IOException{
+            throws SocketTimeoutException, ConnectException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException{
         Cookie ck;
         //String internalToken;
         CloseableHttpClient httpclient;
         HttpRequestBase httpaction;
         //boolean wasEmpty;
         //int code;
-
-        httpclient = HttpClients.createDefault();
+        SSLContextBuilder builder = new SSLContextBuilder();
+        builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+            builder.build());
+        
+        httpclient = HttpClients.custom().setSSLSocketFactory(
+            sslsf).build();
 
         URI uri = null;
         try {
