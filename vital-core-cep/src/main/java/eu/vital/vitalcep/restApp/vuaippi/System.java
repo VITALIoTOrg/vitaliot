@@ -120,14 +120,14 @@ public class System {
             @Context HttpServletRequest req) throws FileNotFoundException,
             IOException {
         
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }      
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }      
         
         MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
         MongoDatabase db = mongo.getDatabase(mongoDB);
@@ -223,7 +223,6 @@ public class System {
 //        metadata.put("sensors", sensors);
         metadata.append("sensors", sensors);
         
-
         return Response.status(Response.Status.OK)
                                 .entity(metadata.toString()).build();
     }
@@ -236,14 +235,14 @@ public class System {
             @Context HttpServletRequest req) throws FileNotFoundException,
             IOException {
         
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
         
         JSONObject metadata = new JSONObject();
         
@@ -299,14 +298,14 @@ public class System {
     public Response getPerformanceMetrics(String info,
             @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
         
         JSONObject metric1 = new JSONObject();
         
@@ -390,14 +389,14 @@ public class System {
             @Context HttpServletRequest req) throws FileNotFoundException, 
             IOException {
         
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
 
         JSONObject metric1 = new JSONObject();
         
