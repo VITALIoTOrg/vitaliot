@@ -51,6 +51,7 @@ public class SensorResource {
 	 */
 	@POST
 	@Path("/metadata")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Object> metadata() {
 		final List<Object> sensors = new ArrayList<>();

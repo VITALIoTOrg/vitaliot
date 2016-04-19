@@ -81,12 +81,12 @@ public class MeasurementResource {
 			});
 			final String sensor = ((List<String>) map.get("sensor")).get(0);
 			if (!sensor.equals(ppi + "/sensor/monitoring")) {
-				logger.log(Level.INFO, "Unknown sensor " + sensor + ".");
+				logger.log(Level.WARNING, "Unknown sensor " + sensor + ".");
 				return new ArrayList<>();
 			}
 			final String theproperty = (String) map.get("property");
 			if (!theproperty.equals("http://vital-iot.eu/ontology/ns/OperationalState")) {
-				logger.log(Level.INFO, "Unknown property " + theproperty + ".");
+				logger.log(Level.WARNING, "Unknown property " + theproperty + ".");
 				return new ArrayList<>();
 			}
 
