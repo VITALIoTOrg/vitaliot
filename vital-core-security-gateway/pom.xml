@@ -5,20 +5,19 @@
 
     <groupId>eu.vital-iot</groupId>
     <artifactId>vital-core-security-gateway</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>Vital Core: Security PPI Gateway</name>
-    <description>PPI gateway for the VITAL project (Java 8 / WildFly 10.0.0.CR5)</description>
+    <name>VITAL Core: Security PPI Gateway</name>
+    <description>PPI gateway for the VITAL project (Java 8 / WildFly 10)</description>
 
     <properties>
         <project.bui1.sourceEncoding>UTF-8</project.bui1.sourceEncoding>
-        <version.compiler.plugin>3.1</version.compiler.plugin>
+        <version.compiler.plugin>3.5.1</version.compiler.plugin>
 
         <!-- Wildfly Plugins -->
         <version.wildfly.maven.plugin>1.0.2.Final</version.wildfly.maven.plugin>
-        <version.jboss.bom>8.0.0.Final</version.jboss.bom>
-        <version.wildfly>8.2.0.Final</version.wildfly>
+        <version.jboss.bom>10.0.1.Final</version.jboss.bom>
         <!-- Java Version -->
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -29,7 +28,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.6.4</version>
+            <version>2.7.3</version>
         </dependency>
 
         <!-- common lang per pojo json -->
@@ -43,50 +42,42 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
+            <version>4.5.2</version>
         </dependency>
 
-        <!-- First declare the APIs we depend on and need for compilation. All
-            of them are provided by JBoss WildFly -->
-
-        <!-- Import the CDI API, we use provided scope as the API is included in
-            JBoss WildFly -->
+        <!-- Import the CDI API -->
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
+            <version>2.0-EDR1</version>
         </dependency>
 
-        <!-- Import the Common Annotations API (JSR-250), we use provided scope
-            as the API is included in JBoss WildFly -->
+        <!-- Import the Common Annotations API (JSR-250) -->
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
             <artifactId>jboss-annotations-api_1.2_spec</artifactId>
-            <scope>provided</scope>
+            <version>1.0.0.Final</version>
         </dependency>
 
-        <!-- Import the JAX-RS API, we use provided scope as the API is included
-            in JBoss WildFly -->
+        <!-- Import the JAX-RS API -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>jaxrs-api</artifactId>
-            <scope>provided</scope>
+            <version>3.0.12.Final</version>
         </dependency>
 
-        <!-- Import the EJB API, we use provided scope as the API is included in
-            JBoss WildFly -->
+        <!-- Import the EJB API -->
         <dependency>
             <groupId>org.jboss.spec.javax.ejb</groupId>
             <artifactId>jboss-ejb-api_3.2_spec</artifactId>
-            <scope>provided</scope>
+            <version>1.0.0.Final</version>
         </dependency>
 
-        <!-- Import the JSF API, we use provided scope as the API is included in
-            JBoss WildFly -->
+        <!-- Import the JSF API -->
         <dependency>
             <groupId>org.jboss.spec.javax.faces</groupId>
             <artifactId>jboss-jsf-api_2.2_spec</artifactId>
-            <scope>provided</scope>
+            <version>2.2.13</version>
         </dependency>
 
         <dependency>
@@ -100,61 +91,34 @@
         <dependencies>
             <dependency>
                 <groupId>org.wildfly.bom</groupId>
-                <artifactId>jboss-javaee-7.0-with-tools</artifactId>
-                <version>${version.jboss.bom}</version>
-                <type>pom</type>
+                <artifactId>wildfly-javaee7-with-tools</artifactId>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.wildfly.bom</groupId>
-                <artifactId>jboss-javaee-7.0-with-hibernate</artifactId>
-                <version>${version.jboss.bom}</version>
                 <type>pom</type>
-                <scope>import</scope>
+                <version>${version.jboss.bom}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${version.compiler.plugin}</version>
-                    <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.wildfly.plugins</groupId>
-                    <artifactId>wildfly-maven-plugin</artifactId>
-                    <version>${version.wildfly.maven.plugin}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.compiler.plugin}</version>
                 <configuration>
-                    <!-- Java EE 7 doesn't require web.xml, Maven needs to catch up! -->
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.1.0.Alpha7</version>
-                <inherited>true</inherited>
+                <version>${version.wildfly.maven.plugin}</version>
                 <configuration>
                     <filename>${project.build.finalName}.war</filename>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
 
