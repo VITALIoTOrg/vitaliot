@@ -6,6 +6,7 @@
 package eu.vital.vitalcep.security;
 
 import eu.vital.vitalcep.conf.ConfigReader;
+import eu.vital.vitalcep.connectors.dms.trust.TrustAllX509TrustManager;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -13,6 +14,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
 
 /**
  *
@@ -26,6 +34,31 @@ public class Security {
         ConfigReader configReader = ConfigReader.getInstance();
         
         String securityURL = configReader.get(ConfigReader.AUTH_URL);
+        
+        // Initializing connection variable (will be used throughout the code)
+        HttpURLConnection connection = null;
+
+        // Of course everything will go over HTTPS (here we trust anything, we do not check the certificate)
+        SSLContext sc = null;
+        try {
+            sc = SSLContext.getInstance("TLS");
+        } catch(NoSuchAlgorithmException e1) {
+            e1.printStackTrace();
+        }
+        try {
+            sc.init(null, new TrustManager[] { new TrustAllX509TrustManager() }, new java.security.SecureRandom());
+        } catch(KeyManagementException e1) {
+            e1.printStackTrace();
+        }
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+            @Override
+            public boolean verify(String string, SSLSession ssls) {
+                return true;
+            }
+        });
+        
+        
           
         URL url;
         InputStream is;
@@ -33,7 +66,6 @@ public class Security {
         char cbuf[] = new char[10000];
         String resp = null;
         int len;
-        HttpURLConnection connection = null;
         String ck;
 
         // Create connection
