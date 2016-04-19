@@ -328,7 +328,7 @@ public class Alerts {
             JSONObject oObserves = new JSONObject();
             
             oObserves.put("type", "vital:ComplexEvent");
-            //oObserves.put("uri", "http://"+ host.toString()
+            //oObserves.put("uri",  host.toString()
             //        +"/cep/sensor/"+randomUUIDString
             //        +"/"+oComplex.getString("id").toString());
             oObserves.put("id",  host+"/sensor/"+randomUUIDString
