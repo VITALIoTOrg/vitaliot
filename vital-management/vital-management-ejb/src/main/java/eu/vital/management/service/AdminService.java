@@ -66,23 +66,27 @@ public class AdminService {
 		userPrincipal.setToken(systemAuthToken);
 		userPrincipal.setUser(securityService.getLoggedOnUser(systemAuthToken));
 		result.add("SyncSystemsJob: Login success");
+		result.add("----------");
 		try {
 			for (String systemURL : getSystemUrls()) {
-				result.add("----------");
 				result.add("Syncing System " + systemURL);
+				result.add("");
 				try {
 					result.add("1. Connecting to: " + systemURL + "/metadata");
 					JsonNode systemJSON = syncSystem(systemURL);
 					result.add("Retrieved system: " + systemJSON.get("@id").asText());
+
 					result.add("2. Connecting to: " + systemURL + "/sensor/metadata");
 					ArrayNode sensorList = syncSensors(systemJSON);
 					result.add("Retrieved system/sensors: " + sensorList.size());
+
 					result.add("3. Connecting to: " + systemURL + "/service/metadata");
 					ArrayNode serviceList = syncServices(systemJSON);
-					result.add("4. Retrieved system/services: " + serviceList.size());
+					result.add("Retrieved system/services: " + serviceList.size());
 				} catch (Exception e) {
 					result.add("Failure: " + e.getMessage());
 				}
+				result.add("----------");
 			}
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Failed to sync", e);
