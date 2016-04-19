@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.logging.Level;
 import org.apache.commons.lang.RandomStringUtils;
 
 /**
@@ -74,11 +75,17 @@ public class CepProcess {
                         .exec(cmd);
                 PID = getPid(pr);
                 if (PID==-1){
+                    java.util.logging.Logger.getLogger
+                           (CepProcess.class.getName())
+                                   .log(Level.SEVERE, "couldn't create the process" );
                     isUp = false;
                 }else{
                     isUp = true;
                 }
             } catch (IOException e) {
+                java.util.logging.Logger.getLogger
+                           (CepProcess.class.getName())
+                                   .log(Level.SEVERE, e.getMessage());
                 PID = -3;
                 isUp = false;
 
@@ -87,6 +94,9 @@ public class CepProcess {
             PID = -2;
             isUp = false;
             this.fileName = "";
+            java.util.logging.Logger.getLogger
+                           (CepProcess.class.getName())
+                                   .log(Level.SEVERE, ex.getMessage());
         } 
     }
     
