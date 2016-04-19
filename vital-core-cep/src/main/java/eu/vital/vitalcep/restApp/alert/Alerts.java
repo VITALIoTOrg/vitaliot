@@ -329,7 +329,7 @@ public class Alerts {
             
             oObserves.put("type", "vital:ComplexEvent");
             //oObserves.put("uri",  host.toString()
-            //        +"/cep/sensor/"+randomUUIDString
+            //        +"/sensor/"+randomUUIDString
             //        +"/"+oComplex.getString("id").toString());
             oObserves.put("id",  host+"/sensor/"+randomUUIDString
                     +"/"+oComplex.getString("id").toString());
