@@ -79,15 +79,24 @@ public class SecurityService {
 	}
 
 	public boolean canUserAccessResource(String authToken, URI requestUrl, String method) {
+
+		// For development only
+		boolean isLocalhost = requestUrl.getHost().equals("127.0.0.1") || requestUrl.getHost().equals("localhost");
+		if (isLocalhost) {
+			return true;
+		}
+		// end:For development only
+
 		Client client = ClientBuilder.newClient();
 
 		String systemAuthToken = getSystemAuthenticationToken();
 
-		NewCookie systemAuthCookie = new NewCookie(getTestCookieName(), authToken);
-		NewCookie userAuthCookie = new NewCookie(getCookieName(), systemAuthToken);
+		NewCookie userAuthCookie = new NewCookie(getTestCookieName(), authToken);
+		NewCookie systemAuthCookie = new NewCookie(getCookieName(), systemAuthToken);
 
 		Form form = new Form();
 		form.param("resources[]", requestUrl.toString());
+		form.param("testCookie", "true");
 
 		try {
 			JsonNode evaluation = client
@@ -100,13 +109,6 @@ public class SecurityService {
 
 			JsonNode actions = evaluation.get("responses").get(0).get("actions");
 			boolean canAccess = actions.has(method) && actions.get(method).booleanValue();
-
-			// For development only
-			boolean isLocalhost = requestUrl.getHost().equals("127.0.0.1") || requestUrl.getHost().equals("localhost");
-			if (isLocalhost) {
-				return true;
-			}
-			// end:For development only
 
 			return canAccess;
 		} catch (WebApplicationException e) {
@@ -130,7 +132,10 @@ public class SecurityService {
 					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
 
 			Cookie cookie = response.getCookies().get(getCookieName());
-			return cookie.getValue();
+            if (cookie != null) {
+				return cookie.getValue();
+			}
+            return null;
 		} catch (WebApplicationException e) {
 			return null;
 		} finally {

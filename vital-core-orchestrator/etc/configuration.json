@@ -16,7 +16,7 @@
     ]
   },
   "orchestrator": {
-    "url": "http://vital-integration.atosresearch.eu:8180/vital-core-orchestrator-web/rest",
+    "url": "http://localhost:8080/vital-core-orchestrator-web/rest",
     "status": {
       "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
       "id": "<orchestrator.url>/sensor/monitoring/observation/status/1434443438930",
