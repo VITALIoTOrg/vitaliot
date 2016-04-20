@@ -1,6 +1,6 @@
 [
 {
-"@context": "http://IP_ADDRESS/filtering/contexts/service.jsonld",
+"@context": "http://vital-iot.eu/contexts/service.jsonld",
 "id": "http://IP_ADDRESS/filtering/",
 "type": "vital:FilteringService",
 "operations":
@@ -18,7 +18,7 @@
 ]
 },
 {
-"@context": "http://IP_ADDRESS/filtering/contexts/service.jsonld",
+"@context": "http://vital-iot.eu/contexts/service.jsonld",
 "id": "http://IP_ADDRESS/filtering/monitoring",
 "type": "vital:MonitoringService",
 "operations":
@@ -31,7 +31,7 @@
 ]
 },
 {
-"@context": "http://IP_ADDRESS/filtering/contexts/service.jsonld",
+"@context": "http://vital-iot.eu/contexts/service.jsonld",
 "id": "http://IP_ADDRESS/filtering/observation",
 "type": "vital:ObservationService",
 "operations":

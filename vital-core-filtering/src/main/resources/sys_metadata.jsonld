@@ -1,5 +1,5 @@
 {
-"@context": "http://IP_ADDRESS/filtering/contexts/system.jsonld",
+"@context": "http://vital-iot.eu/contexts/system.jsonld",
 "id": "http://IP_ADDRESS/filtering",
 "type": "vital:VitalSystem",
 "name": "Filtering System",
