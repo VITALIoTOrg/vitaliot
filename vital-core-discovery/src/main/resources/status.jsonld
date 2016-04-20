@@ -1,5 +1,5 @@
 {
-"@context": "IP_ADDRESS/discoverer/contexts/measurement.jsonld",
+"@context": "http://vital-iot.eu/contexts/measurement.jsonld",
 "id": "IP_ADDRESS/discoverer/ppi/sensor/monitoring/IDENTIFIER",
 "type": "ssn:Observation",
 "ssn:observationProperty":

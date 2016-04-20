@@ -1,6 +1,6 @@
 [
 {
-"@context": "IP_ADDRESS/discoverer/contexts/sensor.jsonld",
+"@context": "http://vital-iot.eu/contexts/sensor.jsonld",
 "id": "IP_ADDRESS/discoverer/ppi/sensor/monitoring",
 "type": "vital:MonitoringSensor",
 "name": "System Monitoring Sensor",

@@ -1,5 +1,5 @@
 {
-"@context": "IP_ADDRESS/discoverer/contexts/system.jsonld",
+"@context": "http://vital-iot.eu/contexts/system.jsonld",
 "id": "IP_ADDRESS/discoverer",
 "type": "vital:VitalSystem",
 "name": "Discovery System",
