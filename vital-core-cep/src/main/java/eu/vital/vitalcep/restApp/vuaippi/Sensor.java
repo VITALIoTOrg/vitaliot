@@ -1542,10 +1542,24 @@ public class Sensor {
         
         JSONObject simplequery = new JSONObject();
 
-        //JSONObject propertyJ= new JSONObject();
-       // propertyJ.put("type",property );
+        String auxProp="";
+            if(property.contains("#")) {
+                String[] vect = property.split("#");
+                auxProp = vect[vect.length-1]; 
+            } else if (property.contains("/")) {
+                String[] vect = property.split("/");
+                auxProp = vect[vect.length-1];
+            } else if (property.contains(":")) {
+                String[] vect = property.split(":");
+                 auxProp= vect[vect.length-1];
+            }else{
+                auxProp =property; 
+            }
+            
+        JSONObject propertyJ= new JSONObject("{\"$regex\" :\""
+                            +auxProp +"\"}");
 
-        simplequery.put("ssn:observationProperty.type",property);
+        simplequery.put("ssn:observationProperty.type",propertyJ);
         simplequery.put("ssn:observedBy",sensor);
         
         if (!(from==null)&&!(to==null)){
