@@ -4,17 +4,11 @@
  * and open the template in the editor.
  */
 package eu.vital.vitalcep.publisher.encoder;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
-import eu.vital.vitalcep.restApp.filteringApi.StaticFiltering;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import org.bson.Document;
 import org.json.JSONArray;
