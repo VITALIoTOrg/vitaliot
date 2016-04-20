@@ -82,7 +82,8 @@ public LinkedList<JSONObject> getByField(String field, String value){
 
 		JSONObject postObject=new JSONObject();
 
-		postObject.put(field, value);
+		//postObject.put(field, value);
+		postObject.put("@"+field, value);
 
 		return queryDMS(endpoint, postObject, cookie);
 
@@ -245,7 +246,7 @@ private String removeExtraQuotes(String input){
 			wr.write(postObjectByte);
 			wr.flush();
 			int HttpResult = connectionDMS.getResponseCode();
-			if(HttpResult == HttpURLConnection.HTTP_OK){
+			if(HttpResult == HttpURLConnection.HTTP_ACCEPTED){
 				JSONParser parser=new JSONParser();
 				JSONArray array=(JSONArray) parser.parse(new InputStreamReader(connectionDMS.getInputStream(),"utf-8"));
 

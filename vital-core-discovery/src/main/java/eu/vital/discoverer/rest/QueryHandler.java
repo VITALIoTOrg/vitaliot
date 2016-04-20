@@ -62,7 +62,7 @@ public class QueryHandler {
 			}
 
 			JSONObject resp=new JSONObject();
-			resp.put("@context", "http://vital-iot.org/contexts/system.jsonld");
+			resp.put("@context", "http://vital-iot.eu/contexts/system.jsonld");
 			resp.put("systems", resultList);
 			return resp;
 
