@@ -45,6 +45,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 
@@ -1354,38 +1355,51 @@ public class Sensor {
             }
             
         }
-        
+       
+        String sfrom =null;
+        String sto=null;
         if (request.containsField("from") && request.containsField("to")){
             
-           if(!isDateValid((String)request.get("from"))|| 
-                   !isDateValid((String)request.get("to"))){
+            if(!isDateValid((String)request.get("from"))|| 
+                    !isDateValid((String)request.get("to"))){
+                  return Response.status(Response.Status.BAD_REQUEST)
+                     .entity("wrong xsd:dateTime format").build();
+            }
+           
+            try{
+                sfrom=getXSDDateTimeSecure((String)request.get("from"));
+                sto=getXSDDateTimeSecure((String)request.get("to"));
+            }catch(
+            ParseException e){
+                return Response.status(Response.Status.BAD_REQUEST)
+                     .entity("wrong xsd:dateTime format").build();
+            }
+          
+           
+        }else if (request.containsField("from") ){
+            
+           if(!isDateValid((String)request.get("from"))){
                  return Response.status(Response.Status.BAD_REQUEST)
                     .build();
            }
+           
+            try{
+                sfrom=getXSDDateTimeSecure((String)request.get("from"));
+            }catch(ParseException e){
+                return Response.status(Response.Status.BAD_REQUEST)
+                     .entity("wrong xsd:dateTime format").build();
+            }
+           
         }
         
-//        JSONArray observationsCEPICOS= new JSONArray() ;
-//        JSONArray observationsStaticQuery= new JSONArray();
-//        JSONArray observationsStaticData= new JSONArray() ;
-//        JSONArray observationsContinuous= new JSONArray() ;
-//         JSONArray observationsAlerts= new JSONArray() ;
+
         JSONArray observations = new JSONArray();
         
         if (request.containsField("from") && request.containsField("to")){
             
             observations = getObservations(sensors,property
-                    ,(String)request.get("from"),(String)request.get("to"));
+                    ,sfrom,sto);
 
-//            observationsCEPICOS = getObservations(sensors,"cepicosobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsStaticQuery = getObservations(sensors,"staticqueryfiltersobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsStaticData = getObservations(sensors,"staticdatafiltersobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsContinuous = getObservations(sensors,"continuosfiltersobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsAlerts = getObservations(sensors,"alertsobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
         
         }else if(request.containsField("from")){
             //now
@@ -1393,53 +1407,16 @@ public class Sensor {
             Date NOW = new Date();
             
             observations = getObservations(sensors,property
-                    ,(String)request.get("from"),getXSDDateTime(NOW));
+                    ,sfrom,getXSDDateTime(NOW));
             
-//            observationsCEPICOS = getObservations(sensors,"cepicosobservations",property
-//                    ,(String)request.get("from"),getXSDDateTime(NOW));
-//            observationsStaticQuery = getObservations(sensors,"staticqueryfiltersobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsStaticData = getObservations(sensors,"staticdatafiltersobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsContinuous = getObservations(sensors,"continuosfiltersobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-//            observationsAlerts = getObservations(sensors,"alertsobservations",property
-//                    ,(String)request.get("from"),(String)request.get("to"));
-            
+
         }else{
             
             observations = getObservations(sensors,property
                     ,null,null);
             
-//            observationsCEPICOS = getObservations(sensors,"cepicosobservations",property
-//                    ,null,null);
-//            observationsStaticQuery = getObservations(sensors,"staticqueryfiltersobservations",property
-//                    ,null,null);
-//            observationsStaticData = getObservations(sensors,"staticdatafiltersobservations",property
-//                    ,null,null);
-//            observationsContinuous = getObservations(sensors,"continuosfiltersobservations",property
-//                    ,null,null);
-//            observationsAlerts = getObservations(sensors,"alertsobservations",property
-//                    ,null,null);
-        
         }
-        
-//        for (int i = 0; i < observationsCEPICOS.length(); i++) {
-//            observations.put(observationsCEPICOS.get(i));
-//        }
-//        for (int i = 0; i < observationsStaticQuery.length(); i++) {
-//            observations.put(observationsStaticQuery.get(i));
-//        }
-//        for (int i = 0; i < observationsStaticData.length(); i++) {
-//            observations.put(observationsStaticData.get(i));
-//        }
-//        for (int i = 0; i < observationsContinuous.length(); i++) {
-//            observations.put(observationsContinuous.get(i));
-//        }
-//        for (int i = 0; i < observationsAlerts.length(); i++) {
-//            observations.put(observationsAlerts.get(i));
-//        }
-                 
+
         return Response.status(Response.Status.OK)
                 .entity (observations.toString()).build();
                 
@@ -1635,6 +1612,24 @@ public class Sensor {
     }
      private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return  dateFormat.format(date);
+     }
+     
+     private String getXSDDateTimeSecure(String sdate) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date;
+        try{
+              date = dateFormat.parse(sdate);
+              return  dateFormat.format(date);
+        }catch(ParseException e){
+              date = formatter.parse(sdate);
+              return  dateFormat.format(date);
+            
+        }
+       
      }
 }

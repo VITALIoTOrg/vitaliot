@@ -46,6 +46,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bson.conversions.Bson;
@@ -306,6 +307,7 @@ public class Collector {
     
     private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return  dateFormat.format(date);
     }
      
