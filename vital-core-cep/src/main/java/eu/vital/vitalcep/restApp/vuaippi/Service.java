@@ -309,7 +309,7 @@ public class Service {
         JSONObject operation3 = new JSONObject();
               
         operation3.put("type","vital:GetObservations");
-        operation3.put("hrest:hasAddress",host+"/observation");
+        operation3.put("hrest:hasAddress",host+"/sensor/observation");
         operation3.put("hrest:hasMethod","hrest:POST");
 
         JSONArray observationOperations = new JSONArray();
