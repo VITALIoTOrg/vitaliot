@@ -66,7 +66,7 @@ public class SecurityService {
 	public JsonNode getLoggedOnUser(String authToken) {
 
 		// Check Cache
-		if (loggedOnDateMap.containsKey(authToken)) {
+		if (loggedOnDateMap.containsKey(authToken) && loggedOnUserMap.containsKey(authToken)) {
 			Date loggedOnDate = loggedOnDateMap.get(authToken);
 			Date now = new Date();
 			Long duration = now.getTime() - loggedOnDate.getTime();
@@ -113,7 +113,7 @@ public class SecurityService {
 		String accessKey = method + "@" + requestUrl;
 
 		// Check Cache
-		if (loggedOnDateMap.containsKey(authToken)) {
+		if (loggedOnDateMap.containsKey(authToken) && loggedOnAccessMap.containsKey(authToken)) {
 			Date loggedOnDate = loggedOnDateMap.get(authToken);
 			Date now = new Date();
 			Long duration = now.getTime() - loggedOnDate.getTime();
