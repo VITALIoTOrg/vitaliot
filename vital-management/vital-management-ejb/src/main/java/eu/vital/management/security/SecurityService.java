@@ -3,7 +3,7 @@ package eu.vital.management.security;
 import com.fasterxml.jackson.databind.JsonNode;
 import eu.vital.management.util.VitalConfiguration;
 
-import javax.ejb.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 /**
  * Created by anglen on 29/02/16.
  */
-@Singleton
+@ApplicationScoped
 public class SecurityService {
 
 	@Inject
