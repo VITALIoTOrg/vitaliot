@@ -6,18 +6,24 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.management.security.SecurityService;
 import eu.vital.management.security.VitalUserPrincipal;
+import eu.vital.management.storage.DocumentManager;
 import eu.vital.management.util.VitalClient;
 import eu.vital.management.util.VitalConfiguration;
+import org.bson.conversions.Bson;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.mongodb.client.model.Filters.nin;
 
 /**
  * Created by anglen on 08/04/16.
@@ -55,6 +61,9 @@ public class AdminService {
 	@Inject
 	SecurityService securityService;
 
+	@Inject
+	DocumentManager documentManager;
+
 	public List<String> syncSystems() {
 
 		List<String> result = new ArrayList<>();
@@ -67,6 +76,8 @@ public class AdminService {
 		userPrincipal.setUser(securityService.getLoggedOnUser(systemAuthToken));
 		result.add("SyncSystemsJob: Login success");
 		result.add("----------");
+
+		Set<String> systemIdSet = new HashSet<>();
 		try {
 			for (String systemURL : getSystemUrls()) {
 				result.add("Syncing System " + systemURL);
@@ -74,6 +85,7 @@ public class AdminService {
 				try {
 					result.add("1. Connecting to: " + systemURL + "/metadata");
 					JsonNode systemJSON = syncSystem(systemURL);
+					systemIdSet.add(systemJSON.get("@id").asText());
 					result.add("Retrieved system: " + systemJSON.get("@id").asText());
 
 					result.add("2. Connecting to: " + systemURL + "/sensor/metadata");
@@ -88,6 +100,12 @@ public class AdminService {
 				}
 				result.add("----------");
 			}
+			// Clean up data not in list anymore:
+			Map<String, Long> removed = cleanEntriesNotInSet(systemIdSet);
+			result.add("Removed SYSTEM: " + removed.get("SYSTEM"));
+			result.add("Removed SENSOR: " + removed.get("SENSOR"));
+			result.add("Removed SERVICE: " + removed.get("SERVICE"));
+
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Failed to sync", e);
 		}
@@ -161,5 +179,21 @@ public class AdminService {
 			serviceDAO.save(serviceJSON);
 		}
 		return serviceList;
+	}
+
+	private Map<String, Long> cleanEntriesNotInSet(Set<String> systemIds) throws Exception {
+		Map<String, Long> result = new HashMap<>();
+
+		Bson systemQuery = nin("@id", systemIds);
+		Long count = documentManager.delete(DocumentManager.DOCUMENT_TYPE.SYSTEM.toString(), systemQuery);
+		result.put("SYSTEM", count);
+		Bson query = nin("system", systemIds);
+		count = documentManager.delete(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), query);
+		result.put("SENSOR", count);
+		count = documentManager.delete(DocumentManager.DOCUMENT_TYPE.SERVICE.toString(), query);
+		result.put("SERVICE", count);
+
+		return result;
+
 	}
 }

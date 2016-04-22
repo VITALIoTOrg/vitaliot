@@ -7,7 +7,7 @@
         <div class="box box-solid bg-aqua" ng-if="data.observation['@id']">
             <div class="box-header">
                 <h3 class="box-title">
-                    {{data.observation.value}}
+                    <pre>{{data.observation.value | json}}</pre>
                 </h3>
 
                 <div class="box-tools pull-right">
@@ -33,23 +33,23 @@
 
         <table class="table table-striped">
             <tbody>
-                <tr>
-                    <th style="width: 10px">#</th>
-                    <th>Type</th>
-                    <th style="width: 92px">&nbsp;</th>
-                </tr>
-                <tr ng-repeat="obs in data.observationList">
-                    <td>{{$index + 1}}</td>
-                    <td>{{obs['@type']}}</td>
-                    <td align="right">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default"
-                                    ng-click="actions.fetchObservationValue(sensor['@id'], obs['@type'])">
-                                <i class="fa fa-eye"></i> <span>View</span>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+            <tr>
+                <th style="width: 10px">#</th>
+                <th>Type</th>
+                <th style="width: 92px">&nbsp;</th>
+            </tr>
+            <tr ng-repeat="obs in data.observationList">
+                <td>{{$index + 1}}</td>
+                <td>{{obs['@type']}}</td>
+                <td align="right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default"
+                                ng-click="actions.fetchObservationValue(sensor['@id'], obs['@type'])">
+                            <i class="fa fa-eye"></i> <span>View</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

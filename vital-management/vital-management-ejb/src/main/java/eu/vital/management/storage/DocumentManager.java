@@ -219,9 +219,9 @@ public class DocumentManager implements Serializable {
 		}
 	}
 
-	public long delete(String type, String documentId) {
+	public long delete(String type, Bson query) {
 		MongoCollection mongoCollection = mongoDatabase.getCollection(type);
-		DeleteResult result = mongoCollection.deleteOne(queryById(documentId));
+		DeleteResult result = mongoCollection.deleteMany(query);
 		return result.getDeletedCount();
 	}
 
