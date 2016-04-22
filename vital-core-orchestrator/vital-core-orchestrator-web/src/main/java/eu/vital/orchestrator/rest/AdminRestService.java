@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/admin")
 @RequestScoped
@@ -21,9 +22,9 @@ public class AdminRestService {
 	@GET
 	@Path("/sync")
 	public Response executeSync() throws Exception {
-		adminService.syncSystems();
+		List<String> results = adminService.syncSystems();
 
-		return Response.ok().build();
+		return Response.ok(results).build();
 	}
 
 }

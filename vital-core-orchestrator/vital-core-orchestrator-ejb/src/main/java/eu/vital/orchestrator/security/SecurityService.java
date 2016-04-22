@@ -3,7 +3,7 @@ package eu.vital.orchestrator.security;
 import com.fasterxml.jackson.databind.JsonNode;
 import eu.vital.orchestrator.util.VitalConfiguration;
 
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -17,13 +17,16 @@ import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Created by anglen on 29/02/16.
  */
-@Stateless
+@ApplicationScoped
 public class SecurityService {
 
 	@Inject
@@ -31,6 +34,10 @@ public class SecurityService {
 
 	@Inject
 	VitalConfiguration vitalConfiguration;
+
+	private Map<String, JsonNode> loggedOnUserMap = new HashMap<>();
+	private Map<String, Date> loggedOnDateMap = new HashMap<>();
+	private Map<String, Map<String, Boolean>> loggedOnAccessMap = new HashMap<>();
 
 	public String getCookieName() {
 		return vitalConfiguration.getProperty("vital-core-orchestrator.sso-token", "vitalAccessToken");
@@ -57,8 +64,19 @@ public class SecurityService {
 	}
 
 	public JsonNode getLoggedOnUser(String authToken) {
-		Client client = ClientBuilder.newClient();
 
+		// Check Cache
+		if (loggedOnDateMap.containsKey(authToken) && loggedOnUserMap.containsKey(authToken)) {
+			Date loggedOnDate = loggedOnDateMap.get(authToken);
+			Date now = new Date();
+			Long duration = now.getTime() - loggedOnDate.getTime();
+			if (duration <= 30000) { // 30.000 msec
+				return loggedOnUserMap.get(authToken);
+			}
+		}
+
+		// Retrieve from Security server
+		Client client = ClientBuilder.newClient();
 		NewCookie cookie = new NewCookie(getCookieName(), authToken);
 		try {
 			JsonNode userData = client
@@ -70,6 +88,11 @@ public class SecurityService {
 			if (userData.has("valid") && !userData.get("valid").asBoolean()) {
 				return null;
 			}
+
+			// Update cache
+			loggedOnUserMap.put(authToken, userData);
+			loggedOnDateMap.put(authToken, new Date());
+
 			return userData;
 		} catch (WebApplicationException e) {
 			return null;
@@ -87,6 +110,23 @@ public class SecurityService {
 		}
 		// end:For development only
 
+		String accessKey = method + "@" + requestUrl;
+
+		// Check Cache
+		if (loggedOnDateMap.containsKey(authToken) && loggedOnAccessMap.containsKey(authToken)) {
+			Date loggedOnDate = loggedOnDateMap.get(authToken);
+			Date now = new Date();
+			Long duration = now.getTime() - loggedOnDate.getTime();
+			if (duration <= 30000) { // 30.000 msec
+				Map<String, Boolean> accesMap = loggedOnAccessMap.get(authToken);
+				if (accesMap.containsKey(accessKey)) {
+					return accesMap.get(accessKey);
+				}
+			}
+		}
+		// end: Check Cache
+
+		// Connect to Security Server
 		Client client = ClientBuilder.newClient();
 
 		String systemAuthToken = getSystemAuthenticationToken();
@@ -110,6 +150,12 @@ public class SecurityService {
 			JsonNode actions = evaluation.get("responses").get(0).get("actions");
 			boolean canAccess = actions.has(method) && actions.get(method).booleanValue();
 
+			// Update cache
+			Map accessMap = loggedOnAccessMap.containsKey(authToken) ? loggedOnAccessMap.get(authToken) : new HashMap<>();
+			accessMap.put(accessKey, canAccess);
+			loggedOnAccessMap.put(authToken, accessMap);
+			// end: Update cache
+
 			return canAccess;
 		} catch (WebApplicationException e) {
 			return false;
@@ -132,10 +178,10 @@ public class SecurityService {
 					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
 
 			Cookie cookie = response.getCookies().get(getCookieName());
-            if (cookie != null) {
+			if (cookie != null) {
 				return cookie.getValue();
 			}
-            return null;
+			return null;
 		} catch (WebApplicationException e) {
 			return null;
 		} finally {
@@ -144,6 +190,13 @@ public class SecurityService {
 	}
 
 	public void logout(String authToken) {
+
+		// Clear cache
+		loggedOnDateMap.remove(authToken);
+		loggedOnUserMap.remove(authToken);
+		loggedOnAccessMap.remove(authToken);
+
+		// Notify security service
 		Client client = ClientBuilder.newClient();
 		try {
 			client.target(getSecurityProxyUrl() + "/logout")

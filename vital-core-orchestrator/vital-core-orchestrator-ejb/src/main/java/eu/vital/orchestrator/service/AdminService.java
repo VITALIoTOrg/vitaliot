@@ -6,21 +6,29 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.security.SecurityService;
 import eu.vital.orchestrator.security.VitalUserPrincipal;
+import eu.vital.orchestrator.storage.OrchestratorStorage;
 import eu.vital.orchestrator.util.VitalClient;
 import eu.vital.orchestrator.util.VitalConfiguration;
+import org.bson.conversions.Bson;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.mongodb.client.model.Filters.nin;
+
 /**
  * Created by anglen on 08/04/16.
  */
-@Stateless
+@ApplicationScoped
 public class AdminService {
 
 	@Inject
@@ -53,32 +61,57 @@ public class AdminService {
 	@Inject
 	SecurityService securityService;
 
-	public void syncSystems() {
-		log.info("Starting SyncSystemsJob");
+	@Inject
+	OrchestratorStorage documentManager;
+
+	public List<String> syncSystems() {
+
+		List<String> result = new ArrayList<>();
+
+		result.add("Starting SyncSystemsJob");
 
 		// Login as platform to get authToken:
 		String systemAuthToken = securityService.getSystemAuthenticationToken();
 		userPrincipal.setToken(systemAuthToken);
 		userPrincipal.setUser(securityService.getLoggedOnUser(systemAuthToken));
-		log.info("SyncSystemsJob: Login success");
+		result.add("SyncSystemsJob: Login success");
+		result.add("----------");
+
+		Set<String> systemIdSet = new HashSet<>();
 		try {
 			for (String systemURL : getSystemUrls()) {
+				result.add("Syncing System " + systemURL);
+				result.add("");
 				try {
-					log.info("SyncSystem " + systemURL);
+					result.add("1. Connecting to: " + systemURL + "/metadata");
 					JsonNode systemJSON = syncSystem(systemURL);
-					log.info("SyncSystem: " + systemJSON.get("@id").asText());
+					systemIdSet.add(systemJSON.get("@id").asText());
+					result.add("Retrieved system: " + systemJSON.get("@id").asText());
+
+					result.add("2. Connecting to: " + systemURL + "/sensor/metadata");
 					ArrayNode sensorList = syncSensors(systemJSON);
-					log.info("SyncSystem/Sensors: " + sensorList.size());
+					result.add("Retrieved system/sensors: " + sensorList.size());
+
+					result.add("3. Connecting to: " + systemURL + "/service/metadata");
 					ArrayNode serviceList = syncServices(systemJSON);
-					log.info("SyncSystem/Services: " + serviceList.size());
+					result.add("Retrieved system/services: " + serviceList.size());
 				} catch (Exception e) {
-					log.info("SyncSystem " + systemURL + " failed: " + e.getMessage());
+					result.add("Failure: " + e.getMessage());
 				}
+				result.add("----------");
 			}
+			// Clean up data not in list anymore:
+			Map<String, Long> removed = cleanEntriesNotInSet(systemIdSet);
+			result.add("Removed SYSTEM: " + removed.get("SYSTEM"));
+			result.add("Removed SENSOR: " + removed.get("SENSOR"));
+			result.add("Removed SERVICE: " + removed.get("SERVICE"));
+
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Failed to sync", e);
 		}
-		log.info("Finished SyncSystemsJob");
+		result.add("Finished SyncSystemsJob");
+
+		return result;
 	}
 
 	private Set<String> getSystemUrls() throws Exception {
@@ -146,5 +179,21 @@ public class AdminService {
 			serviceDAO.save(serviceJSON);
 		}
 		return serviceList;
+	}
+
+	private Map<String, Long> cleanEntriesNotInSet(Set<String> systemIds) throws Exception {
+		Map<String, Long> result = new HashMap<>();
+
+		Bson systemQuery = nin("@id", systemIds);
+		Long count = documentManager.delete(OrchestratorStorage.DOCUMENT_TYPE.SYSTEM.toString(), systemQuery);
+		result.put("SYSTEM", count);
+		Bson query = nin("system", systemIds);
+		count = documentManager.delete(OrchestratorStorage.DOCUMENT_TYPE.SENSOR.toString(), query);
+		result.put("SENSOR", count);
+		count = documentManager.delete(OrchestratorStorage.DOCUMENT_TYPE.SERVICE.toString(), query);
+		result.put("SERVICE", count);
+
+		return result;
+
 	}
 }

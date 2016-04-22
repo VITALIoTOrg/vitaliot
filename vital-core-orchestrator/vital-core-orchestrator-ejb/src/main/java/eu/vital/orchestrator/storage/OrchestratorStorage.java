@@ -227,6 +227,12 @@ public class OrchestratorStorage implements Serializable {
 		return result.getDeletedCount();
 	}
 
+	public long delete(String type, Bson query) {
+		MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+		DeleteResult result = mongoCollection.deleteMany(query);
+		return result.getDeletedCount();
+	}
+
 	private Bson queryById(String documentId) {
 		if (ObjectId.isValid(documentId)) {
 			return in("_id", documentId, new ObjectId(documentId));
