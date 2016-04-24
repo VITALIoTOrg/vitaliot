@@ -37,13 +37,13 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -99,6 +99,19 @@ public class Keeper {
 	private String dms;
 
 	/**
+	 * The name of the cookie that contains the SSO token.
+	 */
+	@Inject
+	@Property(name = "vital-core-iot-data-adapter.sso-token")
+	private String cookieName;
+
+	/**
+	 * The security guard.
+	 */
+	@Inject
+	private Guard guard;
+
+	/**
 	 * The SSL connection socket factory.
 	 */
 	private SSLConnectionSocketFactory factory;
@@ -132,7 +145,7 @@ public class Keeper {
 	/**
 	 * Keeps.
 	 */
-	@Schedule(second = "0", minute = "*/3", hour = "*", persistent = false)
+	@Schedule(second = "0", minute = "*/30", hour = "*", persistent = false)
 	public void keep() {
 
 		logger.log(Level.FINE, "Keep.");
@@ -152,7 +165,7 @@ public class Keeper {
 				}
 			}
 			if (dlast == null || ((new Date().getTime() - dlast.getTime()) / 60000) > period) {
-				keepData(iotsystem);
+				pool.submit(() -> keepData(iotsystem));
 			}
 		}
 
@@ -274,6 +287,7 @@ public class Keeper {
 		try (final CloseableHttpClient client = builder.build()) {
 			final HttpPost post = new HttpPost(dms + "/insertSystem");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
+			post.setHeader("Cookie", cookieName + "=" + guard.systemLogin());
 			final HttpEntity entity = new StringEntity(metadata, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
@@ -345,6 +359,7 @@ public class Keeper {
 		try (final CloseableHttpClient client = builder.build()) {
 			final HttpPost post = new HttpPost(dms + "/insertService");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
+			post.setHeader("Cookie", cookieName + "=" + guard.systemLogin());
 			final HttpEntity entity = new StringEntity(metadata, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
@@ -416,6 +431,7 @@ public class Keeper {
 		try (final CloseableHttpClient client = builder.build()) {
 			final HttpPost post = new HttpPost(dms + "/insertSensor");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
+			post.setHeader("Cookie", cookieName + "=" + guard.systemLogin());
 			final HttpEntity entity = new StringEntity(metadata, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
@@ -480,7 +496,7 @@ public class Keeper {
 					for (final Object oo : ll) {
 						final String property = (String) ((List<Object>) ((Map<String, Object>) oo).get("@type"))
 								.get(0);
-						pool.submit(() -> pullSensorData(iotsystem, url, sensor, property));
+						pullSensorData(iotsystem, url, sensor, property);
 						break;
 					}
 				} catch (JsonLdError jle) {
@@ -655,6 +671,7 @@ public class Keeper {
 		try (final CloseableHttpClient client = builder.build()) {
 			final HttpPost post = new HttpPost(dms + "/insertObservation");
 			post.setHeader(HTTP.CONTENT_TYPE, "application/json");
+			post.setHeader("Cookie", cookieName + "=" + guard.systemLogin());
 			final HttpEntity entity = new StringEntity(data, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
