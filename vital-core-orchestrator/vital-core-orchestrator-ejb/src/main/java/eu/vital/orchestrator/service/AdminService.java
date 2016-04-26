@@ -12,7 +12,7 @@ import eu.vital.orchestrator.util.VitalConfiguration;
 import org.bson.conversions.Bson;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ import static com.mongodb.client.model.Filters.nin;
 /**
  * Created by anglen on 08/04/16.
  */
-@ApplicationScoped
+@Stateless
 public class AdminService {
 
 	@Inject
