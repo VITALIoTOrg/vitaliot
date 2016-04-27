@@ -33,9 +33,13 @@ import com.mongodb.util.JSON;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.cep.CepProcess;
 import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
 import eu.vital.vitalcep.publisher.MessageProcessor_publisher;
@@ -50,9 +54,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 
 
@@ -196,22 +203,27 @@ public class ContinuosFiltering {
                     UUID uuid = UUID.randomUUID();
                     String randomUUIDString = uuid.toString();
                             
-                    DBObject dbObject = 
-                            createCEPFilterSensor(filter, randomUUIDString, dsjo);
-
+                 
                     String mqin = RandomStringUtils.randomAlphanumeric(8);
                     String mqout = RandomStringUtils.randomAlphanumeric(8);
                     
-                    CEP cepProcess = new CEP(CEP.CEPType.CONTINUOUS,ds
-                        ,mqin,mqout,jo.getJSONArray("source").toString()
-                        ,credentials);
+                    CEP cepProcess = new CEP();
+                   
+                    if (!(cepProcess.CEPStart(CEP.CEPType.CONTINUOUS, ds, mqin,
+                            mqout, jo.getJSONArray("source").toString(), credentials))){
+                        return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+                    }
+                    
                     
                     if (cepProcess.PID<1){
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
                
-                    
+                    DBObject dbObject = 
+                            createCEPFilterSensor(filter, randomUUIDString
+                                    , dsjo,cepProcess.id);
                     //MIGUEL
                     MessageProcessor_publisher Publisher_MsgProcc 
                             = new MessageProcessor_publisher(this.dmsURL
@@ -271,7 +283,8 @@ public class ContinuosFiltering {
     }
 
     private DBObject createCEPFilterSensor(String filter, 
-            String randomUUIDString, JSONObject dsjo) throws JSONException {
+            String randomUUIDString, JSONObject dsjo
+    ,String cepInstance) throws JSONException {
         DBObject dbObject = (DBObject) JSON.parse(filter);
         dbObject.put("@context","http://vital-iot.eu/contexts/sensor.jsonld");
         dbObject.put("id", host+"/sensor/"
@@ -297,6 +310,7 @@ public class ContinuosFiltering {
         DBObject dbObject2 = (DBObject)JSON.parse(observes
                             .toString());
         dbObject.put("ssn:observes",dbObject2);
+        dbObject.put("cepinstance",cepInstance);
         return dbObject;
     }
     
@@ -368,12 +382,12 @@ public class ContinuosFiltering {
      * @param req
      * @return the filter 
      */
-    @POST
+    @DELETE
     @Path("deletecontinuousfilter")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletecontinuousfilter(String filterId,
-            @Context HttpServletRequest req) {
+            @Context HttpServletRequest req) throws IOException {
         
         StringBuilder ck = new StringBuilder();
         Security slogin = new Security();
@@ -403,6 +417,56 @@ public class ContinuosFiltering {
         }
             
         MongoCollection<Document> coll = db.getCollection("continuousfilters");
+        
+      
+        Bson filter = Filters.eq("id",idjo );
+        
+        FindIterable<Document> iterable = coll.find(filter);
+        
+        String cepInstance;
+        
+        CEP cepProcess = new CEP();
+        
+        if (iterable!= null && iterable.first()!=null){
+            Document doc = iterable.first();
+            cepInstance = doc.getString("cepinstance");
+                
+            MongoCollection<Document> collInstances = db.getCollection("cepinstances");
+
+            ObjectId ci = new ObjectId(cepInstance);
+            Bson filterInstances = Filters.eq("_id",ci);
+
+            FindIterable<Document> iterable2 = collInstances.find(filterInstances);
+        
+            if (iterable2!= null){
+                Document doc2 = iterable2.first();
+                cepProcess.PID = doc2.getInteger("PID");
+                cepProcess.fileName = doc2.getString("fileName");
+                cepProcess.cepFolder = doc2.getString("cepFolder");
+                cepProcess.type = CEP.CEPType.CONTINUOUS.toString();
+                CepProcess cp = new CepProcess(null, null,null);
+                cp.PID=doc2.getInteger("PID");
+                
+                cepProcess.cp =cp;
+                
+                if (!cepProcess.cepDispose()){
+                    java.util.logging.Logger.getLogger
+                    (ContinuosFiltering.class.getName()).log(Level.SEVERE, 
+                    "bcep Instance not terminated" );
+                }else{
+    
+                    Bson filter1 = Filters.eq("_id",ci);
+                    Bson update =  new Document("$set"
+                            ,new Document("status","terminated"));
+                    UpdateOptions options = new UpdateOptions().upsert(false);
+                    UpdateResult updateDoc =  db.getCollection("cepinstances")
+                            .updateOne(filter1,update,options);
+  
+                };
+                
+            }
+        }
+    
         
         DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
         
