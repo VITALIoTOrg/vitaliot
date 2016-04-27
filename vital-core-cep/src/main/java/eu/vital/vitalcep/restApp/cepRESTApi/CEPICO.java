@@ -33,8 +33,12 @@ import com.mongodb.util.JSON;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import eu.vital.vitalcep.cep.CepProcess;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.RandomStringUtils;
@@ -57,6 +61,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
+import javax.ws.rs.DELETE;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -98,10 +105,11 @@ public class CEPICO {
         MongoDatabase db = mongo.getDatabase(mongoDB);
         
         BasicDBObject query = new BasicDBObject(); 
-        BasicDBObject fields = new BasicDBObject().append("_id",false);
+        BasicDBObject fields = new BasicDBObject().append("_id",false)
+                .append("cepinstance",false);
         fields.append("dolceSpecification", false);
         
-        FindIterable<Document> coll = db.getCollection("ceps")
+        FindIterable<Document> coll = db.getCollection("cepicos")
                 .find(query).projection(fields);
        
         final JSONArray AllJson = new JSONArray(); 
@@ -125,7 +133,8 @@ public class CEPICO {
                 fPid.setAccessible(true);
             }
             return fPid.getInt(process);
-        } catch (Exception e) {
+        } catch (NoSuchFieldException | SecurityException |
+                IllegalArgumentException | IllegalAccessException e) {
             return -1;
         }
     }
@@ -190,11 +199,7 @@ public class CEPICO {
                     UUID uuid = UUID.randomUUID();
                     String randomUUIDString = uuid.toString();
                             
-                    DBObject dbObject = 
-                            createCEPSensor(cepico, randomUUIDString, dsjo);
-                 
-                    
-                    Document doc = new Document(dbObject.toMap());
+                  
 
                     String mqin = RandomStringUtils.randomAlphanumeric(8);
                     String mqout = RandomStringUtils.randomAlphanumeric(8);
@@ -214,13 +219,25 @@ public class CEPICO {
                     }
                     
                     
-                    CEP cepProcess = new CEP(CEP.CEPType.CEPICO,ds
-                        ,mqin,mqout,requestArray.toString(),credentials);
+                    CEP cepProcess = new CEP();
+                   
+                    if (!(cepProcess.CEPStart(CEP.CEPType.CEPICO, ds, mqin, mqout,
+                            requestArray.toString(), credentials))){
+                        return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+                    }
                     
                     if (cepProcess.PID<1){
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
+                    
+                    DBObject dbObject = 
+                            createCEPSensor(cepico, randomUUIDString, dsjo,
+                            cepProcess.id);
+                 
+                    
+                    Document doc = new Document(dbObject.toMap());
 
                     try{
                         db.getCollection("cepicos").insertOne(doc);
@@ -297,7 +314,8 @@ public class CEPICO {
     }
     
 
-    private DBObject createCEPSensor(String cepico, String randomUUIDString, JSONObject dsjo) throws JSONException {
+    private DBObject createCEPSensor(String cepico, String randomUUIDString,
+            JSONObject dsjo, String cepInstance) throws JSONException {
         DBObject dbObject = (DBObject) JSON.parse(cepico);
          dbObject.put("@context",
                 "http://vital-iot.eu/contexts/sensor.jsonld");
@@ -325,6 +343,7 @@ public class CEPICO {
         DBObject dbObject2 = (DBObject)JSON.parse(observes
                             .toString());
         dbObject.put("ssn:observes",dbObject2);
+        dbObject.put("cepinstance",cepInstance);
         return dbObject;
     }
       
@@ -346,7 +365,7 @@ public class CEPICO {
         MongoDatabase db = mongo.getDatabase(mongoDB);
 
         try {
-           db.getCollection("ceps");
+           db.getCollection("cepicos");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
           mongo.close();
@@ -357,9 +376,10 @@ public class CEPICO {
         
         BasicDBObject searchById = new BasicDBObject("id",idjo);
         String found = null;
-        BasicDBObject fields = new BasicDBObject().append("_id",false);
+        BasicDBObject fields = new BasicDBObject().append("_id",false)
+                .append("cepinstance",false);
 
-       FindIterable<Document> coll = db.getCollection("ceps")
+       FindIterable<Document> coll = db.getCollection("cepicos")
                 .find(searchById).projection(fields);
         
         try {
@@ -384,12 +404,12 @@ public class CEPICO {
      * @param req
      * @return the filter 
      */
-    @POST
+    @DELETE
     @Path("deletecepico")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteCEPICO(String filterId,
-            @Context HttpServletRequest req) {
+            @Context HttpServletRequest req) throws IOException {
         
         StringBuilder ck = new StringBuilder();
         Security slogin = new Security();
@@ -401,7 +421,6 @@ public class CEPICO {
         }
         this.cookie = ck.toString(); 
         
-        
         JSONObject jo = new JSONObject(filterId);
         String idjo = jo.getString("id");
              
@@ -409,24 +428,74 @@ public class CEPICO {
         MongoDatabase db = mongo.getDatabase(mongoDB);
 
         try {
-           db.getCollection("ceps");
+           db.getCollection("cepicos");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
           mongo.close();
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
-
         }
         
-        MongoCollection<Document> coll = db.getCollection("ceps");
+        
+        MongoCollection<Document> coll = db.getCollection("cepicos");
+        
+        Bson filter = Filters.eq("id",idjo );
+        
+        FindIterable<Document> iterable = coll.find(filter);
+        
+        String cepInstance;
+        
+        CEP cepProcess = new CEP();
+        
+        if (iterable!= null && iterable.first()!=null){
+            Document doc = iterable.first();
+            cepInstance = doc.getString("cepinstance");
+                
+            MongoCollection<Document> collInstances = db.getCollection("cepinstances");
+
+            ObjectId ci = new ObjectId(cepInstance);
+            Bson filterInstances = Filters.eq("_id",ci);
+
+            FindIterable<Document> iterable2 = collInstances.find(filterInstances);
+        
+            if (iterable2!= null){
+                Document doc2 = iterable2.first();
+                cepProcess.PID = doc2.getInteger("PID");
+                cepProcess.fileName = doc2.getString("fileName");
+                cepProcess.cepFolder = doc2.getString("cepFolder");
+                cepProcess.type = CEP.CEPType.CEPICO.toString();
+                CepProcess cp = new CepProcess(null, null,null);
+                cp.PID=doc2.getInteger("PID");
+                
+                cepProcess.cp =cp;
+                
+                if (!cepProcess.cepDispose()){
+                    java.util.logging.Logger.getLogger
+                    (CEPICO.class.getName()).log(Level.SEVERE, 
+                    "bcep Instance not terminated" );
+                }else{
+    
+                    Bson filter1 = Filters.eq("_id",ci);
+                    Bson update =  new Document("$set"
+                            ,new Document("status","terminated"));
+                    UpdateOptions options = new UpdateOptions().upsert(false);
+                    UpdateResult updateDoc =  db.getCollection("cepinstances")
+                            .updateOne(filter1,update,options);
+  
+                };
+                
+            }
+        }else{
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+       
         
         DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
         
         if (deleteResult.getDeletedCount() < 1){
             return Response.status(Response.Status.NOT_FOUND).build();
         }else{
-            
-                return Response.status(Response.Status.OK)
+            return Response.status(Response.Status.OK)
                     .build();
         }
     }
