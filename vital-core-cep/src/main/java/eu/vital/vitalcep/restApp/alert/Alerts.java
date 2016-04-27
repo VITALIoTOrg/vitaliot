@@ -27,9 +27,13 @@ import com.mongodb.util.JSON;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.cep.CepProcess;
 import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.connectors.ppi.PPIManager;
 import eu.vital.vitalcep.security.Security;
@@ -50,9 +54,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import org.json.JSONException;
 
 // TODO: Auto-generated Javadoc
@@ -199,12 +207,9 @@ public class Alerts {
                 if(ds instanceof DolceSpecification) {
                     UUID uuid = UUID.randomUUID();
                     String randomUUIDString = uuid.toString();
-                            
-                    DBObject dbObject = 
-                            createAlertSensor(cepico, randomUUIDString, dsjo);
-                 
+                  
                     
-                    Document doc = new Document(dbObject.toMap());
+                   
 
                     String mqin = RandomStringUtils.randomAlphanumeric(8);
                     String mqout = RandomStringUtils.randomAlphanumeric(8);
@@ -223,9 +228,13 @@ public class Alerts {
                                 .build();
                     }
                     
-                    
-                    CEP cepProcess = new CEP(CEP.CEPType.CEPICO,ds
-                        ,mqin,mqout,requestArray.toString(),credentials);
+                    CEP cepProcess = new CEP();
+                   
+                    if (!(cepProcess.CEPStart(CEP.CEPType.ALERT, ds, mqin,
+                            mqout, requestArray.toString(), credentials))){
+                        return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+                    }
                     
                     String clientName = cepProcess.fileName;
 
@@ -233,6 +242,13 @@ public class Alerts {
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
+                    
+                              
+                    DBObject dbObject = 
+                            createAlertSensor(cepico, randomUUIDString, dsjo,
+                            cepProcess.id);
+                 
+                     Document doc = new Document(dbObject.toMap());
 
                     try{
                         db.getCollection("alerts").insertOne(doc);
@@ -312,7 +328,7 @@ public class Alerts {
     
 
     private DBObject createAlertSensor(String cepico, String randomUUIDString,
-            JSONObject dsjo) throws JSONException {
+            JSONObject dsjo, String cepInstance) throws JSONException {
         DBObject dbObject = (DBObject) JSON.parse(cepico);
         dbObject.put("@context",
                 "http://vital-iot.eu/contexts/sensor.jsonld");
@@ -340,6 +356,7 @@ public class Alerts {
         DBObject dbObject2 = (DBObject)JSON.parse(observes
                             .toString());
         dbObject.put("ssn:observes",dbObject2);
+        dbObject.put("cepinstance",cepInstance);
         return dbObject;
     }
     
@@ -425,14 +442,14 @@ public class Alerts {
      * @param req
      * @return the filter 
      */
-    @POST
+    @DELETE
     @Path("deletealert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteAlert(String filterId
-            ,@Context HttpServletRequest req) {
+            ,@Context HttpServletRequest req) throws IOException {
         
-        StringBuilder ck = new StringBuilder();
+         StringBuilder ck = new StringBuilder();
         Security slogin = new Security();
                   
         Boolean token = slogin.login(req.getHeader("name")
@@ -441,7 +458,6 @@ public class Alerts {
               return Response.status(Response.Status.UNAUTHORIZED).build();
         }
         this.cookie = ck.toString(); 
-        
         
         JSONObject jo = new JSONObject(filterId);
         String idjo = jo.getString("id");
@@ -456,18 +472,68 @@ public class Alerts {
           mongo.close();
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
-
         }
         
+        
         MongoCollection<Document> coll = db.getCollection("alerts");
+        
+        Bson filter = Filters.eq("id",idjo );
+        
+        FindIterable<Document> iterable = coll.find(filter);
+        
+        String cepInstance;
+        
+        CEP cepProcess = new CEP();
+        
+        if (iterable!= null && iterable.first()!=null){
+            Document doc = iterable.first();
+            cepInstance = doc.getString("cepinstance");
+                
+            MongoCollection<Document> collInstances = db.getCollection("cepinstances");
+
+            ObjectId ci = new ObjectId(cepInstance);
+            Bson filterInstances = Filters.eq("_id",ci);
+
+            FindIterable<Document> iterable2 = collInstances.find(filterInstances);
+        
+            if (iterable2!= null){
+                Document doc2 = iterable2.first();
+                cepProcess.PID = doc2.getInteger("PID");
+                cepProcess.fileName = doc2.getString("fileName");
+                cepProcess.cepFolder = doc2.getString("cepFolder");
+                 cepProcess.type = CEP.CEPType.ALERT.toString();
+                CepProcess cp = new CepProcess(null, null,null);
+                cp.PID=doc2.getInteger("PID");
+                
+                cepProcess.cp =cp;
+                
+                if (!cepProcess.cepDispose()){
+                    java.util.logging.Logger.getLogger
+                    (Alerts.class.getName()).log(Level.SEVERE, 
+                    "bcep Instance not terminated" );
+                }else{
+    
+                    Bson filter1 = Filters.eq("_id",ci);
+                    Bson update =  new Document("$set"
+                            ,new Document("status","terminated"));
+                    UpdateOptions options = new UpdateOptions().upsert(false);
+                    UpdateResult updateDoc =  db.getCollection("cepinstances")
+                            .updateOne(filter1,update,options);
+  
+                };
+                
+            }
+        }else{
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+       
         
         DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
         
         if (deleteResult.getDeletedCount() < 1){
             return Response.status(Response.Status.NOT_FOUND).build();
         }else{
-            
-                return Response.status(Response.Status.OK)
+            return Response.status(Response.Status.OK)
                     .build();
         }
     }
