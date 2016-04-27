@@ -5,6 +5,7 @@
  */
 package eu.vital.vitalcep.collector.decoder;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -130,6 +131,10 @@ public class Decoder {
                 //String time = getDolceDateTime(oTime);
                 observationResultTime = "string observationTime "
                     + oTime ;
+            }else {
+                Date NOW = new Date();
+                observationResultTime = "string observationTime "
+                    + NOW ;
             }
             
            
@@ -157,6 +162,13 @@ public class Decoder {
         output.setTimeZone(TimeZone.getTimeZone("GMT"));
         
         return  output.format(date);
+    }
+    
+    private String getXSDDateTime(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        return  dateFormat.format(date);
     }
 
 }
