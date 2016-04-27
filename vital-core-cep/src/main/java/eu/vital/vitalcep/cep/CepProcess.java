@@ -107,20 +107,44 @@ public class CepProcess {
         try {
             Process pr = Runtime.getRuntime()
                     .exec(cmd);
-            PID = getPid(pr);
             
-            if(PID == 0){
+            if(pr.exitValue()==0){
+                PID = -1;
                 try{
-    		
-    		File file = new File(cepFolder//+"/"+dolceFile
-                                +"/"+fileName+"_dolce");
-    		file.delete();
+                    File file = new File(cepFolder//+"/"+dolceFile
+                                    +"/"+fileName+"_dolce");
+                    file.delete();
                 }catch(Exception e){
                 }
             }
         } catch (IOException e) {
 
         }
+
+    }
+    
+    public static Boolean stopCEP(int PID, String cepFolder,
+            String fileName) throws FileNotFoundException, IOException {
+                       
+        String cmd = "kill -9 " + Integer.toString(PID);
+
+        try {
+            Process pr = Runtime.getRuntime()
+                    .exec(cmd);
+            if(pr.exitValue()==0){
+                PID = -1;
+                try{
+                    File file = new File(cepFolder//+"/"+dolceFile
+                                    +"/"+fileName+"_dolce");
+                    file.delete();
+                }catch(Exception e){
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+        
+        return true;
 
     }
     
@@ -134,13 +158,13 @@ public class CepProcess {
             if (!fPid.isAccessible()) {
                 fPid.setAccessible(true);
             }else{
-                return 0;
+                return -1;
             }
             
             return fPid.getInt(process);
         } catch (NoSuchFieldException | SecurityException | 
                 IllegalArgumentException | IllegalAccessException e) {
-            return -1;
+            return -2;
         }
     }
     
