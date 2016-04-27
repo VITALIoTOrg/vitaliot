@@ -134,7 +134,7 @@ public class Decoder {
             }else {
                 Date NOW = new Date();
                 observationResultTime = "string observationTime "
-                    + NOW ;
+                    + getXSDDateTime(NOW) ;
             }
             
            
