@@ -6,7 +6,6 @@
 package eu.vital.vitalcep.cep;
 
 import com.mongodb.BasicDBList;
-import eu.vital.vitalcep.conf.PropertyLoader;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
@@ -46,7 +45,7 @@ import org.json.JSONObject;
 public class CEP {
 
     public enum CEPType {
-        DATA, QUERY, CEPICO, CONTINUOUS
+        DATA, QUERY, CEPICO, CONTINUOUS, ALERT
     }
     
     private  String mongoURL;
@@ -57,10 +56,12 @@ public class CEP {
     public String mqin;
     public String mqout;
     public String doceSpecification;
-    public CEPType type;
-    final private CepProcess cp;
-    
-    public CEP (CEPType type,DolceSpecification dolceSpecification
+    public String type;
+    public CepProcess cp;
+    public String id;
+    public String cepFolder;
+      
+    public Boolean CEPStart (CEPType type,DolceSpecification dolceSpecification
             ,String mqin, String mqout,
             String sources, JSONObject credentials)
             throws FileNotFoundException, IOException{
@@ -74,6 +75,7 @@ public class CEP {
         cp.startCEP();
         this.PID = cp.PID;
                
+        this.type = type.toString();
         String T = type.toString();
         
         if (cp.PID>0){
@@ -93,6 +95,9 @@ public class CEP {
                 doc.put("dolcefile", cp.cepFolder+"/"+cp.fileName);
                 doc.put("cepType", T);
                 doc.put("clientId", fileName);
+                //doc.put("sensorId", id);
+                doc.put("fileName",fileName);
+                doc.put("cepFolder",cp.cepFolder);
                 
                 Date NOW = new Date();
 
@@ -104,7 +109,8 @@ public class CEP {
                         doc.put("querys", sources);
                         break;
                         
-                    case "CEPICO":
+                    case "CEPICO": 
+                    case "ALERT":
                         doc.put("lastRequest", getXSDDateTime(NOW));
                         BasicDBList sourcesCEPICO = (BasicDBList) JSON.parse(sources);
                         doc.put("requests", sourcesCEPICO);
@@ -128,16 +134,22 @@ public class CEP {
                 
                 doc.put("status","OK");
                 db.getCollection("cepinstances").insertOne(doc);
-                ObjectId id = (ObjectId)doc.get( "_id" );
+                ObjectId idO = (ObjectId)doc.get( "_id" );
+                this.id=idO.toString();
                 
-                Boolean insertIntoCollectorList = insertIntoCollectorList(doc,id);
-                
-                if (!insertIntoCollectorList){
-                    db.getCollection("cepinstances").updateOne(doc
-                            , new Document("$set", new Document("status"
-                                    , "no collector available")));
-                     throw new ServerErrorException(500);
+                if (id!=null && !(T=="DATA" || T=="QUERY")){
+                    Boolean insertIntoCollectorList = 
+                            insertIntoCollectorList(doc,idO);
+                    
+                    if (!insertIntoCollectorList){
+                        db.getCollection("cepinstances").updateOne(doc
+                                , new Document("$set", new Document("status"
+                                        , "no collector available")));
+                         throw new ServerErrorException(500);
+                    }
+               
                 }
+                
                
             }catch(JSONException | 
                     GeneralSecurityException | 
@@ -147,7 +159,9 @@ public class CEP {
                 
         }else{
             this.fileName = "";
+            return false;
         }
+        return true;
       
     }
 
@@ -186,21 +200,17 @@ public class CEP {
                 final String jsonStringRequests = doc1.toJson();
                 JSONObject requestsObject = new JSONObject(jsonStringRequests);
 
-
                 oCollector.put("requests"
                         , requestsObject.getJSONArray("requests") );
                 oCollector.put("username",doc.getString("username"));
                 oCollector.put("password",doc.getString("password"));
             }
-            oCollector.put("lastRequest",doc.getString("lastRequest"));
             
+            oCollector.put("lastRequest",doc.getString("lastRequest"));
             Collector oCol = Collector.getInstance( );    
             oCol.sensors.put(oCollector);
-            
-            
-            
-            
             return true;
+            
         }catch( JSONException | IOException ee ){
             java.util.logging.Logger.getLogger(CEP.class.getName())
                     .log(Level.SEVERE, null, ee);
@@ -210,12 +220,25 @@ public class CEP {
     
     public boolean cepDispose() throws IOException{
         
-        this.cp.stopCEP();
-        return this.cp.PID==0;
-
+        if(!((this.type.toString()=="DATA")||(this.type.toString()=="QUERY"))){
+            Collector oCol = Collector.getInstance( );  
+            for (int i = 0; i < oCol.sensors.length(); i++) {
+                JSONObject JCollector = new JSONObject();
+                JCollector = oCol.sensors.getJSONObject(i);
+                if(JCollector.getString("id").equals(id)){
+                    oCol.sensors.remove(i);
+                    break;
+                }
+        }
+            
+        }
+        
+        this.cp.stopCEP();      
+        return this.cp.PID==-1;
+        
     }
     
-     private String getXSDDateTime(Date date) {
+    private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
