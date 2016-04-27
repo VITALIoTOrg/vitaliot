@@ -138,10 +138,14 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 
                 JSONArray aData =  jo.getJSONArray("data");
 
-                CEP cepProcess = new CEP(CEP.CEPType.DATA,ds
-                        ,mqin,mqout,aData.toString(),null);
-                
-                
+                CEP cepProcess = new CEP();
+                   
+                if (!(cepProcess.CEPStart(CEP.CEPType.DATA, ds, mqin,
+                        mqout, aData.toString(), null))){
+                    return Response.status(Response
+                            .Status.INTERNAL_SERVER_ERROR).build();
+                }
+                    
                 String clientName = "collector_"+RandomStringUtils
                         .randomAlphanumeric(4);
 
@@ -411,10 +415,17 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 String mqin = RandomStringUtils.randomAlphanumeric(8);
                 String mqout = RandomStringUtils.randomAlphanumeric(8);
 
-                CEP cepProcess = new CEP(CEP.CEPType.QUERY,ds
-                        ,mqin,mqout,jo.getString("query"),null);
+                CEP cepProcess = new CEP();
+                   
+                if (!(cepProcess.CEPStart(CEP.CEPType.QUERY, ds, mqin,
+                        mqout, jo.getString("query"), null))){
+                    return Response.status(Response
+                            .Status.INTERNAL_SERVER_ERROR).build();
+                }
 
-                String clientName =  "collector_"+RandomStringUtils.randomAlphanumeric(4);
+
+                String clientName =  "collector_"+RandomStringUtils
+                        .randomAlphanumeric(4);
 
                 if (cepProcess.PID<1){
                     return Response.status(Response
