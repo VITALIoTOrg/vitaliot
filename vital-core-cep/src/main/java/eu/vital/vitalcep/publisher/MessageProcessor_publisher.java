@@ -50,7 +50,8 @@ public class MessageProcessor_publisher  implements MessageProcessor {
         
         try {
             if (!oDMS.pushObservations(body.toString())){
-                //log
+                Logger.getLogger(MessageProcessor_publisher.class.getName())
+                    .log(Level.SEVERE, null,"couldn't push to DMS");
                  return false;
             } else{
                 return true;
