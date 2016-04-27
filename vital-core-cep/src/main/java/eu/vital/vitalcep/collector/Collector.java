@@ -225,11 +225,13 @@ public class Collector {
         
         final MongoDatabase db = mongo.getDatabase(mongoDB);
         
-        BasicDBObject clause1 = new BasicDBObject("cepType", "CONTINUOUS");
+        BasicDBObject clause1 = new BasicDBObject("cepType", "CONTINUOUS").append("status", "OK");
         BasicDBObject clause2 = new BasicDBObject("cepType", "CEPICO");
+         BasicDBObject clause3 = new BasicDBObject("cepType", "ALERT");
         BasicDBList or = new BasicDBList();
         or.add(clause1);
         or.add(clause2);
+         or.add(clause3);
         BasicDBObject query = new BasicDBObject("$or", or);
         
         
