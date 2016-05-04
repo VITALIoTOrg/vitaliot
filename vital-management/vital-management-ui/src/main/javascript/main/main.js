@@ -70,13 +70,18 @@ angular.module('main', [
                     $scope.title = 'System Configuration';
                     $scope.subtitile = '';
                     $scope.titlelink = '';
+                // Governance
+                } else if (/^\/governance./.test(path)) {
+                    $scope.title = '';
+                    $scope.subtitile = '';
+                    $scope.titlelink = '';
+                // Utility
+                } else if (path === '/query') {
+                    $scope.title = '';
+                    $scope.subtitile = '';
+                    $scope.titlelink = '';
                 }
                 // Security paths
-                else if (path.substring(0, 18) === '/security/systconf') {
-                    $scope.title = 'Guided System Configuration';
-                    $scope.subtitle = '';
-                    $scope.titlelink = '#/security/systconf';
-                }
                 else if (path.substring(0, 15) === '/security/users') {
                     $scope.title = 'Users Control Panel';
                     $scope.subtitle = '';
@@ -109,11 +114,6 @@ angular.module('main', [
                     if (path === '/security/policies/details') {
                         $scope.subtitle = 'Policy Details';
                     }
-                }
-                else if (path.substring(0, 21) === '/security/datacontrol') {
-                    $scope.title = 'Data Access Control';
-                    $scope.subtitle = '';
-                    $scope.titlelink = '#/security/datacontrol';
                 }
                 else if (path.substring(0, 22) === '/security/applications') {
                     $scope.title = 'Applications Control Panel';
