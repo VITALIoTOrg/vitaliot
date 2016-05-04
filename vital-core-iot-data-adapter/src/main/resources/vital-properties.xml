@@ -7,7 +7,7 @@
 	<entry key="vital-core-iot-data-adapter.mongo.uri">mongodb://localhost:27017</entry>
 	<entry key="vital-core-iot-data-adapter.mongo.db">vital-iot-data-adapter</entry>
 	<entry key="vital-core-iot-data-adapter.keeper.workers">100</entry>
-	<entry key="vital-core-iot-data-adapter.security">https://vitalgateway.cloud.reply.eu/securitywrapper/rest</entry>
+	<entry key="vital-core-iot-data-adapter.security">https://vital-integration.atosresearch.eu:8843/securitywrapper/rest</entry>
 	<entry key="vital-core-iot-data-adapter.sso-token">vitalAccessToken</entry>
 	<entry key="vital-core-iot-data-adapter.alt-token">vitalTestToken</entry>
 	<entry key="vital-core-iot-data-adapter.system.user">iot-data-adapter</entry>
