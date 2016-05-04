@@ -17,11 +17,11 @@
     <entry key="vital-core-iot-data-adapter.mongo.uri">mongodb://localhost:27017</entry>
     <entry key="vital-core-iot-data-adapter.mongo.db">vital-iot-data-adapter</entry>
     <entry key="vital-core-iot-data-adapter.keeper.workers">100</entry>
-	<entry key="vital-core-iot-data-adapter.security">https://localhost:8443/securitywrapper/rest</entry>
-	<entry key="vital-core-iot-data-adapter.sso-token">vitalAccessToken</entry>
-	<entry key="vital-core-iot-data-adapter.alt-token">vitalTestToken</entry>
-	<entry key="vital-core-iot-data-adapter.system.user">iot-data-adapter</entry>
-	<entry key="vital-core-iot-data-adapter.system.password">12345678</entry>
+    <entry key="vital-core-iot-data-adapter.security">https://localhost:8443/securitywrapper/rest</entry>
+    <entry key="vital-core-iot-data-adapter.sso-token">vitalAccessToken</entry>
+    <entry key="vital-core-iot-data-adapter.alt-token">vitalTestToken</entry>
+    <entry key="vital-core-iot-data-adapter.system.user">iot-data-adapter</entry>
+    <entry key="vital-core-iot-data-adapter.system.password">12345678</entry>
     <!--/.vital-core-iot-data-adapter-->
 
     <!--vital-core-iot-data-adapter-ppi-->
