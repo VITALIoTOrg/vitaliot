@@ -71,9 +71,9 @@ public abstract class ProxyRestService extends HttpServlet {
                         if (matcher.find()) {
                             domain = matcher.group(1);
                         }
-                        httpServletResponse.addHeader(headerName, headerValues.toString().replaceAll("Domain=[^;]*", "Domain=" + domain));
+                        httpServletResponse.addHeader(headerName, headerValues.get(0).replaceAll("Domain=[^;]*", "Domain=" + domain));
                     } else {
-                        httpServletResponse.addHeader(headerName, headerValues.toString());
+                        httpServletResponse.addHeader(headerName, headerValues.get(0));
                     }
 				}
 			}
