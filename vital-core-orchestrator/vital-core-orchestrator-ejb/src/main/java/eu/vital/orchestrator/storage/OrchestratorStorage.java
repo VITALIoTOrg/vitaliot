@@ -146,7 +146,6 @@ public class OrchestratorStorage implements Serializable {
 	public void update(String type, String documentId, JsonNode document) {
 		try {
 			Document mongoDocument = Document.parse(objectMapper.writeValueAsString(document));
-			mongoDocument.put("_id", documentId);
 
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
 			FindOneAndReplaceOptions options = new FindOneAndReplaceOptions();

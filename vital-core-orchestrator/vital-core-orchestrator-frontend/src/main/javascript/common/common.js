@@ -4,6 +4,7 @@ angular.module('common', [
         'ngCookies',
         'ngSanitize',
         'ui.codemirror',
+        'angular-loading-bar',
         'common.templates',
         'common.authentication'
     ])
