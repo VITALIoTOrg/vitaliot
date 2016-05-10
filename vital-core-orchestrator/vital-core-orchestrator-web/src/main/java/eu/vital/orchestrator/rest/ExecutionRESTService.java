@@ -18,7 +18,6 @@ package eu.vital.orchestrator.rest;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.engine.WorkFlowEngine;
 import eu.vital.orchestrator.service.MetaserviceDAO;
@@ -33,6 +32,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.Map;
 
 @Path("/execute")
 public class ExecutionRESTService extends RESTService {
@@ -63,7 +63,7 @@ public class ExecutionRESTService extends RESTService {
 	public Response executeWorkflowOnce(JsonNode data) throws Exception {
 		JsonNode input = data.get("input");
 		JsonNode workflow = data.get("workflow");
-		JsonNode response = workFlowEngine.executeWorkflow(workflow, input);
+		Map<String, JsonNode> response = workFlowEngine.executeWorkflow(workflow, input);
 		return Response.ok(response).build();
 	}
 
@@ -72,15 +72,13 @@ public class ExecutionRESTService extends RESTService {
 	public Response executeWorkflow(@PathParam("id") String serviceId, JsonNode input) throws Exception {
 		JsonNode service = metaserviceDAO.getMetaservice(serviceId);
 		JsonNode workflow = service.get("workflow");
-		ArrayNode response = workFlowEngine.executeWorkflow(workflow, input);
-		JsonNode lastOperation = response.get(response.size() - 1);
-
-		//1. Check for errors:
-		if (lastOperation.has("error")) {
-			throw new Exception(lastOperation.get("error").asText());
+		Map<String, JsonNode> response = workFlowEngine.executeWorkflow(workflow, input);
+		if (response.containsKey("output")) {
+			JsonNode output = response.get("output");
+			return Response.ok(output.get("outputData")).build();
+		} else {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(response).build();
 		}
-		//2. Return result
-		return Response.ok(lastOperation.get("outputData")).build();
 	}
 
 	@GET

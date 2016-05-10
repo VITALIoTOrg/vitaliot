@@ -33,75 +33,142 @@
                     <label for="name">Workflow Operations</label>
 
                     <!-- Operations -->
-                    <div class="box box-solid box-primary"
-                         ng-repeat="operation in workflowEditCtrl.workflow.operationList">
-                        <div class="box-header">
-                            <i class="fa fa-gear"> {{$index + 1}}</i>
+                    <div ng-repeat="(nodeName, node) in workflowEditCtrl.workflow.nodes"
+                         ng-switch="nodeName">
 
-                            <h3 class="box-title">
-                                <input class="form-control form-inline" ng-model="operation.name"/>
-                            </h3>
-
-                            <div class="box-tools pull-right">
-                                <a class="btn btn-sm bg-blue" data-target="#collapse-input-{{$index}}" data-toggle="tab">Input Data</a>
-                                <a class="btn btn-sm bg-blue" data-target="#collapse-script-{{$index}}" data-toggle="tab">Script</a>
-                                <a class="btn btn-sm bg-red"
-                                   ng-click="workflowEditCtrl.actions.removeOperation(operation)">
-                                    <i class="fa fa-times"></i>
-                                </a>
+                        <!-- Input -->
+                        <div class="box box-solid box-success" ng-switch-when="input">
+                            <div class="box-header">
+                                <h3 class="box-title">
+                                    {{nodeName}}
+                                </h3>
                             </div>
-                        </div>
 
-                        <div class="box-body border-radius-none">
-                            <div class="tab-content">
-                                <div class="tab-pane" id="collapse-input-{{$index}}">
-                                    <textarea class="form-control" name="data"
+                            <div class="box-body border-radius-none">
+                                <div class="tab-content">
+                                    <textarea class="form-control" name="operationData"
                                               ui-codemirror="workflowEditCtrl.data.cmOption.inputData"
-                                              ng-model="operation.inputData"
-                                              ng-required="true"
-                                              ng-if="$index === 0"></textarea>
-
-                                    <pre ng-if="$index > 0">{{operation.inputData | jsonString}}</pre>
+                                              ng-model="node.inputData"
+                                              ng-required="nodeName === 'input'">
+                                    </textarea>
                                 </div>
-                                <div class="tab-pane active" id="collapse-script-{{$index}}">
-                                     <textarea class="form-control" name="data"
-                                               ui-codemirror="workflowEditCtrl.data.cmOption.script"
-                                               ng-model="operation.script"
-                                               ng-required="true"></textarea>
+
+                            </div>
+                            <div class="box-footer no-border">
+                            </div>
+                        </div>
+                        <!-- /.Input -->
+
+                        <!-- Output -->
+                        <div class="box box-solid box-warning" ng-switch-when="output">
+                            <div class="box-header">
+                                <h3 class="box-title">
+                                    {{nodeName}}
+                                </h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-sm bg-blue" data-target="#collapse-incoming-{{nodeName}}" data-toggle="tab">Incoming</button>
                                 </div>
                             </div>
 
+                            <div class="box-body border-radius-none">
+                                <div class="tab-content">
+                                    <select name="currentNodeList"
+                                            ng-model="workflowEditCtrl.data.incomingNodeName"
+                                            ng-options="incomingNodeName for incomingNodeName in workflowEditCtrl.data.currentNodeList() track by incomingNodeName"></select>
+                                    <button type="button" class="btn btn-xs" ng-click="workflowEditCtrl.actions.addEdge(workflowEditCtrl.data.incomingNodeName, nodeName)">(+)</button>
+
+                                    <div ng-repeat="incomingNodeName in node.incoming">
+                                        {{incomingNodeName}}
+                                        <button type="button" class="btn btn-xs" ng-click="workflowEditCtrl.actions.removeEdge(incomingNodeName, nodeName)">(X)</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-footer no-border">
+                            </div>
                         </div>
-                        <div class="box-footer no-border">
+                        <!-- /.Output -->
+
+                        <!-- Operation -->
+                        <div class="box box-solid box-primary" ng-switch-default>
+
+                            <div class="box-header">
+                                <h3 class="box-title">
+                                    <input class="form-control form-inline" name="operationName" ng-model="node.operation.name"/>
+                                </h3>
+
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-sm bg-blue" data-target="#collapse-input-{{nodeName}}" data-toggle="tab">Input Data</button>
+                                    <button type="button" class="btn btn-sm bg-blue" data-target="#collapse-script-{{nodeName}}" data-toggle="tab">Script</button>
+                                    <button type="button" class="btn btn-sm bg-blue" data-target="#collapse-incoming-{{nodeName}}" data-toggle="tab">Incoming</button>
+                                    <button type="button" class="btn btn-sm bg-red"
+                                            ng-click="workflowEditCtrl.actions.removeNode(nodeName)">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="box-body border-radius-none">
+                                <div class="tab-content">
+                                    <div class="tab-pane" id="collapse-input-{{nodeName}}">
+                                        <textarea class="form-control" name="operationData"
+                                                  ui-codemirror="workflowEditCtrl.data.cmOption.inputData"
+                                                  ng-model="node.operation.inputData">
+                                        </textarea>
+                                    </div>
+                                    <div class="tab-pane active" id="collapse-script-{{nodeName}}">
+                                     <textarea class="form-control" name="operationData"
+                                               ui-codemirror="workflowEditCtrl.data.cmOption.script"
+                                               ng-model="node.operation.script"
+                                               ng-required="true"></textarea>
+                                    </div>
+                                    <div class="tab-pane" id="collapse-incoming-{{nodeName}}">
+                                        <select name="currentNodeList"
+                                                ng-model="workflowEditCtrl.data.incomingNodeName"
+                                                ng-options="incomingNodeName for incomingNodeName in workflowEditCtrl.data.currentNodeList() track by incomingNodeName"></select>
+                                        <button type="button" class="btn btn-xs" ng-click="workflowEditCtrl.actions.addEdge(workflowEditCtrl.data.incomingNodeName, nodeName)">(+)</button>
+
+                                        <div ng-repeat="incomingNodeName in node.incoming">
+                                            {{incomingNodeName}}
+                                            <button type="button" class="btn btn-xs" ng-click="workflowEditCtrl.actions.removeEdge(incomingNodeName, nodeName)">(X)</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="box-footer no-border">
+                            </div>
                         </div>
+                        <!-- /.Operation -->
                     </div>
-                    <!-- /.Operations -->
 
-                    <div class="input-group input-group-sm">
-
-                        <select name="operation"
-                                class="form-control"
-                                ng-options="operation.name for operation in workflowEditCtrl.data.operationList track by operation.id"
-                                ng-model="workflowEditCtrl.data.operation">
-                            <option value="">--</option>
-                        </select>
-
-                        <div class="input-group-btn">
-                            <a class="btn btn-success"
-                               ng-click="workflowEditCtrl.actions.addOperation(workflowEditCtrl.data.operation)">
-                                <i class="fa fa-plus-circle"></i> Add operation
-                            </a>
-                        </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                        <button type="button" class="btn btn-success"
+                                ng-click="workflowEditCtrl.actions.execute(workflowEditForm)">
+                            <i class="fa fa-play-circle-o"></i> Test
+                        </button>
                     </div>
 
                 </div>
+            </form>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                    <a class="btn btn-success"
-                       ng-click="workflowEditCtrl.actions.execute(workflowEditForm)">
-                        <i class="fa fa-play-circle-o"></i> Test
-                    </a>
+            <form name="addNewNodeForm">
+                <div class="input-group input-group-sm">
+
+                    <select name="operation"
+                            class="form-control"
+                            ng-options="operation.name for operation in workflowEditCtrl.data.operationList track by operation.id"
+                            ng-model="workflowEditCtrl.data.operation">
+                        <option value="">--</option>
+                    </select>
+
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-success"
+                                ng-click="workflowEditCtrl.actions.addNode(workflowEditCtrl.data.operation)">
+                            <i class="fa fa-plus-circle"></i> Add operation
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

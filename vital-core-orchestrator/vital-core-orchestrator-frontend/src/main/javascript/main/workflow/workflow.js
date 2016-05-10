@@ -33,7 +33,17 @@ angular.module('main.workflow', [])
                             return {
                                 'name': '',
                                 'status': 'DISABLED',
-                                'operationList': []
+                                'nodes': {
+                                    input: {
+                                        name: 'Start',
+                                        inputData: null,
+                                        incoming: []
+                                    },
+                                    output: {
+                                        name: 'End',
+                                        incoming: ['input']
+                                    }
+                                }
                             };
                         }
                     }
@@ -122,12 +132,28 @@ angular.module('main.workflow', [])
                 },
                 errors: [],
                 operationList: operationList,
+                currentNodeList: function () {
+                    return _.keys(thisCtrl.workflow.nodes);
+                },
+                incomingNodeName: null,
+                newNodeName: null,
                 operation: null
             };
 
             thisCtrl.actions = {
-                addOperation: function (operation) {
-                    operation = operation || {
+                addNode: function (operation) {
+                    function nextName() {
+                        var i = _.keys(thisCtrl.workflow.nodes).length - 2;
+                        var nextName = 'operation' + i;
+                        while (_.isObject(thisCtrl.workflow.nodes[nextName])) {
+                            i += 1;
+                            nextName = 'operation' + i;
+                        }
+                        return nextName;
+                    }
+
+                    var nodeName = nextName();
+                    var operation = operation || {
                             'script': 'function execute(input) {\n' +
                             '\tvar output;\n' +
                             '\n' +
@@ -140,15 +166,35 @@ angular.module('main.workflow', [])
                             '\treturn output;\n' +
                             '}\n'
                         };
-                    workflow.operationList.push(angular.copy(operation));
+                    var node = {
+                        operation: angular.copy(operation),
+                        incoming: []
+                    };
+                    workflow.nodes[nodeName] = node;
                 },
-                removeOperation: function (operation) {
-                    workflow.operationList.splice(workflow.operationList.indexOf(operation), 1);
+                removeNode: function (name) {
+                    if (name === 'input' || name === 'output') {
+                        // Cannot delete the input and output nodes
+                        return;
+                    }
+                    delete workflow.nodes[name];
+                },
+                addEdge: function (fromNodeName, toNodeName) {
+                    workflow.nodes[toNodeName].incoming.push(fromNodeName);
+                },
+                removeEdge: function (fromNodeName, toNodeName) {
+                    var index = workflow.nodes[toNodeName].incoming.indexOf(fromNodeName);
+                    workflow.nodes[toNodeName].incoming.splice(index, 1);
                 },
                 save: function (ngFormController) {
+                    // Check form
                     if (ngFormController.$invalid) {
                         return;
                     }
+                    // Check that the graph is connected (path exists from input to output)
+
+
+                    //
                     workflowResource.save(thisCtrl.workflow)
                         .then(function (savedWorkflow) {
                             angular.copy(savedWorkflow, thisCtrl.workflow);
@@ -157,7 +203,7 @@ angular.module('main.workflow', [])
                         });
                 },
                 execute: function () {
-                    var inputData = angular.fromJson(thisCtrl.workflow.operationList[0].inputData);
+                    var inputData = angular.fromJson(thisCtrl.workflow.nodes.input.inputData);
                     thisCtrl.output = null;
                     thisCtrl.data.errors.length = 0;
                     workflowResource.execute(thisCtrl.workflow, inputData)
