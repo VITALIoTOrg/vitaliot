@@ -12,3 +12,43 @@
 @fa-font-path: "./vendor/fontawesome/fonts";
 
 @gray: #2f2f2f;
+
+// Workflow Graph:
+path.link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+}
+
+g.node {
+
+    &.selected {
+        circle {
+            stroke: yellow;
+            stroke-width: 2.5px;
+        }
+    }
+
+    &.input {
+        circle {
+            fill: green;
+        }
+    }
+
+    &.output {
+        circle {
+            fill: red;
+        }
+    }
+
+    circle {
+        fill: #ccc;
+        stroke: #fff;
+        stroke-width: 1.5px;
+    }
+
+    text {
+        fill: #000;
+        font: 10px sans-serif;
+    }
+}

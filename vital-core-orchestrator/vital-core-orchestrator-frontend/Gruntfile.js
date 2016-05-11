@@ -145,6 +145,13 @@ module.exports = function (grunt) {
                             'dist/MarkerCluster.css',
                             'dist/MarkerCluster.Default.css'
                         ]
+                    },
+                    'codemirror': {
+                        "main": [
+                            'lib/codemirror.js',
+                            'lib/codemirror.css',
+                            'theme/solarized.css'
+                        ]
                     }
                 }
             }

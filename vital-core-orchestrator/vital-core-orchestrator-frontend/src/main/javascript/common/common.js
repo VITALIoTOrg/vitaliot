@@ -5,6 +5,7 @@ angular.module('common', [
         'ngSanitize',
         'ui.codemirror',
         'angular-loading-bar',
+        'checklist-model',
         'common.templates',
         'common.authentication'
     ])

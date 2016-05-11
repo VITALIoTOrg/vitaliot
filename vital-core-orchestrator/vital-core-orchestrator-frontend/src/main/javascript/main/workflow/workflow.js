@@ -1,6 +1,10 @@
 'use strict';
 angular.module('main.workflow', [])
 
+    /*****************
+     * Configuration
+     *****************/
+
     .config(['$routeProvider', function ($routeProvider) {
 
         $routeProvider.when('/workflow/list', {
@@ -107,6 +111,9 @@ angular.module('main.workflow', [])
         }
     ])
 
+    /*****************
+     * Controllers
+     *****************/
 
     .controller('WorkflowEditController', [
         '$scope', '$location', 'workflowResource', 'workflow', 'operationList',
@@ -118,13 +125,13 @@ angular.module('main.workflow', [])
             thisCtrl.data = {
                 cmOption: {
                     script: {
-                        theme: 'solarized',
+                        theme: 'solarized light',
                         lineNumbers: true,
                         indentWithTabs: true,
                         mode: 'javascript'
                     },
                     inputData: {
-                        theme: 'solarized',
+                        theme: 'solarized light',
                         lineNumbers: true,
                         indentWithTabs: true,
                         mode: 'javascript'
@@ -132,12 +139,21 @@ angular.module('main.workflow', [])
                 },
                 errors: [],
                 operationList: operationList,
+                selectedNodeName: 'input',
+                selectedOperation: null,
                 currentNodeList: function () {
                     return _.keys(thisCtrl.workflow.nodes);
                 },
-                incomingNodeName: null,
-                newNodeName: null,
-                operation: null
+                incomingNodeList: function (currentNodeName) {
+                    // Remove output, nodeName and nodes that are already use nodeName as input
+                    var list = _.filter(_.keys(thisCtrl.workflow.nodes), function (nodeName) {
+                        if (nodeName === 'output' || nodeName === currentNodeName) {
+                            return false;
+                        }
+                        return thisCtrl.workflow.nodes[nodeName].incoming.indexOf(currentNodeName) < 0;
+                    });
+                    return list;
+                }
             };
 
             thisCtrl.actions = {
@@ -170,21 +186,28 @@ angular.module('main.workflow', [])
                         operation: angular.copy(operation),
                         incoming: []
                     };
-                    workflow.nodes[nodeName] = node;
+                    thisCtrl.workflow.nodes[nodeName] = node;
                 },
                 removeNode: function (name) {
                     if (name === 'input' || name === 'output') {
                         // Cannot delete the input and output nodes
                         return;
                     }
-                    delete workflow.nodes[name];
+                    delete thisCtrl.workflow.nodes[name];
+
+                    // Also delete all edges to other nodes
+                    _.forEach(thisCtrl.workflow.nodes, function (node, nodeName) {
+                        thisCtrl.actions.removeEdge(name, nodeName);
+                    });
                 },
                 addEdge: function (fromNodeName, toNodeName) {
-                    workflow.nodes[toNodeName].incoming.push(fromNodeName);
+                    thisCtrl.workflow.nodes[toNodeName].incoming.push(fromNodeName);
                 },
                 removeEdge: function (fromNodeName, toNodeName) {
                     var index = workflow.nodes[toNodeName].incoming.indexOf(fromNodeName);
-                    workflow.nodes[toNodeName].incoming.splice(index, 1);
+                    if (index >= 0) {
+                        thisCtrl.workflow.nodes[toNodeName].incoming.splice(index, 1);
+                    }
                 },
                 save: function (ngFormController) {
                     // Check form
@@ -214,19 +237,12 @@ angular.module('main.workflow', [])
                         });
                 }
             };
-
         }
     ])
 
-    .filter('jsonString', [
-        '$filter',
-        function ($filter) {
-            return function (jsonString) {
-                var obj = angular.fromJson(jsonString);
-                return $filter('json')(obj);
-            };
-        }
-    ])
+    /************
+     * Services
+     ***********/
 
     .factory('workflowResource', [
         '$http', '$q', 'SERVICE_URL', 'metaserviceResource',
@@ -284,4 +300,196 @@ angular.module('main.workflow', [])
 
             return workflow;
         }
-    ]);
+    ])
+
+    /************
+     * Filters
+     ***********/
+
+    .filter('jsonString', [
+        '$filter',
+        function ($filter) {
+            return function (jsonString) {
+                var obj = angular.fromJson(jsonString);
+                return $filter('json')(obj);
+            };
+        }
+    ])
+
+    /*************
+     * Directives
+     *************/
+
+    .directive('workflowGraph', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: '<div></div>',
+            scope: {
+                nodes: '=',
+                selectedNodeName: '='
+            },
+            link: function (scope, element, attrs) {
+
+                var width = element.parent().width() || 960;
+                var height = 200;
+                var graph = {
+                    nodes: [],
+                    links: []
+                };
+
+                var svg = d3.select(element[0]).append('svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                var force = d3.layout.force()
+                    .nodes(graph.nodes)
+                    .links(graph.links)
+                    .size([width, height])
+                    .linkDistance(150)
+                    .charge(-300)
+                    .on('tick', tick);
+
+                // build the arrow.
+                svg.append('svg:defs')
+                    .selectAll('marker')
+                    .data(['end'])      // Different link/path types can be defined here
+                    .enter().append('svg:marker')    // This section adds in the arrows
+                    .attr('id', String)
+                    .attr('viewBox', '0 -5 10 10')
+                    .attr('refX', 15)
+                    .attr('refY', -1.5)
+                    .attr('markerWidth', 6)
+                    .attr('markerHeight', 6)
+                    .attr('orient', 'auto')
+                    .append('svg:path')
+                    .attr('d', 'M0,-5L10,0L0,5');
+
+                // add the links and the arrows
+                var path = svg.append('svg:g').selectAll('path');
+                // define the nodes
+                var node = svg.selectAll('.node');
+
+                // add the curvy lines
+                function tick() {
+                    path.attr('d', function (d) {
+                        var dx = d.target.x - d.source.x,
+                            dy = d.target.y - d.source.y,
+                            dr = Math.sqrt(dx * dx + dy * dy);
+                        return 'M' +
+                            d.source.x + ',' +
+                            d.source.y + 'A' +
+                            dr + ',' + dr + ' 0 0,1 ' +
+                            d.target.x + ',' +
+                            d.target.y;
+                    });
+
+                    node.attr('transform', function (d) {
+                        return 'translate(' + d.x + ',' + d.y + ')';
+                    });
+                }
+
+                function restart() {
+                    path = path.data(force.links());
+                    path.exit().remove();
+                    path.enter()
+                        .append('svg:path')
+                        .attr('class', 'link')
+                        .attr('marker-end', 'url(#end)');
+
+                    // define the nodes
+                    node = node.data(force.nodes());
+                    node.classed('selected', function (nodeData) {
+                        return scope.selectedNodeName === nodeData.name;
+                    });
+                    node.exit().remove();
+                    var g = node.enter().append('g')
+                        .attr('class', 'node')
+                        .classed('input', function (nodeData) {
+                            return nodeData.name === 'input';
+                        })
+                        .classed('output', function (nodeData) {
+                            return nodeData.name === 'output';
+                        })
+                        .on('click', function (nodeData) {
+                            scope.$applyAsync(function () {
+                                scope.selectedNodeName = scope.selectedNodeName === nodeData.name ? null : nodeData.name;
+                            });
+                            restart();
+                        })
+                        .call(force.drag);
+                    g.append('circle')
+                        .attr('r', 5);
+                    g.append('text')
+                        .attr('x', 10)
+                        .attr('dy', '.35em')
+                        .text(function (d) {
+                            return d.name;
+                        });
+
+                    force.start();
+                }
+
+                // functions
+                function workflowToGraph(nodesMap) {
+                    var graph = {
+                        nodes: _.flatMap(nodesMap, function (value, key) {
+                            var copy = _.cloneDeep(value);
+                            copy.name = key;
+                            if (copy.name === 'input') {
+                                copy.fixed = true;
+                                copy.x = 10;
+                                copy.y = (height - 10) / 2;
+                            }
+                            if (copy.name === 'output') {
+                                copy.fixed = true;
+                                copy.x = width - 60;
+                                copy.y = (height - 10) / 2;
+                            }
+                            return copy;
+                        }),
+                        links: []
+                    };
+
+                    _.forEach(graph.nodes, function (node) {
+                        _.forEach(node.incoming, function (incomingNodeName) {
+                            var link = {
+                                source: _.find(graph.nodes, {name: incomingNodeName}),
+                                target: node
+                            };
+                            graph.links.push(link);
+                        });
+                    });
+                    return graph;
+                }
+
+                //watchers
+                scope.$watch('nodes', function (newNodes) {
+                    var newGraph = workflowToGraph(newNodes);
+
+                    // Copy to existing array, so that force will detect the changes
+                    graph.nodes.length = 0;
+                    _.forEach(newGraph.nodes, function (node) {
+                        graph.nodes.push(node);
+                    });
+                    graph.links.length = 0;
+                    _.forEach(newGraph.links, function (link) {
+                        graph.links.push(link);
+                    });
+
+                    // Redraw
+                    restart();
+                }, true);
+
+
+                scope.$watch('selectedNodeName', function () {
+                    // Redraw
+                    restart();
+                });
+            }
+
+
+        };
+
+        // end: functions
+    });
+
