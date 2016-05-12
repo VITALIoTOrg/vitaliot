@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class DMSPermission {
 
 	final static String authURL = VitalConfiguration.getProperty("vital-dms.security") + "/authenticate";
@@ -56,10 +59,17 @@ public class DMSPermission {
 
 			for (final Cookie cookie : cookieStore.getCookies()) {
 				if (cookie.getName().equals("vitalTestToken")) {
+					String domain = VitalConfiguration.getProperty("vital-dms.security");
+					Pattern pattern = Pattern.compile("^[^.]*(.[^:/]*).*$");
+					Matcher matcher = pattern.matcher(domain);
+					if (matcher.find()) {
+						domain = matcher.group(1);
+					}
+
 					DMSToken = cookie.getValue();
 					testCookie = new BasicClientCookie("vitalTestToken",
 							DMSToken);
-					testCookie.setDomain(".cloud.reply.eu");
+					testCookie.setDomain(domain);
 					testCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR,
 							"true");
 
@@ -77,9 +87,15 @@ public class DMSPermission {
 			permission = null;
 			return accessTokenNotFound;
 		} else {
+			String domain = VitalConfiguration.getProperty("vital-dms.security");
+			Pattern pattern = Pattern.compile("^[^.]*(.[^:/]*).*$");
+			Matcher matcher = pattern.matcher(domain);
+			if (matcher.find()) {
+				domain = matcher.group(1);
+			}
 
 			userCookie = (BasicClientCookie) cookie;
-			userCookie.setDomain(".cloud.reply.eu");
+			userCookie.setDomain(domain);
 			userCookie.setAttribute(BasicClientCookie.DOMAIN_ATTR, "true");
 			// System.out.println("userCookie: " + userCookie.getValue());
 			try {
