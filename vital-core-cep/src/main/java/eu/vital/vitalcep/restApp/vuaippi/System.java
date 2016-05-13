@@ -330,7 +330,7 @@ public class System {
         
         JSONObject hasValue = new JSONObject();
         hasValue.put( "type","ssn:ObservationValue");
-        hasValue.put( "value",ThreadLocalRandom.current().nextInt(1, 5 + 1)+"%");
+        hasValue.put( "value",ThreadLocalRandom.current().nextInt(1, 5 + 1));
         hasValue.put( "qudt:unit","qudt:Percent"); 
         JSONObject observationResult = new JSONObject();
         observationResult.put("ssn:hasValue",hasValue);
