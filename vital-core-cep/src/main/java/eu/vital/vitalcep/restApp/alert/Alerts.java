@@ -35,7 +35,10 @@ import com.mongodb.client.result.UpdateResult;
 import eu.vital.vitalcep.cep.CEP;
 import eu.vital.vitalcep.cep.CepProcess;
 import eu.vital.vitalcep.conf.ConfigReader;
+import eu.vital.vitalcep.connectors.mqtt.MqttConnectorContainer;
 import eu.vital.vitalcep.connectors.ppi.PPIManager;
+import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
+import eu.vital.vitalcep.publisher.MessageProcessor_publisher;
 import eu.vital.vitalcep.security.Security;
 
 import org.apache.log4j.Logger;
@@ -79,7 +82,8 @@ public class Alerts {
     private final String mongoURL;
     private final String mongoDB;
     private String cookie;
-    
+    private final String dmsURL;
+
 
     
    // @Context private javax.servlet.http.HttpServletRequest hsr;
@@ -91,6 +95,8 @@ public class Alerts {
         mongoURL = configReader.get(ConfigReader.MONGO_URL);
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
         host = configReader.get(ConfigReader.CEP_BASE_URL);
+        dmsURL = configReader.get(ConfigReader.DMS_URL);
+
     }
     
     
@@ -247,6 +253,14 @@ public class Alerts {
                     DBObject dbObject = 
                             createAlertSensor(cepico, randomUUIDString, dsjo,
                             cepProcess.id);
+                    
+                     MessageProcessor_publisher Publisher_MsgProcc 
+                            = new MessageProcessor_publisher(this.dmsURL
+                            ,cookie);//555
+                    MQTT_connector_subscriper publisher 
+                            = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
+                    MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
+                    
                  
                      Document doc = new Document(dbObject.toMap());
 
