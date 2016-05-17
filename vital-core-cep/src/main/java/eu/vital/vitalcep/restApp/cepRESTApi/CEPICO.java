@@ -39,6 +39,9 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import eu.vital.vitalcep.cep.CepProcess;
+import eu.vital.vitalcep.connectors.mqtt.MqttConnectorContainer;
+import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
+import eu.vital.vitalcep.publisher.MessageProcessor_publisher;
 
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.RandomStringUtils;
@@ -78,6 +81,7 @@ public class CEPICO {
     private String host;
     private final String mongoURL;
     private final String mongoDB;
+     private final String dmsURL;
     private String cookie;
     
     public CEPICO() throws IOException {
@@ -86,6 +90,7 @@ public class CEPICO {
         
         mongoURL = configReader.get(ConfigReader.MONGO_URL);
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
+        dmsURL = configReader.get(ConfigReader.DMS_URL);
         host = configReader.get(ConfigReader.CEP_BASE_URL);
     }
     
@@ -236,6 +241,12 @@ public class CEPICO {
                             createCEPSensor(cepico, randomUUIDString, dsjo,
                             cepProcess.id);
                  
+                     MessageProcessor_publisher Publisher_MsgProcc 
+                            = new MessageProcessor_publisher(this.dmsURL
+                            ,cookie);//555
+                    MQTT_connector_subscriper publisher 
+                            = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
+                    MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
                     
                     Document doc = new Document(dbObject.toMap());
 
