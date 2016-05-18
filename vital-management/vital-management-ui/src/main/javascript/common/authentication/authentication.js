@@ -14,7 +14,7 @@ angular.module('common.authentication', [])
     .run(['$rootScope', '$location', '$route', 'authentication',
         function ($rootScope, $location, $route, authentication) {
             $rootScope.$on('$locationChangeStart', function (event, next, current) {
-                if ($location.path() === '/login' || authentication.isAuthenticated()) {
+                if ($location.path() === '/login' || $location.path() === '/security/register' ||authentication.isAuthenticated()) {
                     return;
                 }
                 // Load User and return to this path, if success.
