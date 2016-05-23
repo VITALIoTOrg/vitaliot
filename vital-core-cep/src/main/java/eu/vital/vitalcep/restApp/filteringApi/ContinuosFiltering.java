@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
@@ -224,26 +225,29 @@ public class ContinuosFiltering {
                     DBObject dbObject = 
                             createCEPFilterSensor(filter, randomUUIDString
                                     , dsjo,cepProcess.id);
-                    //MIGUEL
-                    MessageProcessor_publisher Publisher_MsgProcc 
-                            = new MessageProcessor_publisher(this.dmsURL
-                            ,cookie);//555
-                    MQTT_connector_subscriper publisher 
-                            = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
-                    MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
-
-                    //TODO --> DESTROY DEL CONNECTOR.
-
-//                    MqttConnectorContainer.deleteConnector(publisher
-//                            .getClientName());
+                    
                     Document doc = new Document(dbObject.toMap());
 
                     try{
                         db.getCollection("continuousfilters").insertOne(doc);
                         
                         JSONObject aOutput = new JSONObject();
-                        aOutput.put("id", host+"/sensor/"
-                            +randomUUIDString);
+                        String sensorId = host+"/sensor/"+randomUUIDString;
+                        aOutput.put("id",sensorId);
+                        
+                        //MIGUEL
+                        MessageProcessor_publisher Publisher_MsgProcc 
+                                = new MessageProcessor_publisher(this.dmsURL
+                                ,this.cookie,sensorId,"continuosfiltersobservations",
+                                this.mongoURL,this.mongoDB);//555
+                        MQTT_connector_subscriper publisher 
+                                = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
+                        MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
+
+                        //TODO --> DESTROY DEL CONNECTOR.
+
+    //                    MqttConnectorContainer.deleteConnector(publisher
+//                            .getClientName());
                         
                         JSONObject opState = createOperationalStateObservation(
                                 randomUUIDString);
@@ -508,6 +512,7 @@ public class ContinuosFiltering {
     
     private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return  dateFormat.format(date);
     }
 
