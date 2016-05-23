@@ -167,7 +167,6 @@ public class Decoder {
     private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
         return  dateFormat.format(date);
     }
 
