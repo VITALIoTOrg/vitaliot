@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 import org.bson.Document;
 import org.json.JSONArray;
@@ -192,6 +193,7 @@ public class Encoder {
     
     private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return  dateFormat.format(date);
     }
     
@@ -218,17 +220,33 @@ public class Encoder {
             for (int z=3;z<values.length;z++){
                 Document payloadLine = new Document();
                 String token = values[z];
-                if (token.compareToIgnoreCase("SensorId")==0)
-                   idEvent=values[z+1];
-                if (token.compareToIgnoreCase("Position")==0)
+                if (token.compareToIgnoreCase("SensorId")==0){
+                    idEvent=values[z+1];
+                    payloadLine.put("dataType","string");
+                    payloadLine.put("name",values [z]);
+                    payloadLine.put("value",values [z+1]);
+
+                    payload.add(payloadLine); 
+                }else if (token.compareToIgnoreCase("Position")==0)
                     {   locationEvent = values [z+1];
+                    payloadLine.put("dataType","pos");
+                    payloadLine.put("name",values [z]);
+                    payloadLine.put("value",values [z+1]);
+
+                    payload.add(payloadLine); 
                     hasLoc = true;}
                       
-                else if (token.compareToIgnoreCase("Time")==0)
+                else if (token.compareToIgnoreCase("Time")==0){
+                    
                     timeEvent = values [z+1];
+                    payloadLine.put("dataType","time");
+                    payloadLine.put("name",values [z]);
+                    payloadLine.put("value",values [z+1]);
+
+                    payload.add(payloadLine);
                 //from observationTime
                 
-                else if ((z % 3)==0) {
+                }else if ((z % 3)==0) {
                     valueEvent = values [z+1];
                
                     payloadLine.put("dataType",values [z-1]);
