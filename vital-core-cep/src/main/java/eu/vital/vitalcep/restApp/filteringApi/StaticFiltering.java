@@ -56,6 +56,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import java.util.logging.Level;
+import javax.ws.rs.GET;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -573,5 +574,47 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
     return Response.status(Response.Status.BAD_REQUEST).build();
     
 }
+
+/*
+     * test launcher
+     */
+    @POST
+    @Path("test")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response test_luncher(String info,@Context HttpServletRequest req){
+     
+      StringBuilder ck = new StringBuilder();
+         Security slogin = new Security();
+                   
+     JSONArray aData =  new JSONArray();
+     JSONObject credentials = new JSONObject();
+     
+     Boolean token = slogin.login("elisa", "elisotas1",false,ck);
+//            credentials.put("username", req.getHeader("trustUser"));
+//            credentials.put("password", req.getHeader("querty1234"));
+    if (!token){
+          return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+    this.cookie = ck.toString();  
+
+
+     
+    String body = info;
+
+    try {
+             
+             DMSManager oDMS = new DMSManager(dmsURL,cookie);
+ 
+             aData = oDMS.getSystems(body);
+             
+         } catch (KeyManagementException | KeyStoreException | NoSuchAlgorithmException | IOException ex) {
+             java.util.logging.Logger.getLogger(StaticFiltering
+                     .class.getName()).log(Level.SEVERE, null, ex);
+         }
+
+     return Response.status(Response.Status.OK).build();
+     
+    }
 
 }
