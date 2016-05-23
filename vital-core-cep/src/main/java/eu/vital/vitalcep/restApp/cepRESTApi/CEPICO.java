@@ -240,13 +240,6 @@ public class CEPICO {
                     DBObject dbObject = 
                             createCEPSensor(cepico, randomUUIDString, dsjo,
                             cepProcess.id);
-                 
-                     MessageProcessor_publisher Publisher_MsgProcc 
-                            = new MessageProcessor_publisher(this.dmsURL
-                            ,cookie);//555
-                    MQTT_connector_subscriper publisher 
-                            = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
-                    MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
                     
                     Document doc = new Document(dbObject.toMap());
 
@@ -255,6 +248,16 @@ public class CEPICO {
                         
                          JSONObject opState = createOperationalStateObservation
                             (randomUUIDString);
+                         
+                        String sensorId = host+"/sensor/"+randomUUIDString;
+                        
+                        MessageProcessor_publisher Publisher_MsgProcc 
+                            = new MessageProcessor_publisher(this.dmsURL
+                                ,cookie,sensorId,"cepicosobservations",
+                            mongoURL,mongoDB);//555
+                        MQTT_connector_subscriper publisher 
+                                = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
+                        MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
 
                         DBObject oPut =  (DBObject)JSON.parse(opState.toString());
                         Document doc1 = new Document(oPut.toMap());
