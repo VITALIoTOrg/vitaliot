@@ -105,11 +105,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>1.7.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-controller-client</artifactId>
             <version>8.1.0.Final</version>
