@@ -68,7 +68,7 @@ function execute(input) {
 
 //Operation 3: Get All Observations from Sensor
 function execute(input) {
-    var observationList = observationAdapter.fetchAllBySensorAndType(input.sensor['@id'], 'vital:Footfall');
+    var observationList = observationAdapter.fetchAllBySensorAndType(input.sensor['@id'], 'http://vital-iot.eu/ontology/ns/Footfall');
 
     input.observationList = observationList;
     return input;
