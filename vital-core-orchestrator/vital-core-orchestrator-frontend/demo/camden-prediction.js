@@ -8,13 +8,13 @@
 //{
 //    "lat": 51.539011,
 //    "lng": -0.142555,
-//    "atDate" : "2015-06-14T19:37:22Z"
+//    "atDate" : "2016-05-30T19:37:22Z"
 //}
 
 //Operation1: Get List of Sensors measuring footfall
 
 function execute(input) {
-    input.sensorList = sensorAdapter.searchByObservationType('http://vital-iot.eu/ontology/ns/Footfall');
+    input.sensorList = sensorAdapter.searchByObservationType('http://vital-iot.eu/ontology/ns/AvailableBikes');
     return input;
 }
 
@@ -66,11 +66,21 @@ function execute(input) {
 }
 
 
-//Operation 3: Get All Observations from Sensor
+//Operation 1: Get All Observations from Sensor
 function execute(input) {
-    var observationList = observationAdapter.fetchAllBySensorAndType(input.sensor['@id'], 'http://vital-iot.eu/ontology/ns/Footfall');
+    input.observationList = dmsAdapter.query("observation", {
+        "http://purl.oclc.org/NET/ssnx/ssn#observedBy": {
+            "$elemMatch": {
+                "@value": input.sensor.id
+            }
+        },
+        "http://purl.oclc.org/NET/ssnx/ssn#observationProperty": {
+            "$elemMatch": {
+                "@type": "http://vital-iot.eu/ontology/ns/http://vital-iot.eu/ontology/ns/AvailableBikes"
+            }
+        }
+    });
 
-    input.observationList = observationList;
     return input;
 }
 

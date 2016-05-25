@@ -28,7 +28,7 @@ public class DmsAdapter {
 	@Inject
 	ObjectMapper objectMapper;
 
-	public Collection<Map> query(String resourceType, JsonNode query) throws Exception {
+	public Collection<Map> query(String resourceType, Map query) throws Exception {
 
 		String dmsUrl = configuration.getProperty("vital-core-orchestrator.dms", "http://localhost:8080/");
 
@@ -43,7 +43,7 @@ public class DmsAdapter {
 		}
 
 		// Connect to this URL and fetch all sensors:
-		JsonNode dmsResponse = vitalClient.doPost(dmsUrl, query);
+		JsonNode dmsResponse = vitalClient.doPost(dmsUrl, objectMapper.valueToTree(query));
 
 		Collection<Map> queryResult = new ArrayList<>();
 
