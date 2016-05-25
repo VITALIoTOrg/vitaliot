@@ -81,16 +81,16 @@ angular.module('main.operation', [])
             thisCtrl.options = {
                 cmOption: {
                     script: {
-                        theme: 'solarized',
+                        theme: 'solarized light',
                         lineNumbers: true,
                         indentWithTabs: true,
-                        mode: 'javascript'
+                        mode: 'text/javascript'
                     },
                     inputData: {
-                        theme: 'solarized',
+                        theme: 'solarized light',
                         lineNumbers: true,
                         indentWithTabs: true,
-                        mode: 'javascript'
+                        mode: 'application/json'
                     }
                 },
                 errors: []

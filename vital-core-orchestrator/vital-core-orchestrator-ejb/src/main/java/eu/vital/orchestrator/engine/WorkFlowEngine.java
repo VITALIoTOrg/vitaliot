@@ -91,6 +91,7 @@ public class WorkFlowEngine {
 		logAdapter.log(operation.get("name").asText());
 		ObjectNode output = objectMapper.createObjectNode();
 		output.put("name", operation.get("name"));
+		output.put("inputData", input);
 
 		try {
 			ScriptEngine scriptEngine = createScriptEngine();
@@ -124,9 +125,10 @@ public class WorkFlowEngine {
 
 		// Add input
 		ObjectNode inputOutput = objectMapper.createObjectNode();
+		inputOutput.put("name", "input");
+		inputOutput.put("inputData", input);
 		inputOutput.put("outputData", input);
 		inputOutput.put("log", objectMapper.createArrayNode());
-		inputOutput.put("name", "input");
 		workflowResults.put("input", inputOutput);
 
 		boolean finished = false;
@@ -188,6 +190,7 @@ public class WorkFlowEngine {
 		for (JsonNode incomingNode : incomingNodes) {
 			operationOutputData.put(incomingNode.asText(), workflowResults.get(incomingNode.asText()).get("outputData"));
 		}
+		outputOutput.put("inputData", operationOutputData);
 		outputOutput.put("outputData", operationOutputData);
 		outputOutput.put("log", objectMapper.createArrayNode());
 		outputOutput.put("name", "output");

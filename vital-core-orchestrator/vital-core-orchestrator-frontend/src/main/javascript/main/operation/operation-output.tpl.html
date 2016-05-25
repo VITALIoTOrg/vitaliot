@@ -3,7 +3,7 @@
             'bg-orange': !! operationOutputCtrl.output.error,
             'bg-green': ! operationOutputCtrl.output.error,
          }"
-    >
+>
     <div class="box-header">
         <i class="fa fa-gear"></i>
 
@@ -13,6 +13,7 @@
         </h3>
 
         <div class="box-tools pull-right">
+            <a class="btn btn-sm bg-blue" data-target="#collapse-input-{{operationOutputCtrl.id}}" data-toggle="tab">Input</a>
             <a class="btn btn-sm bg-blue" data-target="#collapse-output-{{operationOutputCtrl.id}}" data-toggle="tab">Output</a>
             <a class="btn btn-sm bg-blue" data-target="#collapse-error-{{operationOutputCtrl.id}}" data-toggle="tab">Error</a>
             <a class="btn btn-sm bg-blue" data-target="#collapse-log-{{operationOutputCtrl.id}}" data-toggle="tab">Log</a>
@@ -21,6 +22,9 @@
 
     <div class="box-body border-radius-none">
         <div class="tab-content">
+            <div class="tab-pane" id="collapse-input-{{operationOutputCtrl.id}}">
+                <pre style="height: 200px;">{{operationOutputCtrl.output.inputData | json}}</pre>
+            </div>
             <div class="tab-pane" id="collapse-output-{{operationOutputCtrl.id}}">
                 <pre style="height: 200px;">{{operationOutputCtrl.output.outputData | json}}</pre>
             </div>

@@ -1,9 +1,9 @@
 'use strict';
 angular.module('main.workflow', [])
 
-    /*****************
-     * Configuration
-     *****************/
+/*****************
+ * Configuration
+ *****************/
 
     .config(['$routeProvider', function ($routeProvider) {
 
@@ -128,13 +128,13 @@ angular.module('main.workflow', [])
                         theme: 'solarized light',
                         lineNumbers: true,
                         indentWithTabs: true,
-                        mode: 'javascript'
+                        mode: 'text/javascript'
                     },
                     inputData: {
                         theme: 'solarized light',
                         lineNumbers: true,
                         indentWithTabs: true,
-                        mode: 'javascript'
+                        mode: 'application/json'
                     }
                 },
                 errors: [],

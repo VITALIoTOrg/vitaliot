@@ -41,11 +41,8 @@
                             </a>
                             <span class="product-description">
                               <ul class="list-inline">
-                                  <li>
-                                      <i class="fa fa-arrow-circle-o-right"></i>
-                                  </li>
-                                  <li ng-repeat="operation in workflow.operationList">
-                                      {{operation.name}} <i class="fa fa-arrow-circle-o-right"></i>
+                                  <li ng-repeat="(nodeName, nodeValue) in workflow.nodes">
+                                      {{nodeValue.name || nodeValue.operation.name}} ({{nodeName}})
                                   </li>
                               </ul>
                             </span>

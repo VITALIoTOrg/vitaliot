@@ -149,6 +149,7 @@ module.exports = function (grunt) {
                     'codemirror': {
                         "main": [
                             'lib/codemirror.js',
+                            'mode/javascript/javascript.js',
                             'lib/codemirror.css',
                             'theme/solarized.css'
                         ]
