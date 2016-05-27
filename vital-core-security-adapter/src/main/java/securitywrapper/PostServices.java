@@ -36,6 +36,7 @@ import jsonpojos.User;
 import utils.Action;
 import utils.JsonUtils;
 import utils.MD5Util;
+import utils.UTF8fixer;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -44,7 +45,6 @@ import clients.OpenAMClient;
 
 @Path("/rest")
 public class PostServices {
-
     private OpenAMClient client;
     
     public PostServices() {
@@ -61,19 +61,17 @@ public class PostServices {
             @FormParam("password") String password,
             @FormParam("mail") String mail,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         User user = new User();
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        if(client.createUser(givenName, surname, username, password, mail, answer, token)) {
-            
+        if (client.createUser(UTF8fixer.convert(givenName), UTF8fixer.convert(surname), UTF8fixer.convert(username), UTF8fixer.convert(password), UTF8fixer.convert(mail), answer, token)) {
             try {
                 user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
             } catch (JsonParseException e) {
@@ -84,32 +82,31 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(user.getAdditionalProperties().containsKey("code")) {
-                if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (user.getAdditionalProperties().containsKey("code")) {
+                if (user.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) user.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
                         .entity(answer.toString())
                         .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
-        
     }
     
     @Path("/user/delete")
@@ -118,19 +115,18 @@ public class PostServices {
     public Response deleteUser(
             @FormParam("name") String username,
             @HeaderParam("Cookie") String cookie) {
-        
         Boolean result;
         int code;
         StringBuilder answer = new StringBuilder();
         User user = new User();
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        result = client.deleteUser(username, answer, token);
+        result = client.deleteUser(UTF8fixer.convert(username), answer, token);
         
         try {
             user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
@@ -142,30 +138,29 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(user.getAdditionalProperties().containsKey("code")) {
-            if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (user.getAdditionalProperties().containsKey("code")) {
+            if (user.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) user.getAdditionalProperties().get("code");
             }
         }
         
-        if(result) {
+        if (result) {
             return Response.ok()
                 .entity(answer.toString())
                 .build();
         } else {
             
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
             else {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         }
-        
     }
     
     @Path("/group/create")
@@ -174,19 +169,17 @@ public class PostServices {
     public Response createGroup(
             @FormParam("name") String name,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Group group = new Group();
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
-        
-        if(client.createGroup(name, answer, token)) {
-            
+       
+        if (client.createGroup(UTF8fixer.convert(name), answer, token)) {
             try {
                 group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
             } catch (JsonParseException e) {
@@ -197,32 +190,31 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(group.getAdditionalProperties().containsKey("code")) {
-                if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (group.getAdditionalProperties().containsKey("code")) {
+                if (group.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) group.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
                         .entity(answer.toString())
                         .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
-        
     }
     
     @Path("/group/delete")
@@ -231,19 +223,18 @@ public class PostServices {
     public Response deleteGroup(
             @FormParam("name") String name,
             @HeaderParam("Cookie") String cookie) {
-        
         Boolean result;
         int code;
         StringBuilder answer = new StringBuilder();
         Group group = new Group();
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        result = client.deleteGroup(name, answer, token);
+        result = client.deleteGroup(UTF8fixer.convert(name), answer, token);
         
         try {
             group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
@@ -255,31 +246,30 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(group.getAdditionalProperties().containsKey("code")) {
-            if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (group.getAdditionalProperties().containsKey("code")) {
+            if (group.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) group.getAdditionalProperties().get("code");
             }
         }
         
-        if(result) {
+        if (result) {
 
             return Response.ok()
                 .entity(answer.toString())
                 .build();
         } else {
             
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
             else {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         }
-        
     }
     
     @Path("/group/{id}/addUser")
@@ -289,22 +279,20 @@ public class PostServices {
             @PathParam("id") String groupId,
             @FormParam("user") String username,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Group group = new Group();
         
         ArrayList<String> usersList = new ArrayList<String>();
-        usersList.add(username);
+        usersList.add(UTF8fixer.convert(username));
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        if(client.addUsersToGroup(groupId, usersList, answer, token)) {
-            
+        if (client.addUsersToGroup(UTF8fixer.convert(groupId), usersList, answer, token)) {
             try {
                 group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
             } catch (JsonParseException e) {
@@ -315,32 +303,31 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(group.getAdditionalProperties().containsKey("code")) {
-                if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (group.getAdditionalProperties().containsKey("code")) {
+                if (group.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) group.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
-        
     }
     
     @Path("/group/{id}/delUser")
@@ -350,21 +337,20 @@ public class PostServices {
             @PathParam("id") String groupId,
             @FormParam("user") String username,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Group group = new Group();
         
         ArrayList<String> usersList = new ArrayList<String>();
-        usersList.add(username);
+        usersList.add(UTF8fixer.convert(username));
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        if(client.deleteUsersFromGroup(groupId, usersList, answer, token)) {
+        if (client.deleteUsersFromGroup(UTF8fixer.convert(groupId), usersList, answer, token)) {
             
             try {
                 group = (Group) JsonUtils.deserializeJson(answer.toString(), Group.class);
@@ -376,32 +362,31 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(group.getAdditionalProperties().containsKey("code")) {
-                if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (group.getAdditionalProperties().containsKey("code")) {
+                if (group.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) group.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
-        
     }
     
     @Path("/policy/create")
@@ -423,48 +408,57 @@ public class PostServices {
             @FormParam("actions[RETRIEVE]") Boolean retrieve,
             @FormParam("actions[STORE]") Boolean store,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Policy policy = new Policy();
         ArrayList<Action> actions = new ArrayList<Action>();
         Boolean result;
         
-        if(delete != null) {
+        if (delete != null) {
             actions.add(new Action("DELETE", delete.booleanValue()));
         }
-        if(get != null) {
+        if (get != null) {
             actions.add(new Action("GET", get.booleanValue()));
         }
-        if(head != null) {
+        if (head != null) {
             actions.add(new Action("HEAD", head.booleanValue()));
         }
-        if(options != null) {
+        if (options != null) {
             actions.add(new Action("OPTIONS", options.booleanValue()));
         }
-        if(patch != null) {
+        if (patch != null) {
             actions.add(new Action("PATCH", patch.booleanValue()));
         }
-        if(post != null) {
+        if (post != null) {
             actions.add(new Action("POST", post.booleanValue()));
         }
-        if(put != null) {
+        if (put != null) {
             actions.add(new Action("PUT", put.booleanValue()));
         }
-        if(retrieve != null) {
+        if (retrieve != null) {
             actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
         }
-        if(store != null) {
+        if (store != null) {
             actions.add(new Action("STORE", store.booleanValue()));
         }
         
         code = 0;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
+
+        ArrayList<String> resCor = new ArrayList<String>();
+        for (int i = 0; i < res.size(); i++) {
+            resCor.add(UTF8fixer.convert(res.get(i)));
+        }
+
+        ArrayList<String> grsCor = new ArrayList<String>();
+        for (int i = 0; i < grs.size(); i++) {
+            grsCor.add(UTF8fixer.convert(grs.get(i)));
+        }
         
-        result = client.createIdentityGroupsPolicy(name, description, actions, res, grs, appname, answer, token);
+        result = client.createIdentityGroupsPolicy(UTF8fixer.convert(name), UTF8fixer.convert(description), actions, resCor, grsCor, UTF8fixer.convert(appname), answer, token);
         
         try {
             policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
@@ -476,50 +470,47 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(result) {
+        if (result) {
             return Response.ok()
                 .entity(answer.toString())
                 .build();
         } else {
-            if(policy.getAdditionalProperties().containsKey("code")) {
-                if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (policy.getAdditionalProperties().containsKey("code")) {
+                if (policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) policy.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
             else {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         }
-
     }
-    
-    
+ 
     @Path("/policy/delete")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response deletePolicy(
             @FormParam("name") String name,
             @HeaderParam("Cookie") String cookie) {
-        
         Boolean result;
         int code;
         StringBuilder answer = new StringBuilder();
         Policy policy = new Policy();
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        result = client.deletePolicy(name, answer, token);
+        result = client.deletePolicy(UTF8fixer.convert(name), answer, token);
         
         try {
             policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
@@ -531,29 +522,28 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(policy.getAdditionalProperties().containsKey("code")) {
-            if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (policy.getAdditionalProperties().containsKey("code")) {
+            if (policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) policy.getAdditionalProperties().get("code");
             }
         }
         
-        if(result) {
+        if (result) {
             return Response.ok()
                 .entity(answer.toString())
                 .build();
         } else {
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
             else {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         }
-        
     }
     
     @Path("/application/create")
@@ -574,49 +564,53 @@ public class PostServices {
             @FormParam("actions[RETRIEVE]") Boolean retrieve,
             @FormParam("actions[STORE]") Boolean store,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Application application = new Application();
         Boolean result;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
         ArrayList<Action> actions = new ArrayList<Action>();
         
-        if(delete != null) {
+        if (delete != null) {
             actions.add(new Action("DELETE", delete.booleanValue()));
         }
-        if(get != null) {
+        if (get != null) {
             actions.add(new Action("GET", get.booleanValue()));
         }
-        if(head != null) {
+        if (head != null) {
             actions.add(new Action("HEAD", head.booleanValue()));
         }
-        if(options != null) {
+        if (options != null) {
             actions.add(new Action("OPTIONS", options.booleanValue()));
         }
-        if(patch != null) {
+        if (patch != null) {
             actions.add(new Action("PATCH", patch.booleanValue()));
         }
-        if(post != null) {
+        if (post != null) {
             actions.add(new Action("POST", post.booleanValue()));
         }
-        if(put != null) {
+        if (put != null) {
             actions.add(new Action("PUT", put.booleanValue()));
         }
-        if(retrieve != null) {
+        if (retrieve != null) {
             actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
         }
-        if(store != null) {
+        if (store != null) {
             actions.add(new Action("STORE", store.booleanValue()));
         }
+
+        ArrayList<String> resCor = new ArrayList<String>();
+        for (int i = 0; i < res.size(); i++) {
+            resCor.add(UTF8fixer.convert(res.get(i)));
+        }
         
-        result = client.createApplication(type, name, description, res, actions, answer, token);
+        result = client.createApplication(UTF8fixer.convert(type), UTF8fixer.convert(name), UTF8fixer.convert(description), resCor, actions, answer, token);
         
         try {
             application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -628,28 +622,27 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(result) {
+        if (result) {
             return Response.ok()
                 .entity(answer.toString())
                 .build();
         } else {
-            if(application.getAdditionalProperties().containsKey("code")) {
-                if(application.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (application.getAdditionalProperties().containsKey("code")) {
+                if (application.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) application.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
             else {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         }
-
     }
     
     @Path("/application/delete")
@@ -658,7 +651,6 @@ public class PostServices {
     public Response deleteApplication(
             @FormParam("name") String name,
             @HeaderParam("Cookie") String cookie) {
-        
         Boolean result;
         int code;
         StringBuilder answer = new StringBuilder();
@@ -666,12 +658,12 @@ public class PostServices {
         Application application = new Application();
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        result = client.deleteApplication(name, answer, token);
+        result = client.deleteApplication(UTF8fixer.convert(name), answer, token);
         
         try {
             application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
@@ -683,29 +675,28 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(application.getAdditionalProperties().containsKey("code")) {
-            if(application.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (application.getAdditionalProperties().containsKey("code")) {
+            if (application.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) application.getAdditionalProperties().get("code");
             }
         }
         
-        if(result) {
+        if (result) {
             return Response.ok()
                 .entity(answer.toString())
                 .build();
         } else {
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
             else {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         }
-        
     }
     
     @Path("/user/{id}")
@@ -718,7 +709,6 @@ public class PostServices {
             @FormParam("mail") String mail,
             @FormParam("status") String status,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         String userJson = null;
@@ -727,13 +717,12 @@ public class PostServices {
         //System.out.println(userId);
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
         
-        if(client.updateUser(userId, givenName, surname, mail, status, answer, token)) {
-            
+        if (client.updateUser(UTF8fixer.convert(userId), UTF8fixer.convert(givenName), UTF8fixer.convert(surname), UTF8fixer.convert(mail), status, answer, token)) {
             try {
                 user = (User) JsonUtils.deserializeJson(answer.toString(), User.class);
             } catch (JsonParseException e) {
@@ -744,32 +733,32 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(user.getAdditionalProperties().containsKey("code")) {
-                if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (user.getAdditionalProperties().containsKey("code")) {
+                if (user.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) user.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
             else {
                 List<String> gn = null;
                 gn = user.getGivenName();
-                if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
-                    if(gn.get(0).equals(" "))
+                if ((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+                    if (gn.get(0).equals(" "))
                         user.setGivenName(null);
                 }
                 
                 gn = user.getGivenname();
-                if((gn != null) && (!gn.isEmpty())) {
-                    if(gn.get(0).equals(" "))
+                if ((gn != null) && (!gn.isEmpty())) {
+                    if (gn.get(0).equals(" "))
                         user.setGivenName(null);
                 }
                 try {
@@ -782,15 +771,14 @@ public class PostServices {
                     e.printStackTrace();
                 }
                 return Response.ok()
-                        .entity(userJson)
-                        .build();
+                    .entity(userJson)
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
-        
     }
     
     @Path("/user/changePassword")
@@ -800,18 +788,17 @@ public class PostServices {
             @HeaderParam("Cookie") String cookie,
             @FormParam("userpass") String userPass,
             @FormParam("currpass") String currPass) {
-        
         GenericObject resp;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
         code = 0;
-        resp = client.changePassword(token, userPass, currPass);
+        resp = client.changePassword(token, UTF8fixer.convert(userPass), UTF8fixer.convert(currPass));
         
         try {
             answer = JsonUtils.serializeJson(resp);
@@ -823,25 +810,25 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(resp.getAdditionalProperties().containsKey("code")) {
-            if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (resp.getAdditionalProperties().containsKey("code")) {
+            if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) resp.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
     }
     
@@ -852,9 +839,9 @@ public class PostServices {
             @PathParam("id") String name,
             @FormParam("description") String description,
             @FormParam("active") Boolean active,
-            @FormParam("groups[]") ArrayList<String> groups,
+            @FormParam("groups[]") ArrayList<String> grs,
             @FormParam("nogr") Boolean nogr,
-            @FormParam("resources[]") ArrayList<String> resources,
+            @FormParam("resources[]") ArrayList<String> res,
             @FormParam("nores") Boolean nores,
             @FormParam("actions[DELETE]") Boolean delete,
             @FormParam("actions[GET]") Boolean get,
@@ -867,54 +854,62 @@ public class PostServices {
             @FormParam("actions[STORE]") Boolean store,
             @FormParam("noact") Boolean noact,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Policy policy = new Policy();
         ArrayList<Action> actions = new ArrayList<Action>();
-        boolean res;
+        boolean result;
         
-        if(delete != null) {
+        if (delete != null) {
             actions.add(new Action("DELETE", delete.booleanValue()));
         }
-        if(get != null) {
+        if (get != null) {
             actions.add(new Action("GET", get.booleanValue()));
         }
-        if(head != null) {
+        if (head != null) {
             actions.add(new Action("HEAD", head.booleanValue()));
         }
-        if(options != null) {
+        if (options != null) {
             actions.add(new Action("OPTIONS", options.booleanValue()));
         }
-        if(patch != null) {
+        if (patch != null) {
             actions.add(new Action("PATCH", patch.booleanValue()));
         }
-        if(post != null) {
+        if (post != null) {
             actions.add(new Action("POST", post.booleanValue()));
         }
-        if(put != null) {
+        if (put != null) {
             actions.add(new Action("PUT", put.booleanValue()));
         }
-        if(retrieve != null) {
+        if (retrieve != null) {
             actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
         }
-        if(store != null) {
+        if (store != null) {
             actions.add(new Action("STORE", store.booleanValue()));
         }
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
-        
-        if(client.getPolicy(name, token).getSubject().getType().equals("Identity")) {
-            res = client.updatePolicyIdentity(name, description, active, groups, nogr, resources, nores, actions, noact, answer, token);
-        } else {
-            res = client.updatePolicyAuthenticated(name, description, active, groups, nogr, resources, nores, actions, noact, answer, token);
+
+        ArrayList<String> resCor = new ArrayList<String>();
+        for (int i = 0; i < res.size(); i++) {
+            resCor.add(UTF8fixer.convert(res.get(i)));
         }
-        if(res) {
-            
+
+        ArrayList<String> grsCor = new ArrayList<String>();
+        for (int i = 0; i < grs.size(); i++) {
+            grsCor.add(UTF8fixer.convert(grs.get(i)));
+        }
+        
+        if (client.getPolicy(UTF8fixer.convert(name), token).getSubject().getType().equals("Identity")) {
+            result = client.updatePolicyIdentity(UTF8fixer.convert(name), UTF8fixer.convert(description), active, grsCor, nogr, resCor, nores, actions, noact, answer, token);
+        } else {
+            result = client.updatePolicyAuthenticated(UTF8fixer.convert(name), UTF8fixer.convert(description), active, grsCor, nogr, resCor, nores, actions, noact, answer, token);
+        }
+        if (result) {
             try {
                 policy = (Policy) JsonUtils.deserializeJson(answer.toString(), Policy.class);
             } catch (JsonParseException e) {
@@ -925,30 +920,30 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(policy.getAdditionalProperties().containsKey("code")) {
-                if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (policy.getAdditionalProperties().containsKey("code")) {
+                if (policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) policy.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
     }
     
@@ -972,7 +967,6 @@ public class PostServices {
             @FormParam("actions[STORE]") Boolean store,
             @FormParam("noact") Boolean noact,
             @HeaderParam("Cookie") String cookie) {
-        
         int code;
         StringBuilder answer = new StringBuilder();
         Application application = new Application();
@@ -981,42 +975,46 @@ public class PostServices {
         
         ArrayList<Action> actions = new ArrayList<Action>();
         
-        if(delete != null) {
+        if (delete != null) {
             actions.add(new Action("DELETE", delete.booleanValue()));
         }
-        if(get != null) {
+        if (get != null) {
             actions.add(new Action("GET", get.booleanValue()));
         }
-        if(head != null) {
+        if (head != null) {
             actions.add(new Action("HEAD", head.booleanValue()));
         }
-        if(options != null) {
+        if (options != null) {
             actions.add(new Action("OPTIONS", options.booleanValue()));
         }
-        if(patch != null) {
+        if (patch != null) {
             actions.add(new Action("PATCH", patch.booleanValue()));
         }
-        if(post != null) {
+        if (post != null) {
             actions.add(new Action("POST", post.booleanValue()));
         }
-        if(put != null) {
+        if (put != null) {
             actions.add(new Action("PUT", put.booleanValue()));
         }
-        if(retrieve != null) {
+        if (retrieve != null) {
             actions.add(new Action("RETRIEVE", retrieve.booleanValue()));
         }
-        if(store != null) {
+        if (store != null) {
             actions.add(new Action("STORE", store.booleanValue()));
         }
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         code = 0;
-        
-        if(client.updateApplication(type, name, description, res, nores, actions, noact, answer, token)) {
-            
+
+        ArrayList<String> resCor = new ArrayList<String>();
+        for (int i = 0; i < res.size(); i++) {
+            resCor.add(UTF8fixer.convert(res.get(i)));
+        }
+
+        if (client.updateApplication(UTF8fixer.convert(type), UTF8fixer.convert(name), UTF8fixer.convert(description), resCor, nores, actions, noact, answer, token)) {
             try {
                 application = (Application) JsonUtils.deserializeJson(answer.toString(), Application.class);
             } catch (JsonParseException e) {
@@ -1027,30 +1025,30 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(application.getAdditionalProperties().containsKey("code")) {
-                if(application.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (application.getAdditionalProperties().containsKey("code")) {
+                if (application.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) application.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
     }
     
@@ -1062,7 +1060,6 @@ public class PostServices {
             @FormParam("password") String password,
             @FormParam("testCookie") boolean altCookie,
             @Context UriInfo uri) {
-        
         Authenticate auth;
         String answer;
         int code;
@@ -1074,7 +1071,7 @@ public class PostServices {
 
         answer = null;
         code = 0;
-        auth = client.authenticate(name, password);
+        auth = client.authenticate(UTF8fixer.convert(name), UTF8fixer.convert(password));
         
         try {
             answer = JsonUtils.serializeJson(auth);
@@ -1086,59 +1083,59 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(auth.getAdditionalProperties().containsKey("code")) {
-            if(auth.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (auth.getAdditionalProperties().containsKey("code")) {
+            if (auth.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) auth.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             Cookie ck;
             
             // Let's give back some info about the user
-            User user = client.getUser(name, auth.getTokenId()); // get the info
+            User user = client.getUser(UTF8fixer.convert(name), auth.getTokenId()); // get the info
             AuthenticationResponse resp = new AuthenticationResponse();
-            resp.setUid(name); // always give back the login username
+            resp.setUid(UTF8fixer.convert(name)); // always give back the login username
             List<String> gn = null;
             gn = user.getGivenName();
-            if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+            if ((gn != null) && (!gn.isEmpty())) { // send back the first name if available
                 resp.setName(gn.get(0));
             } else {
                 gn = user.getGivenname();
-                if((gn != null) && (!gn.isEmpty())) {
+                if ((gn != null) && (!gn.isEmpty())) {
                     resp.setName(gn.get(0));
                 }
             }
             List<String> ln = null;
             ln = user.getSn();
-            if((gn != null) && (!gn.isEmpty()) && (ln != null) && (!ln.isEmpty())) { // send back the full name if available
+            if ((gn != null) && (!gn.isEmpty()) && (ln != null) && (!ln.isEmpty())) { // send back the full name if available
                 resp.setFullname(gn.get(0) + " " + ln.get(0)); // composed by first name + last name
             } else { // otherwise use common name, but it is not the full name for sure
                 List<String> cn = null;
                 cn = user.getCn();
-                if((cn != null) && (!cn.isEmpty())) {
+                if ((cn != null) && (!cn.isEmpty())) {
                     resp.setFullname(cn.get(0));
                 }
             }
             
             List<String> mail = null;
             mail = user.getMail();
-            if((mail != null) && (!mail.isEmpty())) {
+            if ((mail != null) && (!mail.isEmpty())) {
                 resp.setMailhash(MD5Util.md5Hex(mail.get(0)));
             }
             
             List<String> time = user.getCreateTimestamp();
             SimpleDate date = new SimpleDate();
-            if((time != null) && (!time.isEmpty())) {
+            if ((time != null) && (!time.isEmpty())) {
                 date.setYear(time.get(0).substring(0, 4));
                 int m = Integer.parseInt(time.get(0).substring(4, 6));
                 date.setMonth(new DateFormatSymbols().getMonths()[m - 1]);
@@ -1165,18 +1162,18 @@ public class PostServices {
                 domain = matcher.group(1);
             }
 
-            if(!altCookie) {
+            if (!altCookie) {
                 ck = new Cookie(client.getSSOCookieName(), auth.getTokenId(), "/", domain);
                 return Response.ok()
-                        .entity(answer)
-                        .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
-                        .build();
+                    .entity(answer)
+                    .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
+                    .build();
             } else {
                 ck = new Cookie(client.getAltCookieName(), auth.getTokenId(), "/", domain);
                 return Response.ok()
-                        .entity(answer)
-                        .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
-                        .build();
+                    .entity(answer)
+                    .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
+                    .build();
             }
         }
     }
@@ -1188,20 +1185,19 @@ public class PostServices {
             @HeaderParam("Cookie") String cookie,
             @FormParam("testCookie") boolean altCookie,
             @Context UriInfo uri) {
-        
         LogoutResponse resp;
         String answer;
         int code;
         
         String altToken = null, ssoToken = null;
-        if(cookie != null) {
+        if (cookie != null) {
             altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
             ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         }
         
         answer = null;
         code = 0;
-        if(altCookie) {
+        if (altCookie) {
             resp = client.logout(altToken);
         }
         else {
@@ -1218,20 +1214,20 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(resp.getAdditionalProperties().containsKey("code")) {
-            if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (resp.getAdditionalProperties().containsKey("code")) {
+            if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) resp.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             Cookie ck;
@@ -1243,18 +1239,18 @@ public class PostServices {
                 domain = matcher.group(1);
             }
             
-            if(!altCookie) {
+            if (!altCookie) {
                 ck = new Cookie(client.getSSOCookieName(), "", "/", domain);
                 return Response.ok()
-                        .entity(answer)
-                        .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
-                        .build();
+                    .entity(answer)
+                    .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
+                    .build();
             } else {
                 ck = new Cookie(client.getAltCookieName(), "", "/", domain);
                 return Response.ok()
-                        .entity(answer)
-                        .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
-                        .build();
+                    .entity(answer)
+                    .header("SET-COOKIE", ck.toString() + "; secure" + "; HttpOnly")
+                    .build();
             }
         }
     }
@@ -1266,28 +1262,32 @@ public class PostServices {
             @HeaderParam("Cookie") String cookie,
             @FormParam("testCookie") boolean altCookie,
             @FormParam("resources[]") ArrayList<String> res) {
-        
         int code;
         String tokenPerformer, tokenUser;
         StringBuilder answer = new StringBuilder();
         DecisionArray resp = new DecisionArray();
         
         String altToken = null, ssoToken = null;
-        if(cookie != null) {
+        if (cookie != null) {
             altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
             ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         }
         
         code = 0;
-        if(altCookie) {
+        if (altCookie) {
             tokenPerformer = ssoToken;
             tokenUser = altToken;
         } else {
             tokenPerformer = altToken;
             tokenUser = ssoToken;
         }
+
+        ArrayList<String> resCor = new ArrayList<String>();
+        for (int i = 0; i < res.size(); i++) {
+            resCor.add(UTF8fixer.convert(res.get(i)));
+        } 
         
-        if(client.evaluate(tokenUser, res, answer, tokenPerformer)) {
+        if (client.evaluate(tokenUser, resCor, answer, tokenPerformer)) {
             try {
                 resp = (DecisionArray) JsonUtils.deserializeJson(answer.toString(), DecisionArray.class);
             } catch (JsonParseException e) {
@@ -1298,30 +1298,30 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(resp.getAdditionalProperties().containsKey("code")) {
-                if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (resp.getAdditionalProperties().containsKey("code")) {
+                if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) resp.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer.toString())
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
             else {
                 return Response.ok()
-                        .entity(answer.toString())
-                        .build();
+                    .entity(answer.toString())
+                    .build();
             }
         } else {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer.toString())
-                    .build();
+                .entity(answer.toString())
+                .build();
         }
     }
     
@@ -1330,14 +1330,13 @@ public class PostServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(
             @FormParam("mail") String mail) {
-        
         GenericObject resp;
         String answer;
         int code;
         
         answer = null;
         code = 0;
-        resp = client.register(mail);
+        resp = client.register(UTF8fixer.convert(mail));
         
         try {
             answer = JsonUtils.serializeJson(resp);
@@ -1349,25 +1348,25 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(resp.getAdditionalProperties().containsKey("code")) {
-            if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (resp.getAdditionalProperties().containsKey("code")) {
+            if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) resp.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
     }
     
@@ -1382,7 +1381,6 @@ public class PostServices {
             @FormParam("mail") String mail,
             @FormParam("tokenId") @Encoded String tokenId,
             @FormParam("confirmationId") @Encoded String confirmationId) {
-        
         GenericObject resp;
         String answer;
         int code;
@@ -1398,7 +1396,7 @@ public class PostServices {
         
         answer = null;
         code = 0;
-        resp = client.confirm(mail, tokenDec, confirmDec);
+        resp = client.confirm(UTF8fixer.convert(mail), tokenDec, confirmDec);
         
         try {
             answer = JsonUtils.serializeJson(resp);
@@ -1410,25 +1408,25 @@ public class PostServices {
             e.printStackTrace();
         }
         
-        if(resp.getAdditionalProperties().containsKey("code")) {
-            if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (resp.getAdditionalProperties().containsKey("code")) {
+            if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) resp.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             answer = null;
             code = 0;
-            resp = client.selfCreateUser(mail, tokenDec, confirmDec, username, password);
+            resp = client.selfCreateUser(UTF8fixer.convert(mail), tokenDec, confirmDec, UTF8fixer.convert(username), UTF8fixer.convert(password));
             
             try {
                 answer = JsonUtils.serializeJson(resp);
@@ -1440,27 +1438,27 @@ public class PostServices {
                 e.printStackTrace();
             }
             
-            if(resp.getAdditionalProperties().containsKey("code")) {
-                if(resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
+            if (resp.getAdditionalProperties().containsKey("code")) {
+                if (resp.getAdditionalProperties().get("code").getClass() == Integer.class) {
                     code = (Integer) resp.getAdditionalProperties().get("code");
                 }
             }
-            if(code >= 400 && code < 500) {
+            if (code >= 400 && code < 500) {
                 return Response.status(Status.BAD_REQUEST)
                     .entity(answer)
                     .build();
             }
-            else if(code >= 500 && code < 600) {
+            else if (code >= 500 && code < 600) {
                 return Response.status(Status.INTERNAL_SERVER_ERROR)
-                        .entity(answer)
-                        .build();
+                    .entity(answer)
+                    .build();
             }
             else {
                 Authenticate auth;
                 
                 answer = null;
                 code = 0;
-                auth = client.authenticate(username, password);
+                auth = client.authenticate(UTF8fixer.convert(username), UTF8fixer.convert(password));
                 
                 try {
                     answer = JsonUtils.serializeJson(auth);
@@ -1472,20 +1470,20 @@ public class PostServices {
                     e.printStackTrace();
                 }
                 
-                if(auth.getAdditionalProperties().containsKey("code")) {
-                    if(auth.getAdditionalProperties().get("code").getClass() == Integer.class) {
+                if (auth.getAdditionalProperties().containsKey("code")) {
+                    if (auth.getAdditionalProperties().get("code").getClass() == Integer.class) {
                         code = (Integer) auth.getAdditionalProperties().get("code");
                     }
                 }
-                if(code >= 400 && code < 500) {
+                if (code >= 400 && code < 500) {
                     return Response.status(Status.BAD_REQUEST)
                         .entity(answer)
                         .build();
                 }
-                else if(code >= 500 && code < 600) {
+                else if (code >= 500 && code < 600) {
                     return Response.status(Status.INTERNAL_SERVER_ERROR)
-                            .entity(answer)
-                            .build();
+                        .entity(answer)
+                        .build();
                 }
                 else {
                     StringBuilder answer1 = new StringBuilder();
@@ -1494,8 +1492,7 @@ public class PostServices {
                     
                     code = 0;
                     
-                    if(client.updateUser(username, givenName, surname, mail, "Active", answer1, auth.getTokenId())) {
-                        
+                    if (client.updateUser(UTF8fixer.convert(username), UTF8fixer.convert(givenName), UTF8fixer.convert(surname), UTF8fixer.convert(mail), "Active", answer1, auth.getTokenId())) {
                         try {
                             user = (User) JsonUtils.deserializeJson(answer1.toString(), User.class);
                         } catch (JsonParseException e) {
@@ -1506,32 +1503,32 @@ public class PostServices {
                             e.printStackTrace();
                         }
                         
-                        if(user.getAdditionalProperties().containsKey("code")) {
-                            if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+                        if (user.getAdditionalProperties().containsKey("code")) {
+                            if (user.getAdditionalProperties().get("code").getClass() == Integer.class) {
                                 code = (Integer) user.getAdditionalProperties().get("code");
                             }
                         }
-                        if(code >= 400 && code < 500) {
+                        if (code >= 400 && code < 500) {
                             return Response.status(Status.BAD_REQUEST)
                                 .entity(answer1.toString())
                                 .build();
                         }
-                        else if(code >= 500 && code < 600) {
+                        else if (code >= 500 && code < 600) {
                             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                                    .entity(answer1.toString())
-                                    .build();
+                                .entity(answer1.toString())
+                                .build();
                         }
                         else {
                             List<String> gn = null;
                             gn = user.getGivenName();
-                            if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
-                                if(gn.get(0).equals(" "))
+                            if ((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+                                if (gn.get(0).equals(" "))
                                     user.setGivenName(null);
                             }
                             
                             gn = user.getGivenname();
-                            if((gn != null) && (!gn.isEmpty())) {
-                                if(gn.get(0).equals(" "))
+                            if ((gn != null) && (!gn.isEmpty())) {
+                                if (gn.get(0).equals(" "))
                                     user.setGivenName(null);
                             }
                             try {
@@ -1545,16 +1542,17 @@ public class PostServices {
                             }
                             client.logout(auth.getTokenId());
                             return Response.ok()
-                                    .entity(userJson)
-                                    .build();
+                                .entity(userJson)
+                                .build();
                         }
                     } else {
                         return Response.status(Status.INTERNAL_SERVER_ERROR)
-                                .entity(answer1.toString())
-                                .build();
+                            .entity(answer1.toString())
+                            .build();
                     }
                 }
             }
         }
     }
 }
+

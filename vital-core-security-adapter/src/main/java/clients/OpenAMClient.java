@@ -110,7 +110,7 @@ public class OpenAMClient {
         try {
             resp = httpclient.httpc.execute(request);
             httpent = resp.getEntity();
-            if(httpent != null) {
+            if (httpent != null) {
                 response = EntityUtils.toString(httpent);
             }
             resp.close();
@@ -125,7 +125,7 @@ public class OpenAMClient {
                 request.setConfig(RequestConfig.custom().setConnectionRequestTimeout(7000).setConnectTimeout(7000).setSocketTimeout(7000).build());
                 resp = httpclient.httpc.execute(request);
                 httpent = resp.getEntity();
-                if(httpent != null) {
+                if (httpent != null) {
                     response = EntityUtils.toString(httpent);
                 }
                 resp.close();
@@ -140,7 +140,7 @@ public class OpenAMClient {
                 try {
                     resp = httpclient.httpc.execute(request);
                     httpent = resp.getEntity();
-                    if(httpent != null) {
+                    if (httpent != null) {
                         response = EntityUtils.toString(httpent);
                     }
                     resp.close();
@@ -197,7 +197,7 @@ public class OpenAMClient {
         
         LogoutResponse resp = new LogoutResponse();
         
-        if(token == null || token.isEmpty()) {
+        if (token == null || token.isEmpty()) {
             try {
                 resp = (LogoutResponse) JsonUtils.deserializeJson("{ \"code\": 400, \"reason\": \"Bad request!\" , \"message\": \"Missing or empty session cookie!\" }", LogoutResponse.class);
             } catch (JsonParseException e) {
@@ -211,7 +211,7 @@ public class OpenAMClient {
             return resp;
         }
         
-        if(!isTokenValid(token)) {
+        if (!isTokenValid(token)) {
             try {
                 resp = (LogoutResponse) JsonUtils.deserializeJson("{\"result\":\"Successfully logged out\"}", LogoutResponse.class);
             } catch (JsonParseException e) {
@@ -276,7 +276,7 @@ public class OpenAMClient {
         
         HttpPost httppost = new HttpPost(uri);
         httppost.setHeader("Content-Type", "application/json");
-        if(name != null) {
+        if (name != null) {
             httppost.setHeader("X-OpenAM-Username", name);
             httppost.setHeader("X-OpenAM-Password", password);
         } else {
@@ -673,7 +673,7 @@ public class OpenAMClient {
     public Monitor getStats(String token) {
         String respString = "";
         
-        if(token != null && !token.equals("") && isTokenValid(token)) {
+        if (token != null && !token.equals("") && isTokenValid(token)) {
             Cookie ck;
             CloseableHttpClient httpclient;
     
@@ -734,7 +734,7 @@ public class OpenAMClient {
             }
     
             HttpEntity entity = response.getEntity();
-            if(response.getStatusLine().getStatusCode() == 200) {
+            if (response.getStatusLine().getStatusCode() == 200) {
                 if (entity != null) {
                     try {
                         respString = EntityUtils.toString(entity);
@@ -809,14 +809,14 @@ public class OpenAMClient {
         
         List<String> gn = null;
         gn = user.getGivenName();
-        if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
-            if(gn.get(0).equals(" "))
+        if ((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+            if (gn.get(0).equals(" "))
                 user.setGivenName(null);
         }
         
         gn = user.getGivenname();
-        if((gn != null) && (!gn.isEmpty())) {
-            if(gn.get(0).equals(" "))
+        if ((gn != null) && (!gn.isEmpty())) {
+            if (gn.get(0).equals(" "))
                 user.setGivenName(null);
         }
         
@@ -979,10 +979,10 @@ public class OpenAMClient {
         userModel.setUsername(username);
         userModel.setUserpassword(password);
         userModel.setMail(mail);
-        if(givenName != null && !givenName.isEmpty()) {
+        if (givenName != null && !givenName.isEmpty()) {
             userModel.setAdditionalProperty("givenName", givenName);
         }
-        if(surname != null && !surname.isEmpty()) {
+        if (surname != null && !surname.isEmpty()) {
             userModel.setAdditionalProperty("sn", surname);
         }
         
@@ -1029,8 +1029,7 @@ public class OpenAMClient {
     }
     
     public boolean createGroup(String groupId, StringBuilder goingOn, String token) {
-        
-        if (getGroup(groupId, token).getUsername()!=null) {
+        if (getGroup(groupId, token).getUsername() != null) {
             // group with the same ID already existing 
             return false;
         }
@@ -1080,7 +1079,6 @@ public class OpenAMClient {
     }
     
     public boolean createApplication(String applicationType, String applicationName, String description, ArrayList<String> resources, ArrayList<Action> actions, StringBuilder goingOn, String token) {
-        
         if (getApplication(applicationName, token).getName() != null) {
             // application already existing, return false
             return false;
@@ -1092,15 +1090,15 @@ public class OpenAMClient {
         application.setDescription(description);
         application.setAdditionalProperty("realm", "/");
         application.setResources(resources);
-        if(applicationType == null || applicationType.equals(""))
+        if (applicationType == null || applicationType.equals(""))
             application.setAdditionalProperty("applicationType", "iPlanetAMWebAgentService");
         else
             application.setAdditionalProperty("applicationType", applicationType);
         
         ActionValues___ actVal = new ActionValues___();
         
-        if(actions == null || actions.size() == 0) {
-            if(applicationType.equals("iPlanetAMWebAgentService")) {
+        if (actions == null || actions.size() == 0) {
+            if (applicationType.equals("iPlanetAMWebAgentService")) {
                 actVal.setPOST(true);
                 actVal.setPATCH(true);
                 actVal.setGET(true);
@@ -1108,7 +1106,7 @@ public class OpenAMClient {
                 actVal.setOPTIONS(true);
                 actVal.setPUT(true);
                 actVal.setHEAD(true);
-            } else if(applicationType.equals("FineGrainedAccess")) {
+            } else if (applicationType.equals("FineGrainedAccess")) {
                 actVal.setRETRIEVE(true);
                 actVal.setSTORE(true);
             }
@@ -1365,17 +1363,17 @@ public class OpenAMClient {
         UserModel userModel = new UserModel();
         
         userModel.setMail(mail);
-        if(givenName != null && !givenName.isEmpty()) {
+        if (givenName != null && !givenName.isEmpty()) {
             userModel.setAdditionalProperty("givenName", givenName);
         } else {
             userModel.setAdditionalProperty("givenName", " ");
         }
-        if(surname != null && !surname.isEmpty()) {
+        if (surname != null && !surname.isEmpty()) {
             userModel.setAdditionalProperty("sn", surname);
         }
         
         String uid = getUserIdFromToken(token).getUid();
-        if(!uid.equals(username) || uid.equals("amAdmin")) {
+        if (!uid.equals(username) || uid.equals("amAdmin")) {
             userModel.setAdditionalProperty("inetUserStatus", status);
         }
         
@@ -1652,7 +1650,7 @@ public class OpenAMClient {
         policyIdentityModel.setActive(true);
         policyIdentityModel.setDescription(description);
         policyIdentityModel.setResources(resources);
-        if(applicationName == null || applicationName.equals(""))
+        if (applicationName == null || applicationName.equals(""))
             policyIdentityModel.setApplicationName("iPlanetAMWebAgentService");
         else
             policyIdentityModel.setApplicationName(applicationName);
@@ -1747,14 +1745,14 @@ public class OpenAMClient {
         policyModel.setDescription(description);
         policyModel.setApplicationName(getPolicy(name, token).getApplicationName());
         
-        if(resources.isEmpty() && !nores) {
+        if (resources.isEmpty() && !nores) {
             policyModel.setResources(getPolicy(name, token).getResources());
         }
-        else if(!nores) {
+        else if (!nores) {
             policyModel.setResources(resources);
         }
         
-        if(groups.isEmpty() && !nogr) {
+        if (groups.isEmpty() && !nogr) {
             try {
                 policyModel.setSubject((Subject___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getSubject()), sub.getClass()));
             } catch (JsonParseException e2) {
@@ -1769,7 +1767,7 @@ public class OpenAMClient {
             
             for(int i = 0; i < groups.size(); i++) {
                 String currentGroup = groups.get(i);
-                if(getGroup(currentGroup, token).getUsername() == null) {
+                if (getGroup(currentGroup, token).getUsername() == null) {
                     return false;
                 } else {
                     groupsId.add(getGroup(currentGroup, token).getUniversalid().get(0)); 
@@ -1785,7 +1783,7 @@ public class OpenAMClient {
         
         ActionValues___ actVal = new ActionValues___();
         
-        if(!actions.isEmpty()) {
+        if (!actions.isEmpty()) {
             
             for (int i = 0; i<actions.size(); i++) {
                 Action currentAction = actions.get(i);
@@ -1813,7 +1811,7 @@ public class OpenAMClient {
             }
             
             policyModel.setActionValues(actVal);
-        } else if(!noact) {
+        } else if (!noact) {
             try {
                 policyModel.setActionValues((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getActionValues()), actVal.getClass()));
             } catch (JsonParseException e) {
@@ -1873,14 +1871,14 @@ public class OpenAMClient {
         policyModel.setActive(active);
         policyModel.setDescription(description);
         
-        if(resources.isEmpty() && !nores) {
+        if (resources.isEmpty() && !nores) {
             policyModel.setResources(getPolicy(name, token).getResources());
         }
-        else if(!nores) {
+        else if (!nores) {
             policyModel.setResources(resources);
         }
         
-        if(groups.isEmpty() && !nogr) {
+        if (groups.isEmpty() && !nogr) {
             try {
                 policyModel.setSubject((Subject__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getSubject()), sub.getClass()));
             } catch (JsonParseException e2) {
@@ -1910,7 +1908,7 @@ public class OpenAMClient {
         
         ActionValues__ actVal = new ActionValues__();
         
-        if(!actions.isEmpty()) {
+        if (!actions.isEmpty()) {
             
             for (int i = 0; i<actions.size(); i++) {
                 Action currentAction = actions.get(i);
@@ -1938,7 +1936,7 @@ public class OpenAMClient {
             }
             
             policyModel.setActionValues(actVal);
-        } else  if(!noact) {
+        } else  if (!noact) {
             try {
                 policyModel.setActionValues((ActionValues__) JsonUtils.deserializeJson(JsonUtils.serializeJson(getPolicy(name, token).getActionValues()), actVal.getClass()));
             } catch (JsonParseException e) {
@@ -2039,10 +2037,10 @@ public class OpenAMClient {
         application.setName(applicationName);
         application.setDescription(description);
         application.setAdditionalProperty("realm", "/");
-        if(resources.isEmpty() && !nores) {
+        if (resources.isEmpty() && !nores) {
             application.setResources(getApplication(applicationName, token).getResources());
         }
-        else if(!nores) {
+        else if (!nores) {
             application.setResources(resources);
         }
         application.setAdditionalProperty("applicationType", applicationType);
@@ -2073,7 +2071,7 @@ public class OpenAMClient {
         
         ActionValues___ actVal = new ActionValues___();
         
-        if(!actions.isEmpty()) {
+        if (!actions.isEmpty()) {
             
             for (int i = 0; i < actions.size(); i++) {
                 Action currentAction = actions.get(i);
@@ -2101,7 +2099,7 @@ public class OpenAMClient {
             }
             
             application.setActions(actVal);
-        } else if(!noact) {
+        } else if (!noact) {
             try {
                 application.setActions((ActionValues___) JsonUtils.deserializeJson(JsonUtils.serializeJson(getApplication(applicationName, token).getActions()), actVal.getClass()));
             } catch (JsonParseException e) {
@@ -2270,7 +2268,7 @@ public class OpenAMClient {
         
         while (iter.hasNext()) {
             String group = iter.next();
-            if(!userIsInGroup(userId, group, token)) {
+            if (!userIsInGroup(userId, group, token)) {
                 iter.remove();
                 groups.setResultCount(groups.getResultCount()-1);
             }
@@ -2288,7 +2286,7 @@ public class OpenAMClient {
         
         while (iter.hasNext()) {
             Result policy = iter.next();
-            if(!policy.getApplicationName().equals(appName)) {
+            if (!policy.getApplicationName().equals(appName)) {
                 iter.remove();
                 policies.setResultCount(policies.getResultCount()-1);
             }

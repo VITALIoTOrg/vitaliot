@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.UnsupportedEncodingException;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -55,11 +56,11 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import utils.JsonUtils;
 import utils.MD5Util;
+import utils.UTF8fixer;
 import clients.OpenAMClient;
 
 @Path("/rest")
 public class GetServices {
-    
     private OpenAMClient client;
     
     public GetServices() {
@@ -72,18 +73,17 @@ public class GetServices {
     public Response getUser(
             @PathParam("id") String userId,
             @HeaderParam("Cookie") String cookie) {
-        
         User user;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
-        
+
         answer = null;
         code = 0;
-        user = client.getUser(userId, token);
+        user = client.getUser(UTF8fixer.convert(userId), token);
         
         try {
             answer = JsonUtils.serializeJson(user);
@@ -95,27 +95,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(user.getAdditionalProperties().containsKey("code")) {
-            if(user.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (user.getAdditionalProperties().containsKey("code")) {
+            if (user.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) user.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/user/{id}/groups")
@@ -124,16 +123,15 @@ public class GetServices {
     public Response getUserGroups(
             @PathParam("id") String userId,
             @HeaderParam("Cookie") String cookie) {
-        
         String answer;
         
         answer = null;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
-        Groups groups = client.listUserGroups(userId, token);
+        Groups groups = client.listUserGroups(UTF8fixer.convert(userId), token);
         
         try {
             answer = JsonUtils.serializeJson(groups);
@@ -146,9 +144,8 @@ public class GetServices {
         }
         
         return Response.ok()
-                .entity(answer)
-                .build();
-        
+            .entity(answer)
+            .build();
     }
     
     @Path("/group/{id}")
@@ -157,18 +154,30 @@ public class GetServices {
     public Response getGroup(
             @PathParam("id") String groupId,
             @HeaderParam("Cookie") String cookie)  {
-        
         Group group;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
-        
+
+        String converted;
+        byte[] bytes = new byte[groupId.length()];
+
+        for (int i = 0; i < groupId.length(); i++) {
+            bytes[i] = (byte) groupId.charAt(i);
+        }
+
+        try {
+            converted = new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException ue) {
+            converted = null;
+        }
+ 
         answer = null;
         code = 0;
-        group = client.getGroup(groupId, token);
+        group = client.getGroup(converted, token);
         
         try {
             answer = JsonUtils.serializeJson(group);
@@ -180,27 +189,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(group.getAdditionalProperties().containsKey("code")) {
-            if(group.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (group.getAdditionalProperties().containsKey("code")) {
+            if (group.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) group.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/policy/{id}")
@@ -209,18 +217,17 @@ public class GetServices {
     public Response getPolicy(
             @PathParam("id") String policyId,
             @HeaderParam("Cookie") String cookie) {
-        
         Policy policy;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
         code = 0;
-        policy = client.getPolicy(policyId, token);
+        policy = client.getPolicy(UTF8fixer.convert(policyId), token);
         
         try {
             answer = JsonUtils.serializeJson(policy);
@@ -232,27 +239,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(policy.getAdditionalProperties().containsKey("code")) {
-            if(policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (policy.getAdditionalProperties().containsKey("code")) {
+            if (policy.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) policy.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/application/{id}")
@@ -261,18 +267,17 @@ public class GetServices {
     public Response getApplication(
             @PathParam("id") String applicationId,
             @HeaderParam("Cookie") String cookie) {
-        
         Application application;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
         code = 0;
-        application = client.getApplication(applicationId, token);
+        application = client.getApplication(UTF8fixer.convert(applicationId), token);
         
         try {
             answer = JsonUtils.serializeJson(application);
@@ -284,27 +289,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(application.getAdditionalProperties().containsKey("code")) {
-            if(application.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (application.getAdditionalProperties().containsKey("code")) {
+            if (application.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) application.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/apptype/{id}")
@@ -313,18 +317,17 @@ public class GetServices {
     public Response getApplicationType(
             @PathParam("id") String applicationTypeId,
             @HeaderParam("Cookie") String cookie) {
-        
         ApplicationType applicationType;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
         code = 0;
-        applicationType = client.getApplicationType(applicationTypeId, token);
+        applicationType = client.getApplicationType(UTF8fixer.convert(applicationTypeId), token);
         
         try {
             answer = JsonUtils.serializeJson(applicationType);
@@ -336,25 +339,25 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(applicationType.getAdditionalProperties().containsKey("code")) {
-            if(applicationType.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (applicationType.getAdditionalProperties().containsKey("code")) {
+            if (applicationType.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) applicationType.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
     }
     
@@ -364,16 +367,15 @@ public class GetServices {
     public Response getApplicationPolicies(
             @PathParam("id") String appName,
             @HeaderParam("Cookie") String cookie) {
-        
         String answer;
         
         answer = null;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
-        Policies policies = client.listApplicationPolicies(appName, token);
+        Policies policies = client.listApplicationPolicies(UTF8fixer.convert(appName), token);
         
         try {
             answer = JsonUtils.serializeJson(policies);
@@ -386,9 +388,8 @@ public class GetServices {
         }
         
         return Response.ok()
-                .entity(answer)
-                .build();
-        
+            .entity(answer)
+            .build();
     }
     
     @Path("/users")
@@ -396,13 +397,12 @@ public class GetServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUsers(
             @HeaderParam("Cookie") String cookie) {
-        
         Users users;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
@@ -419,27 +419,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(users.getAdditionalProperties().containsKey("code")) {
-            if(users.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (users.getAdditionalProperties().containsKey("code")) {
+            if (users.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) users.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/groups")
@@ -447,13 +446,12 @@ public class GetServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroups(
             @HeaderParam("Cookie") String cookie) {
-        
         Groups groups;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
@@ -470,27 +468,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(groups.getAdditionalProperties().containsKey("code")) {
-            if(groups.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (groups.getAdditionalProperties().containsKey("code")) {
+            if (groups.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) groups.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/policies")
@@ -498,13 +495,12 @@ public class GetServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPolicies(
             @HeaderParam("Cookie") String cookie) {
-        
         Policies policies;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
@@ -521,27 +517,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(policies.getAdditionalProperties().containsKey("code")) {
-            if(policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (policies.getAdditionalProperties().containsKey("code")) {
+            if (policies.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) policies.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/applications")
@@ -549,13 +544,12 @@ public class GetServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getApplications(
             @HeaderParam("Cookie") String cookie) {
-        
         Applications apps;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
@@ -572,25 +566,25 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(apps.getAdditionalProperties().containsKey("code")) {
-            if(apps.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (apps.getAdditionalProperties().containsKey("code")) {
+            if (apps.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) apps.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
     }
     
@@ -599,13 +593,12 @@ public class GetServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getApplicationTypes(
             @HeaderParam("Cookie") String cookie) {
-        
         ApplicationTypes appTypes;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
@@ -622,25 +615,25 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(appTypes.getAdditionalProperties().containsKey("code")) {
-            if(appTypes.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (appTypes.getAdditionalProperties().containsKey("code")) {
+            if (appTypes.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) appTypes.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
     }
     
@@ -649,13 +642,12 @@ public class GetServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSessions(
             @HeaderParam("Cookie") String cookie) {
-        
         Monitor values;
         String answer;
         int code;
         
         String token = null;
-        if(cookie != null)
+        if (cookie != null)
             token = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         
         answer = null;
@@ -672,27 +664,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(values.getAdditionalProperties().containsKey("code")) {
-            if(values.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (values.getAdditionalProperties().containsKey("code")) {
+            if (values.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) values.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/user")
@@ -701,7 +692,6 @@ public class GetServices {
     public Response getUserFromToken(
             @QueryParam("testCookie") boolean altCookie,
             @HeaderParam("Cookie") String cookie) {
-        
         Validation val;
         String token, answer;
         int code;
@@ -710,12 +700,12 @@ public class GetServices {
         code = 0;
         
         String altToken = null, ssoToken = null;
-        if(cookie != null) {
+        if (cookie != null) {
             altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
             ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         }
         
-        if(altCookie)
+        if (altCookie)
             token = altToken;
         else
             token = ssoToken;
@@ -725,35 +715,35 @@ public class GetServices {
         
         List<String> gn = null;
         gn = user.getGivenName();
-        if((gn != null) && (!gn.isEmpty())) { // send back the first name if available
+        if ((gn != null) && (!gn.isEmpty())) { // send back the first name if available
             val.setName(gn.get(0));
         } else {
             gn = user.getGivenname();
-            if((gn != null) && (!gn.isEmpty())) {
+            if ((gn != null) && (!gn.isEmpty())) {
                 val.setName(gn.get(0));
             }
         }
         List<String> ln = null;
         ln = user.getSn();
-        if((gn != null) && (!gn.isEmpty()) && (ln != null) && (!ln.isEmpty())) { // send back the full name if available
+        if ((gn != null) && (!gn.isEmpty()) && (ln != null) && (!ln.isEmpty())) { // send back the full name if available
             val.setFullname(gn.get(0) + " " + ln.get(0)); // composed by first name + last name
         } else { // otherwise use common name, but it is not the full name for sure
             List<String> cn = null;
             cn = user.getCn();
-            if((cn != null) && (!cn.isEmpty())) {
+            if ((cn != null) && (!cn.isEmpty())) {
                 val.setFullname(cn.get(0));
             }
         }
         
         List<String> mail = null;
         mail = user.getMail();
-        if((mail != null) && (!mail.isEmpty())) {
+        if ((mail != null) && (!mail.isEmpty())) {
             val.setMailhash(MD5Util.md5Hex(mail.get(0)));
         }
         
         List<String> time = user.getCreateTimestamp();
         SimpleDate date = new SimpleDate();
-        if((time != null) && (!time.isEmpty())) {
+        if ((time != null) && (!time.isEmpty())) {
             date.setYear(time.get(0).substring(0, 4));
             int m = Integer.parseInt(time.get(0).substring(4, 6));
             date.setMonth(new DateFormatSymbols().getMonths()[m - 1]);
@@ -771,27 +761,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(val.getAdditionalProperties().containsKey("code")) {
-            if(val.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (val.getAdditionalProperties().containsKey("code")) {
+            if (val.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) val.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/validate")
@@ -805,14 +794,14 @@ public class GetServices {
         int code;
         
         String altToken = null, ssoToken = null;
-        if(cookie != null) {
+        if (cookie != null) {
             altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
             ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         }
         
         answer = null;
         code = 0;
-        if(altCookie) {
+        if (altCookie) {
             val = client.validateToken(ssoToken, altToken);
         } else {
             val = client.validateToken(ssoToken, ssoToken);
@@ -828,27 +817,26 @@ public class GetServices {
             e.printStackTrace();
         }
         
-        if(val.getAdditionalProperties().containsKey("code")) {
-            if(val.getAdditionalProperties().get("code").getClass() == Integer.class) {
+        if (val.getAdditionalProperties().containsKey("code")) {
+            if (val.getAdditionalProperties().get("code").getClass() == Integer.class) {
                 code = (Integer) val.getAdditionalProperties().get("code");
             }
         }
-        if(code >= 400 && code < 500) {
+        if (code >= 400 && code < 500) {
             return Response.status(Status.BAD_REQUEST)
                 .entity(answer)
                 .build();
         }
-        else if(code >= 500 && code < 600) {
+        else if (code >= 500 && code < 600) {
             return Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
         else {
             return Response.ok()
-                    .entity(answer)
-                    .build();
+                .entity(answer)
+                .build();
         }
-        
     }
     
     @Path("/getresource")
@@ -858,7 +846,6 @@ public class GetServices {
             @HeaderParam("Cookie") String cookie,
             @QueryParam("testCookie") boolean altCookie,
             @QueryParam("resource") String resource) {
-
         Cookie ck;
         CloseableHttpClient httpclient;
 
@@ -866,19 +853,19 @@ public class GetServices {
 
         URI uri = null;
         try {
-            uri = new URI(resource);
+            uri = new URI(UTF8fixer.convert(resource));
         } catch (URISyntaxException e1) {
             e1.printStackTrace();
         }
 
         String altToken = null, ssoToken = null;
-        if(cookie != null) {
+        if (cookie != null) {
             altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
             ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         }
         
         HttpGet httpget = new HttpGet(uri);
-        if(altCookie) {
+        if (altCookie) {
             ck = new Cookie(client.getSSOCookieName(), altToken);
         } else {
             ck = new Cookie(client.getSSOCookieName(), ssoToken);
@@ -941,8 +928,8 @@ public class GetServices {
         }
 
         return Response.ok()
-                .entity(respString)
-                .build();
+            .entity(respString)
+            .build();
     }
     
     @Path("/permissions")
@@ -951,7 +938,6 @@ public class GetServices {
     public Response getPermissions(
             @HeaderParam("Cookie") String cookie,
             @DefaultValue("false") @QueryParam("testCookie") boolean altCookie) {
-        
         // One token is used to identify the user, the other one is to authorize the requests
         String tokenPerformer, tokenUser;
         boolean error = false;
@@ -961,7 +947,7 @@ public class GetServices {
         //System.out.println(cookie);
 
         String altToken = null, ssoToken = null;
-        if(cookie != null) {
+        if (cookie != null) {
             altToken = cookie.replaceAll(".*altToken=([^;]*).*", "$1");
             ssoToken = cookie.replaceAll(".*ssoToken=([^;]*).*", "$1");
         }
@@ -969,7 +955,7 @@ public class GetServices {
         //System.out.println(ssoToken);
         //System.out.println(altToken);
 
-        if(ssoToken == null || ssoToken.equals("") || altToken == null || altToken.equals("")) {
+        if (ssoToken == null || ssoToken.equals("") || altToken == null || altToken.equals("")) {
             return Response.status(Status.UNAUTHORIZED)
                 .entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid user token!\"}")
                 .build();
@@ -1026,7 +1012,7 @@ public class GetServices {
         }
         
         if (!error) {
-            if(!val.getValid()) {
+            if (!val.getValid()) {
                 return Response.status(Status.UNAUTHORIZED)
                     .entity("{ \"code\": 401, \"reason\": \"Unauthorized\", \"message\": \"Missing or invalid user token!\"}")
                     .build();
@@ -1127,3 +1113,4 @@ public class GetServices {
     }
 
 }
+
