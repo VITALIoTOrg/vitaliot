@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package eu.vital.vitalcep.publisher.encoder;
+import com.mongodb.BasicDBList;
+import com.mongodb.util.JSON;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -214,8 +216,9 @@ public class Encoder {
             
             complexEvent = values[1];
             
-            ArrayList<Document> payload;
-        payload = new ArrayList<Document>() {};
+            BasicDBList payloadBDBList = new BasicDBList();
+            
+       // payload = new ArrayList<Document>() {};
                      
             for (int z=3;z<values.length;z++){
                 Document payloadLine = new Document();
@@ -226,14 +229,14 @@ public class Encoder {
                     payloadLine.put("name",values [z]);
                     payloadLine.put("value",values [z+1]);
 
-                    payload.add(payloadLine); 
+                    payloadBDBList.add(payloadLine); 
                 }else if (token.compareToIgnoreCase("Position")==0)
                     {   locationEvent = values [z+1];
                     payloadLine.put("dataType","pos");
                     payloadLine.put("name",values [z]);
                     payloadLine.put("value",values [z+1]);
 
-                    payload.add(payloadLine); 
+                    payloadBDBList.add(payloadLine); 
                     hasLoc = true;}
                       
                 else if (token.compareToIgnoreCase("Time")==0){
@@ -243,7 +246,7 @@ public class Encoder {
                     payloadLine.put("name",values [z]);
                     payloadLine.put("value",values [z+1]);
 
-                    payload.add(payloadLine);
+                    payloadBDBList.add(payloadLine);
                 //from observationTime
                 
                 }else if ((z % 3)==0) {
@@ -253,7 +256,7 @@ public class Encoder {
                     payloadLine.put("name",values [z]);
                     payloadLine.put("value",values [z+1]);
 
-                    payload.add(payloadLine); 
+                    payloadBDBList.add(payloadLine); 
                 }
             }           
             
@@ -285,7 +288,7 @@ public class Encoder {
             Document valuex = new Document();
             Document value = new Document();
             value.put("complexEvent",complexEvent);
-            value.put("payload",payload);
+            value.put("payload",payloadBDBList);
             
            /* busca localization*/
             if (hasLoc){
