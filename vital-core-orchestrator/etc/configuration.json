@@ -1,11 +1,11 @@
 {
   "bootstrap": {
     "system_urls": [
-      "http://localhost:8080/iot-data-adapter-ppi/ppi/system",
-      "http://localhost:8080/vital-core-orchestrator-web/rest/ppi",
-      "http://localhost:8080/discoverer/ppi",
-      "http://localhost:8080/filtering/ppi",
-      "http://localhost:8080/cep",
+      "http://vital-integration.atosresearch.eu:8280/iot-data-adapter-ppi/ppi/system",
+      "http://vital-integration.atosresearch.eu:8280/vital-core-orchestrator-web/rest/ppi",
+      "http://vital-integration.atosresearch.eu:8280/discoverer/ppi",
+      "http://vital-integration.atosresearch.eu:8280/filtering/ppi",
+      "http://vital-integration.atosresearch.eu:8280/cep",
       "http://vital-integration.atosresearch.eu:8280/vital-ppi-camden-footfall/ppi/system",
       "http://vital-integration.atosresearch.eu:8280/hireplyppi",
       "http://vital-integration.atosresearch.eu:8280/vital-ppi-london-air-quality/ppi/system",

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.orchestrator.engine.adapter.DmsAdapter;
+import eu.vital.orchestrator.engine.adapter.HttpAdapter;
 import eu.vital.orchestrator.engine.adapter.LogAdapter;
 import eu.vital.orchestrator.engine.adapter.ObservationAdapter;
 import eu.vital.orchestrator.engine.adapter.SensorAdapter;
@@ -47,6 +48,9 @@ public class WorkFlowEngine {
 	@Inject
 	DmsAdapter dmsAdapter;
 
+	@Inject
+	HttpAdapter httpAdapter;
+
 	private Map convertToMap(ObjectNode node) {
 		return objectMapper.convertValue(node, Map.class);
 	}
@@ -83,6 +87,7 @@ public class WorkFlowEngine {
 		scriptEngine.put("sensorAdapter", sensorAdapter);
 		scriptEngine.put("dmsAdapter", dmsAdapter);
 		scriptEngine.put("observationAdapter", observationAdapter);
+		scriptEngine.put("httpAdapter", httpAdapter);
 		scriptEngine.put("objectMapper", objectMapper);
 		return scriptEngine;
 	}
