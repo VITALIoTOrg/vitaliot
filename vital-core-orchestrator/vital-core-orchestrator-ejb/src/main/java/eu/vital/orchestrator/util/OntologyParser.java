@@ -25,31 +25,55 @@ public class OntologyParser {
 	public static ObjectNode findOperation(String serviceType, String operationType, ArrayNode serviceList) throws Exception {
 		for (JsonNode service : serviceList) {
 			if (service.get("@type").asText().equals(serviceType)) {
-				JsonNode operationList = (JsonNode) service.get("http://iserve.kmi.open.ac.uk/ns/msm#hasOperation");
-				if (operationList.isArray()) {
-					for (JsonNode operation : operationList) {
-						if (operation.get("@type").asText().equals(operationType)) {
-							return (ObjectNode) operation;
-						}
-					}
-				} else {
-					if (operationList.get("@type").asText().equals(operationType)) {
-						return (ObjectNode) operationList;
-					}
+				try {
+					return findOperation(operationType, service);
+				} catch (Exception e) {
+					// Just continue
 				}
 			}
 		}
 		throw new Exception("operation of " + serviceType + " " + operationType + " not supported");
 	}
 
+	public static ObjectNode findOperation(String operationType, JsonNode service) throws Exception {
+		JsonNode operationList = service.get("http://iserve.kmi.open.ac.uk/ns/msm#hasOperation");
+		if (operationList.isArray()) {
+			for (JsonNode operation : operationList) {
+				if (operation.get("@type").asText().equals(operationType)) {
+					return (ObjectNode) operation;
+				}
+			}
+		} else {
+			if (operationList.get("@type").asText().equals(operationType)) {
+				return (ObjectNode) operationList;
+			}
+		}
+		throw new Exception("operation of " + service.get("id") + " " + operationType + " not supported");
+	}
 
 	public static String findOperationURL(String serviceType, String operationType, ArrayNode serviceList) throws Exception {
 		ObjectNode operation = findOperation(serviceType, operationType, serviceList);
+		return getOperationURL(operation);
+	}
+
+	public static String findOperationURL(String operationType, JsonNode service) throws Exception {
+		JsonNode operation = findOperation(operationType, service);
+		return getOperationURL(operation);
+	}
+
+	public static String getOperationURL(JsonNode operation) {
 		String operationURL = operation
 				.get("http://www.wsmo.org/ns/hrests#hasAddress")
 				.get("@value")
 				.asText();
 		return operationURL;
+	}
+
+	public static String getOperationMethod(JsonNode operation) {
+		String operationMethod = operation
+				.get("http://www.wsmo.org/ns/hrests#hasMethod")
+				.asText();
+		return operationMethod.replaceAll("hrest\\:", "");
 	}
 
 }

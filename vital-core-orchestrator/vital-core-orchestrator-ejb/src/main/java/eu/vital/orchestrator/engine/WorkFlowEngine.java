@@ -9,6 +9,7 @@ import eu.vital.orchestrator.engine.adapter.HttpAdapter;
 import eu.vital.orchestrator.engine.adapter.LogAdapter;
 import eu.vital.orchestrator.engine.adapter.ObservationAdapter;
 import eu.vital.orchestrator.engine.adapter.SensorAdapter;
+import eu.vital.orchestrator.engine.adapter.ServiceAdapter;
 import eu.vital.orchestrator.engine.adapter.SystemAdapter;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
@@ -49,6 +50,9 @@ public class WorkFlowEngine {
 	DmsAdapter dmsAdapter;
 
 	@Inject
+	ServiceAdapter serviceAdapter;
+
+	@Inject
 	HttpAdapter httpAdapter;
 
 	private Map convertToMap(ObjectNode node) {
@@ -87,6 +91,7 @@ public class WorkFlowEngine {
 		scriptEngine.put("sensorAdapter", sensorAdapter);
 		scriptEngine.put("dmsAdapter", dmsAdapter);
 		scriptEngine.put("observationAdapter", observationAdapter);
+		scriptEngine.put("serviceAdapter", serviceAdapter);
 		scriptEngine.put("httpAdapter", httpAdapter);
 		scriptEngine.put("objectMapper", objectMapper);
 		return scriptEngine;
