@@ -88,6 +88,31 @@ public class DMSUtils {
 		return newMongoObject;
 	}
 
+	public static DBObject encodePerm(DBObject dbObject) {
+		DBObject newMongoObject = new BasicDBObject();
+		for (String key : dbObject.keySet()) {
+			String tmpKey = key.replaceAll("\\.", "\\\\u002e");
+			String newKey = tmpKey.replaceAll("\\|", "\\.");
+			Object value = dbObject.get(key);
+			if (value instanceof BasicDBObject) {
+				newMongoObject.put(newKey, encodePerm((BasicDBObject) value));
+			} else if (value instanceof ArrayList) {
+				ArrayList newList = new ArrayList();
+				for (Object item : (ArrayList) value) {
+					if (item instanceof BasicDBObject) {
+						newList.add(encodePerm((BasicDBObject) item));
+					} else {
+						newList.add(item);
+					}
+				}
+				newMongoObject.put(newKey, newList);
+			} else {
+				newMongoObject.put(newKey, value);
+			}
+		}
+		return newMongoObject;
+	}
+
 	public static DBObject decodeKeys(DBObject dbObject) {
 		DBObject newMongoDocument = new BasicDBObject();
 		for (String key : dbObject.keySet()) {

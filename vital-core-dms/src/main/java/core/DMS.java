@@ -163,7 +163,7 @@ public class DMS {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
 				if (code == DMSPermission.successfulPermission) {
-					DBObject perm = DMSUtils.encodeKeys(DMSPermission
+					DBObject perm = DMSUtils.encodePerm(DMSPermission
 							.getPermission());
 
 					DBObject filteredQuery = DMSPermission.permissionFilter(
@@ -217,7 +217,7 @@ public class DMS {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
 				if (code == DMSPermission.successfulPermission) {
-					DBObject perm = DMSUtils.encodeKeys(DMSPermission
+					DBObject perm = DMSUtils.encodePerm(DMSPermission
 							.getPermission());
 
 					DBObject filteredQuery = DMSPermission.permissionFilter(
@@ -271,7 +271,7 @@ public class DMS {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
 				if (code == DMSPermission.successfulPermission) {
-					DBObject perm = DMSUtils.encodeKeys(DMSPermission
+					DBObject perm = DMSUtils.encodePerm(DMSPermission
 							.getPermission());
 
 					DBObject filteredQuery = DMSPermission.permissionFilter(
@@ -326,7 +326,7 @@ public class DMS {
 				int code = DMSPermission.checkPermission(c);
 				// System.out.println("Code: " + code);
 				if (code == DMSPermission.successfulPermission) {
-					DBObject perm = DMSUtils.encodeKeys(DMSPermission
+					DBObject perm = DMSUtils.encodePerm(DMSPermission
 							.getPermission());
 
 					DBObject filteredQuery = DMSPermission.permissionFilter(
