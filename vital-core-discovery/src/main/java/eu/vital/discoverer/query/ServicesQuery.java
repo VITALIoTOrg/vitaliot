@@ -1,11 +1,3 @@
-/**
-* @Author: Riccardo Petrolo <riccardo> - Salvatore Guzzo Bonifacio <salvatore>
-* @Date:   2016-03-30T17:37:24+02:00
-* @Email:  riccardo.petrolo@inria.fr
-* @Last modified by:   riccardo
-* @Last modified time: 2016-03-30T18:27:05+02:00
-*/
-
 
 
 package eu.vital.discoverer.query;
@@ -67,7 +59,7 @@ public class ServicesQuery extends DiscoverQuery{
 		DMSManager systemManager=new DMSManager(DMS_Index.SYSTEM, cookie);
 		LinkedList<JSONObject> result = null;
 		if(this.inputObject.hasType()){
-			result=this.combineResults(result, serviceManager.getByField(TYPE_KEY, inputObject.getType()));
+			result=this.combineResults(result, serviceManager.getByField("@"+TYPE_KEY, inputObject.getType()));
 		}
 
 		if(this.inputObject.hasSystem()){

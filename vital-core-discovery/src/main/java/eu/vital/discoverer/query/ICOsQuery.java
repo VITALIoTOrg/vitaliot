@@ -1,11 +1,3 @@
-/**
-* @Author: Riccardo Petrolo <riccardo> - Salvatore Guzzo Bonifacio <salvatore>
-* @Date:   2016-03-30T17:37:24+02:00
-* @Email:  riccardo.petrolo@inria.fr
-* @Last modified by:   riccardo
-* @Last modified time: 2016-03-30T18:27:05+02:00
-*/
-
 package eu.vital.discoverer.query;
 
 import java.io.IOException;
@@ -32,7 +24,7 @@ public class ICOsQuery extends DiscoverQuery {
 
 	final static Logger logger=Logger.getLogger(ICOsQuery.class);
 	private Discover_ICO_JSON_Object inputObject;
-	private final String OBSERVES_KEY="ssn:observes.type";
+	private final String OBSERVES_KEY="http://purl.oclc.org/NET/ssnx/ssn#observes";
 	private final String TYPE_KEY="type";
 	private final String MOVEMENT_PATTERN_KEY="hasMovementPattern.type";
 	private final String CONNECTION_STABILITY_KEY="connectionstability";
@@ -89,19 +81,20 @@ public class ICOsQuery extends DiscoverQuery {
 		}
 
 		if(this.inputObject.hasType()){
-			result=combineResults(result, manager.getByField(TYPE_KEY, inputObject.getType()));
+			result=combineResults(result, manager.getByField("@"+TYPE_KEY, inputObject.getType()));
 		}
 
 		if(this.inputObject.hasObserves()){
-			result=combineResults(result, manager.getByField(OBSERVES_KEY, inputObject.getObserves()));
+			//result=combineResults(result, manager.getByField(OBSERVES_KEY, inputObject.getObserves()));
+			result=combineResults(result, manager.getByObser(OBSERVES_KEY, inputObject.getObserves()));
 		}
 
 		if(this.inputObject.hasMovementPattern()){
-			result=combineResults(result, manager.getByField(MOVEMENT_PATTERN_KEY, inputObject.getMovementPattern()));
+			result=combineResults(result, manager.getByField("@"+MOVEMENT_PATTERN_KEY, inputObject.getMovementPattern()));
 		}
 
 		if(this.inputObject.hasConnectionStability()){
-			result=combineResults(result, manager.getByField(CONNECTION_STABILITY_KEY, inputObject.getConnectionStability()));
+			result=combineResults(result, manager.getByField("@"+CONNECTION_STABILITY_KEY, inputObject.getConnectionStability()));
 		}
 
 

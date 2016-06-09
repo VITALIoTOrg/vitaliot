@@ -1,13 +1,3 @@
-/**
-* @Author: Riccardo Petrolo <riccardo> - Salvatore Guzzo Bonifacio <salvatore>
-* @Date:   2016-03-30T17:37:24+02:00
-* @Email:  riccardo.petrolo@inria.fr
-* @Last modified by:   riccardo
-* @Last modified time: 2016-03-30T18:27:05+02:00
-*/
-
-
-
 package eu.vital.discoverer.util;
 
 import java.io.DataOutputStream;
@@ -22,6 +12,7 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
 import eu.vital.discoverer.exception.ConnectionErrorException;
@@ -81,17 +72,67 @@ public class DMSManager {
 public LinkedList<JSONObject> getByField(String field, String value){
 
 		JSONObject postObject=new JSONObject();
-
-		//postObject.put(field, value);
-		postObject.put("@"+field, value);
-
+		
+		//forcing @ character 
+		//postObject.put("@"+field, value);
+		postObject.put(field, value);
+		
 		return queryDMS(endpoint, postObject, cookie);
 
 	}
 
+public LinkedList<JSONObject> getByObser(String field, String value){
+
+	//JSONObject postObject=new JSONObject();
+	
+	//String jsonstring = "{ \""+field+"\": { $elemMatch : {"+"\"@type\" " +":"+" \""+value+"\"} }";
+	String jsonstring = "{ \""+field+"\": { $elemMatch: { \"@type\": \""+value+"\"} } }";
+	
+	logger.debug("Creata stringa: "+jsonstring);
+	
+	JSONObject rootQuery=new JSONObject();
+	JSONObject root=new JSONObject();
+	JSONArray array=new JSONArray();
+
+//	JSONObject elemMatch=new JSONObject();
+//	elemMatch.put("$elemMatch", "");
+//	array.add(elemMatch);
+
+//	JSONObject ty=new JSONObject();
+//	ty.put("@"+"type", value);
+//	array.add(ty);
+	
+	JSONObject tyOb=new JSONObject();
+	tyOb.put("@"+"type", value);
+	array.add(tyOb);
+	rootQuery.put("$elemMatch",array);
+	
+	root.put(field,rootQuery);
+	
+
+
+	//root.put(field, array);
+
+	logger.debug("Array: "+root.toJSONString());
+
+	return queryDMS2(endpoint, removeExtraQuotesandBrackets(root.toJSONString()), cookie);
+			
+}
+
+public LinkedList<JSONObject> getBySubField(String field, String subfield, String value){
+
+	String jsonstring = "{ \""+field+"\": { \""+subfield+"\": \""+value+"\"} }";
+	
+	JSONObject jsonObject = (JSONObject) JSONValue.parse(jsonstring);
+	
+	return queryDMS(endpoint, jsonObject, cookie);
+
+}
+
+
 public JSONObject getById(String id){
 
-	LinkedList<JSONObject> id_search=getByField("id", id);
+	LinkedList<JSONObject> id_search=getByField("@id", id);
 	if(id_search.isEmpty()){
 		return null;
 	}
@@ -217,6 +258,39 @@ private String removeExtraQuotes(String input){
 
 }
 
+private String removeExtraQuotesandBrackets(String input){
+	
+	String noBrackets = input.replaceAll("\\[", "").replaceAll("\\]","").replaceAll("\\,","");
+
+	StringTokenizer st=new StringTokenizer(noBrackets,"\"");
+	StringBuilder sb=new StringBuilder();
+
+	if(st.hasMoreTokens())
+
+		sb.append(st.nextToken());
+
+
+	while(st.hasMoreTokens()){
+
+		String token=st.nextToken();
+		if(token.charAt(0) == '$'){
+			sb.append(" "+token+" ");
+		}
+		else{
+			sb.append("\""+token+"\"");
+		}
+
+		if(st.hasMoreTokens()){
+			sb.append(st.nextToken());
+		}
+
+	}
+
+	return sb.toString();
+
+}
+
+
 	private LinkedList<JSONObject> queryDMS(String DMS_endpoint, JSONObject postObject, String cookie){
 		HttpURLConnection connectionDMS = null;
 		try{
@@ -233,8 +307,8 @@ private String removeExtraQuotes(String input){
 			connectionDMS = (HttpURLConnection) DMS_Url.openConnection();
 			connectionDMS.setDoOutput(true);
 			connectionDMS.setDoInput(true);
-			connectionDMS.setConnectTimeout(5000);
-			connectionDMS.setReadTimeout(5000);
+			connectionDMS.setConnectTimeout(50000);
+			connectionDMS.setReadTimeout(50000);
 			connectionDMS.setRequestProperty("Content-Type", "application/json");
 			connectionDMS.setRequestProperty("Accept", "application/json");
 			connectionDMS.setRequestProperty("charset", "utf-8");
@@ -296,8 +370,8 @@ private String removeExtraQuotes(String input){
 			connectionDMS = (HttpURLConnection) DMS_Url.openConnection();
 			connectionDMS.setDoOutput(true);
 			connectionDMS.setDoInput(true);
-			connectionDMS.setConnectTimeout(5000);
-			connectionDMS.setReadTimeout(5000);
+			connectionDMS.setConnectTimeout(50000);
+			connectionDMS.setReadTimeout(50000);
 			connectionDMS.setRequestProperty("Content-Type", "application/json");
 			connectionDMS.setRequestProperty("Accept", "application/json");
 			connectionDMS.setRequestProperty("charset", "utf-8");
