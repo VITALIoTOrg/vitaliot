@@ -1034,7 +1034,7 @@ public class GetServices {
                                 String cond = iterCond.next();
                                 int s = cond.indexOf('$');
                                 if (s > 0) {
-                                    String attribute = cond.substring(0, s);
+                                    String attribute = cond.substring(0, s).replaceAll(":80", "");
                                     String value = cond.substring(s + 1);
                                     AttributeValue av = new AttributeValue();
                                     av.setAttribute(attribute);
