@@ -82,25 +82,11 @@ public LinkedList<JSONObject> getByField(String field, String value){
 	}
 
 public LinkedList<JSONObject> getByObser(String field, String value){
-
-	//JSONObject postObject=new JSONObject();
-	
-	//String jsonstring = "{ \""+field+"\": { $elemMatch : {"+"\"@type\" " +":"+" \""+value+"\"} }";
-	String jsonstring = "{ \""+field+"\": { $elemMatch: { \"@type\": \""+value+"\"} } }";
-	
-	logger.debug("Creata stringa: "+jsonstring);
 	
 	JSONObject rootQuery=new JSONObject();
 	JSONObject root=new JSONObject();
 	JSONArray array=new JSONArray();
 
-//	JSONObject elemMatch=new JSONObject();
-//	elemMatch.put("$elemMatch", "");
-//	array.add(elemMatch);
-
-//	JSONObject ty=new JSONObject();
-//	ty.put("@"+"type", value);
-//	array.add(ty);
 	
 	JSONObject tyOb=new JSONObject();
 	tyOb.put("@"+"type", value);
@@ -108,10 +94,6 @@ public LinkedList<JSONObject> getByObser(String field, String value){
 	rootQuery.put("$elemMatch",array);
 	
 	root.put(field,rootQuery);
-	
-
-
-	//root.put(field, array);
 
 	logger.debug("Array: "+root.toJSONString());
 
@@ -146,7 +128,7 @@ public LinkedList<JSONObject> getByIdList(LinkedList<String> ids){
 
 	for(String s: ids){
 		JSONObject current=new JSONObject();
-		current.put("id", s);
+		current.put("@id", s);
 		array.add(current);
 	}
 
@@ -158,30 +140,38 @@ public LinkedList<JSONObject> getByIdList(LinkedList<String> ids){
 
 public LinkedList<JSONObject> searchInRegion(MapSelectionSquare area){
 
-	JSONObject root=new JSONObject();
-	JSONArray array=new JSONArray();
+	String ValuesLatitude = "{ \"$gt\": "+Double.parseDouble(area.getMinLatitude())+",\"$lt\":"+Double.parseDouble(area.getMaxLatitude())+"}";
+	String ValuesLongitude = "{ \"$gt\": "+Double.parseDouble(area.getMinLongitude())+",\"$lt\":"+Double.parseDouble(area.getMaxLongitude())+"}";
+	
+	JSONObject IntervalLatitude = new JSONObject();
+	IntervalLatitude.put("@value", JSONValue.parse(ValuesLatitude));
+		
+	JSONArray ArrayIntervalLatitude = new JSONArray();
+	ArrayIntervalLatitude.add(IntervalLatitude);
+	
+	JSONObject MatchIntervalLatitude = new JSONObject();
+	MatchIntervalLatitude.put("$elemMatch", ArrayIntervalLatitude);
+	
+	JSONObject IntervalLongitude = new JSONObject();
+	IntervalLongitude.put("@value", JSONValue.parse(ValuesLongitude));
+			
+	JSONArray ArrayIntervalLongitude = new JSONArray();
+	ArrayIntervalLongitude.add(IntervalLongitude);
+	
+	JSONObject MatchIntervalLongitude = new JSONObject();
+	MatchIntervalLongitude.put("$elemMatch", ArrayIntervalLongitude);
+	
+	String HasPosition = "{\""+KnownLocation_lat_KEY+"\":"+MatchIntervalLatitude+",\""+KnownLocation_long_KEY+"\""+MatchIntervalLongitude+"}";
+	
+	JSONObject MatchPositions = new JSONObject();
+	MatchPositions.put("$elemMatch", JSONValue.parse(HasPosition));
+		
+	JSONObject HasLocation = new JSONObject();
+	HasLocation.put(KnownLocation_KEY, MatchPositions);
 
-	JSONObject minLat=new JSONObject();
-	minLat.put(LATITUDE_KEY, createGT(Double.parseDouble(area.getMinLatitude())));
-	array.add(minLat);
+	logger.debug("HasLocation: "+HasLocation.toString());
 
-	JSONObject maxLat=new JSONObject();
-	maxLat.put(LATITUDE_KEY, createLT(Double.parseDouble(area.getMaxLatitude())));
-	array.add(maxLat);
-
-	JSONObject minLong=new JSONObject();
-	minLong.put(LONGITUDE_KEY, createGT(Double.parseDouble(area.getMinLongitude())));
-	array.add(minLong);
-
-	JSONObject maxLong=new JSONObject();
-	maxLong.put(LONGITUDE_KEY, createLT(Double.parseDouble(area.getMaxLongitude())));
-	array.add(maxLong);
-
-	root.put("$and", array);
-
-	logger.debug("Geo Query sent: "+root.toJSONString());
-
-	return queryDMS2(endpoint, removeExtraQuotes(root.toJSONString()), cookie);
+	return queryDMS2(endpoint, removeExtraBrackets(HasLocation.toJSONString()), cookie);
 
 }
 
@@ -287,6 +277,22 @@ private String removeExtraQuotesandBrackets(String input){
 	}
 
 	return sb.toString();
+
+}
+
+private String removeExtraBrackets(String input){
+	
+	//String noBrackets = input.replaceAll("\\[", "").replaceAll("\\]","").replaceAll("\\,","");
+	String noBrackets = input.replaceAll("\\[", "").replaceAll("\\]","");
+	return noBrackets;
+
+}
+
+private String CleanElemMatch(String input){
+	
+	String noBrackets = input.replaceAll("}]}]}]", "]");
+
+	return noBrackets;
 
 }
 
