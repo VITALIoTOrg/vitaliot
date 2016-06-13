@@ -24,6 +24,9 @@ public class DMSManager {
 	private final String LONGITUDE_KEY="hasLastKnownLocation.geo:long";
 	private final String MOVEMENT_PATTER_KEY="hasMovementPattern.type";
 	private final String PREDICTED="Predicted";
+	private final String KnownLocation_KEY="http://vital-iot.eu/ontology/ns/hasLastKnownLocation";
+	private final String KnownLocation_lat_KEY="http://www.w3.org/2003/01/geo/wgs84_pos#lat";
+	private final String KnownLocation_long_KEY="http://www.w3.org/2003/01/geo/wgs84_pos#long";
 
 	private String endpoint, cookie;
 
