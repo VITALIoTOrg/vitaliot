@@ -32,6 +32,9 @@
         <!-- Governance and Management -->
         <module>vital-management</module>
 
+        <!-- Vital OS (Home Page) -->
+        <module>vital-os</module>
+
     </modules>
 
     <properties>
