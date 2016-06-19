@@ -51,7 +51,6 @@ public class DMSManager {
 
 	}
 
-
 	public DMSManager(DMS_Index index, String cookie){
 		DiscoveryProperties props=new DiscoveryProperties();
 		String DMS_Address=props.getProperty(DiscoveryProperties.DMS_ENDPOINT_ADDRESS);
@@ -60,14 +59,12 @@ public class DMSManager {
 		this.cookie=cookie;
 	}
 
-
 	public LinkedList<JSONObject> getByType(String type){
 
 		JSONObject postObject=new JSONObject();
 
 		JSONObject obj=new JSONObject();
 		obj.put("$exists", "true");
-
 		postObject.put("type", obj);
 		logger.debug("postObject: "+postObject.toJSONString());
 		return queryDMS(endpoint, postObject, cookie);
@@ -88,11 +85,25 @@ public LinkedList<JSONObject> getByField(String field, String value){
 	}
 
 public LinkedList<JSONObject> getByObser(String field, String value){
+
+	//JSONObject postObject=new JSONObject();
+	
+	//String jsonstring = "{ \""+field+"\": { $elemMatch : {"+"\"@type\" " +":"+" \""+value+"\"} }";
+	//String jsonstring = "{ \""+field+"\": { $elemMatch: { \"@type\": \""+value+"\"} } }";
+	
+	//logger.debug("Creata stringa: "+jsonstring);
 	
 	JSONObject rootQuery=new JSONObject();
 	JSONObject root=new JSONObject();
 	JSONArray array=new JSONArray();
 
+//	JSONObject elemMatch=new JSONObject();
+//	elemMatch.put("$elemMatch", "");
+//	array.add(elemMatch);
+
+//	JSONObject ty=new JSONObject();
+//	ty.put("@"+"type", value);
+//	array.add(ty);
 	
 	JSONObject tyOb=new JSONObject();
 	tyOb.put("@"+"type", value);
@@ -100,12 +111,17 @@ public LinkedList<JSONObject> getByObser(String field, String value){
 	rootQuery.put("$elemMatch",array);
 	
 	root.put(field,rootQuery);
+	
+
+
+	//root.put(field, array);
 
 	logger.debug("Array: "+root.toJSONString());
 
 	return queryDMS2(endpoint, removeExtraQuotesandBrackets(root.toJSONString()), cookie);
 			
 }
+
 
 public LinkedList<JSONObject> getBySubField(String field, String subfield, String value){
 
@@ -116,7 +132,6 @@ public LinkedList<JSONObject> getBySubField(String field, String subfield, Strin
 	return queryDMS(endpoint, jsonObject, cookie);
 
 }
-
 
 public JSONObject getById(String id){
 
@@ -158,22 +173,45 @@ public LinkedList<JSONObject> searchInRegion(MapSelectionSquare area){
 	JSONObject MatchIntervalLatitude = new JSONObject();
 	MatchIntervalLatitude.put("$elemMatch", ArrayIntervalLatitude);
 	
+	//JSONObject LatitudesObject = new JSONObject();
+	//LatitudesObject.put(KnownLocation_lat_KEY, MatchIntervalLatitude);
+	
+	
 	JSONObject IntervalLongitude = new JSONObject();
 	IntervalLongitude.put("@value", JSONValue.parse(ValuesLongitude));
-			
+	
+		
 	JSONArray ArrayIntervalLongitude = new JSONArray();
 	ArrayIntervalLongitude.add(IntervalLongitude);
 	
 	JSONObject MatchIntervalLongitude = new JSONObject();
 	MatchIntervalLongitude.put("$elemMatch", ArrayIntervalLongitude);
 	
+	
+	//JSONObject LongitudesObject = new JSONObject();
+	//LongitudesObject.put(KnownLocation_long_KEY, MatchIntervalLongitude);
+	
+	
 	String HasPosition = "{\""+KnownLocation_lat_KEY+"\":"+MatchIntervalLatitude+",\""+KnownLocation_long_KEY+"\""+MatchIntervalLongitude+"}";
+	
+	
+	//{ " http://www.w3.org/2003/01/geo/wgs84_pos#lat ": {"$elemMatch":[{"@value":{"$gt":-52.686066,"$lt":-47.313934}}]},"http://www.w3.org/2003/01/geo/wgs84_pos#long"}
+	logger.debug("HasPosition: "+HasPosition);
+		
+	//JSONArray ArrayPositions = new JSONArray();
+	//ArrayPositions.add(LatitudesObject);
+	//ArrayPositions.add(LongitudesObject);
+	
 	
 	JSONObject MatchPositions = new JSONObject();
 	MatchPositions.put("$elemMatch", JSONValue.parse(HasPosition));
-		
+	
+	logger.debug("MatchPositions: "+MatchPositions.toString());
+	
+	
 	JSONObject HasLocation = new JSONObject();
 	HasLocation.put(KnownLocation_KEY, MatchPositions);
+
 
 	logger.debug("HasLocation: "+HasLocation.toString());
 
@@ -302,14 +340,17 @@ private String CleanElemMatch(String input){
 
 }
 
-
 	private LinkedList<JSONObject> queryDMS(String DMS_endpoint, JSONObject postObject, String cookie){
 		HttpURLConnection connectionDMS = null;
 		try{
 
 			logger.debug("cookie sent: "+cookie);
-			logger.debug("JSON object received: "+postObject.toJSONString());
-
+			logger.debug("JSON string received: "+postObject.toString());
+			//logger.debug("JSON object received: "+postObject.toJSONString());
+			//logger.debug("JSON string : "+"@"+postObject.toString());
+			
+			
+			//postObject = "@"+String(postObject);
 			String postObjectString=postObject.toJSONString();
 			byte[] postObjectByte=postObjectString.getBytes(StandardCharsets.UTF_8);
 			int postDataLength = postObjectByte.length;
@@ -319,6 +360,78 @@ private String CleanElemMatch(String input){
 			connectionDMS = (HttpURLConnection) DMS_Url.openConnection();
 			connectionDMS.setDoOutput(true);
 			connectionDMS.setDoInput(true);
+			//connectionDMS.setConnectTimeout(5000);
+			//connectionDMS.setReadTimeout(5000);
+			connectionDMS.setConnectTimeout(50000);
+			connectionDMS.setReadTimeout(50000);
+			connectionDMS.setRequestProperty("Content-Type", "application/json");
+			connectionDMS.setRequestProperty("Accept", "application/json");
+			connectionDMS.setRequestProperty("charset", "utf-8");
+			connectionDMS.setRequestProperty("Cookie", cookie);
+			connectionDMS.setRequestMethod("POST");
+			connectionDMS.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+			
+			DataOutputStream wr=new DataOutputStream(connectionDMS.getOutputStream());
+			wr.write(postObjectByte);
+			wr.flush();
+
+			int HttpResult = connectionDMS.getResponseCode();
+	
+			if(HttpResult == HttpURLConnection.HTTP_ACCEPTED){
+			
+				JSONParser parser=new JSONParser();
+				JSONArray array=(JSONArray) parser.parse(new InputStreamReader(connectionDMS.getInputStream(),"utf-8"));
+				//JSONArray array=(JSONArray) parser.parse(new InputStreamReader(connectionDMS.getInputStream()));
+
+				logger.debug("Reveiced response"+array.toJSONString());
+
+				LinkedList<JSONObject> result=new LinkedList<JSONObject>();
+
+				Iterator i= array.iterator();
+
+				while(i.hasNext()){
+					Object current=i.next();
+					if(current instanceof JSONObject)
+					result.add((JSONObject) current);
+				}
+
+				return result;
+
+			}else{
+				logger.debug("HTTP is not accepted "+ HttpResult);
+				//TODO: throw exception for internal error
+				return new LinkedList<JSONObject>();
+			}
+		}catch(Exception e){
+			//TODO: throw exception for internal error
+			logger.error(e.toString());
+//			return new LinkedList<JSONObject>();
+			throw new ConnectionErrorException("Error in connection with DMS");
+		}finally{
+			if(connectionDMS != null) {
+				connectionDMS.disconnect();
+			}
+		}
+	}
+	
+	private LinkedList<JSONObject> queryDMS2(String DMS_endpoint, String postObject, String cookie){
+		HttpURLConnection connectionDMS = null;
+		try{
+
+			logger.debug("cookie sent: "+cookie);
+			logger.debug("JSON object received: "+postObject);
+
+			String postObjectString=postObject;
+			byte[] postObjectByte=postObjectString.getBytes(StandardCharsets.UTF_8);
+			int postDataLength = postObjectByte.length;
+			URL DMS_Url=new URL(DMS_endpoint);
+
+			// prepare header
+			connectionDMS = (HttpURLConnection) DMS_Url.openConnection();
+			connectionDMS.setDoOutput(true);
+			connectionDMS.setDoInput(true);
+			//connectionDMS.setConnectTimeout(5000);
+			//connectionDMS.setReadTimeout(5000);
 			connectionDMS.setConnectTimeout(50000);
 			connectionDMS.setReadTimeout(50000);
 			connectionDMS.setRequestProperty("Content-Type", "application/json");
@@ -336,70 +449,7 @@ private String CleanElemMatch(String input){
 				JSONParser parser=new JSONParser();
 				JSONArray array=(JSONArray) parser.parse(new InputStreamReader(connectionDMS.getInputStream(),"utf-8"));
 
-				logger.debug("Reveiced response"+array.toJSONString());
-
-				LinkedList<JSONObject> result=new LinkedList<JSONObject>();
-
-				Iterator i= array.iterator();
-
-				while(i.hasNext()){
-					Object current=i.next();
-					if(current instanceof JSONObject)
-					result.add((JSONObject) current);
-				}
-
-				return result;
-
-			}else{
-				//TODO: throw exception for internal error
-				return new LinkedList<JSONObject>();
-			}
-		}catch(Exception e){
-			//TODO: throw exception for internal error
-			logger.error(e.toString());
-//			return new LinkedList<JSONObject>();
-			throw new ConnectionErrorException("Error in connection with DMS");
-		}finally{
-			if(connectionDMS != null) {
-				connectionDMS.disconnect();
-			}
-		}
-	}
-
-	private LinkedList<JSONObject> queryDMS2(String DMS_endpoint, String postObject, String cookie){
-		HttpURLConnection connectionDMS = null;
-		try{
-
-			logger.debug("cookie sent: "+cookie);
-			logger.debug("JSON object received: "+postObject);
-
-			String postObjectString=postObject;
-			byte[] postObjectByte=postObjectString.getBytes(StandardCharsets.UTF_8);
-			int postDataLength = postObjectByte.length;
-			URL DMS_Url=new URL(DMS_endpoint);
-
-			// prepare header
-			connectionDMS = (HttpURLConnection) DMS_Url.openConnection();
-			connectionDMS.setDoOutput(true);
-			connectionDMS.setDoInput(true);
-			connectionDMS.setConnectTimeout(50000);
-			connectionDMS.setReadTimeout(50000);
-			connectionDMS.setRequestProperty("Content-Type", "application/json");
-			connectionDMS.setRequestProperty("Accept", "application/json");
-			connectionDMS.setRequestProperty("charset", "utf-8");
-			connectionDMS.setRequestProperty("Cookie", cookie);
-			connectionDMS.setRequestMethod("POST");
-			connectionDMS.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-
-			DataOutputStream wr=new DataOutputStream(connectionDMS.getOutputStream());
-			wr.write(postObjectByte);
-			wr.flush();
-			int HttpResult = connectionDMS.getResponseCode();
-			if(HttpResult == HttpURLConnection.HTTP_OK){
-				JSONParser parser=new JSONParser();
-				JSONArray array=(JSONArray) parser.parse(new InputStreamReader(connectionDMS.getInputStream(),"utf-8"));
-
-				logger.debug("Reveiced response"+array.toJSONString());
+				//logger.debug("Reveiced response"+array.toJSONString());
 
 				LinkedList<JSONObject> result=new LinkedList<JSONObject>();
 
