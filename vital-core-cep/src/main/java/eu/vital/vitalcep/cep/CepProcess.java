@@ -87,7 +87,7 @@ public class CepProcess {
             
             String cmd = cepFolder + "/bcep -d " + cepFolder 
                 + "/"+fileName+"_dolce -mi " + mqin + " -mo "
-                +mqout+ " -f " + cepFolder + "/" + confFile + " &>/home/adminuser/bcep/bcep/logs/miguel &";
+                +mqout+ " -f " + cepFolder + "/" + confFile + " &>/dev/null &";
             
             logger.debug("starting bCEP with command: " + cmd);
             try {
