@@ -149,6 +149,12 @@ public class Observation {
                 ){
             return Response.status(Response.Status.BAD_REQUEST)
                     .build();
+        }finally{
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }
         }
          
     }
@@ -193,6 +199,12 @@ public class Observation {
         
         DeleteResult deleted =  db.getCollection("subscriptions")
                                 .deleteOne(doc);
+        
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
         
         if (deleted.wasAcknowledged()!= true || deleted.getDeletedCount()!=1 ){
             return Response.status(Response.Status.NOT_FOUND)

@@ -223,6 +223,12 @@ public class System {
 //        metadata.put("sensors", sensors);
         metadata.append("sensors", sensors);
         
+        
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
         return Response.status(Response.Status.OK)
                                 .entity(metadata.toString()).build();
     }

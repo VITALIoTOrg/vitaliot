@@ -55,6 +55,7 @@ public class CEP {
     public int PID;
     public String mqin;
     public String mqout;
+    public String confFile;
     public String doceSpecification;
     public String type;
     public CepProcess cp;
@@ -62,7 +63,7 @@ public class CEP {
     public String cepFolder;
       
     public Boolean CEPStart (CEPType type,DolceSpecification dolceSpecification
-            ,String mqin, String mqout,
+            ,String mqin, String mqout, String confFile,
             String sources, JSONObject credentials)
             throws FileNotFoundException, IOException{
 
@@ -71,9 +72,11 @@ public class CEP {
         mongoURL = configReader.get(ConfigReader.MONGO_URL);
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
         
-        cp = new CepProcess(dolceSpecification.toString(), mqin, mqout);
+        cp = new CepProcess(dolceSpecification.toString(), mqin, mqout, confFile);
         cp.startCEP();
         this.PID = cp.PID;
+        
+        CepContainer.putCepProc(cp);
                
         this.type = type.toString();
         String T = type.toString();
@@ -155,6 +158,13 @@ public class CEP {
                     GeneralSecurityException | 
                     UnsupportedEncodingException | ServerErrorException ex){
                     String a= "";
+            }finally{
+            	if (db != null)
+            		db = null;
+            	if (mongo != null){
+            		mongo.close();
+            		mongo = null;
+            	}
             }
                 
         }else{

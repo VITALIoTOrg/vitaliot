@@ -28,7 +28,7 @@ public class MQTT_connector_subscriper implements MQTT_conn_interface{
             clientName = "publisher_"+RandomStringUtils.randomAlphanumeric(4);
             MsgQueue oQueue = new MsgQueue(MsgProcc);
             connector = new MqttConnector(clientName, 
-                     oQueue,"", queueName, 2);
+                     oQueue,"", queueName, 2,false);
        }
     }
     

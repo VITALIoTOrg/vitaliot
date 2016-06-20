@@ -2,6 +2,7 @@ package eu.vital.vitalcep.connectors.mqtt;
 
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
@@ -45,17 +46,39 @@ public class MsgQueue{
     }
 
     public class Receiver extends Thread{
-        @Override
+        
+    	boolean execute = true;
+    	
+         
+    	
+    	@Override
         public void run(){
             try{
-                    while(true){
-                            msgProcessor.processMsg((MqttMsg)queue.take());
+                    while(execute){
+                    	MqttMsg mqttMsg = queue.poll(1000,TimeUnit.MILLISECONDS);
+                    	if (mqttMsg!=null)
+                            msgProcessor.processMsg(mqttMsg);
                     }
             }catch(Exception e){
                     logger.error(e,e);
             }
+            
+            logger.debug("MIGUEL: si pasa por aqui es porque lo han parado");
+            
         }
+    	
+    	public void stop_run_method(){
+    		execute = false;
+    		
+    	}
 
+    }
+    
+    public boolean parar(){
+    	receiver.stop_run_method();
+    	receiver.stop();
+    	
+    	return true;
     }
 
 }

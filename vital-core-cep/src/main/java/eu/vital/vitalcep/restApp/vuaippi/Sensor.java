@@ -580,6 +580,12 @@ public class Sensor {
     } catch (JSONException ex) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .build();
+    }finally{
+    	db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
     }
         
         
@@ -1431,6 +1437,8 @@ public class Sensor {
         BasicDBObject query = new BasicDBObject();
         
         final JSONArray oObservations = new JSONArray();
+        MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
+        MongoDatabase db = mongo.getDatabase(mongoDB);
             
         if (!(to == null) && !(from == null)){
             try{
@@ -1439,8 +1447,7 @@ public class Sensor {
                         .parse(queryS);
                 query = (BasicDBObject) queryO;
                 
-                MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
-                final MongoDatabase db = mongo.getDatabase(mongoDB);
+                
 
 
                 Block<Document> block = new Block<Document>() {
@@ -1465,6 +1472,12 @@ public class Sensor {
                
             }catch (Exception e){
                 String a= "a";
+            }finally{
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
             }
                             
         }else{
@@ -1473,11 +1486,7 @@ public class Sensor {
                             .parse(createQuery(sensor, property,null,null));
                 query = (BasicDBObject) queryO;
 
-                MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
-                final MongoDatabase db = mongo.getDatabase(mongoDB);
-
-
-                Block<Document> block = new Block<Document>() {
+               Block<Document> block = new Block<Document>() {
                     @Override
                     public void apply(final Document document) {
                         JSONObject oCollector = new JSONObject(document.toJson());
@@ -1506,6 +1515,12 @@ public class Sensor {
 
             }catch (Exception e){
                String a= "a";
+            }finally{
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
             }
                   
         }

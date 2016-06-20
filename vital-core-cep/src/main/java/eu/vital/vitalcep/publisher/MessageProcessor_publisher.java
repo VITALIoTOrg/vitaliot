@@ -5,16 +5,6 @@
  */
 package eu.vital.vitalcep.publisher;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.MongoException;
-import com.mongodb.client.MongoDatabase;
-import eu.vital.vitalcep.connectors.mqtt.MessageProcessor;
-import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
-import eu.vital.vitalcep.publisher.encoder.Encoder;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import eu.vital.vitalcep.connectors.dms.DMSManager;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -24,9 +14,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.MongoException;
+import com.mongodb.client.MongoDatabase;
+
+import eu.vital.vitalcep.connectors.dms.DMSManager;
+import eu.vital.vitalcep.connectors.mqtt.MessageProcessor;
+import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
+import eu.vital.vitalcep.publisher.encoder.Encoder;
 
 
 /**
@@ -41,11 +44,13 @@ public class MessageProcessor_publisher  implements MessageProcessor {
     private final String mongocollection;
     private final String mongoURL;
     private final String mongoDB;
-   
+    private Logger logger;
     
     public MessageProcessor_publisher(String dms_url, String cookie,
              String sensorId,String mongocollection,String mongo_url,
              String mongo_db){
+    	
+    	this.logger = Logger.getLogger(this.getClass().getName());
         this.dms_URL=dms_url;
         this.cookie=cookie;
         this.sensorId=sensorId;
@@ -58,7 +63,7 @@ public class MessageProcessor_publisher  implements MessageProcessor {
     @Override
      public boolean processMsg(MqttMsg mqttMsg) {
 
-	Encoder encoder = new Encoder();
+    	Encoder encoder = new Encoder();
         Date date = new Date();
         String xsdTime = getXSDDateTime(date);
         UUID uuid = UUID.randomUUID();
@@ -70,16 +75,23 @@ public class MessageProcessor_publisher  implements MessageProcessor {
         Document doc = encoder.dolceOutput2Document(mqttMsg.msg,id
                 , this.sensorId, xsdTime);
         
-        MongoClient mongo = new MongoClient(new MongoClientURI (this.mongoURL));
-        MongoDatabase db = mongo.getDatabase(this.mongoDB);
+        logger.debug("MQTTMessage received: "+ mqttMsg.msg);
         
+        MongoClient mongo=null;
+        MongoDatabase db=null;
         try{
+        	mongo = new MongoClient(new MongoClientURI (this.mongoURL));
+            db = mongo.getDatabase(this.mongoDB);
             db.getCollection(mongocollection)
                     .insertOne(doc);
         }catch(MongoException ex
                 ){
-            Logger.getLogger(MessageProcessor_publisher.class.getName())
-                    .log(Level.SEVERE, null,"observation not saved");
+        	logger.error("observation not saved");
+        }finally{
+        	if (db != null)
+        		db = null;
+        	if (mongo != null)
+        		mongo.close();
         }
         
         JSONArray body = new JSONArray();
@@ -89,16 +101,14 @@ public class MessageProcessor_publisher  implements MessageProcessor {
         
         try {
             if (!oDMS.pushObservations(body.toString())){
-                Logger.getLogger(MessageProcessor_publisher.class.getName())
-                    .log(Level.SEVERE, null,"couldn't push to DMS");
+                logger.error("couldn't push to DMS");
                  return false;
             } else{
                 return true;
             }
         } catch (IOException | KeyManagementException 
                 | NoSuchAlgorithmException | KeyStoreException ex) {
-            Logger.getLogger(MessageProcessor_publisher.class.getName())
-                    .log(Level.SEVERE, null, ex);
+        	logger.error(ex);
         }
 	
         return true;
