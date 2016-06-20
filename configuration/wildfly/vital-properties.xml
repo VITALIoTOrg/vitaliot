@@ -71,6 +71,7 @@
     <entry key="vital-core-cep.ucep.path">/home/ucep</entry>
     <entry key="vital-core-cep.security">https://localhost:8443/securitywrapper/rest</entry>
     <entry key="vital-core-cep.dms">http://localhost:8080/vital-core-dms</entry>
+    <entry key="vital-core-cep.configuraiong.file">confFile.ini</entry>
     <!--/.vital-core-cep-->
 
     <!--vital-core-orchestrator-->
