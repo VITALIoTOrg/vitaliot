@@ -218,8 +218,6 @@ public class Encoder {
             
             BasicDBList payloadBDBList = new BasicDBList();
             
-       // payload = new ArrayList<Document>() {};
-                     
             for (int z=3;z<values.length;z++){
                 Document payloadLine = new Document();
                 String token = values[z];
