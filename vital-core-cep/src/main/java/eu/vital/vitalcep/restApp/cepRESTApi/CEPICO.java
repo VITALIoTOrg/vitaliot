@@ -434,20 +434,20 @@ public class CEPICO {
             	mongo= null;
             }           
             return Response.status(Response.Status.NOT_FOUND)
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
+                   .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build(); 
         }
             
         if (found == null){
             return Response.status(Response.Status.NOT_FOUND)
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
+                    .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build(); 
         }else{
             return Response.status(Response.Status.OK)
                     .entity(found)
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
+                    .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();   
         }
