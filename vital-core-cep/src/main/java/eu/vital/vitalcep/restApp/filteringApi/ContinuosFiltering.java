@@ -39,6 +39,7 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.cep.CepContainer;
 import eu.vital.vitalcep.cep.CepProcess;
 import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
@@ -79,6 +80,7 @@ public class ContinuosFiltering {
     private final String mongoDB;
     private final String dmsURL;
     private String cookie;
+    private String confFile;
     
     public ContinuosFiltering() throws IOException {
 
@@ -88,7 +90,7 @@ public class ContinuosFiltering {
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
         dmsURL = configReader.get(ConfigReader.DMS_URL);
         host = configReader.get(ConfigReader.CEP_BASE_URL);
-        
+        confFile = configReader.get(ConfigReader.CEP_CONF_FILE);
     }
     
     /**
@@ -118,7 +120,11 @@ public class ContinuosFiltering {
                db.getCollection("staticdatafilters");
             } catch (Exception e) {
               //System.out.println("Mongo is down");
-              mongo.close();
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
               return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     
@@ -142,7 +148,11 @@ public class ContinuosFiltering {
                 AllJson.put(sensoraux);
             }
         });
-            
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
         return Response.status(Response
                                 .Status.OK).entity(AllJson.toString()).build();
 
@@ -185,7 +195,11 @@ public class ContinuosFiltering {
            db.getCollection("continuousfilters");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
-          mongo.close();
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -211,7 +225,7 @@ public class ContinuosFiltering {
                     CEP cepProcess = new CEP();
                    
                     if (!(cepProcess.CEPStart(CEP.CEPType.CONTINUOUS, ds, mqin,
-                            mqout, jo.getJSONArray("source").toString(), credentials))){
+                            mqout, confFile, jo.getJSONArray("source").toString(), credentials))){
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
@@ -260,16 +274,30 @@ public class ContinuosFiltering {
                                     .insertOne(doc1);
                             String id = doc1.get("_id").toString();
 
-                        }catch(MongoException ex
-                                ){
+                            db = null;
+                            if (mongo!= null){
+                            	mongo.close();
+                            	mongo= null;
+                            }
+                            
+                        }catch(MongoException ex){
+                        	db = null;
+                            if (mongo!= null){
+                            	mongo.close();
+                            	mongo= null;
+                            }
                             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                                     .build();
                         }
                         return Response.status(Response.Status.OK)
                             .entity(aOutput.toString()).build();
                        
-                    }catch(MongoException ex
-                            ){
+                    }catch(MongoException ex){
+                    	db = null;
+                        if (mongo!= null){
+                        	mongo.close();
+                        	mongo= null;
+                        }
                         return Response.status(Response.Status.BAD_REQUEST)
                                 .build();
                     }
@@ -351,7 +379,11 @@ public class ContinuosFiltering {
                db.getCollection("continuousfilters");
             } catch (Exception e) {
               //System.out.println("Mongo is down");
-              mongo.close();
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
               return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
             }
@@ -363,7 +395,11 @@ public class ContinuosFiltering {
 
        FindIterable<Document> coll = db.getCollection("continuousfilters")
                 .find(searchById).projection(fields);
-        
+       db = null;
+       if (mongo!= null){
+       	mongo.close();
+       	mongo= null;
+       }
         try {
             found = coll.first().toJson();
         }catch(Exception e){
@@ -414,7 +450,11 @@ public class ContinuosFiltering {
            db.getCollection("continuousfilters");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
-          mongo.close();
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
 
@@ -448,7 +488,7 @@ public class ContinuosFiltering {
                 cepProcess.fileName = doc2.getString("fileName");
                 cepProcess.cepFolder = doc2.getString("cepFolder");
                 cepProcess.type = CEP.CEPType.CONTINUOUS.toString();
-                CepProcess cp = new CepProcess(null, null,null);
+                CepProcess cp = new CepProcess(null, null,null,null);
                 cp.PID=doc2.getInteger("PID");
                 
                 cepProcess.cp =cp;
@@ -467,13 +507,18 @@ public class ContinuosFiltering {
                             .updateOne(filter1,update,options);
   
                 };
+                CepContainer.deleteCepProcess(cp.PID);
                 
             }
         }
     
         
         DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
-        
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
         if (deleteResult.getDeletedCount() < 1){
             return Response.status(Response.Status.NOT_FOUND).build();
         }else{

@@ -9,6 +9,7 @@ import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
 import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.cep.CepContainer;
 import eu.vital.vitalcep.connectors.mqtt.MqttAllInOne;
 import eu.vital.vitalcep.collector.decoder.Decoder;
 import eu.vital.vitalcep.connectors.dms.DMSManager;
@@ -76,6 +77,7 @@ public class StaticFiltering {
     
     private String dmsURL;
     private String cookie;
+    private String confFile;
     
     public StaticFiltering() throws IOException {
     
@@ -85,6 +87,7 @@ public class StaticFiltering {
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
         dmsURL = configReader.get(ConfigReader.DMS_URL);
         host = configReader.get(ConfigReader.CEP_BASE_URL);
+        confFile = configReader.get(ConfigReader.CEP_CONF_FILE);
 
     }
     
@@ -114,7 +117,11 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
            db.getCollection("staticdatafilters");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
-          mongo.close();
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
 
@@ -142,7 +149,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 CEP cepProcess = new CEP();
                    
                 if (!(cepProcess.CEPStart(CEP.CEPType.DATA, ds, mqin,
-                        mqout, aData.toString(), null))){
+                        mqout, confFile, aData.toString(), null))){
                     return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
                 }
@@ -170,6 +177,11 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
 
                 }catch(MongoException ex
                         ){
+                	db = null;
+                    if (mongo!= null){
+                    	mongo.close();
+                    	mongo= null;
+                    }
                     return Response.status(Response.Status.BAD_REQUEST)
                             .build();
                 }
@@ -186,6 +198,11 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
 
                 }catch(MongoException ex
                         ){
+                	db = null;
+                    if (mongo!= null){
+                    	mongo.close();
+                    	mongo= null;
+                    }
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                             .build();
                 }
@@ -260,20 +277,37 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                     }
                     
                 } catch (KeyManagementException | KeyStoreException ex) {
+                	db = null;
+                    if (mongo!= null){
+                    	mongo.close();
+                    	mongo= null;
+                    }
                     java.util.logging.Logger.getLogger(MessageProcessor_publisher
                             .class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                CepContainer.deleteCepProcess(cepProcess.PID);
                 
                 if (!cepProcess.cepDispose()){
                     java.util.logging.Logger.getLogger
                            (StaticFiltering.class.getName())
                                    .log(Level.SEVERE, "couldn't terminate ucep" );
                 }
-
+                
+                db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
                 return Response.status(Response.Status.OK)
                         .entity(sOutput).build();
 
             }catch(IOException | JSONException | java.text.ParseException e){
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
                  return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
     }   
@@ -393,7 +427,11 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
            db.getCollection("staticqueryfilters");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
-          mongo.close();
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
 
@@ -419,7 +457,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 CEP cepProcess = new CEP();
                    
                 if (!(cepProcess.CEPStart(CEP.CEPType.QUERY, ds, mqin,
-                        mqout, jo.getString("query"), null))){
+                        mqout, confFile, jo.getString("query"), null))){
                     return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
                 }
@@ -446,7 +484,11 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                     String id = doc.get("_id").toString();
 
                 }catch(MongoException ex
-                        ){
+                        ){db = null;
+                        if (mongo!= null){
+                        	mongo.close();
+                        	mongo= null;
+                        }
                     return Response.status(Response.Status.BAD_REQUEST)
                             .build();
                 }
@@ -464,6 +506,11 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
 
                 }catch(MongoException ex
                         ){
+                	db = null;
+                    if (mongo!= null){
+                    	mongo.close();
+                    	mongo= null;
+                    }
                     return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                             .build();
                 }
@@ -545,22 +592,38 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                     
                 } catch (IOException | KeyManagementException 
                         | NoSuchAlgorithmException | KeyStoreException ex) {
+                	db = null;
+                    if (mongo!= null){
+                    	mongo.close();
+                    	mongo= null;
+                    }
                     java.util.logging.Logger.getLogger
                         (StaticFiltering.class.getName())
                             .log(Level.SEVERE, null, ex);
                 }
+                
+                CepContainer.deleteCepProcess(cepProcess.PID);
                              
                 if (!cepProcess.cepDispose()){
                      java.util.logging.Logger.getLogger
                     (StaticFiltering.class.getName()).log(Level.SEVERE, 
                 "bcep Instance not terminated" );
                 };
-
+                db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
                     return Response.status(Response.Status.OK)
                         .entity(sOutput).build();
 
             }catch(IOException | JSONException | NoSuchAlgorithmException 
                     | java.text.ParseException e){
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
                  return Response.status(Response.Status
                          .INTERNAL_SERVER_ERROR).build();
             }

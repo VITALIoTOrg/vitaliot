@@ -8,6 +8,7 @@ package eu.vital.vitalcep.restApp.cepRESTApi;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
 
 import eu.vital.vitalcep.cep.CEP;
+import eu.vital.vitalcep.cep.CepContainer;
 import eu.vital.vitalcep.conf.ConfigReader;
 import eu.vital.vitalcep.connectors.ppi.PPIManager;
 import eu.vital.vitalcep.security.Security;
@@ -83,6 +84,7 @@ public class CEPICO {
     private final String mongoDB;
     private final String dmsURL;
     private String cookie;
+    private String confFile;
     
     
     public CEPICO() throws IOException {
@@ -93,6 +95,7 @@ public class CEPICO {
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
         dmsURL = configReader.get(ConfigReader.DMS_URL);
         host = configReader.get(ConfigReader.CEP_BASE_URL);
+        confFile = configReader.get(ConfigReader.CEP_CONF_FILE);
     }
     
     
@@ -127,12 +130,18 @@ public class CEPICO {
             }
         });
         
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
+        
         return Response.status(Response.Status.OK)
                 .entity(AllJson.toString())
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();          
-
+        
     }
    
     public static int getPid(Process process) {
@@ -190,8 +199,7 @@ public class CEPICO {
         } catch (Exception e) {
           //System.out.println("Mongo is down");
           mongo.close();
-          return Response.status(Response
-                            .Status.INTERNAL_SERVER_ERROR).build();
+          return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
 
         }
                
@@ -223,6 +231,7 @@ public class CEPICO {
                         jo.getJSONArray("source"),
                         ds.getEvents(), getXSDDateTime(NOW));
                     }catch(Exception e){
+                    	mongo.close();
                         return Response.status(Response.Status.BAD_REQUEST)
                                 .entity("not available getObservation Service for this sensor ")
                                 .build();
@@ -231,13 +240,14 @@ public class CEPICO {
                     
                     CEP cepProcess = new CEP();
                    
-                    if (!(cepProcess.CEPStart(CEP.CEPType.CEPICO, ds, mqin, mqout,
-                            requestArray.toString(), credentials))){
+                    if (!(cepProcess.CEPStart(CEP.CEPType.CEPICO, ds, mqin, mqout, confFile, requestArray.toString(), credentials))){
+                    	mongo.close();
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
                     
                     if (cepProcess.PID<1){
+                    	mongo.close();
                         return Response.status(Response
                                 .Status.INTERNAL_SERVER_ERROR).build();
                     }
@@ -257,9 +267,7 @@ public class CEPICO {
                         String sensorId = host+"/sensor/"+randomUUIDString;
                         
                         MessageProcessor_publisher Publisher_MsgProcc 
-                            = new MessageProcessor_publisher(this.dmsURL
-                                ,cookie,sensorId,"cepicosobservations",
-                            mongoURL,mongoDB);//555
+                            = new MessageProcessor_publisher(this.dmsURL ,cookie,sensorId,"cepicosobservations", mongoURL,mongoDB);//555
                         MQTT_connector_subscriper publisher 
                                 = new MQTT_connector_subscriper (mqout,Publisher_MsgProcc);
                         MqttConnectorContainer.addConnector(publisher.getClientName(), publisher);
@@ -271,10 +279,9 @@ public class CEPICO {
                             db.getCollection("cepicosobservations").insertOne(doc1);
                             String id = doc1.get("_id").toString();
 
-                        }catch(MongoException ex
-                                ){
-                            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                                    .build();
+                        }catch(MongoException ex){
+                        	mongo.close();
+                            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
                         }
                    
                         JSONObject aOutput = new JSONObject();
@@ -295,22 +302,26 @@ public class CEPICO {
                     }
       
                 }else{
-                    
+                        mongo.close();
                     return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();       
+                }    
+                       
+                    }catch(MongoException ex){
+                        
+                    	 return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
+                .build();    
+                    }
+      
+                }else{
+                    mongo.close();
+                    return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
+                .build();      
                 }
-            }catch(Exception e){
-                 return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
-            }
-        }   
-        
-        return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
-          
+            
     }
 
     private String getXSDDateTime(Date date) {
@@ -398,7 +409,11 @@ public class CEPICO {
            db.getCollection("cepicos");
         } catch (Exception e) {
           //System.out.println("Mongo is down");
-          mongo.close();
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }
           return Response.status(Response
                             .Status.INTERNAL_SERVER_ERROR).build();
 
@@ -415,12 +430,18 @@ public class CEPICO {
         try {
             found = coll.first().toJson();
         }catch(Exception e){
+
+        	db = null;
+            if (mongo!= null){
+            	mongo.close();
+            	mongo= null;
+            }           
             return Response.status(Response.Status.NOT_FOUND)
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build(); 
-        }
-        
+            }
+            
         if (found == null){
             return Response.status(Response.Status.NOT_FOUND)
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
@@ -507,7 +528,7 @@ public class CEPICO {
                 cepProcess.fileName = doc2.getString("fileName");
                 cepProcess.cepFolder = doc2.getString("cepFolder");
                 cepProcess.type = CEP.CEPType.CEPICO.toString();
-                CepProcess cp = new CepProcess(null, null,null);
+                CepProcess cp = new CepProcess(null, null,null,null);
                 cp.PID=doc2.getInteger("PID");
                 
                 cepProcess.cp =cp;
@@ -519,13 +540,13 @@ public class CEPICO {
                 }else{
     
                     Bson filter1 = Filters.eq("_id",ci);
-                    Bson update =  new Document("$set"
-                            ,new Document("status","terminated"));
+                    Bson update =  new Document("$set",new Document("status","terminated"));
                     UpdateOptions options = new UpdateOptions().upsert(false);
-                    UpdateResult updateDoc =  db.getCollection("cepinstances")
-                            .updateOne(filter1,update,options);
+                    UpdateResult updateDoc =  db.getCollection("cepinstances").updateOne(filter1,update,options);
   
                 };
+                
+                CepContainer.deleteCepProcess(cp.PID);
                 
             }
         }else{

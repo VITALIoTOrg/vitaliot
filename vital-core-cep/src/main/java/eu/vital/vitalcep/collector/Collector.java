@@ -64,6 +64,8 @@ public class Collector {
     protected boolean      isStopped    = false;
     private String mongoURL;
     private String mongoDB;
+    MongoClient mongo=null;
+    MongoDatabase db = null;
     public final JSONArray sensors = new JSONArray(); 
     private static Collector instance = null;
     
@@ -81,6 +83,7 @@ public class Collector {
         mongoURL = configReader.get(ConfigReader.MONGO_URL);
         mongoDB = configReader.get(ConfigReader.MONGO_DB);
         
+         
         getCollectorList();
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(2);
@@ -89,6 +92,12 @@ public class Collector {
         collectoRunnable = new Runnable() {
             @Override
             public void run() {
+            	
+            	if (sensors.length()>0){
+            		mongo = new MongoClient(new MongoClientURI(mongoURL));
+            	    db = mongo.getDatabase(mongoDB);
+            	}
+            	
                 Date NOW = new Date();
                 String nowString = getXSDDateTime(NOW);
                 for (int i = 0; i < sensors.length(); i++) {
@@ -150,9 +159,11 @@ public class Collector {
                         
                         sensors.getJSONObject(i).put("lastRequest"
                                                 ,nowString);
-                        MongoClient mongo = new MongoClient(new MongoClientURI(mongoURL));
+                        if (mongo == null)
+                        	mongo = new MongoClient(new MongoClientURI(mongoURL));
+                        if (db == null)
+                        	db = mongo.getDatabase(mongoDB);
         
-                        MongoDatabase db = mongo.getDatabase(mongoDB);
                         
                         Bson filter = Filters.eq("_id"
                                 , new ObjectId(sensors.getJSONObject(i)
@@ -171,9 +182,22 @@ public class Collector {
                         java.util.logging.Logger
                         .getLogger(Collector.class.getName())
                                 .log(Level.SEVERE, null, ex);
+                    }finally{
+                    	if (db != null)
+                    		db = null;
+                    	if (mongo != null){
+                    		mongo.close();
+                    		mongo = null;
+                    	}
                     }
                     
                 }
+                if (db != null)
+            		db = null;
+            	if (mongo != null){
+            		mongo.close();
+            		mongo = null;
+            	}
             }
 
             private void sendData2CEP(JSONArray aData, int i) throws JSONException, ParseException {
@@ -190,6 +214,8 @@ public class Collector {
                         , simpleEventAL
                         ,sensors.getJSONObject(i).getString("mqin")
                         ,sensors.getJSONObject(i).getString("mqout"));
+                
+                
             }
 
             private String getListenerCredentials(int i) throws IOException
@@ -215,7 +241,7 @@ public class Collector {
         };
 
 
-        exec.scheduleAtFixedRate(collectoRunnable , 0, 1, TimeUnit.MINUTES);
+        exec.scheduleAtFixedRate(collectoRunnable , 0, 10, TimeUnit.SECONDS);
 
     }
 
@@ -288,6 +314,13 @@ public class Collector {
         
         }catch (Exception e){
         String a= "a";
+        }finally{
+        	if (db != null)
+        		db = null;
+        	if (mongo != null){
+        		mongo.close();
+        		mongo = null;
+        	}
         }
     }
         

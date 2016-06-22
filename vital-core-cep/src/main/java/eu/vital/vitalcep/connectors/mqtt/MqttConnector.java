@@ -26,20 +26,23 @@ public class MqttConnector implements MqttCallback,MQTT_conn_interface{
     //Configuration conf;
     MsgQueue msgQueue;
     String clientName;
+    boolean only_sender = false;
 
     public MqttConnector (String name, 
             /*RESTIntfProperties conf, */MsgQueue msgQueue,
             String cepInputTopicName, String cepOutputTopicName,
-            int qos /*fixed to 2*/){
-
-            logger = Logger.getLogger(this.getClass().getName());
-            this.logger = logger;
+            int qos /*fixed to 2*/, boolean only_sender){
+    		this.only_sender = only_sender;
+    	
+    		this.logger = Logger.getLogger(this.getClass().getName());
             this.msgQueue = msgQueue;
             this.publishTopic = cepInputTopicName;
             this.subscribedTopic = cepOutputTopicName;
             this.qos = qos;
             this.clientName = name;
-
+            logger.debug("logger: "+this.getClass().getName());
+            logger.debug("subscribed to topic: " + msgQueue);
+            
             //BrokerUrl = "tcp://"+conf.getMqttBroker_ip()+":"+conf.getMqttBroker_port();
             BrokerUrl = "tcp://localhost:1883";
             subscribe();
@@ -56,7 +59,8 @@ public class MqttConnector implements MqttCallback,MQTT_conn_interface{
         //connect to broker
         try{
                 myClient = new MqttClient(BrokerUrl, clientName);
-                myClient.setCallback(this);
+                if (!only_sender)
+                	myClient.setCallback(this);
                 myClient.connect(connOpt);
         }catch (MqttException e){
                 logger.error(e,e);
@@ -66,11 +70,13 @@ public class MqttConnector implements MqttCallback,MQTT_conn_interface{
        // logger.info("Connected to: "+BrokerUrl+", client name:"+clientName);
 
         //subscribe to topic
-        try{
-                myClient.subscribe(subscribedTopic,qos);
-        }catch (Exception e){
-                logger.error(e,e);
-        }
+	    if (!only_sender){
+	    	try{
+	                myClient.subscribe(subscribedTopic,qos);
+	        }catch (Exception e){
+	                logger.error(e,e);
+	        }
+	    }
     }
 
 
@@ -80,7 +86,8 @@ public class MqttConnector implements MqttCallback,MQTT_conn_interface{
             MqttMessage message = new MqttMessage(msg.getBytes());
             message.setQos(qos);
             message.setRetained(false);
-
+            logger.debug("logger: "+this.getClass().getName());
+            logger.debug("publishing to topic: -" + publishTopic+"-");
            // logger.debug("Publishing to topic: \"" + publishTopic 
             //+ "\" qos: " + qos + " MSG:"+ message.toString());
 
@@ -119,16 +126,23 @@ public class MqttConnector implements MqttCallback,MQTT_conn_interface{
             // disconnect
             try {
                     // wait to ensure subscribed messages are delivered
-                    Thread.sleep(50);
+                if (myClient != null){    
+            		Thread.sleep(50);
                     myClient.disconnect();
+                    myClient = null;
+                }
+                if (!only_sender)
+                	msgQueue.parar();
+                
+                
             } catch (Exception e) {
                     logger.error (e,e);
             }
     }
-
+    
     @Override
     public void connectionLost(Throwable arg0) {
-            logger.warn("Connection lost");
+            logger.warn("bCEP error??? MQTTClient Connection lost--------------> TODO");
             // TODO Auto-generated method stub
 
     }

@@ -21,6 +21,7 @@ public class ConfigReader {
     public static final String MSQUITTO_URL = "vital-core-cep.mosquitto.uri";
     public static final String UCEP_PATH = "vital-core-cep.ucep.path";
     public static final String DMS_URL = "vital-core-cep.dms";
+    public static final String CEP_CONF_FILE = "vital-core-cep.configuraiong.file";
       
     private ConfigReader() {
         String fileName = System.getProperty("jboss.server.config.dir") + "/vital-properties.xml";
