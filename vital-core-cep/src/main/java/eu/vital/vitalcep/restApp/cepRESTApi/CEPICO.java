@@ -307,20 +307,18 @@ public class CEPICO {
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();       
                 }    
-                       
                     }catch(MongoException ex){
-                        
                     	 return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();    
                     }
       
-                }else{
-                    mongo.close();
-                    return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();      
-                }
+        }else{
+            mongo.close();
+            return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
+        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
+        .build();      
+        }
             
     }
 
@@ -430,7 +428,6 @@ public class CEPICO {
         try {
             found = coll.first().toJson();
         }catch(Exception e){
-
         	db = null;
             if (mongo!= null){
             	mongo.close();
@@ -440,7 +437,7 @@ public class CEPICO {
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build(); 
-            }
+        }
             
         if (found == null){
             return Response.status(Response.Status.NOT_FOUND)
