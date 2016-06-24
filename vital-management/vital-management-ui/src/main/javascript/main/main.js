@@ -71,8 +71,12 @@ angular.module('main', [
                     $scope.subtitile = '';
                     $scope.titlelink = '';
                 // Governance
-                } else if (/^\/governance./.test(path)) {
-                    $scope.title = '';
+                } else if (/^\/governance\/registry./.test(path)) {
+                    $scope.title = 'System Registry';
+                    $scope.subtitile = '';
+                    $scope.titlelink = '';
+                } else if (/^\/governance\/boundaries/.test(path)) {
+                    $scope.title = 'System Boundaries';
                     $scope.subtitile = '';
                     $scope.titlelink = '';
                 // Utility

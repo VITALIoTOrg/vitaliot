@@ -37,7 +37,8 @@ public class DocumentManager implements Serializable {
 		SYSTEM,
 		SERVICE,
 		SENSOR,
-		CONFIGURATION
+		CONFIGURATION,
+		BOUNDARIES
 	}
 
 	@Inject
@@ -185,6 +186,29 @@ public class DocumentManager implements Serializable {
 			ArrayNode arrayNode = objectMapper.createArrayNode();
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
 			MongoCursor<Document> cursor = mongoCollection.find(query).iterator();
+			try {
+				while (cursor.hasNext()) {
+					Document mongoDocument = decodeKeys(cursor.next());
+					ObjectNode objectNode = (ObjectNode) objectMapper.readTree(mongoDocument.toJson());
+					objectNode.put("id", mongoDocument.get("_id").toString());
+					arrayNode.add(objectNode);
+				}
+			} finally {
+				cursor.close();
+			}
+			return arrayNode;
+		} catch (IOException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+			return null;
+		}
+	}
+
+	public ArrayNode search(String type, Bson query, Bson projection) {
+		try {
+			ArrayNode arrayNode = objectMapper.createArrayNode();
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			MongoCursor<Document> cursor = mongoCollection.find(query).projection(projection).iterator();
 			try {
 				while (cursor.hasNext()) {
 					Document mongoDocument = decodeKeys(cursor.next());

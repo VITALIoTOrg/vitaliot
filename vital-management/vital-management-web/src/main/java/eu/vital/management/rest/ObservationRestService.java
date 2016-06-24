@@ -7,11 +7,13 @@ import eu.vital.management.service.SensorDAO;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Path("/observation")
@@ -27,6 +29,13 @@ public class ObservationRestService {
 	@Inject
 	private Logger log;
 
+	@GET
+	@Path("/types")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getObservationTypes() throws Exception {
+		Set<String> observationTypes = observationService.getObservationTypes();
+		return Response.ok(observationTypes).build();
+	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)

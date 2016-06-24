@@ -7,12 +7,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.management.storage.DocumentManager;
 import eu.vital.management.util.OntologyParser;
 import eu.vital.management.util.VitalClient;
+import org.bson.BsonDocument;
+import org.bson.BsonInt32;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +43,29 @@ public class ObservationService {
 
 	@Inject
 	private VitalClient vitalClient;
+
+	public Set<String> getObservationTypes() throws Exception {
+
+		BsonDocument query = new BsonDocument();
+		BsonDocument projection = new BsonDocument();
+		projection.put("http://purl\\u002eoclc\\u002eorg/NET/ssnx/ssn#observes.@type", new BsonInt32(1));
+
+		ArrayNode result = documentManager.search(DocumentManager.DOCUMENT_TYPE.SENSOR.toString(), query, projection);
+
+		Set<String> types = new HashSet<>();
+		for (JsonNode node : result) {
+			JsonNode observes = node.get("http://purl.oclc.org/NET/ssnx/ssn#observes");
+			if (observes.isArray()) {
+				ArrayNode arrayNode = (ArrayNode) observes;
+				for (JsonNode type : arrayNode) {
+					types.add(type.get("@type").asText());
+				}
+			} else {
+				types.add(observes.get("@type").asText());
+			}
+		}
+		return types;
+	}
 
 	public ArrayNode fetchObservation(String sensorURI, String observationType) throws Exception {
 
@@ -86,7 +113,6 @@ public class ObservationService {
 		return observations;
 	}
 
-
 	private JsonNode randomizeTemplate(String type) throws Exception {
 		String template = "{" +
 				"\"@context\" : \"http://vital-iot.org/contexts/measurement.jsonld\"," +
@@ -115,7 +141,6 @@ public class ObservationService {
 
 		ObjectNode obsTemplate = (ObjectNode) objectMapper.readTree(template);
 		((ObjectNode) obsTemplate.get("ssn:observationProperty")).put("type", type);
-
 
 		String obsType = obsTemplate.get("ssn:observationProperty").get("type").textValue();
 		JsonNode obsTimeNode = obsTemplate.get("ssn:observationResultTime");

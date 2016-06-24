@@ -7,7 +7,7 @@ angular.module('common', [
         'ngFx',
         'ui.bootstrap',
         'angular-loading-bar',
-        'leaflet-directive',
+        'ui-leaflet',
         'common.templates',
         'common.resources',
         'common.route',
