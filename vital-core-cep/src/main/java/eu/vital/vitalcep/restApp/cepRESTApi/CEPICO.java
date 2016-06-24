@@ -66,6 +66,7 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.OPTIONS;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
@@ -385,7 +386,7 @@ public class CEPICO {
         dbObject.put("cepinstance",cepInstance);
         return dbObject;
     }
-      
+   
     /**
      * Gets a filter.
      *
@@ -447,6 +448,8 @@ public class CEPICO {
         }else{
             return Response.status(Response.Status.OK)
                     .entity(found)
+                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                    .header("Access-Control-Allow-Credentials", "true")
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();   
@@ -673,5 +676,17 @@ public class CEPICO {
 
     }
     
+       
+    @OPTIONS
+    @Path("getcepico")
+    public Response options() {
+    return Response.ok("")
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+            .header("Access-Control-Allow-Credentials", "true")
+            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+            .header("Access-Control-Max-Age", "1209600")
+            .build();
+    }
     
 }
