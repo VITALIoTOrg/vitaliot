@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{asCtrl.group.username}} </h3>
+            </div>
+            <div class="box-body">
+                <ul class="list-inline">
+                    <li>
+                        Users:
+                    </li>
+                    <li ng-repeat="user in asCtrl.group.uniqueMember">
+                        <span class="label label-default">{{user.split(',')[0].replace('uid=', '')}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Throughput</h3>
+            </div>
+            <div class="box-body">
+                <sla-throughput data="asCtrl.chart.throughput"></sla-throughput>
+            </div>
+        </div>
+
+    </div>
+</div>

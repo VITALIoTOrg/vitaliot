@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import static com.mongodb.client.model.Filters.in;
@@ -38,7 +39,8 @@ public class DocumentManager implements Serializable {
 		SERVICE,
 		SENSOR,
 		CONFIGURATION,
-		BOUNDARIES
+		BOUNDARIES,
+		ACCESS
 	}
 
 	@Inject
@@ -230,17 +232,18 @@ public class DocumentManager implements Serializable {
 	public ObjectNode get(String type, String documentId) {
 		try {
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
-			Document mongoDocument = (Document) mongoCollection.find(queryById(documentId)).first();
-
-			ObjectNode objectNode = (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
-			objectNode.put("id", mongoDocument.get("_id").toString());
-
-			return objectNode;
+			Iterator iterator = mongoCollection.find(queryById(documentId)).iterator();
+			if (iterator.hasNext()) {
+				Document mongoDocument = (Document) iterator.next();
+				ObjectNode objectNode = (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
+				objectNode.put("id", mongoDocument.get("_id").toString());
+				return objectNode;
+			}
 		} catch (IOException e) {
 			// Should never happen, just log it and return null
 			log.severe(e.getMessage());
-			return null;
 		}
+		return null;
 	}
 
 	public long delete(String type, Bson query) {

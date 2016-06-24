@@ -3,11 +3,13 @@ package eu.vital.management.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import eu.vital.management.storage.DocumentManager;
 import eu.vital.management.util.VitalClient;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.Date;
 
 @Stateless
 public class GovernanceService {
@@ -40,6 +42,47 @@ public class GovernanceService {
 		//-----------------------------
 
 		return savedBoundaries;
+	}
+
+	public JsonNode getAccess(String groupName) throws Exception {
+		JsonNode access = documentManager.get(DocumentManager.DOCUMENT_TYPE.ACCESS.toString(), groupName);
+		if (access == null) {
+			return saveAccess(groupName, objectMapper.createObjectNode());
+		} else {
+			return access;
+		}
+	}
+
+	public JsonNode saveAccess(String groupName, JsonNode access) throws Exception {
+		documentManager.update(DocumentManager.DOCUMENT_TYPE.ACCESS.toString(), groupName, access);
+		JsonNode savedAccess = getAccess(groupName);
+
+		//-----------------------------
+		// TODO: Add code here to update group policies based on "savedAccess"
+		// vitalClient.doPost(....);
+		//-----------------------------
+
+		return savedAccess;
+	}
+
+	public JsonNode getSLAObservations(String groupName, String slaType) throws Exception {
+		//-----------------------------
+		// TODO: Add code here to retrieve a set of SLA metric for the slaType
+		//-----------------------------
+		if ("throughput".equals(slaType)) {
+			// Return a random array now:
+			ArrayNode slas = objectMapper.createArrayNode();
+			Date now = new Date();
+			for (int i = 200; i > 0; i--) {
+				ObjectNode sla = objectMapper.createObjectNode();
+				sla.put("timestamp", now.getTime() - i * 10000);
+				sla.put("value", 1 + Math.random() * 100);
+
+				slas.add(sla);
+			}
+			return slas;
+		}
+		throw new Exception("Not supported Type");
 	}
 
 }

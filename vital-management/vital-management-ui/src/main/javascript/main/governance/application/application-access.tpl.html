@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{aaCtrl.group.username}} </h3>
+            </div>
+            <div class="box-body">
+                <ul class="list-inline">
+                    <li>
+                        Users:
+                    </li>
+                    <li ng-repeat="user in aaCtrl.group.uniqueMember">
+                        <span class="label label-default">{{user.split(',')[0].replace('uid=', '')}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <form name="accessForm" ng-submit="aaCtrl.save(accessForm)" novalidate="novalidate" autocomplete="off">
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Systems</h3>
+                </div>
+                <div class="box-body">
+                    <div class="list-group">
+                        <div class="list-group-item text-"
+                             ng-class="{'text-muted': !aaCtrl.access[system.id]}"
+                             ng-repeat="system in aaCtrl.systemList">
+                            <div class="btn-group pull-right">
+                                <label class="btn btn-default" ng-class="{active: aaCtrl.access[system.id]}">
+                                    <input type="radio" name="access-{{system.id}}" id="access-{{system.id}}-yes"
+                                           ng-model="aaCtrl.access[system.id]"
+                                           ng-value="true">
+                                    <span>ALLOW</span>
+                                </label>
+                                <label class="btn btn-default" ng-class="{active: !aaCtrl.access[system.id]}">
+                                    <input type="radio" name="access-{{system.id}}" id="access-{{system.id}}-no"
+                                           ng-model="aaCtrl.access[system.id]"
+                                           ng-value="false">
+                                    <span>DENY</span>
+                                </label>
+                            </div>
+                            <h4 class="list-group-item-heading">{{system['http://www.w3.org/2000/01/rdf-schema#label']}}</h4>
+                            <p class="list-group-item-text">{{system['http://www.w3.org/2000/01/rdf-schema#comment']}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
