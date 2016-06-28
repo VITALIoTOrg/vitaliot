@@ -66,6 +66,7 @@ import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
 import eu.vital.vitalcep.publisher.MQTT_connector_subscriper;
 import eu.vital.vitalcep.publisher.MessageProcessor_publisher;
 import eu.vital.vitalcep.security.Security;
+import javax.ws.rs.OPTIONS;
 
 
 
@@ -443,7 +444,8 @@ public class Alerts {
               //System.out.println("Mongo is down");
               mongo.close();
               return Response.status(Response
-                                .Status.INTERNAL_SERVER_ERROR).build();
+                                .Status.INTERNAL_SERVER_ERROR)
+            .build();
                     
             }
         
@@ -457,7 +459,8 @@ public class Alerts {
         try {
             found = coll.first().toJson();
         }catch(Exception e){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND)
+            .build();
         }finally{
         	db = null;
         	if (mongo != null){
@@ -465,15 +468,14 @@ public class Alerts {
         		mongo = null;
         	}
         }
-        
-        	
-        	
-        
+
         if (found == null){
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND)
+            .build();
         }else{
             return Response.status(Response.Status.OK)
-                    .entity(found.toString()).build();
+                    .entity(found.toString())
+            .build();
         }
         
     }
@@ -501,7 +503,8 @@ public class Alerts {
 	        Boolean token = slogin.login(req.getHeader("name")
 	                ,req.getHeader("password"),false,ck);
 	        if (!token){
-	              return Response.status(Response.Status.UNAUTHORIZED).build();
+	              return Response.status(Response.Status.UNAUTHORIZED)
+            .build();
 	        }
 	        this.cookie = ck.toString(); 
 	        
@@ -517,7 +520,8 @@ public class Alerts {
 	          //System.out.println("Mongo is down");
 	          mongo.close();
 	          return Response.status(Response
-	                            .Status.INTERNAL_SERVER_ERROR).build();
+	                            .Status.INTERNAL_SERVER_ERROR)
+            .build();
 	        }
 	        
 	        
@@ -571,21 +575,24 @@ public class Alerts {
 	                
 	            }
 	        }else{
-	            return Response.status(Response.Status.NOT_FOUND).build();
+	            return Response.status(Response.Status.NOT_FOUND)
+            .build();
 	        }
 	       
 	        
 	        DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
 	        
 	        if (deleteResult.getDeletedCount() < 1){
-	            return Response.status(Response.Status.NOT_FOUND).build();
+	            return Response.status(Response.Status.NOT_FOUND)
+            .build();
 	        }else{
 	            return Response.status(Response.Status.OK)
-	                    .build();
+                        .build();
 	        }
         }catch (Exception e){
         	return Response.status(Response
-                    .Status.INTERNAL_SERVER_ERROR).build();
+                    .Status.INTERNAL_SERVER_ERROR)
+            .build();
         }finally{
         	db = null;
         	if (mongo != null){
@@ -704,5 +711,22 @@ public class Alerts {
 
     }
     
+    @OPTIONS
+    @Path("getalert")
+    public Response getalertOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("createalert")
+    public Response createalertOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("deletealert")
+    public Response deletealertOptions() {
+    return Response.ok("").build();
+    }
     
 }
