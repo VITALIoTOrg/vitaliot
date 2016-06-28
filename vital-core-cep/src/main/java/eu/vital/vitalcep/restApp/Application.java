@@ -25,8 +25,8 @@ public class Application extends javax.ws.rs.core.Application {
     private Set<Class<?>> empty = new HashSet();
     
     public Application() throws FileNotFoundException, IOException {
-        // ADD YOUR RESTFUL RESOURCES HERE
-        
+
+        this.empty.add(CORSResponseFilter.class);
         Collector oCol = Collector.getInstance( );    
         this.singletons.add(new StaticFiltering());
         this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.System());
