@@ -369,7 +369,7 @@ public class Alerts {
         dbObject.put("id", host+"/sensor/"
                 +randomUUIDString);
         dbObject.put("type", "vital:AlertSensor");
-        dbObject.put("status", "vitalRunning");
+        dbObject.put("status", "vital:Running");
         JSONArray observes =  new JSONArray();
         JSONArray compl = dsjo.getJSONArray("complex");
         for (int i = 0; i < compl.length(); i++) {
