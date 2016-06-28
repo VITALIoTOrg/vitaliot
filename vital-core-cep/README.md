@@ -19,7 +19,7 @@ Follow installation instructions of Java, Maven, WildFly, Mosquitto and MongDB.
 
 ## Configure and Start WildFly
 
-###Configure
+### Configure
 
 Open file **_WILDFLY_HOME/standalone/configuration/standalone.xml_** and perform the following changes:
 
@@ -48,7 +48,7 @@ Open file **_WILDFLY_HOME/standalone/configuration/standalone.xml_** and perform
 
 ## Configure, Build and Deploy the VITALCEP Module
 
-###Clone
+### Clone
 
         $ git clone http://gitlab.atosresearch.eu/vital-core-cep.git
 
@@ -94,7 +94,7 @@ Publish a test message to the μCEP input queue. Open a new terminal.
 
 Terminate the μCEP test process with `$ Ctrl+c  ` from the cep terminal
 
-###Configure
+### Configure
 
 Copy the file **vital-properties.xml** to the **jboss.server.config.dir** (WILDFLY_HOME/bin/ or WILDFLY_HOME/standalone/configuration) and set the values as needed.
 
@@ -109,13 +109,13 @@ Copy the file **vital-properties.xml** to the **jboss.server.config.dir** (WILDF
         <entry key="vital-core-cep.configuraiong.file">confFile.ini</entry>
         <!--/.vital-core-cep-->
 
-###Build
+### Build
 
 Build the application from the project root to create the **_target/cep.war_** package.
 
         $ mvn package
 
-###Deploy
+### Deploy
 
 Copy the package **_target/cep.war_** to the **_standalone/deployments_** directory of the running instance of the server.
 
