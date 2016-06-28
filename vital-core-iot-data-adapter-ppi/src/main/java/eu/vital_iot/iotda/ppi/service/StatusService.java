@@ -27,7 +27,7 @@ public class StatusService {
 	 * The base URL to the IoT data adapter.
 	 */
 	@Inject
-	@Property(name = "vital_core_iot_data_adapter.base_url")
+	@Property(name = "vital-core-iot-data-adapter.base-url")
 	private String iotda;
 
 	/**
