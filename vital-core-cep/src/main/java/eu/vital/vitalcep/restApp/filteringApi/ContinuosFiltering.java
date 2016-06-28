@@ -57,6 +57,7 @@ import java.util.TimeZone;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bson.Document;
@@ -559,6 +560,24 @@ public class ContinuosFiltering {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return  dateFormat.format(date);
+    }
+    
+    @OPTIONS
+    @Path("getcontinuousfilter")
+    public Response getcontinuousfilterOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("createcontinuousfilter")
+    public Response createcontinuousfilterOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("deletecontinuousfilter")
+    public Response deletecontinuousfilterOptions() {
+    return Response.ok("").build();
     }
 
 	
