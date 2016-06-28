@@ -139,8 +139,6 @@ public class CEPICO {
         
         return Response.status(Response.Status.OK)
                 .entity(AllJson.toString())
-                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
                 .build();          
         
     }
@@ -290,35 +288,25 @@ public class CEPICO {
                             +randomUUIDString);
                         return Response.status(Response.Status.OK)
                             .entity(aOutput.toString())
-                            .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+                            .build();       
                        
                     }catch(MongoException ex
                             ){
                         return Response.status(Response.Status.BAD_REQUEST)
-                                .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+                               .build();       
                     }
       
                 }else{
                         mongo.close();
-                    return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+                    return Response.status(Response.Status.BAD_REQUEST).build();       
                 }    
                     }catch(MongoException ex){
-                    	 return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();    
+                    	 return Response.status(Response.Status.BAD_REQUEST).build();    
                     }
       
         }else{
             mongo.close();
-            return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-        .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-        .build();      
+            return Response.status(Response.Status.BAD_REQUEST).build();      
         }
             
     }
@@ -435,24 +423,16 @@ public class CEPICO {
             	mongo= null;
             }           
             return Response.status(Response.Status.NOT_FOUND)
-                   .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build(); 
+                   .build(); 
         }
             
         if (found == null){
             return Response.status(Response.Status.NOT_FOUND)
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build(); 
+                  .build(); 
         }else{
             return Response.status(Response.Status.OK)
                     .entity(found)
-                    .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
-                    .header("Access-Control-Allow-Origin", "*")
-                    .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();   
+                    .build();   
         }
         
     }
@@ -477,9 +457,7 @@ public class CEPICO {
         Boolean token = slogin.login(req.getHeader("name")
                 ,req.getHeader("password"),false,ck);
         if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+              return Response.status(Response.Status.UNAUTHORIZED).build();       
         }
         this.cookie = ck.toString(); 
         
@@ -495,9 +473,7 @@ public class CEPICO {
           //System.out.println("Mongo is down");
           mongo.close();
           return Response.status(Response
-                            .Status.INTERNAL_SERVER_ERROR).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+                            .Status.INTERNAL_SERVER_ERROR).build();       
         }
         
         
@@ -550,23 +526,16 @@ public class CEPICO {
                 
             }
         }else{
-            return Response.status(Response.Status.NOT_FOUND).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+            return Response.status(Response.Status.NOT_FOUND).build();       
         }
        
         
         DeleteResult deleteResult = coll.deleteOne(eq("id",idjo));     
         
         if (deleteResult.getDeletedCount() < 1){
-            return Response.status(Response.Status.NOT_FOUND).header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+            return Response.status(Response.Status.NOT_FOUND).build();       
         }else{
-            return Response.status(Response.Status.OK)
-                    .header("Access-Control-Allow-Origin", "*")
-                .header("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS")
-                .build();       
+            return Response.status(Response.Status.OK).build();       
         }
     }
 	
@@ -680,36 +649,18 @@ public class CEPICO {
     @OPTIONS
     @Path("getcepico")
     public Response getcepicoOptions() {
-    return Response.ok("")
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
-            .build();
+    return Response.ok("").build();
     }
     
     @OPTIONS
     @Path("createcepico")
     public Response createcepicoOptions() {
-    return Response.ok("")
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
-            .build();
+    return Response.ok("").build();
     }
     
     @OPTIONS
     @Path("deletecepico")
     public Response deletecepicoOptions() {
-    return Response.ok("")
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
-            .build();
+    return Response.ok("").build();
     }
 }
