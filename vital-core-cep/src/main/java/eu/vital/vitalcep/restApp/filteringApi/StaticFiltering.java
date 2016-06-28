@@ -58,6 +58,7 @@ import java.security.NoSuchAlgorithmException;
 
 import java.util.logging.Level;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -678,6 +679,18 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
 
      return Response.status(Response.Status.OK).build();
      
+    }
+
+    @OPTIONS
+    @Path("filterstaticdata")
+    public Response filterstaticdataOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("filterstaticquery")
+    public Response filterstaticqueryOptions() {
+    return Response.ok("").build();
     }
 
 }
