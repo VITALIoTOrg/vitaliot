@@ -1,0 +1,4 @@
+<jboss-web>
+    <context-root>securitywrapper</context-root>
+</jboss-web>
+
