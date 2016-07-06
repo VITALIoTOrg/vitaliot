@@ -1,0 +1,32 @@
+[  
+  {  
+    "@context":"http://vital-iot.eu/contexts/service.jsonld",
+    "id":"http://localhost:8080/iot-data-adapter-ppi/service/monitoring",
+    "type":"vital:MonitoringService",
+    "operations":[  
+      {  
+        "type":"vital:GetSystemStatus",
+        "hrest:hasAddress":"http://localhost:8080/iot-data-adapter-ppi/ppi/system/status",
+        "hrest:hasMethod":"hrest:POST"
+      },
+      {  
+        "type":"vital:GetSensorStatus",
+        "hrest:hasAddress":"http://localhost:8080/iot-data-adapter-ppi/ppi/system/sensor/status",
+        "hrest:hasMethod":"hrest:POST"
+      }
+    ],
+  },
+  {  
+    "@context":"http://vital-iot.eu/contexts/service.jsonld"
+    "id":"http://localhost:8080/iot-data-adapter-ppi/service/observation",
+    "type":"vital:ObservationService",
+    "operations":[  
+      {  
+        "type":"vital:GetObservations",
+        "hrest:hasAddress":"http://localhost:8080/iot-data-adapter-ppi/ppi/system/measurement",
+        "hrest:hasMethod":"hrest:POST"
+      }
+    ],
+  }
+]
+

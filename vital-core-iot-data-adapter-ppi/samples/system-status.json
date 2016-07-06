@@ -1,0 +1,19 @@
+{  
+  "@context":"http://vital-iot.eu/contexts/measurement.jsonld",
+  "id":"http://localhost:8080/iot-data-adapter-ppi/measurement/1443856627798",
+  "type":"ssn:Observation",
+  "ssn:featureOfInterest":"http://localhost:8080/iot-data-adapter",
+  "ssn:observationProperty":{  
+    "type":"vital:OperationalState"
+  }
+  "ssn:observationResultTime":{  
+    "time:inXSDDateTime":"2015-10-03T10:17:07+03"
+  },
+  "ssn:observationResult":{  
+    "type":"ssn:SensorOutput",
+    "ssn:hasValue":{  
+      "type":"ssn:ObservationValue",
+      "value":"vital:Running"
+    }
+  }
+}
