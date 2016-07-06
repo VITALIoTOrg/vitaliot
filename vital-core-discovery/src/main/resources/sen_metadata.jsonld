@@ -1,0 +1,17 @@
+[
+{
+"@context": "http://vital-iot.eu/contexts/sensor.jsonld",
+"id": "IP_ADDRESS/discoverer/ppi/sensor/monitoring",
+"type": "vital:MonitoringSensor",
+"name": "System Monitoring Sensor",
+"description": "A virtual sensor that monitors the operational state of the system, as well as its services and sensors.",
+"status": "vital:Running",
+"ssn:observes":
+[
+{
+"type": "vital:OperationalState",
+"id": "IP_ADDRESS/discoverer/ppi/sensor/monitoring/operationalState"
+}
+]
+}
+]

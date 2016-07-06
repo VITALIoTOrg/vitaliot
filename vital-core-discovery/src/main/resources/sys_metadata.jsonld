@@ -1,0 +1,19 @@
+{
+"@context": "http://vital-iot.eu/contexts/system.jsonld",
+"id": "IP_ADDRESS/discoverer",
+"type": "vital:VitalSystem",
+"name": "Discovery System",
+"description": "Service to discover ICOs systems and services",
+"sensors":
+[
+"IP_ADDRESS/discoverer/ppi/sensor/monitoring"
+],
+"services":
+[
+"IP_ADDRESS/discoverer",
+"IP_ADDRESS/discoverer/monitoring",
+"IP_ADDRESS/discoverer/observation"
+],
+"status": "vital:Running"
+}
+
