@@ -1,0 +1,21 @@
+{
+	"@context": {
+		"@vocab": "http://vital-iot.eu/ontology/ns/",
+		"vital": "http://vital-iot.eu/ontology/ns/",
+		"vital": "http://vital-iot.com/ontology#",
+		"lsm": "http://lsm.deri.ie/ont/lsm.owl#",
+		"ssn": "http://purl.oclc.org/NET/ssnx/ssn#",
+		"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+		"time": "http://www.w3.org/2006/time#",
+		"qudt": "http://qudt.org/vocab/unit#",
+		"xsd": "http://www.w3.org/2001/XMLSchema#",
+		"id": "@id",
+		"type": "@type",
+		"time:inXSDDateTime": {
+			"@type": "xsd:dateTime"
+		},
+		"qudt:unit": {
+			"@type": "@id"
+		}
+	}
+}

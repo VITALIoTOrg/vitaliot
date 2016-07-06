@@ -1,0 +1,20 @@
+{
+	"@context": {
+		"@vocab": "http://vital-iot.eu/ontology/ns/",
+		"vital": "http://vital-iot.eu/ontology/ns/",
+		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+		"msm": "http://iserve.kmi.open.ac.uk/ns/msm#",
+		"hrest": "http://www.wsmo.org/ns/hrests#",
+		"id": "@id",
+		"type": "@type",
+		"name": "rdfs:label",
+		"description": "rdfs:comment",
+		"hrest:hasAddress": {
+			"@type": "hrest:URITemplate"
+		},
+		"operations": {
+			"@id": "msm:hasOperation",
+			"@type": "@id"
+    	}	
+	}
+}
