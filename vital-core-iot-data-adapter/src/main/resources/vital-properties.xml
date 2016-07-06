@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="vital-core-iot-data-adapter.base-url">http://localhost:8080/iot-data-adapter</entry>
+	<entry key="vital-core-iot-data-adapter.vital-core-dms.base-url">https://vmvital03.deri.ie:8011</entry>
+	<entry key="vital-core-iot-data-adapter.mongo.uri">mongodb://localhost:27017</entry>
+	<entry key="vital-core-iot-data-adapter.mongo.db">vital-iot-data-adapter</entry>
+	<entry key="vital-core-iot-data-adapter.keeper.workers">100</entry>
+	<entry key="vital-core-iot-data-adapter.security">https://vital-integration.atosresearch.eu:8843/securitywrapper/rest</entry>
+	<entry key="vital-core-iot-data-adapter.sso-token">vitalAccessToken</entry>
+	<entry key="vital-core-iot-data-adapter.alt-token">vitalTestToken</entry>
+	<entry key="vital-core-iot-data-adapter.system.user">iot-data-adapter</entry>
+	<entry key="vital-core-iot-data-adapter.system.password">12345678</entry>
+
+</properties>

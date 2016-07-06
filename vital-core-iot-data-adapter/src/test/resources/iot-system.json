@@ -1,0 +1,6 @@
+{
+	"uri": "http://104.131.128.70:8080/istanbul-traffic-data",
+	"name": "Istanbul traffic data",
+	"ppi": "http://104.131.128.70:8080/istanbul-traffic-data/ppi",
+	"refreshPeriod": 10
+}

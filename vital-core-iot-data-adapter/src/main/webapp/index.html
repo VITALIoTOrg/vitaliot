@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VITAL - IoT Data Adapter</title>
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="resources/css/index.css" rel="stylesheet">
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"> <img alt="VITAL"
+					src="resources/images/logo.png" height="50">
+				</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">Registered IoT systems</div>
+			<div class="panel-body">
+				<p>These are the PPI-compliant IoT systems that are currently
+					registered with VITAL.</p>
+			</div>
+			<table id="table" class="table">
+				<thead>
+					<tr>
+						<th class="col-md-1">#</th>
+						<th class="col-md-2">Name</th>
+						<th class="col-md-3">URI</th>
+						<th class="col-md-3">&nbsp;</th>
+						<th class="col-md-1">&nbsp;</th>
+						<th class="col-md-1">&nbsp;</th>
+						<th class="col-md-1">&nbsp;</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<div class="panel-footer">
+				<button type="button" class="btn btn-default" onClick="create()">Register</button>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer">
+		<div class="container">
+			<p class="text-muted">&copy; Copyright VITAL 2014-2017</p>
+		</div>
+	</footer>
+
+	<div class="modal fade" id="modal" tabindex="-1" role="dialog"
+		aria-labelledby="label">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="label">Register IoT system</h4>
+				</div>
+				<div class="modal-body">
+					<form role="form">
+						<input type="hidden" class="form-control" id="id" />
+						<div class="form-group">
+							<label for="name">NAME</label> <input type="text"
+								class="form-control" id="name" />
+						</div>
+						<div class="form-group">
+							<label for="uri">URI</label> <input type="text"
+								class="form-control" id="uri" />
+						</div>
+						<div class="form-group">
+							<label for="ppi">PPI</label> <input type="text"
+								class="form-control" id="ppi" />
+						</div>
+						<div class="form-group">
+							<label for="refresh-period">REFRESH PERIOD (IN MINUTES)</label>
+							<div class="input-group">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-default"
+										data-value="decrease" data-target="#refresh-period"
+										data-toggle="spinner">
+										<span class="glyphicon glyphicon-minus"></span>
+									</button>
+								</span> <input type="text" data-ride="spinner" id="refresh-period"
+									class="form-control input-number" value="10" data-min="10"
+									data-step="10"> <span class="input-group-btn">
+									<button type="button" class="btn btn-default"
+										data-value="increase" data-target="#refresh-period"
+										data-toggle="spinner">
+										<span class="glyphicon glyphicon-plus"></span>
+									</button>
+								</span>
+							</div>
+						</div>
+						<div class="checkbox">
+							<label for="enabled"><input type="checkbox" id="enabled" />Enabled</label>
+						</div>
+						<div class="checkbox">
+							<label for="basic-auth"><input type="checkbox"
+								id="basic-auth" />Requires basic authentication</label>
+						</div>
+						<div class="form-group">
+							<label for="username">Username</label> <input type="text"
+								class="form-control" id="username" />
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label> <input type="text"
+								class="form-control" id="password" />
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button id="register" type="button" class="btn btn-primary"
+						onClick="save()">Register</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="resources/js/jquery.min.js"></script>
+	<script src="resources/js/bootstrap.min.js"></script>
+	<script src="resources/js/bootstrap-spinner.min.js"></script>
+	<script src="resources/js/index.js"></script>
+</body>
+</html>
