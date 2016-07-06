@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Logger;
 
 import static com.mongodb.client.model.Filters.in;
@@ -73,6 +74,7 @@ public class OrchestratorStorage implements Serializable {
 		if (this.mongoClient != null) {
 			this.mongoClient.close();
 		}
+		log.info("disposeMongoClient:done");
 	}
 
 	private Document encodeKeys(Document mongoDocument) {
@@ -146,7 +148,11 @@ public class OrchestratorStorage implements Serializable {
 	public void update(String type, String documentId, JsonNode document) {
 		try {
 			Document mongoDocument = Document.parse(objectMapper.writeValueAsString(document));
-
+			if (ObjectId.isValid(documentId)) {
+				mongoDocument.put("_id", new ObjectId(documentId));
+			} else {
+				mongoDocument.put("_id", documentId);
+			}
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
 			FindOneAndReplaceOptions options = new FindOneAndReplaceOptions();
 			options.upsert(true);
@@ -204,20 +210,44 @@ public class OrchestratorStorage implements Serializable {
 		}
 	}
 
-	public ObjectNode get(String type, String documentId) {
+	public ArrayNode search(String type, Bson query, Bson projection) {
 		try {
+			ArrayNode arrayNode = objectMapper.createArrayNode();
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
-			Document mongoDocument = (Document) mongoCollection.find(queryById(documentId)).first();
-
-			ObjectNode objectNode = (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
-			objectNode.put("id", mongoDocument.get("_id").toString());
-
-			return objectNode;
+			MongoCursor<Document> cursor = mongoCollection.find(query).projection(projection).iterator();
+			try {
+				while (cursor.hasNext()) {
+					Document mongoDocument = decodeKeys(cursor.next());
+					ObjectNode objectNode = (ObjectNode) objectMapper.readTree(mongoDocument.toJson());
+					objectNode.put("id", mongoDocument.get("_id").toString());
+					arrayNode.add(objectNode);
+				}
+			} finally {
+				cursor.close();
+			}
+			return arrayNode;
 		} catch (IOException e) {
 			// Should never happen, just log it and return null
 			log.severe(e.getMessage());
 			return null;
 		}
+	}
+
+	public ObjectNode get(String type, String documentId) {
+		try {
+			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
+			Iterator iterator = mongoCollection.find(queryById(documentId)).iterator();
+			if (iterator.hasNext()) {
+				Document mongoDocument = (Document) iterator.next();
+				ObjectNode objectNode = (ObjectNode) objectMapper.readTree(decodeKeys(mongoDocument).toJson());
+				objectNode.put("id", mongoDocument.get("_id").toString());
+				return objectNode;
+			}
+		} catch (IOException e) {
+			// Should never happen, just log it and return null
+			log.severe(e.getMessage());
+		}
+		return null;
 	}
 
 	public long delete(String type, String documentId) {
