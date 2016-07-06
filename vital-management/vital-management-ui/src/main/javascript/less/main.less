@@ -1,0 +1,68 @@
+//Import Bootstrap
+@import (reference) "../vendor/bootstrap/less/bootstrap.less";
+// Import FontAwesome
+@import "../vendor/fontawesome/less/font-awesome.less";
+
+// Import AdminLTE
+//import (reference) "../vendor/admin-lte/build/less/AdminLTE.less";
+@table-bg-accent: #f3f3f3;
+//@import (reference) "../vendor/admin-lte/build/less/skins/skin-black.less";
+//Import Morris Chars less
+//@import "../vendor/morrisjs/less/morris.core.less";
+
+@fa-font-path: "./vendor/fontawesome/fonts";
+
+@gray: #2f2f2f;
+
+// Block Grid
+// Technique adapted from Foundation 5 for Bootstrap 3.
+// https://github.com/zurb/foundation/blob/f755d8704123f86c281ede0b171881e2672f150d/scss/foundation/components/_block-grid.scss
+
+[class*="block-grid-"] {
+    display: block;
+    margin: -(@grid-gutter-width/2);
+    padding: 0;
+    .clearfix();
+}
+
+.block-grid-item {
+    display: inline;
+    margin: 0;
+    padding: (@grid-gutter-width/2);
+    height: auto;
+    float: left;
+    list-style: none;
+}
+
+.block-grid (@per-row) {
+    & > .block-grid-item {
+        width: (100%/@per-row);
+
+        @nth-equation: ~"@{per-row}n+1";
+        &:nth-of-type(n) {
+            clear: none;
+        }
+        &:nth-of-type(@{nth-equation}) {
+            clear: both;
+        }
+    }
+}
+
+.block-grids(@size, @index: @grid-columns) when (@index > 0) {
+    .block-grid-@{size}-@{index} {
+        .block-grid(@index);
+    }
+    .block-grids(@size, @index - 1);
+}
+
+@media (min-width: @screen-sm) {
+    .block-grids(sm)
+}
+
+@media (min-width: @screen-md) {
+    .block-grids(md)
+}
+
+@media (min-width: @screen-lg) {
+    .block-grids(lg)
+}

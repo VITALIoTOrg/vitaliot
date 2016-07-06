@@ -1,0 +1,19 @@
+<div class="box box-info">
+    <div class="box-header">
+        <h3 class="box-title"><i class="fa fa-gamepad"></i> Services </h3>
+    </div>
+    <div class="box-body">
+
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="srv in data.serviceList">
+                <span class="badge bg-light-blue">{{srv['http://iserve.kmi.open.ac.uk/ns/msm#hasOperation'].length}}</span>
+                <b>{{srv['@type']}}</b>
+                <ol>
+                    <li ng-repeat="op in srv['http://iserve.kmi.open.ac.uk/ns/msm#hasOperation']">
+                        {{op['@type']}}
+                    </li>
+                </ol>
+            </li>
+        </ul>
+    </div>
+</div>

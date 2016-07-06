@@ -1,0 +1,31 @@
+{
+    "@context": "http://vital-iot.org/contexts/sensor.jsonld",
+    "uri": "http://localhost:8080/service/cnc12145-I_TrS_2/info",
+    "name": "cnc12145-I_TrS_2",
+    "type": "Traffic",
+    "description": "TEM Karanfilköy",
+    "hasLastKnownLocation": {
+        "type": "geo:Point",
+        "geo:lat": "29.0270595",
+        "geo:long": "41.09301817"
+    },
+    "ssn:observes": [
+        {
+            "type": "http://reply.eu/vital/Speed",
+            "uri": "http://localhost:8080/service/cnc12145-I_TrS_2/property/Speed"
+        },
+        {
+            "type": "http://reply.eu/vital/Color",
+            "uri": "http://localhost:8080/service/cnc12145-I_TrS_2/property/Color"
+        },
+        {
+            "type": "http://reply.eu/vital/Speed",
+            "uri": "http://localhost:8080/service/cnc12145-I_TrS_2/property/ReverseSpeed"
+        },
+        {
+            "type": "http://reply.eu/vital/Color",
+            "uri": "http://localhost:8080/service/cnc12145-I_TrS_2/property/ReverseColor"
+        }
+    ],
+    "ssn:madeObservation": "http://localhost:8080/service/cnc12145-I_TrS_2/info"
+}

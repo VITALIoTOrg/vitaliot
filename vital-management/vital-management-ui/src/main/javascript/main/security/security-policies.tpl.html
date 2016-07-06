@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <a class="btn btn-default" href="#/security/policies/create" role="button">Add Policy</a>
+        <br />
+        <br />
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="getPoliciesError == true">Error {{getPoliciesResponse.data.code}}! {{getPoliciesResponse.data.message}}</p>
+        <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Policy "{{deletedPolicy}}" successfully deleted!</p>
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+        <div class="box" ng-if="getPoliciesError == false">
+            <div class="box-body no-padding">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>List of Policies (total = {{policies.resultCount}})</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="policy in policies.result">
+                        <td><a ng-href="#/security/policies/details?name={{policy.name}}">{{policy.name}}</a></td>
+                        <td>
+                            <input class="btn btn-default" type="button" value="Delete" ng-click="delPolicy(policy.name)">
+                                <span ng-if="deleting == true && policy.name == todelete">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                            </input>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="overlay" ng-if="gotPolicies == false">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="small-box bg-green" ng-class="{
+'bg-green' : data.status.indexOf('Running') >= 0,
+'bg-orange' : data.status.indexOf('Running') < 0
+}">
+    <div class="inner">
+        <h3>
+            {{data.status}}
+        </h3>
+
+        <p>
+            Current Status
+        </p>
+    </div>
+    <div class="icon">
+        <i class="fa" ng-class="{
+                'fa-play-circle' : data.status.indexOf('Running') >= 0,
+                'fa-stop-circle' : data.status.indexOf('Running') < 0}">
+        </i>
+    </div>
+    <a class="small-box-footer" ng-click="actions.fetchStatus()">
+        {{data.date | date:'dd/MM/yyyy hh:mm'}} [Refresh]
+    </a>
+</div>

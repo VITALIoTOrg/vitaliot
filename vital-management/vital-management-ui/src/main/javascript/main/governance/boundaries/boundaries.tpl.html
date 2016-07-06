@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col-xs-12">
+        <form name="boundariesForm" ng-submit="bCtrl.save(boundariesForm)" novalidate="novalidate" autocomplete="off">
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Area Coverage</h3>
+                </div>
+                <div class="box-body">
+                    <leaflet width="100%" height="400px"
+                             defaults="bCtrl.mapOptions.defaults"
+                             center="bCtrl.mapOptions.center"
+                             markers="bCtrl.mapOptions.markers"
+                             layers="bCtrl.mapOptions.layers"
+                             lf-draw="bCtrl.mapOptions.draw">
+                    </leaflet>
+                </div>
+            </div>
+
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Observation Types</h3>
+                </div>
+                <div class="box-body">
+                    <ul class="list-inline">
+                        <li class="col-md-4 col-sm-6 col-xs-12" ng-repeat="(observationType, value) in bCtrl.boundaries.observationTypes">
+                            <div class="checkbox">
+                                <label>
+                                    <input name="{{observationType}}-check" type="checkbox"
+                                           ng-model="bCtrl.boundaries.observationTypes[observationType]"> {{observationType}}
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

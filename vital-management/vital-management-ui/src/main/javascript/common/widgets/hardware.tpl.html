@@ -1,0 +1,23 @@
+<div class="box box-info">
+    <div class="box-header">
+        <h3 class="box-title"><i class="fa fa-cogs"></i> Hardware </h3>
+        <span class="pull-right label label-success">{{sensor.deviceHardware['hard:status']}}</span>
+    </div>
+    <div class="box-body">
+        <table class="table table-striped table-condensed">
+            <tr>
+                <td>CPU Type:</td>
+                <td>{{ sensor.deviceHardware['hard:cpu'].type }}</td>
+            </tr>
+            <tr>
+                <td>CPU Max Frequency:</td>
+                <td>{{ sensor.deviceHardware['hard:cpu'].maxCpuFrequency | number }} MHz</td>
+            </tr>
+            <tr>
+                <td>Built In Memory:</td>
+                <td>{{ sensor.deviceHardware['hard:builtInMemory'].size | number }} kb</td>
+            </tr>
+
+        </table>
+    </div>
+</div>

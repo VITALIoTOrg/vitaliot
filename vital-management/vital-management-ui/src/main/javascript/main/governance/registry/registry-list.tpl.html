@@ -1,0 +1,91 @@
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Registered IoT systems</h2>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-10">
+                    <p>These are the PPI-compliant IoT systems that are currently registered with VITAL.</p>
+                </div>
+                <div class="col-md-2">
+                    <a tabindex="0" class="btn btn-success" ng-href="#/governance/registry/edit">
+                        <i class="fa fa-plus-circle"></i> Register
+                    </a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th width="25%">URI</th>
+                        <th width="25%">Info</th>
+                        <th width="25%">Options</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-hover">
+                    <tr ng-repeat="system in regCtrl.systems">
+                        <td>{{$index + 1}}</td>
+                        <td>
+                            {{system.name}}
+                        </td>
+                        <td>
+                            {{system.uri}}
+                        </td>
+                        <td>
+                            <dl>
+                                <dt>Last Metadata Refresh:</dt>
+                                <dd>{{system.lastMetadataRefresh}}</dd>
+                                <dt>Last Data Refresh:</dt>
+                                <dd>{{system.lastDataRefresh}}</dd>
+                            </dl>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-default" ng-click="regCtrl.refresh(system)">
+                                    <i class="fa fa-refresh"></i> Refresh
+                                </button>
+                                <a tabindex="0" class="btn btn-success" ng-href="#/governance/registry/edit/{{system.id}}">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                                <button type="button" class="btn btn-warning" ng-click="regCtrl.deregister(system)">
+                                    <i class="fa fa-undo"></i> Deregister
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Synchronize System Metadata
+                <button class="btn btn-warning" ng-click="regCtrl.sync()">
+                    <i class="fa fa-key"></i> <span>Sync</span>
+                </button>
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            <div ng-if="regCtrl.syncResults">
+                <ul class="list-unstyled">
+                    <li ng-repeat="result in regCtrl.syncResults track by $index">
+                        {{result}}
+                    </li>
+                </ul>
+                <button class="btn btn-default" ng-click="regCtrl.syncResults = null">
+                    <i class="fa fa-times-circle"></i> <span>Close</span>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Applications</h3>
+            </div>
+            <div class="box-body">
+
+                <div class="list-group">
+                    <div class="list-group-item" ng-repeat="group in aCtrl.groupList">
+                        <div class="row">
+                            <div class="col-md-6">{{group}}</div>
+                            <div class="col-md-6">
+                                <div class="btn-group pull-right" role="group">
+                                    <a class="btn btn-default" ng-href="#/governance/application/access/{{group}}">
+                                        <i class="fa fa-lock"></i> Access Policies
+                                    </a>
+                                    <a class="btn btn-default" ng-href="#/governance/application/sla/{{group}}">
+                                        <i class="fa fa-photo"></i> SLA Monitoring
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
