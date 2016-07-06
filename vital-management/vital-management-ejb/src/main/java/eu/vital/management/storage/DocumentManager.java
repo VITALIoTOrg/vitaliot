@@ -147,8 +147,11 @@ public class DocumentManager implements Serializable {
 	public void update(String type, String documentId, JsonNode document) {
 		try {
 			Document mongoDocument = Document.parse(objectMapper.writeValueAsString(document));
-			mongoDocument.put("_id", documentId);
-
+			if (ObjectId.isValid(documentId)) {
+				mongoDocument.put("_id", new ObjectId(documentId));
+			} else {
+				mongoDocument.put("_id", documentId);
+			}
 			MongoCollection mongoCollection = mongoDatabase.getCollection(type);
 			FindOneAndReplaceOptions options = new FindOneAndReplaceOptions();
 			options.upsert(true);

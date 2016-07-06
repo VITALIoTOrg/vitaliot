@@ -14,11 +14,13 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ProxyRestService extends HttpServlet {
+
+	private static Logger logger = Logger.getLogger(ProxyRestService.class.getName());
 
 	public void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, ServletException {
 		// Execute the proxy request
@@ -41,6 +43,7 @@ public abstract class ProxyRestService extends HttpServlet {
 		// Create a default HttpClient
 		URL url = new URL(getProxyURL(httpServletRequest));
 		HttpURLConnection httpProxyRequest = (HttpURLConnection) url.openConnection();
+
 		try {
 			httpProxyRequest.setRequestMethod(httpServletRequest.getMethod());
 			copyProxyRequestHeaders(httpServletRequest, httpProxyRequest);
@@ -63,29 +66,32 @@ public abstract class ProxyRestService extends HttpServlet {
 			Map<String, List<String>> headerArrayResponse = httpProxyRequest.getHeaderFields();
 			for (String headerName : headerArrayResponse.keySet()) {
 				if (headerName != null) {
-                    List<String> headerValues = headerArrayResponse.get(headerName);
-                    if (headerName.toLowerCase().equals("set-cookie")) {
-                        String domain = httpServletRequest.getRequestURL().toString();
-                        Pattern pattern = Pattern.compile("^[^:]*:[^.]*(.[^:/]*).*$");
-                        Matcher matcher = pattern.matcher(domain);
-                        if (matcher.find()) {
-                            domain = matcher.group(1);
-                        }
-                        httpServletResponse.addHeader(headerName, headerValues.get(0).replaceAll("Domain=[^;]*", "Domain=" + domain));
-                    } else {
-                        httpServletResponse.addHeader(headerName, headerValues.get(0));
-                    }
+					List<String> headerValues = headerArrayResponse.get(headerName);
+					if (headerName.toLowerCase().equals("set-cookie")) {
+						String domain = httpServletRequest.getRequestURL().toString();
+						Pattern pattern = Pattern.compile("^[^:]*:[^.]*(.[^:/]*).*$");
+						Matcher matcher = pattern.matcher(domain);
+						if (matcher.find()) {
+							domain = matcher.group(1);
+						}
+						httpServletResponse.addHeader(headerName, headerValues.get(0).replaceAll("Domain=[^;]*", "Domain=" + domain));
+					} else {
+						httpServletResponse.addHeader(headerName, headerValues.get(0));
+					}
 				}
 			}
 			// Send the content to the client httpProxyRequest => httpServletResponse
-            InputStream httpProxyRequestInputStream;
-            if (responseStatus >= 200 && responseStatus <= 299)
-    			httpProxyRequestInputStream = httpProxyRequest.getInputStream();
-            else
-                httpProxyRequestInputStream = httpProxyRequest.getErrorStream();
+			InputStream httpProxyRequestInputStream;
+			if (responseStatus >= 200 && responseStatus <= 299)
+				httpProxyRequestInputStream = httpProxyRequest.getInputStream();
+			else
+				httpProxyRequestInputStream = httpProxyRequest.getErrorStream();
 			OutputStream httpServletResponseOutputStream = httpServletResponse.getOutputStream();
 			IOUtils.copy(httpProxyRequestInputStream, httpServletResponseOutputStream);
 
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+			throw new ServletException(e);
 		} finally {
 			httpProxyRequest.disconnect();
 		}
