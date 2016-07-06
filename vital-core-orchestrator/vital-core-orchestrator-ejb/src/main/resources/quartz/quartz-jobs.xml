@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<job-scheduling-data version="1.8" xmlns="http://www.quartz-scheduler.org/xml/JobSchedulingData"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.quartz-scheduler.org/xml/JobSchedulingData http://www.quartz-scheduler.org/xml/job_scheduling_data_1_8.xsd">
+
+    <schedule>
+
+        <job>
+            <name>SyncSystemsJob</name>
+            <group>VITAL_JOBS</group>
+            <description>SyncSystemsJob</description>
+            <job-class>eu.vital.orchestrator.job.SyncSystemsJob</job-class>
+        </job>
+
+
+        <trigger>
+            <cron>
+                <name>SyncSystemsJobCronTrigger</name>
+                <group>VITAL_TRIGGERS</group>
+                <job-name>SyncSystemsJob</job-name>
+                <job-group>VITAL_JOBS</job-group>
+                <!-- trigger every 30 minutes -->
+                <cron-expression>0 0/30 * * * ?</cron-expression>
+            </cron>
+        </trigger>
+
+    </schedule>
+
+</job-scheduling-data>

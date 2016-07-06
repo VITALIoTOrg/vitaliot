@@ -1,0 +1,57 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        Operations List
+        <small>Autonomous operations deployed</small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="box box-primary">
+
+        <div class="box-body">
+            <ul class="products-list product-list-in-box">
+                <li class="item" ng-repeat="operation in operationListCtrl.operationList">
+                    <div class="product-img">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default"><span class="fa fa-gears"></span></button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a ng-click="operationListCtrl.actions.delete(operation)">
+                                        <i class="fa fa-remove text-danger"> REMOVE</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-info">
+                            <a ng-href="#/operation/edit/{{operation.id}}" class="product-title">
+                                {{operation.name}}
+                                </span>
+                            </a>
+                            <span class="product-description">
+                              {{operation.description}}
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <!-- /.item -->
+            </ul>
+        </div>
+
+        <div class="box-footer text-center">
+            <a ng-href="#/operation/edit" class="uppercase">
+                <span class="fa fa-plus-circle"></span>
+                Create New Operation
+            </a>
+        </div>
+
+
+    </div>
+</section>

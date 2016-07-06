@@ -1,0 +1,238 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 ng-if="workflowEditCtrl.workflow.id">
+        Update a workflow
+        <small>{{workflowEditCtrl.workflow.id}}</small>
+    </h1>
+
+    <h1 ng-if="!workflowEditCtrl.workflow.id">
+        Create a new workflow
+        <small></small>
+    </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Nodes form -->
+    <form name="workflowEditForm" novalidate
+          ng-submit="workflowEditCtrl.actions.save(workflowEditForm)">
+
+        <!-- Workflow Name -->
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="form-group" ng-class="{
+                        'has-success' : workflowEditCtrl.name.$valid,
+                        'has-error' : workflowEditCtrl.name.$invalid
+                    }">
+                    <label for="name">Workflow Name</label>
+                    <input type="text" class="form-control" name="name" id="name"
+                           ng-model="workflowEditCtrl.workflow.name"
+                           ng-required="true">
+                </div>
+            </div>
+        </div>
+        <!-- /.Workflow Name -->
+
+        <!-- Workflow Graph -->
+        <div class="box box-default">
+            <div class="box-body">
+                <workflow-graph nodes="workflowEditCtrl.workflow.nodes"
+                                selected-node-name="workflowEditCtrl.data.selectedNodeName">
+                </workflow-graph>
+            </div>
+        </div>
+        <!-- /.Workflow Graph -->
+
+        <div class="row">
+            <div class="col-md-2">
+                <!-- Node List -->
+                <div class="box box-default">
+                    <div class="box-body">
+                        <ng-form name="nodeListForm">
+
+                            <div>
+                                <h2>Nodes</h2>
+                                <button type="button" class="btn btn-block btn-default"
+                                        ng-class="{active: workflowEditCtrl.data.selectedNodeName === nodeName}"
+                                        ng-repeat="nodeName in workflowEditCtrl.data.currentNodeList()"
+                                        ng-click="workflowEditCtrl.data.selectedNodeName = nodeName">
+                                    <span>{{nodeName}}</span>
+                                </button>
+                            </div>
+
+                            <hr/>
+
+                            <div class="form-group">
+
+                                <label for="selectedOperation">Operation</label>
+                                <select id="selectedOperation" name="selectedOperation"
+                                        class="form-control"
+                                        ng-options="operation.name for operation in workflowEditCtrl.data.operationList track by operation.id"
+                                        ng-model="workflowEditCtrl.data.selectedOperation">
+                                    <option value="">--</option>
+                                </select>
+
+                            </div>
+
+                            <button type="button" class="btn btn-block btn-success"
+                                    ng-click="workflowEditCtrl.actions.addNode(workflowEditCtrl.data.selectedOperation)">
+                                <i class="fa fa-plus-circle"></i> Add Node
+                            </button>
+
+                        </ng-form>
+                    </div>
+                </div>
+                <!-- /.Node List -->
+            </div>
+            <div class="col-md-10">
+                <!-- Node Edit -->
+                <div ng-repeat="(nodeName, node) in workflowEditCtrl.workflow.nodes"
+                     ng-switch="nodeName"
+                     ng-show="nodeName === workflowEditCtrl.data.selectedNodeName">
+
+                    <!-- Input -->
+                    <div class="box box-solid box-success" ng-switch-when="input">
+                        <div class="box-header">
+                            <h3 class="box-title">
+                                {{nodeName}}
+                            </h3>
+                        </div>
+
+                        <div class="box-body border-radius-none">
+                            <div class="form-group">
+                                <label for="operationInput-{{nodeName}}">Workflow Input (used when pressing Execute button)</label>
+                                <div>
+                                    <textarea id="operationInput-{{nodeName}}" name="operationInput-{{nodeName}}"
+                                              class="form-control"
+                                              ui-codemirror="workflowEditCtrl.data.cmOption.inputData"
+                                              ng-model="node.inputData"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.Input -->
+
+                    <!-- Output -->
+                    <div class="box box-solid box-danger" ng-switch-when="output">
+                        <div class="box-header">
+                            <h3 class="box-title">
+                                {{nodeName}}
+                            </h3>
+                        </div>
+
+                        <div class="box-body border-radius-none">
+                            <div class="form-group">
+                                <fieldset>
+                                    <legend>Incoming Nodes</legend>
+
+                                    <div class="btn-group">
+                                        <label class="btn btn-primary"
+                                               ng-repeat="nodeName in workflowEditCtrl.data.incomingNodeList(nodeName)"
+                                               ng-class="{active: node.incoming.indexOf(nodeName) >= 0}">
+                                            <input type="checkbox" checklist-model="node.incoming" checklist-value="nodeName"> {{nodeName}}
+                                        </label>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.Output -->
+
+                    <!-- Operation -->
+                    <div class="box box-solid box-default" ng-switch-default>
+
+                        <div class="box-header">
+                            <h3 class="box-title">
+                                {{nodeName}}
+                            </h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-sm bg-red"
+                                        ng-click="workflowEditCtrl.actions.removeNode(nodeName)">
+                                    <i class="fa fa-times"></i> Remove Node
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="box-body border-radius-none">
+
+                            <div class="form-group">
+                                <label for="operationName-{{nodeName}}">Operation Name</label>
+                                <input id="operationName-{{nodeName}}" name="operationName-{{nodeName}}"
+                                       type="text" class="form-control"
+                                       ng-model="node.operation.name"
+                                       ng-required="true"/>
+
+                            </div>
+
+                            <div class="form-group">
+                                <fieldset>
+                                    <legend>Incoming Nodes</legend>
+
+                                    <div class="btn-group">
+                                        <label class="btn btn-primary"
+                                               ng-repeat="nodeName in workflowEditCtrl.data.incomingNodeList(nodeName)"
+                                               ng-class="{active: node.incoming.indexOf(nodeName) >= 0}">
+                                            <input type="checkbox" checklist-model="node.incoming" checklist-value="nodeName"> {{nodeName}}
+                                        </label>
+                                    </div>
+
+                                </fieldset>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="operationData-{{nodeName}}">Operation Script</label>
+                                <div>
+                                    <textarea class="form-control"
+                                              id="operationData-{{nodeName}}"
+                                              name="operationData-{{nodeName}}"
+                                              ui-codemirror="workflowEditCtrl.data.cmOption.script"
+                                              ng-model="node.operation.script"
+                                              ng-required="true"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="operationInput-{{nodeName}}">Operation Input (example)</label>
+                                <div>
+                                    <textarea id="operationInput-{{nodeName}}" name="operationInput-{{nodeName}}"
+                                              class="form-control"
+                                              ui-codemirror="workflowEditCtrl.data.cmOption.inputData"
+                                              ng-model="node.operation.inputData"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.Operation -->
+                </div>
+            </div>
+            <!-- /.Node Edit -->
+        </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+            <button type="button" class="btn btn-success"
+                    ng-click="workflowEditCtrl.actions.execute(workflowEditForm)">
+                <i class="fa fa-play-circle-o"></i> Test
+            </button>
+        </div>
+        <!-- /.Buttons -->
+
+    </form>
+    <!-- /.Nodes form -->
+
+    <!-- Execution Output -->
+    <div class="row">
+        <div class="col-xs-12">
+            <operation-output ng-repeat="res in workflowEditCtrl.output" output="res">
+            </operation-output>
+        </div>
+    </div>
+    <!-- /.Execution Output -->
+
+</section>

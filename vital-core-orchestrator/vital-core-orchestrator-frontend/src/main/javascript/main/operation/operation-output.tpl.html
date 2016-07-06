@@ -1,0 +1,44 @@
+<div class="box box-solid"
+     ng-class="{
+            'bg-orange': !! operationOutputCtrl.output.error,
+            'bg-green': ! operationOutputCtrl.output.error,
+         }"
+>
+    <div class="box-header">
+        <i class="fa fa-gear"></i>
+
+        <h3 class="box-title">
+            {{operationOutputCtrl.output.name}}
+            <i class="fa fa-check text-success" ng-if="!operationOutputCtrl.output.error"></i>
+        </h3>
+
+        <div class="box-tools pull-right">
+            <a class="btn btn-sm bg-blue" data-target="#collapse-input-{{operationOutputCtrl.id}}" data-toggle="tab">Input</a>
+            <a class="btn btn-sm bg-blue" data-target="#collapse-output-{{operationOutputCtrl.id}}" data-toggle="tab">Output</a>
+            <a class="btn btn-sm bg-blue" data-target="#collapse-error-{{operationOutputCtrl.id}}" data-toggle="tab">Error</a>
+            <a class="btn btn-sm bg-blue" data-target="#collapse-log-{{operationOutputCtrl.id}}" data-toggle="tab">Log</a>
+        </div>
+    </div>
+
+    <div class="box-body border-radius-none">
+        <div class="tab-content">
+            <div class="tab-pane" id="collapse-input-{{operationOutputCtrl.id}}">
+                <pre style="height: 200px;">{{operationOutputCtrl.output.inputData | json}}</pre>
+            </div>
+            <div class="tab-pane" id="collapse-output-{{operationOutputCtrl.id}}">
+                <pre style="height: 200px;">{{operationOutputCtrl.output.outputData | json}}</pre>
+            </div>
+            <div class="tab-pane" id="collapse-error-{{operationOutputCtrl.id}}">
+                <span>{{operationOutputCtrl.output.error || 'No Errors'}}</span>
+            </div>
+            <div class="tab-pane active" id="collapse-log-{{operationOutputCtrl.id}}">
+                <ul class="list-unstyled">
+                    <li ng-repeat="log in operationOutputCtrl.output.log">
+                        {{log}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
