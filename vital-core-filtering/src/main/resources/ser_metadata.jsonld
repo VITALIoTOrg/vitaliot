@@ -1,0 +1,47 @@
+[
+{
+"@context": "http://vital-iot.eu/contexts/service.jsonld",
+"id": "http://IP_ADDRESS/filtering/",
+"type": "vital:FilteringService",
+"operations":
+[
+{
+"type": "vital:ThresholdFilter",
+"hrest:hasAddress": "http://IP_ADDRESS/filtering/threshold",
+"hrest:hasMethod": "hrest:POST"
+},
+{
+"type": "vital:ResamplingFilter",
+"hrest:hasAddress": "http://IP_ADDRESS/filtering/resampling",
+"hrest:hasMethod": "hrest:POST"
+}
+]
+},
+{
+"@context": "http://vital-iot.eu/contexts/service.jsonld",
+"id": "http://IP_ADDRESS/filtering/monitoring",
+"type": "vital:MonitoringService",
+"operations":
+[
+{
+"type": "vital:GetSystemStatus",
+"hrest:hasAddress": "http://IP_ADDRESS/filtering/ppi/status",
+"hrest:hasMethod": "hrest:POST"
+}
+]
+},
+{
+"@context": "http://vital-iot.eu/contexts/service.jsonld",
+"id": "http://IP_ADDRESS/filtering/observation",
+"type": "vital:ObservationService",
+"operations":
+[
+{
+"type": "vital:GetObservations",
+"hrest:hasAddress": "http://IP_ADDRESS/filtering/ppi/service/observation",
+"hrest:hasMethod": "hrest:POST"
+}
+]
+}
+]
+

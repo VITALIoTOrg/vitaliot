@@ -1,0 +1,23 @@
+{
+"@context": "http://vital-iot.eu/contexts/measurement.jsonld",
+"id": "http://IP_ADDRESS/filtering/ppi/sensor/monitoring/IDENTIFIER",
+"type": "ssn:Observation",
+"ssn:observationProperty":
+{
+"type": "vital:OperationalState"
+},
+"ssn:observationResultTime":
+{
+"time:inXSDDateTime": "EXECUTION_TIME"
+},
+"ssn:featureOfInterest": "http://IP_ADDRESS/filtering/",
+"ssn:observationResult":
+{
+"type": "ssn:SensorOutput",
+"ssn:hasValue":
+{
+"type": "ssn:ObservationValue",
+"value": "vital:Running"
+}
+}
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- How to access the Filtering -->
+	<entry key="vital-core-filtering.dms">https://vitalsp.cloud.reply.eu/vital/vital-core-dms</entry>
+	<entry key="vital-core-filtering.endpoint-address">http\://vital-integration.atosresearch.eu/vital-core-filtering</entry>
+	<entry key="vital-core-filtering.endpoint-port">8180</entry>
+
+</properties>
