@@ -167,7 +167,7 @@ public class PpiImplementation {
 			logger.debug(sensorObject.getClass());
 			ArrayList<String> sensorArray=(ArrayList<String>) sensorObject;
 			String sensor=sensorArray.get(0);
-			if(sensor.equals("http://"+FILTERING_BASE_ADDRESS+"/filtering/ppi/sensor/monitoring"))
+			if(sensor.equals(FILTERING_BASE_ADDRESS+"/filtering/ppi/sensor/monitoring"))
 				sensorCheck=true;
 		}
 

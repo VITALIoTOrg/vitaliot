@@ -1,18 +1,18 @@
 {
-"@context": "http://vital-iot.eu/contexts/system.jsonld",
-"id": "http://IP_ADDRESS/filtering",
+"@context": "IP_ADDRESS/filtering/contexts/system.jsonld",
+"id": "IP_ADDRESS/filtering",
 "type": "vital:VitalSystem",
 "name": "Filtering System",
 "description": "Service to filter data in VITAL",
 "sensors":
 [
-"http://IP_ADDRESS/filtering/ppi/sensor/monitoring"
+"IP_ADDRESS/filtering/ppi/sensor/monitoring"
 ],
 "services":
 [
-"http://IP_ADDRESS/filtering/",
-"http://IP_ADDRESS/filtering/monitoring",
-"http://IP_ADDRESS/filtering/observation"
+"IP_ADDRESS/filtering/",
+"IP_ADDRESS/filtering/monitoring",
+"IP_ADDRESS/filtering/observation"
 ],
 "status": "vital:Running"
 }

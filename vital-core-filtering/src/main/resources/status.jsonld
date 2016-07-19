@@ -1,6 +1,6 @@
 {
-"@context": "http://vital-iot.eu/contexts/measurement.jsonld",
-"id": "http://IP_ADDRESS/filtering/ppi/sensor/monitoring/IDENTIFIER",
+"@context": "IP_ADDRESS/filtering/contexts/measurement.jsonld",
+"id": "IP_ADDRESS/filtering/ppi/sensor/monitoring/IDENTIFIER",
 "type": "ssn:Observation",
 "ssn:observationProperty":
 {
@@ -10,7 +10,7 @@
 {
 "time:inXSDDateTime": "EXECUTION_TIME"
 },
-"ssn:featureOfInterest": "http://IP_ADDRESS/filtering/",
+"ssn:featureOfInterest": "IP_ADDRESS/filtering/",
 "ssn:observationResult":
 {
 "type": "ssn:SensorOutput",
