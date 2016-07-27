@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <div ng-if="confirmation == true">
+            <form ng-submit="signup(data)">
+                <div class="form-group">
+                    <label for="inputFirstName">First name</label>
+                    <input style="color: black;" type="text" class="form-control" ng-model="data.givenName" placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label for="inputLastName">Last name</label>
+                    <input style="color: black;" type="text" class="form-control" ng-model="data.surname" placeholder="Smith">
+                </div>
+                <div class="form-group">
+                    <label for="inputUsername">Username <span style="color: #d30000;">*</span></label>
+                    <input style="color: black;" type="text" class="form-control" ng-model="data.name" placeholder="yourusername" required>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Password (at least 8 characters) <span style="color: #d30000;">*</span></label>
+                    <input style="color: black;" type="password" class="form-control" ng-model="data.password" placeholder="impossibletoguess" pattern=".{8,}" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Sign up
+                    <span ng-if="creating == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                </button>
+            </form>
+            <br />
+            <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">User "{{createdUser}}" successfully created!</p>
+            <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            <p class="callout callout-info" style="padding: 15px;">
+                <span style="color: #d30000;">*</span> Mandatory
+            </p>
+        </div>
+        <div ng-if="confirmation == false">
+            <form ng-submit="register(data)">
+                <div class="form-group">
+                    <label for="inputEmail">E-mail</label>
+                    <input style="color: black;" type="email" class="form-control" ng-model="data.mail" placeholder="example@domain.com">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Request account
+                    <span ng-if="registering == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                </button>
+            </form>
+            <br />
+            <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Click on the link we have sent you at "{{userEmail}}"!</p>
+            <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            <p class="callout callout-info" style="padding: 15px;">
+                We will send you an e-mail with a link to proceed with the registration process.
+            </p>
+        </div>
+    </div>
+</div>
+

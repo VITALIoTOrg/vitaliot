@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="getStatsError == true">Error {{getStatsResponse.data.code}}! {{getStatsResponse.data.message}}</p>
+        <div class="box" ng-if="getStatsError == false">
+            <div class="box-body no-padding">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Active User Sessions</th>
+                        <th>Current Internal Sessions</th>
+                        <th>Cumulative Policy Evaluations</th>
+                        <th>Avg rate of policy evaluations (specific resources)</th>
+                        <th>Avg rate of policy evaluations (resources tree)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{stats.activeSessions}}</td>
+                        <td>{{stats.currInternalSessions}}</td>
+                        <td>{{stats.cumPolicyEval}}</td>
+                        <td>{{stats.avgPolicyEval}}</td>
+                        <td>{{stats.avgPolicyEvalTree}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="overlay" ng-if="gotStats == false">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+        </div>
+        <div ng-if="gotStats == true && getStatsError == false">
+            <ul class="list-group" style="list-style-type: none;">
+                <li class="callout callout-info" style="padding: 15px;">
+                    <th><p>
+                        <span style="font-weight: bold;">
+                            Active User Sessions
+                        </span>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        Number of user sessions, such as the one opened by this application.
+                    </p></th>
+                </li>
+                <li class="callout callout-info" style="padding: 15px;">
+                    <th><p>
+                        <span style="font-weight: bold;">
+                            Current Internal Sessions
+                        </span>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        All sessions internal to the OpenAM server (includes user sessions).
+                    </p></th>
+                </li>
+                <li class="callout callout-info" style="padding: 15px;">
+                    <th><p>
+                        <span style="font-weight: bold;">
+                            Cumulative Policy Evaluations
+                        </span>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        Number of policy evaluations since latest OpenAM restart.
+                    </p></th>
+                </li>
+                <li class="callout callout-info" style="padding: 15px;">
+                    <th><p>
+                        <span style="font-weight: bold;">
+                            Avg rate of policy evaluations
+                        </span>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        Average rate of policy evaluations over a sliding time window of size 10 (seconds), the instant rate being computed over time blocks of 1 second. The final value is rounded to an integer.
+                    </p></th>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

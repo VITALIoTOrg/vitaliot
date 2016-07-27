@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <form ng-submit="addApplication(data)" ng-init="tmp.res = null; data.resources = []">
+            <div class="form-group">
+                <label for="inputName">Application name <span style="color: #d30000;">*</span></label>
+                <input style="color: black;" type="text" class="form-control" ng-model="data.name" placeholder="myApplication" required>
+            </div>
+            <div class="form-group">
+                <label for="inputDescription">Description</label>
+                <input style="color: black;" type="text" class="form-control" ng-model="data.description" placeholder="Here I describe my application">
+            </div>
+            <div class="form-group">
+                <label>Application type</label>
+                <div class="dropdown" ng-init="data.type = defaultType">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownType" data-toggle="dropdown" aria-expanded="true">
+                        <span ng-if="data.type == null">Choose a specific application type</span>
+                        <span ng-if="data.type != null">{{data.type}}</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownType">
+                        <li role="presentation">
+                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="data.type = null">Use default type</a>
+                        </li>
+                        <li role="presentation" ng-repeat="applicationType in applicationTypes.result">
+                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="data.type = applicationType.name">{{applicationType.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputResource">Base URL(s) <span style="color: #d30000;">*</span></label>
+                <input style="color: black;" type="text" class="form-control" ng-model="tmp.res" placeholder="http://example.com/*">
+            </div>
+            <input style="display: inline;" class="btn btn-default" type="button" value="Add" ng-click="addRes(tmp.res)">
+            <p class="callout callout-danger" style="display: inline; padding: 15px;" ng-if="nores == true">Please add at least <span style="font-weight: bold;">one</span> resource!</p>
+            <p class="callout callout-danger" style="display: inline; padding: 15px;" ng-if="adderr == true">Resource already added!</p>
+            <p>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="resource in data.resources">
+                        {{resource}} <input class="btn btn-default" style="margin-left: 20px;" type="button" value="Remove" ng-click="rmRes(resource)">
+                    </li>
+                </ul>
+            </p>
+            <button type="submit" class="btn btn-primary">
+                Create Application
+                <span ng-if="creating == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+            </button>
+        </form>
+        <br />
+        <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">New application "{{createdApplication}}" successfully created!</p>
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+        <p class="callout callout-info" style="padding: 15px;">
+            <span style="color: #d30000;">*</span> Mandatory
+        </p>
+    </div>
+</div>
+

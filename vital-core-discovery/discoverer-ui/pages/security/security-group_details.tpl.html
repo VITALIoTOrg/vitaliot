@@ -1,0 +1,82 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="wrongpars == true">No group correctly specified!</p>
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="getGroupError == true">Error {{getGroupResponse.data.code}}! {{getGroupResponse.data.message}}</p>
+        <div class="box" ng-if="wrongpars == false && getGroupError == false">
+            <div class="box-body no-padding">
+                <table class="table table-hover table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Realm</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{group.username}}</td>
+                        <td>{{group.realm}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="overlay" ng-if="gotGroup == false">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+        </div>
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="gotUsers == true && gotGroupUsers == true && getUsersError == true">
+            Error {{getUsersResponse.data.code}}! {{getUsersResponse.data.message}}
+        </p>
+        <div ng-if="gotGroup == true && getUsersError == false && getGroupError == false">
+            <p class="callout callout-info" style="padding: 15px;" ng-if="wrongpars == false && gotUsers == true && gotGroupUsers == true && groupUsers.length == 0">
+                There are no users part of this group.
+            </p>
+            <div ng-if="wrongpars == false && gotUsers == true && gotGroupUsers == true" class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownGroupUser" data-toggle="dropdown" aria-expanded="true">
+                Add user to "{{group.username}}"
+                <span class="caret"></span>
+                <span ng-if="adding == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownGroupUser">
+                    <li role="presentation" ng-repeat="userToAdd in users.result" ng-if="groupUsers.indexOf(userToAdd) == -1">
+                        <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="addUserToGroup(userToAdd)">{{userToAdd}}</a>
+                    </li>
+                </ul>
+            </div>
+            <br />
+            <div ng-if="msgEvent == 'add'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully added "{{addedUser}}" user to the group!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div ng-if="msgEvent == 'delete'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully removed "{{deletedUser}}" from the group!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div class="box" ng-if="(wrongpars == false && groupUsers.length > 0) || gotUsers == false || gotGroupUsers == false">
+                <div class="box-body no-padding">
+                    <table class="table table-hover table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Group Users</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="user in groupUsers">
+                            <td><a ng-href="#/security/users/details?name={{user}}">{{user}}</a></td>
+                            <td>
+                                <input class="btn btn-default" type="button" value="Remove from group" ng-click="rmUserGroup(user)">
+                                <span ng-if="removing == true && toremove == user">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="overlay" ng-if="gotUsers == false || gotGroupUsers == false">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+            <div style="margin-bottom: 400px;">
+            </div>
+        </div>
+    </div>
+</div>

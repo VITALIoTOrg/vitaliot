@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <p class="callout callout-warning" style="padding: 15px;">
+            You need to be an OpenAM administrator in order to apply this configurations!
+        </p>
+        <form ng-submit="addApplication(data)" ng-init="tmp.res = null">
+            <h4>Initial groups</h4>
+            <div class="form-group">
+                <input style="color: black;" type="text" class="form-control" ng-model="tmp.res" placeholder="MyGroup">
+            </div>
+            <input style="display: inline;" class="btn btn-default" type="button" value="Add" ng-click="addRes(tmp.res)">
+            <p class="callout callout-danger" style="display: inline; padding: 15px;" ng-if="nores == true">Please add at least <span style="font-weight: bold;">one</span> resource!</p>
+            <p class="callout callout-danger" style="display: inline; padding: 15px;" ng-if="adderr == true">Resource already added!</p>
+            <p>
+                <ul class="list-group">
+                    <li class="list-group-item" style="background-color: #DD4B39; border-color: #C23321; color: #FFF;" ng-repeat="resource in resources">
+                        {{resource}} (Default) <input class="btn btn-default" style="margin-left: 20px;" type="button" value="Remove" ng-click="rmRes(resource)">
+                    </li>
+                </ul>
+            </p>
+            <button type="submit" class="btn btn-primary">Create Groups</button>
+        </form>
+        <br />
+        <form ng-submit="addApplication(null)">
+            <h4>Default policies</h4>
+            <p class="callout callout-info">
+                If you press on the following button we will automatically create for you a set of default low level policies to protect the modules currently active in your VITAL system.
+            </p>
+            <button type="submit" class="btn btn-primary">Create Policies</button>
+        </form>
+    </div>
+</div>
+

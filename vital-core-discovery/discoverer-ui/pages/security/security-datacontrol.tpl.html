@@ -1,0 +1,72 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <form ng-submit="addApplication(data)" ng-init="tmp.res = null">
+            <h4>Initial groups</h4>
+            <div class="form-group">
+                <input style="color: black;" type="text" class="form-control" ng-model="tmp.res" placeholder="MyGroup">
+            </div>
+            <input style="display: inline;" class="btn btn-default" type="button" value="Add" ng-click="addRes(tmp.res)">
+            <p class="callout callout-danger" style="display: inline; padding: 15px;" ng-if="nores == true">Please add at least <span style="font-weight: bold;">one</span> resource!</p>
+            <p class="callout callout-danger" style="display: inline; padding: 15px;" ng-if="adderr == true">Resource already added!</p>
+            <p>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="resource in resources">
+                        {{resource}} <input class="btn btn-default" style="margin-left: 20px;" type="button" value="Remove" ng-click="rmRes(resource)">
+                    </li>
+                </ul>
+            </p>
+            <button type="submit" class="btn btn-primary">Create Groups</button>
+        </form>
+        <br />
+        <form ng-submit="addPolicy(data)" ng-init="tmp.res = null; data.resources = []">
+            <h4>Modules users and default policies</h4>
+            <div class="form-group">
+                <label for="inputName">Orchestrator location</label>
+                <input style="color: black;" type="text" class="form-control" ng-model="data.name" placeholder="http://5.79.79.172:8180/vital-orchestrator-frontend" required>
+            </div>
+            <div class="form-group">
+                <label>Orchestrator user in group</label>
+                <div class="dropdown" ng-init="data.appname1 = 'Base_Users'">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownApplication" data-toggle="dropdown" aria-expanded="true">
+                        <span ng-if="data.appname1 == null">Choose in which group the module use must be created</span>
+                        <span ng-if="data.appname1 != null">{{data.appname1}}</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownApplication">
+                        <li role="presentation">
+                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="data.appname1 = null">Use default group</a>
+                        </li>
+                        <li role="presentation" ng-repeat="application in applications.result">
+                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="data.appname1 = application.name">{{application.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputDescription">CEP location</label>
+                <input style="color: black;" type="text" class="form-control" ng-model="data.description" placeholder="http://5.79.79.172:8180/cep">
+            </div>
+            <div class="form-group">
+                <label>CEP user in group</label>
+                <div class="dropdown" ng-init="data.appname2 = 'Dev_Users'">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownApplication" data-toggle="dropdown" aria-expanded="true">
+                        <span ng-if="data.appname2 == null">Choose in which group the module use must be created</span>
+                        <span ng-if="data.appname2 != null">{{data.appname2}}</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownApplication">
+                        <li role="presentation">
+                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="data.appname2 = null">Use default group</a>
+                        </li>
+                        <li role="presentation" ng-repeat="application in applications.result">
+                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="data.appname2 = application.name">{{application.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <p>...</p>
+            <button type="submit" class="btn btn-primary">Apply configuration</button>
+        </form>
+    </div>
+</div>
+

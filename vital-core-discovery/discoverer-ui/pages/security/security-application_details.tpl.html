@@ -1,0 +1,185 @@
+<div class="row">
+    <div class="col-md-12" style="display: table; width: 100%;">
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="wrongpars == true">No application correctly specified!</p>
+        <p class="callout callout-danger" style="padding: 15px;" ng-if="getApplicationError == true">Error {{getApplicationResponse.data.code}}! {{getApplicationResponse.data.message}}</p>
+        <form ng-if="wrongpars == false && getApplicationError == false" ng-submit="updApplication(info)">
+            <p ng-if="gotApplication == true">
+                <input ng-if="edit == false" class="btn btn-default" type="button" value="Edit" ng-click="enableEdit()">
+                <button ng-if="edit == true" type="submit" class="btn btn-primary">
+                    Save
+                    <span ng-if="saving == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                </button>
+                <input ng-if="edit == true" class="btn btn-default" type="button" value="Cancel" ng-click="disableEdit()">
+            </p>
+            <div ng-if="msgEvent == 'update'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully updated application details!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div class="box">
+                <div class="box-body no-padding">
+                    <table class="table table-hover table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                {{application.name}}
+                            </td>
+                            <td>
+                                {{application.applicationType}}
+                            </td>
+                            <td>
+                                <span ng-if="edit == false">{{application.description}}</span>
+                                <input ng-if="edit == true" style="color: black;" type="text" class="form-control" ng-model="$parent.info.description" ng-init="$parent.info.description = application.description">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="overlay" ng-if="gotApplication == false">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </form>
+        <div ng-if="gotApplication == true && getApplicationError == false">
+            <p class="callout callout-info" style="padding: 15px;" ng-if="wrongpars == false && application.resources.length == 0">No resource pattern defined.</p>
+            <div ng-if="wrongpars == false" ng-init="$parent.$parent.tmp.res = null">
+                <input style="color: black; display: inline; width: 50%;" type="text" class="form-control" ng-model="$parent.$parent.$parent.tmp.res" placeholder="http://example.com/*">
+                <input style="display: inline;" class="btn btn-default" type="button" value="Add pattern" ng-click="addRes($parent.$parent.$parent.tmp.res)">
+                <span ng-if="addingRes == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+            </div>
+            <p class="callout callout-danger" style="padding: 15px; margin: 0px; margin-top: 5px;" ng-if="duplicate == true">Pattern already added!</p>
+            <p class="callout callout-danger" style="padding: 15px; margin: 0px; margin-top: 5px;" ng-if="lastone == true">Last pattern left, cannot delete!</p>
+            <br />
+            <div ng-if="msgEvent == 'addResource'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully added pattern "{{addedResource}}"!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div ng-if="msgEvent == 'deleteResource'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully removed pattern "{{deletedResource}}"!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div class="box" ng-if="wrongpars == false && application.resources.length > 0">
+                <div class="box-body no-padding">
+                    <table  class="table table-hover table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Patterns</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="resource in application.resources">
+                            <td>{{resource}}</td>
+                            <td>
+                                <input class="btn btn-default" type="button" value="Remove pattern" ng-click="rmRes(resource)">
+                                <span ng-if="removingRes == true && toremoveRes == resource">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <form ng-if="wrongpars == false && gotApplication == true && getApplicationError == false" ng-submit="updActions(actions)">
+            <p>
+                <input ng-if="actionsEdit == false" class="btn btn-default" type="button" value="Edit actions" ng-click="enableActionsEdit()">
+                <button ng-if="actionsEdit == true" type="submit" class="btn btn-primary">
+                    Save
+                    <span ng-if="savingAct == true">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                </button>
+                <input ng-if="actionsEdit == true" class="btn btn-default" type="button" value="Cancel" ng-click="disableActionsEdit()">
+            </p>
+            <div ng-if="msgEvent == 'actionsUpdate'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200">Successfully updated policy actions!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div class="form-group">
+                <div class="box">
+                    <div class="box-body no-padding">
+                        <table class="table table-hover table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Specify</th>
+                            <th>Allow</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(action, value) in applicationType.actions">
+                            <td>{{action}}</td>
+                            <td>
+                                <input type="checkbox" ng-if="actionsEdit == true" ng-model="$parent.checkbox[action]" ng-init="$parent.checkbox[action] = appdefined[action]" ng-change="delAction($parent.$parent.$parent.actions, action)">
+                                <input type="checkbox" ng-if="actionsEdit == false" ng-model="$parent.checkbox[action]" ng-init="$parent.checkbox[action] = appdefined[action]" disabled>
+                            </td>
+                            <td>
+                                <div ng-if="checkbox[action] == true && actionsEdit == true" class="dropdown" ng-init="$parent.$parent.$parent.actions[action] = application.actions[action]">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+                                    <span ng-if="$parent.$parent.$parent.actions[action] == false">No</span>
+                                    <span ng-if="$parent.$parent.$parent.actions[action] == true">Yes</span>
+                                    <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li role="presentation" ng-if="$parent.$parent.$parent.actions[action] == false">
+                                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="$parent.$parent.$parent.actions[action] = true">Yes</a>
+                                        </li>
+                                        <li role="presentation" ng-if="$parent.$parent.$parent.actions[action] == true">
+                                            <a style="cursor: pointer;" role="menuitem" tabindex="-1" ng-click="$parent.$parent.$parent.actions[action] = false">No</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div ng-if="checkbox[action] == true && actionsEdit == false">
+                                    <span ng-if="application.actions[action] == false">No</span>
+                                    <span ng-if="application.actions[action] == true">Yes</span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div ng-if="gotApplication == true && getApplicationError == false">
+            <a class="btn btn-default" href="#/security/policies/create?app={{application.name}}" role="button">
+                Add Policy
+            </a>
+            <br />
+            <br />
+            <div ng-if="msgEvent == 'deletePolicy'">
+                <p class="callout callout-success" style="padding: 15px;" ng-if="response.status == 200 && refreshedPol == true">Successfully removed policy "{{deletedPolicy}}"!</p>
+                <p class="callout callout-danger" style="padding: 15px;" ng-if="response.status == 400 || response.status == 500">Error {{response.data.code}}! {{response.data.message}}</p>
+            </div>
+            <div class="box" ng-if="(wrongpars == false && applicationPolicies.result.length > 0) || gotApplicationPolicies == false">
+                <div class="box-body no-padding">
+                    <table class="table table-hover table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Policies</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="policy in applicationPolicies.result">
+                            <td><a ng-href="#/security/policies/details?name={{policy.name}}">{{policy.name}}</a></td>
+                            <td>
+                                <input class="btn btn-default" type="button" value="Delete policy" ng-click="rmPol(policy.name)">
+                                <span ng-if="deleting == true && todelete == policy.name">&nbsp;<i class="fa fa-refresh fa-spin"></i></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="overlay" ng-if="gotApplicationPolicies == false">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
