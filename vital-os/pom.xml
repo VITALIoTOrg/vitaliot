@@ -42,8 +42,6 @@
                     <!--<protocol>https-remoting</protocol>-->
                     <!--<hostname>vital-integration.atosresearch.eu</hostname>-->
                     <!--<port>9994</port>-->
-                    <!--<username>SILO</username>-->
-                    <!--<password>S#gqw.56</password>-->
                 </configuration>
             </plugin>
 
