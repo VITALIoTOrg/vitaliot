@@ -25,7 +25,7 @@ module.exports = {
     // By default, the Node-RED UI accepts connections on all IPv4 interfaces.
     // The following property can be used to listen on a specific interface. For
     // example, the following would only allow connections from the local machine.
-    uiHost: "138.68.48.183",
+    // uiHost: "127.0.0.1",
 
     // Retry time in milliseconds for MQTT connections
     mqttReconnectTime: 15000,
@@ -184,31 +184,28 @@ module.exports = {
     },
 
     security: {
-       // url: "https://46.101.118.167:8443/securitywrapper/rest",
        url: "https://vital-integration.atosresearch.eu:8843/securitywrapper/rest",
-       user: "katerina",
+       user: "development-tools",
        password: "12345678"
     },
 
     dms: {
-       // url: "https://46.101.118.167:8443/vital-core-dms"
        url: "https://vital-integration.atosresearch.eu:8843/vital-core-dms"
     },
 
     discovery: {
-       // url: "https://46.101.118.167:8443/discoverer"
        url: "https://vital-integration.atosresearch.eu:8843/discoverer"
     },
 
     filtering: {
-       url: "https://46.101.118.167:8443/filtering"
+       url: "https://vital-integration.atosresearch.eu:8843/filtering"
     },
 
     orchestration: {
-       url: "https://46.101.118.167:8443/vital-orchestrator-web"
+       url: "https://vital-integration.atosresearch.eu:8843/vital-orchestrator-web"
     },
 
     cep: {
-       url: "https://46.101.118.167:8443/vital-core-cep"
+       url: "https://vital-integration.atosresearch.eu:8843/vital-core-cep"
     }
 }
