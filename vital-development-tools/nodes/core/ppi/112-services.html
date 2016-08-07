@@ -1,0 +1,52 @@
+<script type='text/javascript'>
+    RED.nodes.registerType('services', {
+        category: 'ppi',
+        color: '#FFFFFF',
+        defaults: {
+            ppi: {
+                value: '',
+                type: 'PPI'
+            },
+            serviceId: {
+                value: ''
+            },
+            serviceType: {
+                value: ''
+            },
+            name: {
+                value: ''
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'vital.png',
+        label: function() {
+            return this.name || 'services';
+        }
+    });
+
+</script>
+
+<script type='text/x-red' data-template-name='services'>
+    <div class="form-row">
+        <label for="node-input-ppi"><i class="fa fa-globe"></i> PPI</label>
+        <input type="text" id="node-input-ppi">
+    </div>
+    <div class="form-row">
+        <label for="node-input-serviceId"><i class="fa fa-list"></i> ID</label>
+        <input type="text" id="node-input-serviceId" placeholder="Comma-separated service ID's">
+    </div>
+    <div class="form-row">
+        <label for="node-input-serviceType"><i class="fa fa-list"></i> Type</label>
+        <input type="text" id="node-input-serviceType" placeholder="Comma-separated service types">
+    </div>
+    <hr>
+    <div class='form-row'>
+        <label for='node-input-name'><i class='icon-tag'></i> Name</label>
+        <input type='text' id='node-input-name' placeholder='Name'>
+    </div>
+</script>
+
+<script type='text/x-red' data-help-name='services'>
+    <p>A node that retrieves metadata about the IoT services that an IoT system provides.</p>
+</script>

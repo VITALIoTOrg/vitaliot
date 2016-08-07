@@ -1,0 +1,65 @@
+<script type="text/javascript">
+    RED.nodes.registerType('discover sensors', {
+        category: 'discovery',
+        color: '#FF6A78',
+        defaults: {
+            sensorType: {
+                value: ""
+            },
+            latitude: {
+                value: ""
+            },
+            longitude: {
+                value: ""
+            },
+            radius: {
+                value: ""
+            },
+            observes: {
+                value: ""
+            },
+            name: {
+                value: ""
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "vital.png",
+        label: function() {
+            return this.name || "discover sensors";
+        }
+    });
+
+</script>
+
+<script type="text/x-red" data-template-name="discover sensors">
+    <div class="form-row">
+        <label for="node-input-sensorType"><i class="fa fa-list"></i> Type</label>
+        <input type="text" id="node-input-sensorType" placeholder="Type">
+    </div>
+    <div class="form-row">
+        <label for="node-input-latitude"><i class="fa fa-list"></i> Latitude</label>
+        <input type="text" id="node-input-latitude" placeholder="Latitude">
+    </div>
+    <div class="form-row">
+        <label for="node-input-longitude"><i class="fa fa-list"></i> Longitude</label>
+        <input type="text" id="node-input-longitude" placeholder="Longitude">
+    </div>
+    <div class="form-row">
+        <label for="node-input-radius"><i class="fa fa-list"></i> Radius</label>
+        <input type="text" id="node-input-radius" placeholder="Radius">
+    </div>
+    <div class="form-row">
+        <label for="node-input-observes"><i class="fa fa-list"></i> Observes</label>
+        <input type="text" id="node-input-observes" placeholder="Property">
+    </div>
+    <hr>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="discover sensors">
+    <p>A node that discovers sensors.</p>
+</script>

@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('cepico',{
+        category: 'cep',
+        color: '#D7D7A0',
+        defaults: {
+            name: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "vital.png",
+        label: function() {
+            return this.name || "cepico";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="cepico">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="cepico">
+    <p>A node that creates a new CEP ICO.</p>
+</script>

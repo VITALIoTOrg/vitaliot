@@ -1,0 +1,52 @@
+<script type='text/javascript'>
+    RED.nodes.registerType('sensors', {
+        category: 'ppi',
+        color: '#FFFFFF',
+        defaults: {
+            ppi: {
+                value: '',
+                type: 'PPI'
+            },
+            sensorId: {
+                value: ''
+            },
+            sensorType: {
+                value: ''
+            },
+            name: {
+                value: ''
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'vital.png',
+        label: function() {
+            return this.name || 'sensors';
+        }
+    });
+
+</script>
+
+<script type='text/x-red' data-template-name='sensors'>
+    <div class="form-row">
+        <label for="node-input-ppi"><i class="fa fa-globe"></i> PPI</label>
+        <input type="text" id="node-input-ppi">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sensorId"><i class="fa fa-list"></i> ID</label>
+        <input type="text" id="node-input-sensorId" placeholder="Comma-separated sensor ID's">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sensorType"><i class="fa fa-list"></i> Type</label>
+        <input type="text" id="node-input-sensorType" placeholder="Comma-separated sensor types">
+    </div>
+    <hr>
+    <div class='form-row'>
+        <label for='node-input-name'><i class='icon-tag'></i> Name</label>
+        <input type='text' id='node-input-name' placeholder='Name'>
+    </div>
+</script>
+
+<script type='text/x-red' data-help-name='sensors'>
+    <p>A node that retrieves metadata about the sensors that an IoT system manages.</p>
+</script>

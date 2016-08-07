@@ -1,0 +1,62 @@
+<script type='text/javascript'>
+    RED.nodes.registerType('PPI', {
+        category: 'config',
+        defaults: {
+            url: {
+                value: '',
+                required: true
+            }
+        },
+        label: function() {
+            return this.url || 'PPI';
+        },
+        credentials: {
+            user: {
+                type: 'text'
+            },
+            password: {
+                type: 'password'
+            }
+        },
+        oneditprepare: function() {
+            if (this.credentials.user || this.credentials.has_password) {
+                $('#node-config-input-useAuth').prop('checked', true);
+                $('.node-config-input-useAuth-row').show();
+            } else {
+                $('#node-config-input-useAuth').prop('checked', false);
+                $('.node-config-input-useAuth-row').hide();
+            }
+            $('#node-config-input-useAuth').change(function() {
+                if ($(this).is(':checked')) {
+                    $('.node-config-input-useAuth-row').show();
+                } else {
+                    $('.node-config-input-useAuth-row').hide();
+                    $('#node-config-input-user').val('');
+                    $('#node-config-input-password').val('');
+                }
+            });
+        }
+    });
+
+</script>
+
+<script type='text/x-red' data-template-name='PPI'>
+    <div class='form-row'>
+        <label for='node-config-input-url'><i class='fa fa-globe'></i> URL</label>
+        <input type='text' id='node-config-input-url' placeholder='http://'>
+    </div>
+    <div class='form-row'>
+        <label>&nbsp;</label>
+        <input type='checkbox' id='node-config-input-useAuth' style='display: inline-block; width: auto;
+ vertical-align: top;'>
+        <label for='node-config-input-useAuth' style='width: 70%;'>Use basic authentication ?</label>
+    </div>
+    <div class='form-row node-config-input-useAuth-row'>
+        <label for='node-config-input-user'><i class='fa fa-user'></i> Username</label>
+        <input type='text' id='node-config-input-user'>
+    </div>
+    <div class='form-row node-config-input-useAuth-row'>
+        <label for='node-config-input-password'><i class='fa fa-lock'></i> Password</label>
+        <input type='password' id='node-config-input-password'>
+    </div>
+</script>

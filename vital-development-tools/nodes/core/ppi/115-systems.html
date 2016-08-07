@@ -1,0 +1,30 @@
+<script type='text/javascript'>
+    RED.nodes.registerType('systems', {
+        category: 'ppi',
+        color: '#FFFF66',
+        defaults: {
+            name: {
+                value: ''
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: 'vital.png',
+        label: function() {
+            return this.name || 'systems';
+        }
+    });
+
+</script>
+
+<script type='text/x-red' data-template-name='systems'>
+    <hr>
+    <div class='form-row'>
+        <label for='node-input-name'><i class='icon-tag'></i> Name</label>
+        <input type='text' id='node-input-name' placeholder='Name'>
+    </div>
+</script>
+
+<script type='text/x-red' data-help-name='systems'>
+    <p>A node that retrieves all PPI-enabled systems.</p>
+</script>

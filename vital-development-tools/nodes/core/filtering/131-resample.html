@@ -1,0 +1,26 @@
+<script type="text/javascript">
+    RED.nodes.registerType('resample',{
+        category: 'filtering',
+        color: '#759CA5',
+        defaults: {
+            name: { value: "" }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "vital.png",
+        label: function() {
+            return this.name || "resample";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="resample">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="resample">
+    <p>A node that re-samples data.</p>
+</script>

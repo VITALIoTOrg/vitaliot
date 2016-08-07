@@ -1,0 +1,37 @@
+<script type="text/javascript">
+    RED.nodes.registerType('query sensors', {
+        category: 'data',
+        color: '#EEEEEE',
+        defaults: {
+            query: {
+                value: ""
+            },
+            name: {
+                value: ""
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "vital.png",
+        label: function() {
+            return this.name || "query sensors";
+        }
+    });
+
+</script>
+
+<script type="text/x-red" data-template-name="query sensors">
+    <div class="form-row">
+        <label for="node-input-query"><i class="icon-tag"></i> Query</label>
+        <textarea id="node-input-query" style="width: 70%; height: 100px"></textarea>
+    </div>
+    <hr>
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="query sensors">
+    <p>A node that queries sensors.</p>
+</script>
