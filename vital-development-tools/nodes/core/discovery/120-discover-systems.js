@@ -41,8 +41,12 @@ module.exports = function (RED) {
                 discopts.headers['cookie'] = cookie;
 
                 var data = {
-                    type: msg.type ? msg.type : node.systemType,
-                    serviceArea: msg.serviceArea ? msg.serviceArea : node.serviceArea
+                };
+                if (msg.type || node.systemType) {                
+                    data.type = msg.type ? msg.type : node.systemType;
+                }
+                if (msg.serviceArea || node.serviceArea) {
+                    data.serviceArea = msg.serviceArea ? msg.serviceArea : node.serviceArea;
                 };
                 var discpayload = JSON.stringify(data);
 
