@@ -25,7 +25,7 @@ module.exports = {
     // By default, the Node-RED UI accepts connections on all IPv4 interfaces.
     // The following property can be used to listen on a specific interface. For
     // example, the following would only allow connections from the local machine.
-    uiHost: "46.101.118.167",
+    uiHost: "138.68.48.183",
 
     // Retry time in milliseconds for MQTT connections
     mqttReconnectTime: 15000,
@@ -151,7 +151,6 @@ module.exports = {
     //    context.global.os
 
     functionGlobalContext: {
-        rstats:require('rstats')
         // os:require('os'),
         // octalbonescript:require('octalbonescript'),
         // jfive:require("johnny-five"),
