@@ -44,18 +44,32 @@ module.exports = function (RED) {
                 discopts.headers['cookie'] = cookie;
 
                 var data = {
-                    type: msg.type ? msg.type : node.sensorType,
-                    position: msg.position ? msg.position : {
+                };
+                if (msg.type || node.sensorType) {
+                    data.type = msg.type ? msg.type : node.sensorType;
+                }
+                if (msg.position || (node.latitude && node.longitude && node.radius)) {
+                    data.position = msg.position ? msg.position : {
                         latitude: node.latitude,
                         longitude: node.longitude,
                         radius: node.radius
-                    },
-                    observes: msg.observes ? msg.observes : node.observes,
-                    movementPattern: msg.movementPattern,
-                    connectionStability: msg.connectionStability,
-                    hasLocalizer: msg.hasLocalizer,
-                    timeWindow: msg.timeWindow
-                };
+                    };
+                }
+                if (msg.observes || node.observes) {
+                    data.observes = msg.observes ? msg.observes : node.observes;
+                }
+                if (msg.movementPattern) {
+                    data.movementPattern = msg.movementPattern;
+                }
+                if (msg.connectionStability) {
+                    data.connectionStability = msg.connectionStability;
+                }
+                if (msg.hasLocalizer) {
+                    data.hasLocalizer = msg.hasLocalizer;
+                }
+                if (msg.timeWindow) {
+                    data.timeWindow = msg.timeWindow;
+                }
                 var discpayload = JSON.stringify(data);
 
                 var discreq = ((/^https/.test(discurl)) ? https : http).request(discopts, function (discres) {
