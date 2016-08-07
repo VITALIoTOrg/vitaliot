@@ -6,9 +6,9 @@ VITAL is an ambitious R&D programme to develop a prototype application platform 
 vital-iot
 ================
 
-- Author: Vital
-- Summary: This is the Vital Integrated Platform
-- Target Project: Vital (<http://vital-iot.eu/>)
+- Author: VITAL
+- Summary: This is the VITAL Integrated Platform
+- Target Project: VITAL (<http://vital-iot.eu/>)
 - Source: <http://gitlab.atosresearch.eu/vital-iot/vital-iot.git>
 
 System requirements
@@ -53,8 +53,8 @@ Start WildFly
 2. Open a command line and navigate to the root of the Wildfly server directory.
 3. The following shows the command line to start the server with the web profile:
 
-        For Linux:   WILDFLY_HOME/bin/standalone.sh -c standalone-vital.xml
-        For Windows: WILDFLY_HOME\bin\standalone.bat -c standalone-vital.xml
+        For Linux:   $WILDFLY_HOME/bin/standalone.sh -c standalone-vital.xml
+        For Windows: %WILDFLY_HOME%\bin\standalone.bat -c standalone-vital.xml
 
 Build and Deploy the Vital Platform
 ----------------------------------------
