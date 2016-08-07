@@ -41,9 +41,13 @@ module.exports = function (RED) {
                 discopts.headers['cookie'] = cookie;
 
                 var data = {
-                    type: msg.type ? msg.type : node.serviceType,
-                    system: msg.system ? msg.type : node.system
                 };
+                if (msg.type || node.serviceType) {
+                    data.type = msg.type ? msg.type : node.serviceType;
+                }
+                if (msg.system || node.system) {
+                    data.system = msg.system ? msg.system : node.system
+                }
                 var discpayload = JSON.stringify(data);
 
                 var discreq = ((/^https/.test(discurl)) ? https : http).request(discopts, function (discres) {
