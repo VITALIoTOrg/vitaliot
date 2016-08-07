@@ -56,7 +56,7 @@ Start WildFly
         For Linux:   $WILDFLY_HOME/bin/standalone.sh -c standalone-vital.xml
         For Windows: %WILDFLY_HOME%\bin\standalone.bat -c standalone-vital.xml
 
-Build and Deploy the Vital Platform
+Build and Deploy the VITAL Platform
 ----------------------------------------
 
 1. Checkout the code from the repository:
@@ -73,7 +73,7 @@ Build and Deploy the Vital Platform
 
         mvn clean package wildfly:deploy
 
-5. This will deploy all vital components to the running instance of the server.
+5. This will deploy all VITAL components to the running instance of the server.
 
 Access the application
 ---------------------
@@ -81,7 +81,7 @@ Access the application
 Access the Management Platform at the following URL: <http://localhost:8080/vital-management-ui>
 Access the Orchestrator at the following URL: <http://localhost:8080/vital-orchestrator>
 
-Undeploy the Vital Platform
+Undeploy the VITAL Platform
 --------------------------------
 
 1. Make sure you have started the JBoss Server as described above.
