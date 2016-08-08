@@ -52,7 +52,7 @@ module.exports = function (RED) {
                     data.position = msg.position ? msg.position : {
                         latitude: node.latitude,
                         longitude: node.longitude,
-                        radius: node.radius
+                        radius: parseInt(node.radius)
                     };
                 }
                 if (msg.observes || node.observes) {
