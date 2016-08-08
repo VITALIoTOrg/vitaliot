@@ -3,7 +3,21 @@
         category: 'filtering',
         color: '#759CA5',
         defaults: {
-            name: { value: "" }
+            ico: {
+                value: ""
+            },
+            observationProperty: {
+                value: ""
+            },
+            timeValue: {
+                value: ""
+            },
+            timeUnit: {
+                value: ""
+            },
+            name: {
+                value: ""
+            }
         },
         inputs: 1,
         outputs: 1,
@@ -15,6 +29,26 @@
 </script>
 
 <script type="text/x-red" data-template-name="resample">
+    <div class="form-row">
+        <label for="node-input-ico"><i class="fa fa-list"></i> Sensor</label>
+        <input type="text" id="node-input-ico" placeholder="Sensor">
+    </div>
+    <div class="form-row">
+        <label for="node-input-observationProperty"><i class="fa fa-list"></i> Property</label>
+        <input type="text" id="node-input-observationProperty" placeholder="Property">
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeValue"><i class="fa fa-list"></i> Time Interval</label>
+        <input type="text" id="node-input-timeValue" placeholder="Value">
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeUnit"><i class="fa fa-list"></i> Time Unit</label>
+        <select id="node-input-timeUnit">
+            <option value="minute">Minute</option>
+            <option value="hour">Hour</option>
+            <option value="day">Day</option>
+        </select>
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
