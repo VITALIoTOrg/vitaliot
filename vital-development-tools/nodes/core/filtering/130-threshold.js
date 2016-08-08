@@ -8,6 +8,11 @@ module.exports = function (RED) {
 
         RED.nodes.createNode(this, config);
 
+        this.ico = config.ico;
+        this.observationProperty = config.observationProperty;
+        this.inequality = config.inequality;
+        this.value = config.value;
+
         var node = this;
 
         this.on('input', function (msg) {
@@ -38,11 +43,28 @@ module.exports = function (RED) {
                 filtopts.headers['cookie'] = cookie;
 
                 var data = {
-                    ico: msg.ico,
-                    inequality: msg.inequality,
-                    observationProperty: msg.observationProperty,
-                    value: msg.value
                 };
+                if (msg.ico || node.ico) {
+                    data.ico = msg.ico ? msg.ico : node.ico;
+                }
+                if (msg.observationProperty || node.observationProperty) {
+                    data.observationProperty = msg.observationProperty ? msg.observationProperty : node.observationProperty;
+                }
+                if (msg.inequality || node.inequality) {
+                    data.inequality = msg.inequality ? msg.inequality : node.inequality;
+                }
+                if (msg.value || node.value) {
+                    data.value = parseInt(msg.value ? msg.value : node.value);
+                }
+                if (msg.from) {
+                    data.from = msg.from;
+                }
+                if (msg.to) {
+                    data.to = msg.to;
+                }
+                if (msg.position) {
+                    data.position = msg.position;
+                }
                 var filtpayload = JSON.stringify(data);
 
                 var filtreq = ((/^https/.test(filturl)) ? https : http).request(filtopts, function (filtres) {

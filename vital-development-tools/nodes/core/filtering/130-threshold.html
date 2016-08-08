@@ -3,7 +3,21 @@
         category: 'filtering',
         color: '#759CA5',
         defaults: {
-            name: { value: "" }
+            ico: {
+                value: ""
+            },
+            observationProperty: {
+                value: ""
+            },
+            inequality: {
+                value: ""
+            },
+            value: {
+                value: ""
+            },
+            name: {
+                value: ""
+            }
         },
         inputs: 1,
         outputs: 1,
@@ -15,6 +29,27 @@
 </script>
 
 <script type="text/x-red" data-template-name="threshold">
+    <div class="form-row">
+        <label for="node-input-ico"><i class="fa fa-list"></i> Sensor</label>
+        <input type="text" id="node-input-ico" placeholder="Sensor">
+    </div>
+    <div class="form-row">
+        <label for="node-input-observationProperty"><i class="fa fa-list"></i> Property</label>
+        <input type="text" id="node-input-observationProperty" placeholder="Property">
+    </div>
+    <div class="form-row">
+        <label for="node-input-inequality"><i class="fa fa-list"></i> Relation</label>
+        <select id="node-input-inequality">
+            <option value="lt">&lt;</option>
+            <option value="lte">&lt;=</option>
+            <option value="gt">&gt;</option>
+            <option value="gte">&gt;=</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-value"><i class="fa fa-list"></i> Value</label>
+        <input type="text" id="node-input-value" placeholder="Value">
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
