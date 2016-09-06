@@ -2,6 +2,11 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
+	<entry key="DMS_ENDPOINT_ADDRESS">http://vital-integration.atosresearch.eu:8280/vital-core-dms</entry>
+<!-- 	<entry key="DMS_ENDPOINT_ADDRESS">https\://vitalsp.cloud.reply.eu/vital/vital-core-dms</entry> -->
+	<entry key="FILTERING_ENDPOINT_ADDRESS">http\://vital-integration.atosresearch.eu/vital-core-filtering</entry>
+	<entry key="FILTERING_ENDPOINT_PORT">8180</entry>
+
 	<!-- How to access the Filtering -->
 	<entry key="vital-core-filtering.dms">https://vitalsp.cloud.reply.eu/vital/vital-core-dms</entry>
 	<entry key="vital-core-filtering.endpoint-address">http\://vital-integration.atosresearch.eu/vital-core-filtering</entry>

@@ -18,7 +18,7 @@ public abstract class FilteringQuery {
 	protected FilteringProperties properties;
 	protected String cookie;
 	protected String DMS_ADDRESS, DMS_PORT;
-	
+
 	public FilteringQuery() {
 
 		//this.properties=new FilteringProperties();
@@ -32,13 +32,13 @@ public abstract class FilteringQuery {
 		inputJSON=null;
 
 	}
-	
+
 	public void SetCookie(String cookie){
 		this.cookie=cookie;
 	}
-	
+
 	public abstract void setInputJSON(JSONObject inputJSON);
-	
+
 	public abstract void executeQuery();
 	//returns a linked list containing json objects to return as response of the wen service
 	public LinkedList<JSONObject> getQueryResult(){

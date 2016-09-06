@@ -46,7 +46,7 @@ public class DMSManager {
 		SENSOR("/querySensor"),
 		OBSERVATION("/queryObservation");
 
-		private final String address;       
+		private final String address;
 
 		private DMS_Index(String s) {
 			address = s;
@@ -67,84 +67,84 @@ public class DMSManager {
 	}
 
 	public LinkedList<JSONObject> getObservationsById(String id, String ObservationProperty, Date from, Date to, INEQUALITY_TYPE inequality, double value){
-		
-		
+
+
 	JSONObject and_root=new JSONObject();
 	JSONArray mainArray=new JSONArray();
-	
+
 	JSONObject IDObject = new JSONObject();
 	JSONArray arrayId = new JSONArray();
 	JSONObject ValueIDObject = new JSONObject();
 	ValueIDObject.put("@value", id);
 	arrayId.add(ValueIDObject);
 	IDObject.put(OBSERVED_BY, arrayId);
-	
+
 	mainArray.add(IDObject);
-	
+
 	JSONObject PropertyObject = new JSONObject();
 	JSONArray arrayPropertyId = new JSONArray();
 	JSONObject ValuePropertyObject = new JSONObject();
 	JSONArray arrayValue = new JSONArray();
-	
+
 	arrayValue.add(ObservationProperty);
 	ValuePropertyObject.put("@type", arrayValue);
-	
+
 	arrayPropertyId.add(ValuePropertyObject);
 	PropertyObject.put(OBSERVATION_PROPERTY, arrayPropertyId);
-		
+
 	mainArray.add(PropertyObject);
-	
+
 	String finalTimeInterval = null;
-	
+
 	if(from !=null && to!=null){
 		String TimeInterval = "{\"$gt\":\" "+formatter.format(from)+"\",\"$lt\": \""+formatter.format(to)+"\"}";
-			
+
 		JSONObject cleaned = (JSONObject) JSONValue.parse(TimeInterval);
-		
+
 		JSONObject TimeIntervalObject = new JSONObject();
 		TimeIntervalObject.put("@value", cleaned);
-				
+
 		JSONObject MatchTimeInterval = new JSONObject();
 		MatchTimeInterval.put("$elemMatch", TimeIntervalObject);
-								
+
 		JSONObject XSDTimeObject = new JSONObject();
 		XSDTimeObject.put(TIME, MatchTimeInterval);
-		
+
 		JSONObject MatchXSDTimeObject = new JSONObject();
 		MatchXSDTimeObject.put("$elemMatch", XSDTimeObject);
-		
+
 		JSONObject TimeObject = new JSONObject();
 		TimeObject.put(KEY_TIME, MatchXSDTimeObject);
-		
+
 		finalTimeInterval = TimeObject.toJSONString();
 		//mainArray.add(TimeObject);
-		
+
 	}
 	String ValueMeasurement = "{\"$"+inequality+"\":"+value +"}";
 	JSONObject cleanedValue = (JSONObject) JSONValue.parse(ValueMeasurement);
 
 	JSONObject valueObject = new JSONObject();
 	valueObject.put("@value", cleanedValue);
-	
+
 	JSONObject MatchvalueObject = new JSONObject();
 	MatchvalueObject.put("$elemMatch", valueObject);
-	
+
 	JSONObject ValueMeasured = new JSONObject();
 	ValueMeasured.put(VALUE, MatchvalueObject);
-	
+
 	JSONObject MatchHasValue = new JSONObject();
 	MatchHasValue.put("$elemMatch", ValueMeasured);
-	
+
 	JSONObject HasValue = new JSONObject();
 	HasValue.put(HAS_VALUE, MatchHasValue);
-	
+
 	JSONObject MatchObservationResult = new JSONObject();
 	MatchObservationResult.put("$elemMatch", HasValue);
-	
+
 	JSONObject ObservationResult = new JSONObject();
 	ObservationResult.put(OBSERVATION_RESULT, MatchObservationResult);
-	
-	
+
+
 	String finalQuery = IDObject.toJSONString()+PropertyObject.toJSONString()+finalTimeInterval+ObservationResult.toJSONString();
 
 	logger.debug("query Sent: "+finalQuery);
@@ -301,7 +301,7 @@ public class DMSManager {
 			DataOutputStream wr=new DataOutputStream(connectionDMS.getOutputStream());
 			wr.write(postObjectByte);
 			wr.flush();
-			int HttpResult = connectionDMS.getResponseCode(); 
+			int HttpResult = connectionDMS.getResponseCode();
 			if(HttpResult == HttpURLConnection.HTTP_OK){
 				JSONParser parser=new JSONParser();
 				JSONArray array=(JSONArray) parser.parse(new InputStreamReader(connectionDMS.getInputStream(),"utf-8"));
@@ -322,14 +322,14 @@ public class DMSManager {
 
 			}else{
 				return new LinkedList<JSONObject>();
-			}  
+			}
 		}
 		catch(Exception e){
 			logger.error(e.toString());
 			throw new ConnectionErrorException("Error in connection with DMS");
 		}finally{
 			if(connectionDMS != null) {
-				connectionDMS.disconnect(); 
+				connectionDMS.disconnect();
 			}
 		}
 	}

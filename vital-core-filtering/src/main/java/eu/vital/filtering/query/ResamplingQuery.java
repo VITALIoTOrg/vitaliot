@@ -28,18 +28,18 @@ import eu.vital.filtering.util.FilteringProperties;
 
 
 public class ResamplingQuery extends FilteringQuery {
-	
+
 	final static Logger logger=Logger.getLogger(ResamplingQuery.class);
 	private Resampling_JSON_Object inputObject;
-	
-	private final String OBSERVED_BY_RESULT=properties.getProperty(FilteringProperties.FILTERING_ENDPOINT_ADDRESS)+":"+properties.getProperty(FilteringProperties.FILTERING_ENDPOINT_PORT)+"/filtering";
+	FilteringProperties props = new FilteringProperties();
+	private final String OBSERVED_BY_RESULT=props.getProperty(FilteringProperties.FILTERING_ENDPOINT_ADDRESS)+":"+props.getProperty(FilteringProperties.FILTERING_ENDPOINT_PORT)+"/filtering";
 
 	@Override
 	public void setInputJSON(JSONObject inputJSON) {
 
 		ObjectMapper mapper=new ObjectMapper();
 		if(inputJSON!=null){
-		
+
 			try {
 				inputObject=mapper.readValue(inputJSON.toJSONString(), Resampling_JSON_Object.class);
 			} catch (JsonParseException e) {
@@ -47,7 +47,7 @@ public class ResamplingQuery extends FilteringQuery {
 				throw new WrongInputException("Wrong JSON object format");
 			} catch (JsonMappingException e) {
 				logger.error("Error mapping input JSON object",e);
-				throw new WrongInputException("Wrong JSON object format");				
+				throw new WrongInputException("Wrong JSON object format");
 			} catch (IOException e) {
 				logger.error("IO Error on input JSON object",e);
 				throw new WrongInputException("Wrong JSON object format");
@@ -55,7 +55,7 @@ public class ResamplingQuery extends FilteringQuery {
 				logger.error("Exception in JSON to POJO convertion", e);
 				throw new WrongInputException("Wrong JSON object format");
 			}
-		
+
 		inputObject.setIncludedKeys(inputJSON);
 		this.inputJSON=inputJSON;
 		}
@@ -66,9 +66,9 @@ public class ResamplingQuery extends FilteringQuery {
 
 	@Override
 	public void executeQuery() {
-		
+
 		DMSManager manager=new DMSManager(DMS_Index.OBSERVATION, cookie);
-		
+
 		try {
 			LinkedList<JSONObject> result=manager.getObservationsInTimeRange(this.inputObject.getIco(),this.inputObject.getObservationProperty(), this.inputObject.getFrom(), this.inputObject.getTo());
 			if(result.size()>0){
@@ -77,7 +77,7 @@ public class ResamplingQuery extends FilteringQuery {
 			DateFormat formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 			SplineInterpolator interpolator=new SplineInterpolator();
 			PolynomialSplineFunction function=interpolator.interpolate(data[0], data[1]);
-			
+
 			// compute number of samples
 			long samplingInterval=samplingIntervalToMillisecond(this.inputObject.getTimeValue(),this.inputObject.getTimeUnit());
 			long samplesNumber=samplesNumber(this.inputObject.getFrom(), this.inputObject.getTo(), samplingInterval);
@@ -85,11 +85,11 @@ public class ResamplingQuery extends FilteringQuery {
 			Date start=this.inputObject.getFrom();
 			JSONObject baseResult=result.getFirst();
 			JSONParser parser=new JSONParser();
-			
+
 			for(long i=0;i<samplesNumber;i++){
 				JSONObject newSample=(JSONObject)parser.parse(baseResult.toJSONString());
 				Date newSampleTime=addTime(start, inputObject.getTimeValue(), inputObject.getTimeUnit());
-				
+
 				double newSamplingInstant=i*samplingIntervalToMillisecond(inputObject.getTimeValue(), inputObject.getTimeUnit());
 				if(function.isValidPoint(newSamplingInstant)){
 					double newSampleValue=function.value(newSamplingInstant);
@@ -102,19 +102,19 @@ public class ResamplingQuery extends FilteringQuery {
 					oldValue.replace("value", Math.round(newSampleValue));
 					logger.debug("Current resampling instant: "+i*samplingIntervalToMillisecond(inputObject.getTimeValue(), inputObject.getTimeUnit()));
 					this.result_in_JSON.addLast(newSample);
-					
+
 				}
-				
-				start=addTime(start, inputObject.getTimeValue(), inputObject.getTimeUnit());			
-				
+
+				start=addTime(start, inputObject.getTimeValue(), inputObject.getTimeUnit());
+
 			} //for
-			
+
 		}// if
 
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -132,9 +132,9 @@ public class ResamplingQuery extends FilteringQuery {
 		}
 	}
 
-	
+
 	private Date addTime(Date start, int amount, TIME_UNIT unit){
-		Calendar cal = Calendar.getInstance(); 
+		Calendar cal = Calendar.getInstance();
 	    cal.setTime(start);
 	    switch(unit){
 	    case second:
@@ -150,30 +150,30 @@ public class ResamplingQuery extends FilteringQuery {
 	    	cal.add(Calendar.DAY_OF_YEAR, amount);
 	    	break;
 	    }
-	    
+
 	   return cal.getTime();
 	}
-	
+
 	private void rebaseTime(double[][] data){
 		double base_time=data[0][0];
 		for(int i=0;i<data[0].length;i++){
 			data[0][i]=data[0][i]-base_time;
-			
+
 		}
-		
-		
+
+
 	}
-	
+
 
 	private double[][] extractData(LinkedList<JSONObject> observations) {
 		//raw[0] time
 		//raw[1] value
-		
+
 		DateFormat formatter=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 		double[][] raw=new double[2][observations.size()];
 		int i=0;
 		for(JSONObject current:observations){
-			
+
 			//Rertieve Value
 			if(current.containsKey("ssn:observationResult")){
 				Map observationResult=(Map)current.get("ssn:observationResult");
@@ -184,7 +184,7 @@ public class ResamplingQuery extends FilteringQuery {
 					}
 				}
 			}
-			
+
 			//Retrieve Time
 			if(current.containsKey("ssn:observationResultTime")){
 				Map observationResultTime=(Map)current.get("ssn:observationResultTime");
@@ -196,23 +196,23 @@ public class ResamplingQuery extends FilteringQuery {
 					} catch (java.text.ParseException e) {
 						e.printStackTrace();
 					}
-					
+
 				}
 			}
-			
+
 			i++;
 		}
-		
+
 		return raw;
 	}
-	
+
 	private long samplesNumber(Date from, Date to, long samplingInterval){
-		
+
 		long timeWindow=to.getTime()-from.getTime();
 		long samples=Math.floorDiv(timeWindow, samplingInterval);
 		return samples;
 	}
-	
+
 	private long samplingIntervalToMillisecond(int timeValue, TIME_UNIT timeUnit){
 		long toMillisecond=0;
 		switch(timeUnit){
@@ -229,12 +229,12 @@ public class ResamplingQuery extends FilteringQuery {
 			toMillisecond=24*60*60*1000;
 			break;
 		default:
-				
+
 		}
-		
+
 		long interval=timeValue*toMillisecond;
 		return interval;
 	}
-	
-	
+
+
 }
