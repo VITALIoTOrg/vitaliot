@@ -51,15 +51,16 @@ Follow installation instructions of Git, Java, Maven and WildFly.
 
         git clone http://gitlab.atosresearch.eu/ari/vital-core-security-adapter.git
 
-2. Open file **_src/main/resources/config.properties_** and set the values defined there to match the locations of OpenAM and the proxy running the Policy Agent. For example:
+2. Open file **_WILDFLY_HOME/standalone/configuration/standalone.xml_** and perform the following changes:
 
       ```
-      IDP_HOST=vitalopenam.com
-      PROXY_HOST=vitalproxy.com
-      IDP_PORT=443
-      PROXY_PORT=443
-      AUTH_TOKEN=vitalAccessToken
-      TEST_TOKEN=vitalTestToken
+        <entry key="vital-core-security-adapter.idp-host">local.vital-iot-test.com</entry>
+        <entry key="vital-core-security-adapter.idp-path">/openam</entry>
+        <entry key="vital-core-security-adapter.idp-port">8453</entry>
+        <entry key="vital-core-security-adapter.proxy-host">local.vital-iot-test.com</entry>
+        <entry key="vital-core-security-adapter.proxy-port">443</entry>
+        <entry key="vital-core-security-adapter.sso-token">vitalAccessToken</entry>
+        <entry key="vital-core-security-adapter.alt-token">vitalTestToken</entry>
       ```
 
 3. Open a command line and navigate to the root directory of the project.

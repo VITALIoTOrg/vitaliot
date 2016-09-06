@@ -24,7 +24,38 @@ Steps
       127.0.1.1       local.vital-iot-test.com <anything>
       ```
 
-* Install OpenJDK 8. For Ubuntu 14.04:
+* Generate of Test Certificates and Test Keystore with these commands:
+    
+    * sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout vital-test.key -out vital-test.crt
+    * sudo openssl pkcs12 -export -name vital -in vital-test.crt -inkey vital-test.key -out keystore.p12
+    * sudo keytool -importkeystore -destkeystore vital-test.jks -srckeystore keystore.p12 -srcstoretype pkcs12 -alias vital
+
+* ONLY UNDER PROXY
+    
+    * Set proxy settings on your system
+
+    * Set proxy exception rules for all FQDN
+
+    * Set npm proxy:
+
+        ```
+        npm config set proxy http/https http://your.proxy.com:your_port
+        ```
+
+    * Set git proxy and rule:
+
+        ```
+        git config --global url."https://".insteadOf git://
+        git config --global http/s.proxy http://your.proxy.com:your_port
+        ```
+
+    * Add JAVA_OPTS proxy settings:
+
+        ```
+        -Dhttp.proxyHost=your.proxy.com -Dhttp.proxyPort=your_port -Dhttps.proxyHost=your.proxy.com -Dhttps.proxyPort=your_port   
+        ```
+
+* Install OpenJDK 8. For Ubuntu 16.04:
 
       ```
       sudo add-apt-repository ppa:openjdk-r/ppa
@@ -87,6 +118,12 @@ Steps
       ```
 
 * Install Apache Tomcat 8
+    
+  * Download and install Tomcat with:
+    ```
+    apt-get install tomcat8
+    ```
+
   * Add admin user (in file "conf/tomcat-users.xml")
 
         ```xml
@@ -96,8 +133,27 @@ Steps
   * Activate and configure HTTPS connector ("conf/server.xml", an example file is provided)
 
         ```xml
-        <Connector port="8443" protocol="HTTP/1.1" maxThreads="150" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" URIEncoding="UTF-8" keystoreFile="/opt/tomcat/conf/vital-test.jks" keystorePass="password" />
+        <Connector port="8453" protocol="HTTP/1.1" maxThreads="150" SSLEnabled="true" scheme="https" secure="true" clientAuth="false" sslProtocol="TLS" URIEncoding="UTF-8" keystoreFile="/your/tomcat/installation/path/conf/vital-test.jks" keystorePass="password" />
         ```
+        
+  * Define AJP Connector ("conf/server.xml", an example file is provided)
+    
+        ```
+        <!-- Define an AJP 1.3 Connector on port 8009 -->
+        <Connector port="8009" protocol="AJP/1.3" redirectPort="8453" />
+        ```
+
+  * Define a port redirection Connector:
+
+        ```
+        <Connector port="8090" protocol="HTTP/1.1"
+            connectionTimeout="20000"
+            redirectPort="8453" />
+        ```
+
+  * Replace the name parameter inside the Host section with your FQDN
+
+  * Replace defaultHost parameter inside the Engine section with your FQDN
 
 * For testing local installation a certificate is provided to be used with Tomcat, WildFly and Apache. To add the self-signed certificate to your java trust store run:
 
@@ -108,6 +164,8 @@ Steps
 
 * Copy the OpenAM ".war" package to Tomcat to deploy it
 
+* Rename the OpenAm ".war" as vital-openam.war
+
 * Configure OpenAM from the web interface
   * Go to "https://local.vital-iot-test.com:8453/vital-openam"
   * Choose "Create New Configuration"
@@ -115,6 +173,7 @@ Steps
     * Port 1389
     * Root suffix: dc=vital-iot-test,dc=com
     * No SSL/TLS unless it was set up during OpenDJ configuration
+    * No load balancing
     * Agent password must be different: "agentpassword" for example
 
 * After the initial configuration enter the OpenAM console:
@@ -155,7 +214,8 @@ Steps
   * Insert URLs and name used while creating the profile
   * Provide the installer with the "/tmp/pwd.txt" password file
   * Restart apache2
-  * Enable cookie security for the agent in OpenAM console
+  * Enable cookie security for the agent in OpenAM Web Agent SSO section
+  * Change cookie name value to "vitalAccessToken" for the agent in OpenAm Web Agent SSO section
 
 * Create group "administrators", create a user and make it part of the group
 
@@ -168,4 +228,10 @@ Steps
 * From the OpenAM console go into "OpenAM services" section of the agent profile and set the OpenAM Login URL to "https://local.vital-iot-test.com:8443/securitywrapper/rest/unauthorized"
 
 * Perform any other needed configuration either from the OpenAM console or using the VITAL management application
+
+* It's very important to add a policy for every module that Vital provides, otherwise the content won't be available and will give a 403 error.
+    
+    ```
+      https://localhost:8443/vital-management-web/*
+    ```
 
