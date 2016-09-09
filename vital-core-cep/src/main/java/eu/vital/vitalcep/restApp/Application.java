@@ -1,15 +1,17 @@
 package eu.vital.vitalcep.restApp;
 
-import eu.vital.vitalcep.collector.Collector;
-import eu.vital.vitalcep.restApp.cepRESTApi.CEPICO;
-import eu.vital.vitalcep.restApp.filteringApi.ContinuosFiltering;
-import eu.vital.vitalcep.restApp.filteringApi.StaticFiltering;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.ws.rs.ApplicationPath;
+
+import eu.vital.TrustManager.restApp.TRUSTMANAGER;
+import eu.vital.vitalcep.collector.Collector;
+import eu.vital.vitalcep.restApp.cepRESTApi.CEPICO;
+import eu.vital.vitalcep.restApp.filteringApi.ContinuosFiltering;
+import eu.vital.vitalcep.restApp.filteringApi.StaticFiltering;
 
 /**
  * The JAX-RS application.
@@ -35,6 +37,7 @@ public class Application extends javax.ws.rs.core.Application {
         this.singletons.add(new eu.vital.vitalcep.restApp.vuaippi.Observation());
         this.singletons.add(new ContinuosFiltering());
         this.singletons.add(new CEPICO());
+        this.singletons.add(new TRUSTMANAGER());
    
     }
  

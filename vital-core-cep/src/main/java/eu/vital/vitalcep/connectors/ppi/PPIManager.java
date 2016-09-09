@@ -14,7 +14,9 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
+
 import javax.ws.rs.core.Cookie;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -35,6 +37,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -66,7 +69,7 @@ public class PPIManager {
         }
 
         return resp;
-}
+    }
   
     public JSONArray getSystems(String ppi_endpoint,String body) throws IOException,
             UnsupportedEncodingException, KeyManagementException, 
@@ -113,6 +116,42 @@ public class PPIManager {
 
         return new JSONArray(response);
     }
+    
+    
+    public JSONArray GetSupportedPerformanceMetrics (String ppi_endpoint,String body) throws IOException,
+    UnsupportedEncodingException, KeyManagementException,
+    NoSuchAlgorithmException, KeyStoreException{
+
+    	String sbody = body;
+    	String ppi_url = ppi_endpoint+"/system/performance";//  /GetSupportedPerformanceMetrics ";
+    	String response = query(ppi_url,sbody,"GET");
+
+    	if ((response !=null)&&(!response.isEmpty())){
+    		JSONObject jobj = new JSONObject (response);
+    		return new JSONArray(jobj.get("metrics").toString());//response);
+    	}
+    	else
+    		return null;
+    }
+
+
+    public JSONArray GetPerformanceMetrics (String ppi_endpoint,String body) throws IOException,
+    UnsupportedEncodingException, KeyManagementException,
+    NoSuchAlgorithmException, KeyStoreException{
+
+    	String sbody = body;
+    	String ppi_url = ppi_endpoint+"/system/performance";//  /GetSupportedPerformanceMetrics ";
+    	String response = query(ppi_url,sbody,"POST");
+
+    	if ((response !=null)&&(!response.isEmpty())){
+    		JSONArray jobj = new JSONArray (response);
+    		return jobj;//new JSONArray(jobj.get("metrics").toString());//response);
+    	}
+    	else
+    		return null;
+    }
+
+    
     
     private String query(String ppi_endpoint, String body, String method) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException{
         Cookie ck;

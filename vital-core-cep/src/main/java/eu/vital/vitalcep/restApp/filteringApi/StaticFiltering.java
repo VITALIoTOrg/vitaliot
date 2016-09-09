@@ -5,6 +5,8 @@
  */
 package eu.vital.vitalcep.restApp.filteringApi;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.Block;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import eu.vital.vitalcep.connectors.mqtt.TMessageProc;
 import eu.vital.vitalcep.entities.dolceHandler.DolceSpecification;
@@ -36,6 +38,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
@@ -223,7 +226,7 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                 String sal =simpleEventAL.toString();
 /////////////////////////////////////////////////////////////////////////////
                 // SENDING TO MOSQUITTO
-                oMqtt.sendMsg(MsgProcc, clientName, simpleEventAL,mqin,mqout);                          
+                oMqtt.sendMsg(MsgProcc, clientName, simpleEventAL,mqin,mqout,false);                          
 
 /////////////////////////////////////////////////////////////////////////////
                 //RECEIVING FROM MOSQUITO               
@@ -286,7 +289,8 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                     java.util.logging.Logger.getLogger(MessageProcessor_publisher
                             .class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
+                //cepProcess.
+            try{     
                 CepContainer.deleteCepProcess(cepProcess.PID);
                 
                 if (!cepProcess.cepDispose()){
@@ -294,7 +298,10 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
                            (StaticFiltering.class.getName())
                                    .log(Level.SEVERE, "couldn't terminate ucep" );
                 }
-                
+            }catch(Exception e){
+                 java.util.logging.Logger.getLogger(StaticFiltering
+                            .class.getName()).log(Level.SEVERE, null, e);
+            }    
                 db = null;
                 if (mongo!= null){
                 	mongo.close();
@@ -389,6 +396,281 @@ public Response filterstaticdata(String info,@Context HttpServletRequest req)
         return dbObject;
     }
  
+   /**
+     * Gets the filters.
+     *
+     * @return the filters
+     */
+    @GET
+    @Path("getstaticdatafilters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response  getStaticDataFilters(@Context HttpServletRequest req) {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
+            MongoDatabase db = mongo.getDatabase(mongoDB);
+            
+            try {
+               db.getCollection("staticdatafilters");
+            } catch (Exception e) {
+              //System.out.println("Mongo is down");
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
+              return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+                    
+            }
+
+        // create an empty query
+        BasicDBObject query = new BasicDBObject(); 
+        BasicDBObject fields = new BasicDBObject().append("_id",false);
+        fields.append("dolceSpecification", false);
+        
+        FindIterable<Document> coll = db.getCollection("staticdatafilters")
+                .find(query).projection(fields);
+                
+        final JSONArray AllJson = new JSONArray();
+        
+        coll.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                 String aux = document.toJson();
+                JSONObject sensoraux = new JSONObject(aux);  
+                AllJson.put(sensoraux);
+            }
+        });
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
+        return Response.status(Response
+                                .Status.OK).entity(AllJson.toString()).build();
+
+    }
+    
+    /**
+     * Gets the filters.
+     *
+     * @return the filters
+     */
+    @GET
+    @Path("getstaticqueryfilters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response  getStaticQueryFilters(@Context HttpServletRequest req) {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
+            MongoDatabase db = mongo.getDatabase(mongoDB);
+            
+            try {
+               db.getCollection("staticqueryfilters");
+            } catch (Exception e) {
+              //System.out.println("Mongo is down");
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
+              return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+                    
+            }
+
+        // create an empty query
+        BasicDBObject query = new BasicDBObject(); 
+        BasicDBObject fields = new BasicDBObject().append("_id",false);
+        fields.append("dolceSpecification", false);
+        
+        FindIterable<Document> coll = db.getCollection("staticqueryfilters")
+                .find(query).projection(fields);
+                
+        final JSONArray AllJson = new JSONArray();
+        
+        coll.forEach(new Block<Document>() {
+            @Override
+            public void apply(final Document document) {
+                 String aux = document.toJson();
+                JSONObject sensoraux = new JSONObject(aux);  
+                AllJson.put(sensoraux);
+            }
+        });
+        db = null;
+        if (mongo!= null){
+        	mongo.close();
+        	mongo= null;
+        }
+        return Response.status(Response
+                                .Status.OK).entity(AllJson.toString()).build();
+
+    }
+    
+     /**
+     * Gets a filter.
+     *
+     * @param filterId
+     * @param req
+     * @return the filter 
+     */
+    @POST
+    @Path("getstaticdatafilter")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getstaticdatafilter(String filterId,
+            @Context HttpServletRequest req) {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        JSONObject jo = new JSONObject(filterId);
+        String idjo = jo.getString("id");
+             
+       MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
+            MongoDatabase db = mongo.getDatabase(mongoDB);
+            
+            try {
+               db.getCollection("staticdatafilters");
+            } catch (Exception e) {
+              //System.out.println("Mongo is down");
+            	db = null;
+                if (mongo!= null){
+                	mongo.close();
+                	mongo= null;
+                }
+              return Response.status(Response
+                                .Status.INTERNAL_SERVER_ERROR).build();
+            }
+        
+        BasicDBObject searchById = new BasicDBObject("id",idjo);
+        String found;
+        BasicDBObject fields = new BasicDBObject().append("_id",false)
+                .append("cepinstance",false);
+
+       FindIterable<Document> coll = db.getCollection("staticdatafilters")
+                .find(searchById).projection(fields);
+      
+        try {
+            found = coll.first().toJson();
+             db = null;
+            if (mongo!= null){
+             mongo.close();
+             mongo= null;
+            }
+        }catch(Exception e){
+             db = null;
+                if (mongo!= null){
+                 mongo.close();
+                 mongo= null;
+                }
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        
+        if (found == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }else{
+            return Response.status(Response.Status.OK)
+                    .entity(found).build();
+        }
+        
+    }
+    
+     /**
+     * Gets a filter.
+     *
+     * @param filterId
+     * @param req
+     * @return the filter 
+     */
+    @POST
+    @Path("getstaticqueryfilter")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getstaticqueryfilter(String filterId,
+            @Context HttpServletRequest req) {
+        
+        StringBuilder ck = new StringBuilder();
+        Security slogin = new Security();
+                  
+        Boolean token = slogin.login(req.getHeader("name")
+                ,req.getHeader("password"),false,ck);
+        if (!token){
+              return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        this.cookie = ck.toString(); 
+        JSONObject jo = new JSONObject(filterId);
+        String idjo = jo.getString("id");
+             
+        MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
+        MongoDatabase db = mongo.getDatabase(mongoDB);
+
+        try {
+           db.getCollection("staticqueryfilters");
+        } catch (Exception e) {
+          //System.out.println("Mongo is down");
+            db = null;
+            if (mongo!= null){
+                    mongo.close();
+                    mongo= null;
+            }
+          return Response.status(Response
+                            .Status.INTERNAL_SERVER_ERROR).build();
+        }
+        
+        BasicDBObject searchById = new BasicDBObject("id",idjo);
+        String found;
+        BasicDBObject fields = new BasicDBObject().append("_id",false)
+                .append("cepinstance",false);
+
+       FindIterable<Document> coll = db.getCollection("staticqueryfilters")
+                .find(searchById).projection(fields);
+       
+        try {
+            found = coll.first().toJson();
+            db = null;
+            if (mongo!= null){
+             mongo.close();
+             mongo= null;
+            }
+        }catch(Exception e){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        
+        if (found == null){
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }else{
+            return Response.status(Response.Status.OK)
+                    .entity(found).build();
+        }
+        
+    }
+
 /**
  * Gets a filter.
  *
@@ -530,6 +812,22 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
         
                     aData = oDMS.getObservations(jo.getString("query"));
                     
+                    if (aData.length()<1){
+                        CepContainer.deleteCepProcess(cepProcess.PID);
+                             
+                        if (!cepProcess.cepDispose()){
+                             java.util.logging.Logger.getLogger
+                            (StaticFiltering.class.getName()).log(Level.SEVERE, 
+                        "bcep Instance not terminated" );
+                        };
+                        db = null;
+                        if (mongo!= null){
+                                mongo.close();
+                                mongo= null;
+                        }
+                        return Response.status(Response.Status.BAD_REQUEST).entity("no data to be filtered").build();
+                    }
+                    
                 } catch (KeyManagementException | KeyStoreException ex) {
                     java.util.logging.Logger.getLogger(StaticFiltering
                             .class.getName()).log(Level.SEVERE, null, ex);
@@ -546,7 +844,7 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
                 
 /////////////////////////////////////////////////////////////////////////////
                 // SENDING TO MOSQUITTO
-                oMqtt.sendMsg(MsgProcc, clientName, simpleEventAL,mqin,mqout);
+                oMqtt.sendMsg(MsgProcc, clientName, simpleEventAL,mqin,mqout,false);
 
 /////////////////////////////////////////////////////////////////////////////
                 //RECEIVING FROM MOSQUITO
@@ -690,6 +988,18 @@ public Response filterstaticquery(String info,@Context HttpServletRequest req) t
     @OPTIONS
     @Path("filterstaticquery")
     public Response filterstaticqueryOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("getstaticdatafilter")
+    public Response getstaticdatafilterOptions() {
+    return Response.ok("").build();
+    }
+    
+    @OPTIONS
+    @Path("getstaticqueryfilter")
+    public Response createstaticqueryfilterOptions() {
     return Response.ok("").build();
     }
 

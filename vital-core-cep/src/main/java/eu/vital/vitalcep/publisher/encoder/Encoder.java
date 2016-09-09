@@ -8,6 +8,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.util.JSON;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +34,7 @@ public class Encoder {
      * @return  the dolce input string 
      */
     public JSONObject dolceOutput2Jsonld(String input,String id, 
-            String sensor, String observationTime) {
+            String sensor, String observationTime) throws ParseException {
 
             JSONObject outputObservation = new JSONObject();
             
@@ -60,8 +61,9 @@ public class Encoder {
                     {   locationEvent = values [z+1];
                     hasLoc = true;}
                       
-                else if (token.compareToIgnoreCase("Time")==0)
-                    timeEvent = values [z+1];
+                else if (token.equals("Time"))
+                  //  timeEvent = values [z+1];
+                    timeEvent = getDolceTime2UTCString(values [z+1]);
                 //from observationTime
                 
                 else if ((z % 3)==0) {
@@ -69,8 +71,11 @@ public class Encoder {
                
                     payloadLine.put("dataType",values [z-1]);
                     payloadLine.put("name",values [z]);
-                    payloadLine.put("value",values [z+1]);
-
+                    if ("time".equals(values [z-1])){
+                        payloadLine.put("value",getDolceTime2UTCString(values [z+1]));
+                    }else{
+                         payloadLine.put("value",values [z+1]);
+                    }
                     payload.put(payloadLine); 
                 }
             }           
@@ -141,7 +146,7 @@ public class Encoder {
     }
 
     public JSONArray dolceOutputList2JsonldArray(ArrayList<MqttMsg> mesagges, 
-            String hostnameport, String randomUUIDString) {
+            String hostnameport, String randomUUIDString) throws ParseException {
         
         JSONArray aOutput = new JSONArray();
         
@@ -170,7 +175,7 @@ public class Encoder {
      * @return
      */
     public ArrayList<Document> dolceOutputList2ListDBObject(ArrayList<MqttMsg> mesagges, 
-            String hostnameport, String randomUUIDString) {
+            String hostnameport, String randomUUIDString) throws ParseException {
         
         ArrayList<Document> documents ;
         documents = new ArrayList<Document>() {};
@@ -193,6 +198,14 @@ public class Encoder {
         return documents;
     }
     
+    private String getDolceTime2UTCString(String date) throws ParseException {
+        
+        date = date.replace("@", "T");
+        date = date+"Z";
+       
+        return  date;
+    }
+
     private String getXSDDateTime(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -200,7 +213,7 @@ public class Encoder {
     }
     
         public Document dolceOutput2Document(String input,String id, 
-            String sensor, String observationTime) {
+            String sensor, String observationTime) throws ParseException {
 
             Document outputObservation = new Document();
             
@@ -222,10 +235,10 @@ public class Encoder {
                 Document payloadLine = new Document();
                 String token = values[z];
                 if (token.compareToIgnoreCase("SensorId")==0){
-                    idEvent=values[z+1];
+                    idEvent=values [z+1].substring(1, values [z+1].length()-2);
                     payloadLine.put("dataType","string");
                     payloadLine.put("name",values [z]);
-                    payloadLine.put("value",values [z+1]);
+                    payloadLine.put("value",values [z+1].substring(1, values [z+1].length()-2));
 
                     payloadBDBList.add(payloadLine); 
                 }else if (token.compareToIgnoreCase("Position")==0)
@@ -237,12 +250,12 @@ public class Encoder {
                     payloadBDBList.add(payloadLine); 
                     hasLoc = true;}
                       
-                else if (token.compareToIgnoreCase("Time")==0){
+                else if (token.equals("Time")){
                     
-                    timeEvent = values [z+1];
+                    timeEvent =  getDolceTime2UTCString(values [z+1]);
                     payloadLine.put("dataType","time");
                     payloadLine.put("name",values [z]);
-                    payloadLine.put("value",values [z+1]);
+                    payloadLine.put("value",timeEvent);
 
                     payloadBDBList.add(payloadLine);
                 //from observationTime
@@ -252,7 +265,11 @@ public class Encoder {
                
                     payloadLine.put("dataType",values [z-1]);
                     payloadLine.put("name",values [z]);
-                    payloadLine.put("value",values [z+1]);
+                    if ("time".equals(values [z-1])){
+                        payloadLine.put("value",getDolceTime2UTCString(values [z+1]));
+                    }else{
+                         payloadLine.put("value",values [z+1]);
+                    }
 
                     payloadBDBList.add(payloadLine); 
                 }

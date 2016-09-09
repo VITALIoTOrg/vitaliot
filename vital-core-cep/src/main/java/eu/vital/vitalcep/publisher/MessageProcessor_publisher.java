@@ -30,6 +30,7 @@ import eu.vital.vitalcep.connectors.dms.DMSManager;
 import eu.vital.vitalcep.connectors.mqtt.MessageProcessor;
 import eu.vital.vitalcep.connectors.mqtt.MqttMsg;
 import eu.vital.vitalcep.publisher.encoder.Encoder;
+import java.text.ParseException;
 
 
 /**
@@ -69,11 +70,21 @@ public class MessageProcessor_publisher  implements MessageProcessor {
         UUID uuid = UUID.randomUUID();
         String id = uuid.toString();
         
-        JSONObject observation = encoder.dolceOutput2Jsonld
-        (mqttMsg.msg, id,this.sensorId,xsdTime);
+        JSONObject observation = null;
+        try {
+            observation = encoder.dolceOutput2Jsonld
+                (mqttMsg.msg, id,this.sensorId,xsdTime);
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(MessageProcessor_publisher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
          
-        Document doc = encoder.dolceOutput2Document(mqttMsg.msg,id
-                , this.sensorId, xsdTime);
+        Document doc=null;
+        try {
+            doc = encoder.dolceOutput2Document(mqttMsg.msg,id
+                    , this.sensorId, xsdTime);
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(MessageProcessor_publisher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
         
         logger.debug("MQTTMessage received: "+ mqttMsg.msg);
         
