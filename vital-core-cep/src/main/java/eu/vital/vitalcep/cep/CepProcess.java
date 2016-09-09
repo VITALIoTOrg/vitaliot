@@ -20,6 +20,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 
 import eu.vital.vitalcep.conf.ConfigReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -137,25 +138,29 @@ public class CepProcess {
     public void stopCEP() throws FileNotFoundException, IOException {
                        
         String cmd = "kill -9 " + Integer.toString(PID);
-        be.stop_while();
-        
+       
         try {
             Process pr = Runtime.getRuntime()
                     .exec(cmd);
-            
-            if(pr.exitValue()==0){
-                logger.debug("bCEP stoped: " + PID);
-            	PID = -1;
-                
-                try{
-                    File file = new File(cepFolder//+"/"+dolceFile
-                                    +"/"+fileName+"_dolce");
-                    file.delete();
-                }catch(Exception e){
+            if (pr.waitFor(500, TimeUnit.MILLISECONDS)){
+                if(pr.exitValue()==0){
+                    logger.debug("bCEP stoped: " + PID);
+                    PID = -1;
+
+                    try{
+                        File file = new File(cepFolder//+"/"+dolceFile
+                                        +"/"+fileName+"_dolce");
+                        file.delete();
+                         be.stop_while();
+                    }catch(Exception e){
+                         java.util.logging.Logger.getLogger(CepProcess
+                                .class.getName()).log(Level.SEVERE, null, e);
+                    }
                 }
             }
-        } catch (IOException e) {
-
+        } catch (IOException | InterruptedException e) {
+            java.util.logging.Logger.getLogger(CepProcess
+                            .class.getName()).log(Level.SEVERE, null, e);
         }
 
     }

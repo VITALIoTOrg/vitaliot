@@ -58,6 +58,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.OPTIONS;
+import javax.ws.rs.PUT;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bson.Document;
@@ -104,21 +105,21 @@ public class ContinuosFiltering {
     @Produces(MediaType.APPLICATION_JSON)
     public Response  getFilterings(@Context HttpServletRequest req) {
         
-        StringBuilder ck = new StringBuilder();
-        Security slogin = new Security();
-                  
-        Boolean token = slogin.login(req.getHeader("name")
-                ,req.getHeader("password"),false,ck);
-        if (!token){
-              return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        this.cookie = ck.toString(); 
+//        StringBuilder ck = new StringBuilder();
+//        Security slogin = new Security();
+//                  
+//        Boolean token = slogin.login(req.getHeader("name")
+//                ,req.getHeader("password"),false,ck);
+//        if (!token){
+//              return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+//        this.cookie = ck.toString(); 
         
         MongoClient mongo = new MongoClient(new MongoClientURI (mongoURL));
             MongoDatabase db = mongo.getDatabase(mongoDB);
             
             try {
-               db.getCollection("staticdatafilters");
+               db.getCollection("continuousfilters");
             } catch (Exception e) {
               //System.out.println("Mongo is down");
             	db = null;
@@ -136,7 +137,7 @@ public class ContinuosFiltering {
         BasicDBObject fields = new BasicDBObject().append("_id",false);
         fields.append("dolceSpecification", false);
         
-        FindIterable<Document> coll = db.getCollection("filters")
+        FindIterable<Document> coll = db.getCollection("continuousfilters")
                 .find(query).projection(fields);
                 
         final JSONArray AllJson = new JSONArray();
@@ -167,7 +168,7 @@ public class ContinuosFiltering {
      * @return the filter id 
      * @throws java.io.IOException 
      */
-    @POST
+    @PUT
     @Path("createcontinuousfilter")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -392,18 +393,24 @@ public class ContinuosFiltering {
         BasicDBObject searchById = new BasicDBObject("id",idjo);
         String found;
         BasicDBObject fields = new BasicDBObject().append("_id",false)
-                .append("dolceSpecification", false);
+                .append("cepinstance",false);
 
        FindIterable<Document> coll = db.getCollection("continuousfilters")
                 .find(searchById).projection(fields);
-       db = null;
-       if (mongo!= null){
-       	mongo.close();
-       	mongo= null;
-       }
+       
         try {
             found = coll.first().toJson();
+            db = null;
+            if (mongo!= null){
+             mongo.close();
+             mongo= null;
+            }
         }catch(Exception e){
+            db = null;
+            if (mongo!= null){
+             mongo.close();
+             mongo= null;
+            }
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         

@@ -22,11 +22,11 @@ public class MqttAllInOne {
 	}
     
      public boolean sendMsg (MessageProcessor processor, String name, ArrayList<String> simpleEvents,
-             String mqin, String mqout ){
-      MessageProcessor msgProc = null;//processor;
-      MsgQueue queue = null;//new MsgQueue(msgProc);
+             String mqin, String mqout, boolean onlySender){
+      MessageProcessor msgProc = processor;
+      MsgQueue queue = new MsgQueue(msgProc);
       //                                  ( name, msgQueue, cepInputTopicName, cepOutputTopicName, qos)
-      MqttConnector connector = new MqttConnector(name, queue, mqin, mqout, 2, true);
+      MqttConnector connector = new MqttConnector(name, queue, mqin, mqout, 2, onlySender);
       
       if (connector!=null){
           
@@ -45,7 +45,8 @@ public class MqttAllInOne {
           }catch(Exception e){}
        try {
     	   	
-            Thread.sleep(1000);                 //1000 milliseconds is one second.
+            Thread.sleep(1000);
+            queue.parar();//1000 milliseconds is one second.
         } catch(InterruptedException ex) {
             Thread.currentThread().interrupt();
         }

@@ -17,6 +17,7 @@ public class ConfigReader {
     public static final String AUTH_URL = "vital-core-cep.security";
     public static final String MONGO_URL = "vital-core-cep.mongo.uri";
     public static final String MONGO_DB = "vital-core-cep.mongo.db";
+    public static final String IOTDA_URL = "vital-core-cep.iotda";
     public static final String CEP_BASE_URL = "vital-core-cep-ppi.base-url";
     public static final String MSQUITTO_URL = "vital-core-cep.mosquitto.uri";
     public static final String UCEP_PATH = "vital-core-cep.ucep.path";

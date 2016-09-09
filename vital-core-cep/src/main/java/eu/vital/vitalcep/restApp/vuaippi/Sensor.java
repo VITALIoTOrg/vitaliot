@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.Block;
 import com.mongodb.DBObject;
@@ -1324,14 +1323,9 @@ public class Sensor {
 
     @OPTIONS
     @Path("observation")
-    public Response options() {
+    public Response observationOptions() {
     return Response.ok("")
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
-            .build();
+        .build();
     }
     
       /**
@@ -1363,11 +1357,7 @@ public class Sensor {
         String property;
         
         if (!request.containsField("sensor")||!request.containsField("property")){
-            return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
+            return Response.status(Response.Status.BAD_REQUEST)
             .build();
         }else{
             
@@ -1375,11 +1365,7 @@ public class Sensor {
                 sensors = (BasicDBList) request.get("sensor");
                 property = (String)request.get("property");
             }catch(Exception e){
-                return Response.status(Response.Status.BAD_REQUEST).header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
+                return Response.status(Response.Status.BAD_REQUEST)
             .build();
             }
             
@@ -1392,11 +1378,7 @@ public class Sensor {
             if(!isDateValid((String)request.get("from"))|| 
                     !isDateValid((String)request.get("to"))){
                   return Response.status(Response.Status.BAD_REQUEST)
-                     .entity("wrong xsd:dateTime format").header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
+                     .entity("wrong xsd:dateTime format")
             .build();
             }
            
@@ -1406,11 +1388,7 @@ public class Sensor {
             }catch(
             ParseException e){
                 return Response.status(Response.Status.BAD_REQUEST)
-                     .entity("wrong xsd:dateTime format").header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
+                     .entity("wrong xsd:dateTime format")
             .build();
             }
           
@@ -1419,11 +1397,6 @@ public class Sensor {
             
            if(!isDateValid((String)request.get("from"))){
                  return Response.status(Response.Status.BAD_REQUEST)
-                    .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
             .build();
            }
            
@@ -1431,11 +1404,7 @@ public class Sensor {
                 sfrom=getXSDDateTimeSecure((String)request.get("from"));
             }catch(ParseException e){
                 return Response.status(Response.Status.BAD_REQUEST)
-                     .entity("wrong xsd:dateTime format").header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
+                     .entity("wrong xsd:dateTime format")
             .build();
             }
            
@@ -1467,11 +1436,7 @@ public class Sensor {
         }
 
         return Response.status(Response.Status.OK)
-                .entity (observations.toString()).header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
-            .header("Access-Control-Allow-Credentials", "true")
-            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-            .header("Access-Control-Max-Age", "1209600")
+                .entity (observations.toString())
             .build();
                 
     }

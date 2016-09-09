@@ -128,13 +128,16 @@ public class Decoder {
                     .getJSONObject("ssn:observationResultTime")
                          .getString("time:inXSDDateTime");
             
-                //String time = getDolceDateTime(oTime);
-                observationResultTime = "string observationTime "
-                    + oTime ;
+                String time = getDolceDateTime(oTime);
+                //observationResultTime = "time observationTime "
+                //    + oTime ;
+                observationResultTime = "time observationTime "
+                   + time ;
+                
             }else {
                 Date NOW = new Date();
-                observationResultTime = "string observationTime "
-                    + getXSDDateTime(NOW) ;
+                observationResultTime = "time observationTime "
+                    + getDolceDateTime(getXSDDateTime(NOW) );
             }
             
            
@@ -159,7 +162,7 @@ public class Decoder {
         SimpleDateFormat output = new SimpleDateFormat("yyyy-MM-dd'@'HH:mm:ss");
              
         Date date = input.parse(observationTime);
-        output.setTimeZone(TimeZone.getTimeZone("GMT"));
+        output.setTimeZone(TimeZone.getTimeZone("UTC"));
         
         return  output.format(date);
     }

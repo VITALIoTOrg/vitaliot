@@ -213,7 +213,8 @@ public class Collector {
                 oMqtt.sendMsg(MsgProcc, clientName
                         , simpleEventAL
                         ,sensors.getJSONObject(i).getString("mqin")
-                        ,sensors.getJSONObject(i).getString("mqout"));
+                        ,sensors.getJSONObject(i).getString("mqout"),
+                        true);
                 
                 
             }
