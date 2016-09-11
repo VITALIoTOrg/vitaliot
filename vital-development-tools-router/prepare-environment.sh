@@ -10,7 +10,7 @@ mkdir $USER_DATA_DIRECTORY/user-data-$username
 
 cp -R $STUB_ENVIRONMENT $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username
 
-cat <<EOT >> $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username/settings.js
+cat <<EOT > $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username/settings.js
 module.exports = {
     uiPort: $port,
     mqttReconnectTime: 15000,
