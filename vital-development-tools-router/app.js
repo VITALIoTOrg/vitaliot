@@ -1,13 +1,11 @@
 var express = require('express');
 var body_parser = require('body-parser')
-var session = require('express-session');
-var cookie_parser = require('cookie-parser');
 var fs = require('fs');
-var flash = require('connect-flash');
 var path = require('path');
 var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
-var ncp = require('ncp').ncp;
+var exec = require('child_process').exec;
+
 var config = require('./config');
 
 var file = 'users.db';
@@ -27,18 +25,10 @@ app.use(express.static('public'));
 app.use(body_parser.urlencoded({
     extended: false
 }));
-app.use(cookie_parser('secret'));
-app.use(session({
-    secret: 'secret',
-    resave: true,
-    saveUninitialized: true
-}));
-app.use(flash());
 app.set('view engine', 'jade');
 app.set('view options', {
     layout: false
 });
-
 
 app.get('/', function (req, res) {
     res.render('index');
@@ -95,34 +85,8 @@ app.post('/', function (req, res) {
                     } while (true);
                     console.log('New user', username, 'signed in and assigned port', port, '.');
                     db.run('INSERT INTO users(username, port) VALUES(?, ?)', username, port);
-                    ncp(config.stub_environment, config.environments_directory + '/vital-development-tools-' + username, function (error) {
-                        var settings = {
-                            uiPort: port,
-                            mqttReconnectTime: 15000,
-                            serialReconnectTime: 15000,
-                            debugMaxLength: 1000,
-                            flowFile: config.flows_directory + '/flows-' + username + '.json',
-                            flowFilePretty: true,
-                            userDir: config.user_data_directory + '/' + username,
-                            functionGlobalContext: {},
-                            logging: {
-                                console: {
-                                    level: "info",
-                                    metrics: false,
-                                    audit: false
-                                }
-                            },
-                            security: config.vital.security,
-                            dms: config.vital.dms,
-                            discovery: config.vital.discovery,
-                            filtering: config.vital.filtering,
-                            orchestration: config.vital.orchestration,
-                            cep: config.vital.cep
-                        };
-
-                        fs.writeFile(config.environments_directory + '/vital-development-tools-' + username + '/settings.js', 'module.exports = ' + JSON.stringify(settings, null, 4), function (error) {
-                            res.redirect('http://' + config.environment_host + ':' + port);
-                        });
+                    exec('bash prepare-environment.sh', function (error) {
+                        res.redirect('http://' + config.environment_host + ':' + port);
                     });
                 }
             });
