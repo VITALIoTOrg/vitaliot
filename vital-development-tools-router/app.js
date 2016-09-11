@@ -85,7 +85,7 @@ app.post('/', function (req, res) {
                     } while (true);
                     console.log('New user', username, 'signed in and assigned port', port, '.');
                     db.run('INSERT INTO users(username, port) VALUES(?, ?)', username, port);
-                    exec('bash prepare-environment.sh', function (error) {
+                    exec('bash prepare-environment.sh ' + username + ' ' + port, function (error) {
                         res.redirect('http://' + config.environment_host + ':' + port);
                     });
                 }

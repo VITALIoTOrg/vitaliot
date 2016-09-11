@@ -47,3 +47,6 @@ module.exports = {
     }
 }
 EOT
+
+cd $ENVIRONMENTS_DIRECTORY/$username
+forever start app.js
