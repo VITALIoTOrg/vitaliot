@@ -9,7 +9,12 @@ config.port_range = {
     stop: 5000
 };
 
-config.vital.security.url = 'https://vital-integration.atosresearch.eu:8843/securitywrapper/rest';
+// All information about VITAL components.
+config.vital = {
+    security: {
+        url: 'https://vital-integration.atosresearch.eu:8843/securitywrapper/rest'
+    }
+};
 
 // The host where all environments reside.
 config.environment_host = '138.68.48.183';
