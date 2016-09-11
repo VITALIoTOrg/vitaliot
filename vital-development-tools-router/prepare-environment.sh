@@ -6,9 +6,9 @@ USER_DATA_DIRECTORY='/root/user-data'
 username=$1
 port=$2
 
-cp -R $STUB_ENVIRONMENT $ENVIRONMENTS_DIRECTORY/$username
+cp -R $STUB_ENVIRONMENT $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username
 
-cat <<EOT >> $ENVIRONMENTS_DIRECTORY/$username/settings.json
+cat <<EOT >> $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username/settings.js
 module.exports = {
     uiPort: $port,
     mqttReconnectTime: 15000,
@@ -48,5 +48,5 @@ module.exports = {
 }
 EOT
 
-cd $ENVIRONMENTS_DIRECTORY/$username
-forever start app.js
+cd $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username
+forever start red.js
