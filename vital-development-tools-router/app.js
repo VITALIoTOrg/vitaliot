@@ -63,7 +63,7 @@ app.post('/', function (req, res) {
     }
 
     request.post(
-        config.security_url + '/authenticate', {
+        config.vital.security.url + '/authenticate', {
             form: {
                 name: username,
                 password: password
@@ -94,7 +94,33 @@ app.post('/', function (req, res) {
                     } while (true);
                     console.log('New user', username, 'signed in and assigned port', port, '.');
                     db.run('INSERT INTO users(username, port) VALUES(?, ?)', username, port);
-                    res.redirect('http://' + config.environment_host + ':' + port);
+                    var settings = {
+                        uiPort: port,
+                        mqttReconnectTime: 15000,
+                        serialReconnectTime: 15000,
+                        debugMaxLength: 1000,
+                        flowFile: config.flows_directory + '/flows-' + username + '.json',
+                        flowFilePretty: true,
+                        userDir: config.user_data_directory + '/' + username,
+                        functionGlobalContext: {},
+
+                        logging: {
+                            console: {
+                                level: "info",
+                                metrics: false,
+                                audit: false
+                            }
+                        },
+                        security: config.vital.security,
+                        dms: config.vital.dms,
+                        discovery: config.vital.discovery,
+                        filtering: config.vital.filtering,
+                        orchestration: config.vital.orchestration,
+                        cep: config.vital.cep
+                    };
+                    fs.writeFile('settings.js', 'module.exports = ' + JSON.stringify(settings, null, 4), function (error) {
+                        res.redirect('http://' + config.environment_host + ':' + port);
+                    });
                 }
             });
         }
