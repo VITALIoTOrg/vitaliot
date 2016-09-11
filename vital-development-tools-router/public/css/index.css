@@ -1,0 +1,25 @@
+body {
+    width: 600px;
+    margin: 50px auto;
+}
+
+#logo {
+    width: 100%;
+    text-align: center;
+    margin: 50px 0;
+}
+
+.btn-primary,
+.btn-primary:hover {
+    background-color: #759CA5;
+    width: 200px;
+    border-color: #759CA5;
+    margin-left: 200px;
+    margin-top: 20px;
+}
+
+#error {
+    color: #FF0000;
+    display: block;
+    text-align: center;
+}

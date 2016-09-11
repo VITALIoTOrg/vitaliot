@@ -1,0 +1,29 @@
+doctype html
+html
+  head
+    title VITAL - Development Tools
+
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css')
+    link(rel='stylesheet', href='css/index.css')
+
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+    script(src='//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js')
+
+  body
+
+    div#logo
+        img(src='images/logo.png')
+
+    form(action='', method='post', enctype='application/x-www-form-urlencoded')
+        div.form-group
+            label(for='username') USERNAME
+            input.form-control(type='text', name='username', aria-describedby='usernameHelp', placeholder='Enter username', value=username)
+            small#usernameHelp.form-text.text-muted This is the VITAL username.
+        div.form-group
+            label(for='password') PASSWORD
+            input.form-control(type='password', name='password', aria-describedby='passwordHelp', placeholder='Enter password')
+            small#passwordHelp.form-text.text-muted This is the VITAL password.
+
+        - if(error)
+            small#error #{error}
+        button.btn.btn-primary(type='submit') SIGN IN
