@@ -52,3 +52,5 @@ EOT
 
 cd $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username
 forever start red.js
+
+sleep 10s
