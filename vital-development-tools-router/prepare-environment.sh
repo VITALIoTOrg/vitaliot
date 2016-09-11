@@ -6,6 +6,8 @@ USER_DATA_DIRECTORY='/root/user-data'
 username=$1
 port=$2
 
+mkdir $USER_DATA_DIRECTORY/user-data-$username
+
 cp -R $STUB_ENVIRONMENT $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username
 
 cat <<EOT >> $ENVIRONMENTS_DIRECTORY/vital-development-tools-$username/settings.js
@@ -16,7 +18,7 @@ module.exports = {
     debugMaxLength: 1000,
     flowFile: $FLOWS_DIRECTORY + '/flows-' + $username + '.json',
     flowFilePretty: true,
-    userDir: $USER_DATA_DIRECTORY + '/' + $username,
+    userDir: $USER_DATA_DIRECTORY + '/user-data-' + $username,
     functionGlobalContext: {},
     logging: {
         console: {
