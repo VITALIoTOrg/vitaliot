@@ -16,13 +16,13 @@ module.exports = {
     mqttReconnectTime: 15000,
     serialReconnectTime: 15000,
     debugMaxLength: 1000,
-    flowFile: $FLOWS_DIRECTORY + '/flows-' + $username + '.json',
+    flowFile: '$FLOWS_DIRECTORY/flows-$username.json',
     flowFilePretty: true,
-    userDir: $USER_DATA_DIRECTORY + '/user-data-' + $username,
+    userDir: '$USER_DATA_DIRECTORY/user-data-$username',
     functionGlobalContext: {},
     logging: {
         console: {
-            level: "info",
+            level: 'info',
             metrics: false,
             audit: false
         }
