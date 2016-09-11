@@ -13,7 +13,10 @@ config.port_range = {
 config.security_url = 'https://vital-integration.atosresearch.eu:8843/securitywrapper/rest'
 
 // The directory where all environments reside.
-config.environment_directory = '/home/vital/environments';
+config.environments_directory = '/root/environments';
+
+// The directory where all flows reside.
+config.flows_directory = '/root/flows';
 
 // The host where all environments reside.
 config.environment_host = '138.68.48.183';
