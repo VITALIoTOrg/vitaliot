@@ -9,6 +9,7 @@ config.port_range = {
     stop: 5000
 };
 
+// Information about all VITAL components.
 config.vital = {
     security: {
         url: 'https://vital-integration.atosresearch.eu:8843/securitywrapper/rest',
@@ -31,6 +32,9 @@ config.vital = {
         url: 'https://vital-integration.atosresearch.eu:8843/vital-core-cep'
     }
 };
+
+// The stub environment.
+config.stub_environment = '/root/vitaliot/vital-development-tools';
 
 // The directory where all environments reside.
 config.environments_directory = '/root/environments';

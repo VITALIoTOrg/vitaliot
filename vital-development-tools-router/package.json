@@ -1,25 +1,26 @@
 {
-    "name": "vital-development-tools-router",
-    "version": "1.0.0",
-    "description": "The router for VITAL development tools.",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/VITALIoTOrg/vitaliot"
-    },
-    "main": "app.js",
-    "scripts": {
-        "start": "node app.js"
-    },
-    "author": "",
-    "license": "GPL-3.0",
-    "dependencies": {
-        "body-parser": "^1.15.2",
-        "connect-flash": "^0.1.1",
-        "cookie-parser": "^1.4.3",
-        "express": "^4.14.0",
-        "express-session": "^1.14.1",
-        "jade": "^1.11.0",
-        "request": "^2.74.0",
-        "sqlite3": "^3.1.4"
-    }
+  "name": "vital-development-tools-router",
+  "version": "1.0.0",
+  "description": "The router for VITAL development tools.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VITALIoTOrg/vitaliot"
+  },
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-session": "^1.14.1",
+    "jade": "^1.11.0",
+    "ncp": "^2.0.0",
+    "request": "^2.74.0",
+    "sqlite3": "^3.1.4"
+  }
 }

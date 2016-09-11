@@ -7,6 +7,7 @@ var flash = require('connect-flash');
 var path = require('path');
 var request = require('request');
 var sqlite3 = require('sqlite3').verbose();
+var ncp = require('ncp').ncp;
 var config = require('./config');
 
 var file = 'users.db';
@@ -71,14 +72,14 @@ app.post('/', function (req, res) {
             rejectUnauthorized: false
         },
         function (error, response, body) {
-            if (error || !response || response.statusCode != 200) {
-                console.log('Sign in failed (error:', error, ', code:', response ? response.statusCode : '-', ')');
-                res.render('index', {
-                    username: username,
-                    error: 'Failed to sign in. Please try again.'
-                });
-                return;
-            }
+            //            if (error || !response || response.statusCode != 200) {
+            //                console.log('Sign in failed (error:', error, ', code:', response ? response.statusCode : '-', ')');
+            //                res.render('index', {
+            //                    username: username,
+            //                    error: 'Failed to sign in. Please try again.'
+            //                });
+            //                return;
+            //            }
             db.each('SELECT port FROM users WHERE username=?', username, function (error, row) {
                 console.log('Old user', username, 'signed in.');
                 res.redirect('http://' + config.environment_host + ':' + row.port);
@@ -94,32 +95,34 @@ app.post('/', function (req, res) {
                     } while (true);
                     console.log('New user', username, 'signed in and assigned port', port, '.');
                     db.run('INSERT INTO users(username, port) VALUES(?, ?)', username, port);
-                    var settings = {
-                        uiPort: port,
-                        mqttReconnectTime: 15000,
-                        serialReconnectTime: 15000,
-                        debugMaxLength: 1000,
-                        flowFile: config.flows_directory + '/flows-' + username + '.json',
-                        flowFilePretty: true,
-                        userDir: config.user_data_directory + '/' + username,
-                        functionGlobalContext: {},
+                    ncp(config.stub_environment, config.environments_directory + '/vital-development-tools-' + username, function (error) {
+                        var settings = {
+                            uiPort: port,
+                            mqttReconnectTime: 15000,
+                            serialReconnectTime: 15000,
+                            debugMaxLength: 1000,
+                            flowFile: config.flows_directory + '/flows-' + username + '.json',
+                            flowFilePretty: true,
+                            userDir: config.user_data_directory + '/' + username,
+                            functionGlobalContext: {},
+                            logging: {
+                                console: {
+                                    level: "info",
+                                    metrics: false,
+                                    audit: false
+                                }
+                            },
+                            security: config.vital.security,
+                            dms: config.vital.dms,
+                            discovery: config.vital.discovery,
+                            filtering: config.vital.filtering,
+                            orchestration: config.vital.orchestration,
+                            cep: config.vital.cep
+                        };
 
-                        logging: {
-                            console: {
-                                level: "info",
-                                metrics: false,
-                                audit: false
-                            }
-                        },
-                        security: config.vital.security,
-                        dms: config.vital.dms,
-                        discovery: config.vital.discovery,
-                        filtering: config.vital.filtering,
-                        orchestration: config.vital.orchestration,
-                        cep: config.vital.cep
-                    };
-                    fs.writeFile('settings.js', 'module.exports = ' + JSON.stringify(settings, null, 4), function (error) {
-                        res.redirect('http://' + config.environment_host + ':' + port);
+                        fs.writeFile(config.environments_directory + '/vital-development-tools-' + username + '/settings.js', 'module.exports = ' + JSON.stringify(settings, null, 4), function (error) {
+                            res.redirect('http://' + config.environment_host + ':' + port);
+                        });
                     });
                 }
             });
