@@ -25,6 +25,8 @@ import api.VitalSystem;
 import util.DMSPermission;
 import util.DMSUtils;
 
+import org.json.JSONObject;
+
 @Path("/")
 public class DMS {
 
@@ -52,6 +54,18 @@ public class DMS {
 		DMSPermission.securityDMSAuth();// Temporary blocked for
 		return Response.status(Response.Status.ACCEPTED)
 				.entity("{\"message\" : \"DMS Re-authenticated.\"}").build();
+	}
+
+	@POST
+	@Path("/frontend")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Object guiAuth(String data) {
+		System.out.println("Data: " + data);
+		JSONObject myObj = new JSONObject(data);
+		JSONObject resp = DMSPermission.frontendAuth(myObj.get("name").toString(), myObj.get("password").toString());
+
+		return Response.status(Response.Status.ACCEPTED).entity(resp.get("user").toString())
+				.header("SET-COOKIE", resp.get("Cookie").toString()).build();
 	}
 
 	@POST
