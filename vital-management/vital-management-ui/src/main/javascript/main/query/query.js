@@ -26,6 +26,7 @@ angular.module('main.query', [
 
             ctrl.resourceType = '';
             ctrl.query = '';
+            ctrl.encodeKeys = true;
             ctrl.result = null;
 
             ctrl.submitQuery = function (ngFormController) {
@@ -33,7 +34,7 @@ angular.module('main.query', [
                     return;
                 }
                 ctrl.result = null;
-                queryResource.query(ctrl.resourceType, ctrl.query)
+                queryResource.query(ctrl.resourceType, ctrl.query, ctrl.encodeKeys)
                     .then(function (data) {
                         ctrl.result = data;
                     }, function (error) {
@@ -49,8 +50,8 @@ angular.module('main.query', [
 
             var service = {
 
-                query: function (resourceType, query) {
-                    return $http.post(API_PATH + '/query/' + resourceType, angular.fromJson(query))
+                query: function (resourceType, query, encodeKeys) {
+                    return $http.post(API_PATH + '/query/' + resourceType + '?encodeKeys=' + encodeKeys, angular.fromJson(query))
                         .then(function (response) {
                             return response.data;
                         });

@@ -1,28 +1,29 @@
 package core;
 
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+
+import org.apache.http.impl.cookie.BasicClientCookie;
+
 import java.util.Timer;
 
 import javax.ws.rs.CookieParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.apache.http.impl.cookie.BasicClientCookie;
 
 import api.VitalObservation;
 import api.VitalSensor;
 import api.VitalService;
 import api.VitalSystem;
-
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-
-import util.DMSUtils;
 import util.DMSPermission;
+import util.DMSUtils;
 
 @Path("/")
 public class DMS {
@@ -152,9 +153,13 @@ public class DMS {
 	@Path("/querySystem")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Object querySystem(String data,
-			@CookieParam("vitalAccessToken") Cookie cookie) {
-		DBObject query = DMSUtils
-				.encodeKeys((DBObject) JSON.parse(data.trim()));
+			@CookieParam("vitalAccessToken") Cookie cookie,
+							  @DefaultValue("true") @QueryParam("encodeKeys") boolean encodeKeys) {
+		DBObject query = (DBObject) JSON.parse(data.trim());
+		if (encodeKeys) {
+			query = DMSUtils.encodeKeys(query);
+		}
+
 		org.apache.http.cookie.Cookie c = null;
 		if (cookie != null)
 			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
@@ -206,9 +211,13 @@ public class DMS {
 	@Path("/queryService")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Object queryService(String data,
-			@CookieParam("vitalAccessToken") Cookie cookie) {
-		DBObject query = DMSUtils
-				.encodeKeys((DBObject) JSON.parse(data.trim()));
+							   @CookieParam("vitalAccessToken") Cookie cookie,
+							   @DefaultValue("true") @QueryParam("encodeKeys") boolean encodeKeys) {
+		DBObject query = (DBObject) JSON.parse(data.trim());
+		if (encodeKeys) {
+			query = DMSUtils.encodeKeys(query);
+		}
+
 		org.apache.http.cookie.Cookie c = null;
 		if (cookie != null)
 			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
@@ -260,9 +269,13 @@ public class DMS {
 	@Path("/querySensor")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Object querySensor(String data,
-			@CookieParam("vitalAccessToken") Cookie cookie) {
-		DBObject query = DMSUtils
-				.encodeKeys((DBObject) JSON.parse(data.trim()));
+							  @CookieParam("vitalAccessToken") Cookie cookie,
+							  @DefaultValue("true") @QueryParam("encodeKeys") boolean encodeKeys) {
+		DBObject query = (DBObject) JSON.parse(data.trim());
+		if (encodeKeys) {
+			query = DMSUtils.encodeKeys(query);
+		}
+
 		org.apache.http.cookie.Cookie c = null;
 		if (cookie != null)
 			c = new BasicClientCookie(cookie.getName(), cookie.getValue());
@@ -313,10 +326,13 @@ public class DMS {
 	@POST
 	@Path("/queryObservation")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Object queryObservation(String data,
-			@CookieParam("vitalAccessToken") Cookie cookie) {
-		DBObject query = DMSUtils
-				.encodeKeys((DBObject) JSON.parse(data.trim()));
+	public Object queryObservation(String data, @CookieParam("vitalAccessToken") Cookie cookie,
+								   @DefaultValue("true") @QueryParam("encodeKeys") boolean encodeKeys) {
+		DBObject query = (DBObject) JSON.parse(data.trim());
+		if (encodeKeys) {
+			query = DMSUtils.encodeKeys(query);
+		}
+
 		org.apache.http.cookie.Cookie c = null;
 		if (cookie != null)
 			c = new BasicClientCookie(cookie.getName(), cookie.getValue());

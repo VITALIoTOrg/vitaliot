@@ -18,6 +18,14 @@
 
             </div>
 
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="queryCtrl.encodeKeys"/>
+                    <span>Encode Keys</span>
+                </label>
+
+            </div>
+
             <div class="form-group"
                  ng-class="{'has-error': queryForm.query.$invalid}">
                 <label for="query">
