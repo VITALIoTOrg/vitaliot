@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Trust: System List</h3>
+            </div>
+            <div class="box-body">
+
+                <div class="list-group">
+                    <div class="list-group-item" ng-repeat="system in tCtrl.systemList">
+                        <div class="row">
+                            <div class="col-md-4">{{system['http://www.w3.org/2000/01/rdf-schema#label']}}</div>
+                            <div class="col-md-4">{{system['http://www.w3.org/2000/01/rdf-schema#comment']}}</div>
+                            <div class="col-md-4">
+                                <div class="btn-group pull-right" role="group">
+                                    <a class="btn btn-default" ng-href="#/governance/trust/{{system['@id'] | encodeHistoryComponent}}">
+                                        <i class="fa fa-photo"></i> SLA Trust Scores
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

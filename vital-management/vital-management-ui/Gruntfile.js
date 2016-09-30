@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
     // Load grunt tasks automatically, when needed
     require('jit-grunt')(grunt, {
@@ -33,39 +33,43 @@ module.exports = function (grunt) {
         // Copies remaining files to places other tasks can use
         copy: {
             build: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: './src/main/javascript',
-                    dest: './target/build',
-                    src: [
-                        '*.{ico,png,txt}',
-                        '.htaccess',
-                        'vendor/**/*',
-                        'assets/**/*',
-                        'common/**/*',
-                        'main/**/*',
-                        'index.html',
-                        '!**/*.spec.js',
-                        '!**/*.mock.js',
-                        '!**/*.less'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: './src/main/javascript',
+                        dest: './target/build',
+                        src: [
+                            '*.{ico,png,txt}',
+                            '.htaccess',
+                            'vendor/**/*',
+                            'assets/**/*',
+                            'common/**/*',
+                            'main/**/*',
+                            'index.html',
+                            '!**/*.spec.js',
+                            '!**/*.mock.js',
+                            '!**/*.less'
+                        ]
+                    }
+                ]
             },
             dist: {
-                files: [{
-                    expand: true,
-                    dot: true,
-                    cwd: './target/build',
-                    dest: './target/dist',
-                    src: [
-                        '*.{ico,png,txt}',
-                        '.htaccess',
-                        'vendor/**/*',
-                        'assets/**/*',
-                        'index.html'
-                    ]
-                }]
+                files: [
+                    {
+                        expand: true,
+                        dot: true,
+                        cwd: './target/build',
+                        dest: './target/dist',
+                        src: [
+                            '*.{ico,png,txt}',
+                            '.htaccess',
+                            'vendor/**/*',
+                            'assets/**/*',
+                            'index.html'
+                        ]
+                    }
+                ]
             }
         },
 
@@ -157,7 +161,7 @@ module.exports = function (grunt) {
             // Inject application script files into index.html (doesn't include bower)
             build_scripts: {
                 options: {
-                    transform: function (filePath) {
+                    transform: function(filePath) {
                         filePath = filePath.replace('./', '');
                         filePath = filePath.replace('target/build/', '');
                         return '<script src="' + filePath + '"></script>';
@@ -179,7 +183,7 @@ module.exports = function (grunt) {
             // Inject component css into index.html
             build_css: {
                 options: {
-                    transform: function (filePath) {
+                    transform: function(filePath) {
                         filePath = filePath.replace('./', '');
                         filePath = filePath.replace('target/build/', '');
                         return '<link rel="stylesheet" href="' + filePath + '">';
@@ -197,7 +201,7 @@ module.exports = function (grunt) {
 
             dist_scripts: {
                 options: {
-                    transform: function (filePath) {
+                    transform: function(filePath) {
                         filePath = filePath.replace('./', '');
                         filePath = filePath.replace('target/dist/', '');
                         return '<script src="' + filePath + '"></script>';
@@ -219,7 +223,7 @@ module.exports = function (grunt) {
             // Inject component css into index.html
             dist_css: {
                 options: {
-                    transform: function (filePath) {
+                    transform: function(filePath) {
                         filePath = filePath.replace('./', '');
                         filePath = filePath.replace('target/build/', '');
                         return '<link rel="stylesheet" href="' + filePath + '">';
@@ -244,14 +248,16 @@ module.exports = function (grunt) {
         // minsafe compatible so Uglify does not destroy the ng references
         ngAnnotate: {
             dist: {
-                files: [{
-                    expand: true,
-                    cwd: './target/build/',
-                    src: [
-                        '{app,origination}/**/*.js'
-                    ],
-                    dest: './target/build/'
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: './target/build/',
+                        src: [
+                            '{app,origination}/**/*.js'
+                        ],
+                        dest: './target/build/'
+                    }
+                ]
             }
         },
 
@@ -302,11 +308,13 @@ module.exports = function (grunt) {
         cachebreaker: {
             dist: {
                 options: {
-                    match: [{
-                        'origination.js': './target/dist/origination.js',
-                        'origination.css': './target/dist/origination.css',
-                        'app.js': './target/dist/app.js',
-                    }],
+                    match: [
+                        {
+                            'origination.js': './target/dist/origination.js',
+                            'origination.css': './target/dist/origination.css',
+                            'app.js': './target/dist/app.js',
+                        }
+                    ],
                     replacement: 'md5'
                 },
                 files: {
@@ -324,7 +332,7 @@ module.exports = function (grunt) {
                 port: 9000,
                 hostname: 'localhost',
                 base: './target/build',
-                middleware: function (connect, options) {
+                middleware: function(connect, options) {
                     var proxy = require('grunt-connect-proxy/lib/utils').proxyRequest;
                     var serveStatic = require('serve-static');
                     return [
@@ -338,7 +346,14 @@ module.exports = function (grunt) {
             proxies: [
                 {
                     context: '/vital-management-web',
-                    host: 'localhost',
+                    host: 'local.vital-iot.eu',
+                    port: '8080',
+                    https: false,
+                    changeOrigin: false
+                },
+                {
+                    context: '/vital-management-trust-engine',
+                    host: 'local.vital-iot.eu',
                     port: '8080',
                     https: false,
                     changeOrigin: false
@@ -424,7 +439,7 @@ module.exports = function (grunt) {
         'cachebreaker'
     ]);
 
-    grunt.registerTask('serve', function (target) {
+    grunt.registerTask('serve', function(target) {
         grunt.task.run([
             'build-clean',
             'configureProxies:connect',
@@ -434,12 +449,12 @@ module.exports = function (grunt) {
     });
 
     // Used for delaying livereload until after server has restarted
-    grunt.registerTask('wait', function () {
+    grunt.registerTask('wait', function() {
         grunt.log.ok('Waiting for server reload...');
 
         var done = this.async();
 
-        setTimeout(function () {
+        setTimeout(function() {
             grunt.log.writeln('Done waiting!');
             done();
         }, 1500);
