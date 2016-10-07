@@ -1,4 +1,4 @@
-# VITALCEP Module
+# VITAL TRUST Module
 
 * Author: Elisa Herrmann, Miguel Mateos
 * Summary: This is the TRUST MANAGER Module
@@ -67,7 +67,7 @@ Use the **_jboss-cli.sh_** script from the project root folder.
 
         $ connect https-remoting://localhost:9993
 
-        $ deploy --force target/cep.war
+        $ deploy --force target/vital-management-trust-manager.war
 
 
 Start WildFly.
