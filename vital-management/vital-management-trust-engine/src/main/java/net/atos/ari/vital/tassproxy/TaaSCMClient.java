@@ -23,8 +23,8 @@ package net.atos.ari.vital.tassproxy;
 
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /*import org.osgi.framework.BundleContext;
@@ -39,36 +39,12 @@ import com.google.gson.JsonParser;
 @Service("TaaSCMClient")
 public class TaaSCMClient 
 {
-	//EGO private ThingsServiceManager myClient; //es un componente externo
-	private static Logger logger = LoggerFactory.getLogger(TaaSCMClient.class);
+	private static Logger logger = Logger.getLogger(TaaSCMClient.class);
 	
 	public TaaSCMClient ()
 	{
 		logger.info("Creationg TaaSCMClient");
-		// Retrieve the BundleContext from the OSGi Framework
-		//EGO BundleContext context = FrameworkUtil.getBundle(TaaSCMClient.class).getBundleContext();
-				
-		// Open tracker in order to retrieve Trust Manager services
-		//EGO ServiceTracker myTracker = new ServiceTracker(context, ThingsServiceManager.class.getName(), null); 
-		//EGO myTracker.open();		
-		//EGPObject [] providers = myTracker.getServices(); 
-		
-		// Select a provider
-		/* EGOint n = 0;
-		if ( providers != null && providers.length > 0 ) 
-		{ 		
-			logger.debug("Number of providers found for TaaS CM: " + providers.length);
-			//myClient = (ThingsServiceManager) providers[n++];
-			myClient = (ThingsServiceManager) providers[n];
-			logger.info("Taas Context Manager Service found!");
-		}
-		else
-		{
-			logger.error("No providers were found for the TaaS Context Manager");			
-		}*/
-		
-		// Close the tracker
-		//EGO myTracker.close();
+
 	}
 	
 	
@@ -122,7 +98,7 @@ public class TaaSCMClient
 			String resList = null;
 			if (location.getEnvironment())
 			{
-				resList = null; /*EGO myClient.getContextThingServices(feature, location.getLocationIdentifier(), location.getLocationKeyword(), location.getLatitude(), location.getLongitude(), location.getAltitude(), Float.toString(100.0f))*/;
+				resList = null; 
 			}
 			else
 			{

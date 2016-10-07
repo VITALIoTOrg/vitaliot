@@ -7,54 +7,58 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import net.atos.ari.vital.mongo.data.JSONParserException;
-import net.atos.ari.vital.mongo.data.MetricMongoData;
-import net.atos.ari.vital.mongo.data.SystemMongoData;
-import net.atos.ari.vital.mongo.data.SystemMongoDataParser;
-import net.atos.ari.vital.mongo.data.ThingServiceTrustSerializer;
-import net.atos.ari.vital.taasaggregator.ThingServiceTrust;
-
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.bson.Document;
 import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
+import net.atos.ari.vital.conf.ConfigReader;
+import net.atos.ari.vital.mongo.data.JSONParserException;
+import net.atos.ari.vital.mongo.data.MetricMongoData;
+import net.atos.ari.vital.mongo.data.SystemMongoData;
+import net.atos.ari.vital.mongo.data.SystemMongoDataParser;
+import net.atos.ari.vital.taasaggregator.ThingServiceTrust;
+
 @Component("MongoDBDriver")
 public class MongoDriver implements InitializingBean{
-	private static Logger logger = LoggerFactory.getLogger(MongoDriver.class);
+	private static Logger logger = Logger.getLogger(MongoDriver.class);
 
 	static final String COLLECTION_NAME = "IoTSystemMetric";
 	static final String RESULT_NAME = "IoTTrusResult";
 	MongoClient mongo; 
     MongoDatabase mongoDB; 
 
-	private static final String NAME = "eu.atos.trust.mongodb.name";
-	private static final String HOST = "eu.atos.trust.mongodb.host";
-	private static final String PORT = "eu.atos.trust.mongodb.port";
-
-	@Value("TRUST{" + NAME + "}")
-	private String name;
-	@Value("TRUST{" + HOST + "}")
-	private String host;
-	@Value("TRUST{" + PORT + "}")
-	private String port;
+//	private static final String NAME = "eu.atos.trust.mongodb.name";
+//	private static final String HOST = "eu.atos.trust.mongodb.host";
+//	private static final String PORT = "eu.atos.trust.mongodb.port";
+//
+//	@Value("TRUST{" + NAME + "}")
+//	private String name;
+//	@Value("TRUST{" + HOST + "}")
+//	private String host;
+//	@Value("TRUST{" + PORT + "}")
+//	private String port;
 	
-
+    private String name;
+	private String mongoURL;
     
     public MongoDriver(){
     	name = "trustManager";
+    	ConfigReader cr = ConfigReader.getInstance();
+    	mongoURL =cr.get(ConfigReader.MONGO_URL);
+    	
     }
     
     
@@ -165,8 +169,7 @@ public class MongoDriver implements InitializingBean{
 
     public static void main(String args[])throws Exception{
 		MongoDriver md = new MongoDriver();
-		md.host = "localhost";
-		md.port = "27017";
+		
 		md.name = "trust";
 		md.afterPropertiesSet();
     	Date now = new Date();
@@ -202,8 +205,8 @@ public class MongoDriver implements InitializingBean{
 
 
 	public void afterPropertiesSet() throws Exception {
-		logger.info("Creating mongodb client with host {}, port {} and dbname {}", host, port, name);
-    	mongo = new MongoClient(host, Integer.parseInt(port));
+		logger.info("Creating mongodb client with url: "+ mongoURL);
+    	mongo = new MongoClient(new MongoClientURI (mongoURL));
     	mongoDB = mongo.getDatabase(name);
 	}
 

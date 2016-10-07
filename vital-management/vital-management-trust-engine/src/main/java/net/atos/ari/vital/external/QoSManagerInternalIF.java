@@ -53,7 +53,6 @@ public abstract interface QoSManagerInternalIF
   
   public abstract void setGatewayId(String paramString);
   
-  //EGO public abstract void update_db(QoSRankResults paramQoSRankResults);*/
   
   public abstract Map<String, Double> getBatteryLevels();
   

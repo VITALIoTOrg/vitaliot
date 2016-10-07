@@ -28,7 +28,6 @@ public class ThingServiceTrust
 	private String IoTSystem_id;	
 	private double trustScore;
 	private Date timeS;
-	//private Date dateCalculated; /* EGO */
 	
 	public ThingServiceTrust (String id, double qos, Date dateCalculated)
 	{

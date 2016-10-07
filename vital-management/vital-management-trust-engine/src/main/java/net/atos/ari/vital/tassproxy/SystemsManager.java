@@ -3,19 +3,19 @@ package net.atos.ari.vital.tassproxy;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import net.atos.ari.vital.mongo.MongoDriver;
 import net.atos.ari.vital.mongo.data.JSONParserException;
 import net.atos.ari.vital.mongo.data.SystemMongoData;
 import net.atos.ari.vital.taasaggregator.ThingServiceTrust;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service("SystemsManager")
 public class SystemsManager {
-	private static Logger logger = LoggerFactory.getLogger(SystemsManager.class);
+	private static Logger logger = Logger.getLogger(SystemsManager.class);
 	@Autowired
 	MongoDriver mongoDriver;
 

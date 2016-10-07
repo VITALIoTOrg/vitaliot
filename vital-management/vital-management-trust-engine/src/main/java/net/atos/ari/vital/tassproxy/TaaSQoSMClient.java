@@ -24,14 +24,13 @@ package net.atos.ari.vital.tassproxy;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import net.atos.ari.vital.external.QoSManagerInternalIF;
 import net.atos.ari.vital.external.SLACalculation;
 import net.atos.ari.vital.mongo.data.MetricMongoData;
 import net.atos.ari.vital.mongo.data.SystemMongoData;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 public class TaaSQoSMClient 
 {
 
@@ -39,7 +38,7 @@ public class TaaSQoSMClient
 	SystemsManager systemsManager; 
 	
 	private QoSManagerInternalIF myClient;	
-	private static Logger logger = LoggerFactory.getLogger(TaaSQoSMClient.class);
+	private static Logger logger = Logger.getLogger(TaaSQoSMClient.class);
 	
 	String thingServiceId;
 	Date startDate;
@@ -50,30 +49,7 @@ public class TaaSQoSMClient
 		this.thingServiceId = thingServiceId;
 		this.startDate = startDate;
 		this.endDate = endDate;
-/*EGO		// Retrieve the BundleContext from the OSGi Framework
-		BundleContext context = FrameworkUtil.getBundle(TaaSQoSMClient.class).getBundleContext();
-				
-		// Retrieve the QoS Manager object
-		// Open tracker in order to retrieve QoS Manager services
-		ServiceTracker myTracker = new ServiceTracker(context, QoSManagerInternalIF.class.getName(), null); 
-		myTracker.open();		
-		Object [] providers = myTracker.getServices(); 
-		
-		// Select a provider
-		int n = 0;
-		if ( providers != null && providers.length > 0 ) 
-		{ 		
-			logger.debug("Number of providers found for TaaS QoSM: " + providers.length);			
-			myClient = (QoSManagerInternalIF) providers[n];
-			logger.info("Taas QoS Manager Service found!");
-		}
-		else
-		{
-			logger.error("No providers were found for the TaaS QoS Manager");			
-		}
-		
-		// Close the tracker
-		myTracker.close();*/		
+	
 	}
 	
 	
@@ -90,9 +66,9 @@ public class TaaSQoSMClient
 			if ((mongoDataList!=null) && (mongoDataList.size()>0)){
 				result = new SLACalculation();
 				for (SystemMongoData mongoData : mongoDataList){
-					logger.debug("Data from id {}",mongoData.getId());		
+					logger.debug("Data from id {"+mongoData.getId()+"}");		
 					for (MetricMongoData metricMongoData :mongoData.getMetric()){
-						logger.debug("\t{} - {} - {}", metricMongoData.getMetric_name(), metricMongoData.getFulfilment(), metricMongoData.getDate());		
+						logger.debug("\t{"+metricMongoData.getMetric_name()+"} - {"+metricMongoData.getFulfilment()+"} - {"+metricMongoData.getDate()+"}");		
 						if (metricMongoData.getFulfilment().equals("1"))
 							numFullfillment++;
 						else 
@@ -103,7 +79,7 @@ public class TaaSQoSMClient
 				result.setQoSparamsFulfill(numFullfillment);
 				result.setQoSparamsNoFulfill(numNonFullfillment);
 			}
-			/* EGO result = myClient.calculateSLA(thingServiceId); myClient siempre es null	*/
+			
 		}
 		catch (Exception ex)
 		{

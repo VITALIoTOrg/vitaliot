@@ -24,6 +24,11 @@ package net.atos.ari.vital.taasaggregator;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import net.atos.ari.vital.external.ThingInformation;
 import net.atos.ari.vital.taastrustcalculator.QoSFulfillmentCalculator;
 import net.atos.ari.vital.tassproxy.SystemsManager;
@@ -32,16 +37,11 @@ import net.atos.ari.vital.tassproxy.TaaSCMClient;
 import net.atos.ari.vital.tassproxy.ThingTrust;
 import net.atos.ari.vital.tassproxy.ThingTrustData;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 
 @Component
 public class ThingServiceTrustCalculator 
 {
-	private static Logger logger = LoggerFactory.getLogger(ThingServiceTrustCalculator.class);
+	private static Logger logger = Logger.getLogger(ThingServiceTrustCalculator.class);
 	@Autowired
 	private TaaSBDMClient myBDMClient;
 	@Autowired
@@ -60,7 +60,7 @@ public class ThingServiceTrustCalculator
 	public ThingServiceTrust calculateThingServiceTrust (String thingServiceId, Date previousTime, Date currentTime)
 	{
 		// Step 1 -> Check the Thing Service exists and retrieve basic data
-		/*EGO ojo que no se usa en el qosCalculator ThingTrust basicData = retrieveBasicData(thingServiceId);
+		/*
 		if (basicData==null)
 		{
 			// If basic data isn't available, just return default value and don't store data
@@ -71,7 +71,6 @@ public class ThingServiceTrustCalculator
 		// Step 3 -> Calculate QoS fulfillment		
 		/*VITAL POR AQUI******************************************************************/
 		float qos = qosCalculator.calculateTrustAspect(thingServiceId, previousTime, currentTime);
-		//EGO resultado que queremos
 				
 		
 		// Step 9 -> Generate trust result
@@ -89,7 +88,7 @@ public class ThingServiceTrustCalculator
 	{
 	
 		ThingTrust basicData = new ThingTrust (thingServiceId);
-		logger.debug("Retrieving basic data for {}", thingServiceId);
+		logger.debug("Retrieving basic data for {" +thingServiceId+"}");
 		 
 		// Retrieving thing identifier for that thing service
 		String thingId = myCM.retrieveThingIdentifier(thingServiceId);
@@ -113,27 +112,8 @@ public class ThingServiceTrustCalculator
 		// Retrieve last data generated
 		ArrayList<ThingTrustData> thingDataList = myBDMClient.getThingData(thingServiceId /* EGO thingId*/);
 		basicData.setDataList(thingDataList);
-		logger.debug ("Thing Data size of list received for {}: {}",thingServiceId,  thingDataList.size());
-		/* EGO not used anywhere ???
-		// Retrieve equivalent thing services by using location
-		ThingLocation location = myBDMClient.getThingLastLocation(thingId);
-		if (location==null)
-		{
-			logger.error ("It was not possible to retrieve thing location for equivalents " + thingServiceId);
-			return null;
-		}*/
-		/* EGO not used anywhere ???
-		ArrayList<String> equivalentsList = myCM.getEquivalentThingServices(type, location, thingServiceId);
-		if (equivalentsList!=null && equivalentsList.size() > 0)
-		{
-			for (int j=0; j<equivalentsList.size(); j++)
-			{
-				// Retrieve things ids, since they are the useful ones
-				basicData.addEquivalent(myCM.retrieveThingIdentifier(equivalentsList.get(j)));
-			}	
-		}			
-		logger.debug ("Equivalent Thing Services received: " + equivalentsList.size());
-		*/
+		logger.debug ("Thing Data size of list received for {"+thingServiceId +"}: {" + thingDataList.size()+"}");
+		
 		logger.debug("Basic data retrieval finished!");
 		
 		return basicData;

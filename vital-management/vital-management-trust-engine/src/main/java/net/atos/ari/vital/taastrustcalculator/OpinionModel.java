@@ -21,8 +21,8 @@ Francisco Javier Nieto. Atos Research and Innovation, Atos SPAIN SA
 
 package net.atos.ari.vital.taastrustcalculator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 
 public class OpinionModel 
 {
@@ -35,7 +35,7 @@ public class OpinionModel
 	private double positiveEvidences;
 	private double negativeEvidences;	
 	
-	private static Logger logger = LoggerFactory.getLogger(OpinionModel.class);
+	private static Logger logger = Logger.getLogger(OpinionModel.class);
 		
 	public OpinionModel()
 	{

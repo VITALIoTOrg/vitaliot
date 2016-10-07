@@ -50,7 +50,7 @@ public class StatisticsCalculator
 		logger.debug ("Standard Deviation = " + Math.sqrt(variance));
 		logger.debug ("Test Statistic calculated T = " + T);
 		
-		if (degFreedom <= 0) return false; // EGO it was failing the fisrt time !!!!
+		if (degFreedom <= 0) return false; 
 		ChiSquaredDistribution myDist = new ChiSquaredDistribution(degFreedom);
 		double myTLeft = myDist.inverseCumulativeProbability(alpha/2.0);
 		double myTRight = myDist.inverseCumulativeProbability(1.0 - alpha/2.0);
@@ -150,17 +150,7 @@ public class StatisticsCalculator
 	public boolean calculateSimilarity (double[] values, double[] extDataset, int type)
 	{
 		boolean result = false;
-/*	EGO no used, is for		DataStabilityCalculator and not used 
-		// Select the adequate test depending on the data type
-		switch (type)
-		{
-		case DataStabilityCalculator.BOOLEAN:
-			result = isSimilarProportion (values, extDataset);
-			break;
-		case DataStabilityCalculator.NUMERIC:
-			result = isSimilarMean (values, extDataset);
-			break;		
-		}*/
+
 		
 		return result;
 	}

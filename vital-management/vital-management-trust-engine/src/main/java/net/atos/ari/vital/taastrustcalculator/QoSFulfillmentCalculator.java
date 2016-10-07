@@ -25,23 +25,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import net.atos.ari.vital.external.SLACalculation;
-import net.atos.ari.vital.tassproxy.TaaSQoSMClient;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-//EGO is in another jar file
+import net.atos.ari.vital.external.SLACalculation;
+import net.atos.ari.vital.tassproxy.TaaSQoSMClient;
+
+
 @Component
 public class QoSFulfillmentCalculator 
 {
 	@Autowired
 	private ApplicationContext applicationContext;
 
-	private static Logger logger = LoggerFactory.getLogger(QoSFulfillmentCalculator.class);
+	private static Logger logger = Logger.getLogger(QoSFulfillmentCalculator.class);
 	private static HashMap<String, ArrayList<Integer>> slaHistory;
 	
 	public QoSFulfillmentCalculator()
@@ -52,7 +52,7 @@ public class QoSFulfillmentCalculator
 
 	public float calculateTrustAspect (String thingServiceId, Date startDate, Date endDate)
 	{		
-		logger.info("Start of calculateTrustAspect of {} - start {} - end {}", thingServiceId, startDate, endDate);
+		logger.info("Start of calculateTrustAspect of {"+ thingServiceId+"} - start {"+startDate+"} - end {"+ endDate+"}");
 		TaaSQoSMClient qosmClient = new TaaSQoSMClient(thingServiceId, startDate, endDate);
 		applicationContext.getAutowireCapableBeanFactory().autowireBean(qosmClient);
 
@@ -63,7 +63,7 @@ public class QoSFulfillmentCalculator
 			logger.error("No QoS information was retrieved for " + thingServiceId);
 			return 2.5f;
 		}
-		logger.info("SLA Calculations obtained! Fulfilled for {}: {}", thingServiceId,  myQoS.getQoSparamsFulfill());
+		logger.info("SLA Calculations obtained! Fulfilled for {"+ thingServiceId+"}: {"+  myQoS.getQoSparamsFulfill()+"}");
 		ArrayList<Integer> tsHistory = new ArrayList<Integer>();
 		
 		// Add the new QoS fulfillment to the history we keep			
