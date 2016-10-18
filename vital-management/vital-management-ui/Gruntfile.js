@@ -352,7 +352,7 @@ module.exports = function(grunt) {
                     changeOrigin: false
                 },
                 {
-                    context: '/vital-management-trust-engine',
+                    context: '/vital-management-trust-manager',
                     host: 'local.vital-iot.eu',
                     port: '8080',
                     https: false,

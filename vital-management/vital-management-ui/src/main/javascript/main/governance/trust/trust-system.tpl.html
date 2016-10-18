@@ -8,10 +8,19 @@
 
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title">Trust Score</h3>
+                <h3 class="box-title">Trust Score : Chart</h3>
             </div>
             <div class="box-body">
-                <trust-score data="tsCtrl.chart.throughput"></trust-score>
+                <trust-score data="tsCtrl.chart.trustScore"></trust-score>
+            </div>
+        </div>
+
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Trust Score : Raw Data</h3>
+            </div>
+            <div class="box-body">
+                <pre>{{tsCtrl.chart.trustScore}}</pre>
             </div>
         </div>
 

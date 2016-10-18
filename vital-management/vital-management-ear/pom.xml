@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>eu.vital-iot</groupId>
-            <artifactId>vital-management-trust-engine</artifactId>
+            <artifactId>vital-management-trust-manager</artifactId>
             <version>${project.parent.version}</version>
             <type>war</type>
         </dependency>

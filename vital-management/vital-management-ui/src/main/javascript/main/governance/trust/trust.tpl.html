@@ -3,9 +3,16 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">Trust: System List</h3>
+                <div class="btn-group pull-right" role="group">
+                    <button class="btn btn-warning" type="button" ng-click="tCtrl.stop()">
+                        <i class="fa fa-stop-circle-o"></i> Stop Monitoring
+                    </button>
+                    <a class="btn btn-primary" ng-href="#/governance/trust/edit">
+                        <i class="fa fa-edit"></i> Edit SLA Parameters
+                    </a>
+                </div>
             </div>
             <div class="box-body">
-
                 <div class="list-group">
                     <div class="list-group-item" ng-repeat="system in tCtrl.systemList">
                         <div class="row">
