@@ -28,7 +28,7 @@
     <modules>
         <module>vital-management-ejb</module>
         <module>vital-management-web</module>
-        <module>vital-management-trust-engine</module>
+        <module>vital-management-trust-manager</module>
         <module>vital-management-ear</module>
         <module>vital-management-ui</module>
     </modules>
