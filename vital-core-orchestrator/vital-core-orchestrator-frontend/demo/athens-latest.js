@@ -1,15 +1,4 @@
-/**
- * Created by anglen on 11/3/15.
- */
 'use strict';
-
-//1. FIRST INPUT;
-//{
-//    "lat": 51.539011,
-//    "lng": -0.142555,
-//    "type1" : "AvailableBikes",
-//    "type2" : "Speed"
-//}
 
 //Operation1, 2: Get List of Sensors measuring <type>
 
@@ -26,12 +15,6 @@ function execute(data) {
 }
 
 //Operation2,3: FindNearestSensor
-
-//{
-//    "lat": 51.539011,
-//    "lng": -0.142555,
-//    "sensorList": []
-//}
 
 function execute(input) {
     var i, tmp,
@@ -114,11 +97,6 @@ function execute(input) {
 }
 
 //Operations 3,4: Get Last Observation from Sensors
-//{
-//  "sensor": {
-//    "@id": ""
-//  }
-//}
 
 function execute(input) {
     var sensor = input.operation2.closestSensor;
@@ -147,4 +125,3 @@ function execute(input) {
             ['http://vital-iot.eu/ontology/ns/value']
     };
 }
-
