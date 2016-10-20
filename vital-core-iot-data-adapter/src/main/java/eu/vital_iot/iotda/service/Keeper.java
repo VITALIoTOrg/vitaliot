@@ -497,7 +497,6 @@ public class Keeper {
 						final String property = (String) ((List<Object>) ((Map<String, Object>) oo).get("@type"))
 								.get(0);
 						pullSensorData(iotsystem, url, sensor, property);
-						break;
 					}
 				} catch (JsonLdError jle) {
 					logger.log(Level.SEVERE, "Failed to get observations URL.", jle);
