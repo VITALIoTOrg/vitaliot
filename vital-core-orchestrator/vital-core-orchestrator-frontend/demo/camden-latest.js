@@ -1,54 +1,47 @@
-/**
- * Created by anglen on 11/3/15.
- */
 'use strict';
-
-//1. FIRST INPUT;
-//{
-//    "lat": 51.539011,
-//    "lng": -0.142555,
-//    "type" : "AvailableBikes"
-//}
 
 //Operation1: Get List of Sensors measuring <type>
 
 function execute(input) {
-    input.sensorList = sensorAdapter.searchByObservationType('http://vital-iot.eu/ontology/ns/' + input.type);
-    return input;
+    var output = {
+        lat: input.input.lat,
+        lng: input.input.lng,
+        atDate: input.input.atDate,
+        sensorList: sensorAdapter.searchByObservationType('http://vital-iot.eu/ontology/ns/AvailableBikes')
+    };
+    return output;
 }
 
 //Operation2: FindNearestSensor
-
-//{
-//    "lat": 51.539011,
-//    "lng": -0.142555,
-//    "sensorList": []
-//}
-
 function execute(input) {
     var i, tmp,
         minDistance = Number.MAX_VALUE,
         sensor,
         result;
 
-    for (i = 0; i < input.sensorList.length; i++) {
-        sensor = input.sensorList[i];
+    for (i = 0; i < input.operation0.sensorList.length; i++) {
+        sensor = input.operation0.sensorList[i];
         tmp = distance(
-            input.lat,
-            input.lng,
+            input.operation0.lat,
+            input.operation0.lng,
             sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#lat'],
-            sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#lon']
+            sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#long'] || sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']['http://www.w3.org/2003/01/geo/wgs84_pos#lon']
         );
         if (tmp < minDistance) {
+            minDistance = tmp;
             result = sensor;
         }
     }
 
-    return {
-        type: input.type,
-        sensor : sensor
+    var output = {
+        lat: input.operation0.lat,
+        lng: input.operation0.lng,
+        atDate: input.operation0.atDate,
+        sensor: result
     };
+    return output;
 
+    // Distance function
     function distance(lat1, lon1, lat2, lon2) {
         var R = 6371; // Radius of the earth in km
         var dLat = deg2rad(lat2 - lat1);  // deg2rad below
@@ -65,7 +58,6 @@ function execute(input) {
         }
     }
 }
-
 //Operation 3: Get Last Observation from Sensor
 //{
 //  "sensor": {
@@ -75,7 +67,7 @@ function execute(input) {
 
 function execute(input) {
     var observation;
-    observation = observationAdapter.get(input.sensor['@id'], 'http://vital-iot.eu/ontology/ns/' + input.type);
+    observation = observationAdapter.get(input.operation1.sensor['@id'], "http://vital-iot.eu/ontology/ns/AvailableBikes");
     return {
         measurementDate: observation['http://purl.oclc.org/NET/ssnx/ssn#observationResultTime']
             ['http://www.w3.org/2006/time#inXSDDateTime']

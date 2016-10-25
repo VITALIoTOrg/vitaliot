@@ -2,5 +2,6 @@
 angular.module('main.governance', [
     'main.governance.registry',
     'main.governance.boundaries',
-    'main.governance.application'
+    'main.governance.access',
+    'main.governance.trust'
 ]);

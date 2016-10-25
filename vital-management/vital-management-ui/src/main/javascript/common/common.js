@@ -19,6 +19,7 @@ angular.module('common', [
      * Common Constants
      */
     .constant('API_PATH', '/vital-management-web/api')
+    .constant('TRUST_API_PATH', '/vital-management-trust-manager/trust-manager')
 
     .filter('encodeHistoryComponent', function () {
         return function (input) {
