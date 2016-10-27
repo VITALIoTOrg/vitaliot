@@ -475,7 +475,7 @@ public class Keeper {
 			final HttpResponse response = client.execute(post);
 			final String sresponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				logger.log(Level.SEVERE, "Failed to get sensor metadata [ status-code: "
+				logger.log(Level.SEVERE, "Failed to get sensor metadata [ iot-system: " + iotsystem + ", status-code: "
 						+ response.getStatusLine().getStatusCode() + " ].");
 				return;
 			}
@@ -499,7 +499,7 @@ public class Keeper {
 						pullSensorData(iotsystem, url, sensor, property);
 					}
 				} catch (JsonLdError jle) {
-					logger.log(Level.SEVERE, "Failed to get observations URL.", jle);
+					logger.log(Level.SEVERE, "Failed to get observations URL [ iot-system: " + iotsystem + " ].", jle);
 				}
 			}
 		}
@@ -544,7 +544,7 @@ public class Keeper {
 			HttpResponse response = client.execute(post);
 			String sresponse = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				logger.log(Level.SEVERE, "Failed to get observations URL [ status-code: "
+				logger.log(Level.SEVERE, "Failed to get observations URL [ iot-system: " + iotsystem + ", status-code: "
 						+ response.getStatusLine().getStatusCode() + " ].");
 				return null;
 			}
@@ -573,7 +573,7 @@ public class Keeper {
 						}
 					}
 				} catch (JsonLdError jle) {
-					logger.log(Level.SEVERE, "Failed to get observations URL.", jle);
+					logger.log(Level.SEVERE, "Failed to get observations URL [ iot-system: " + iotsystem + " ].", jle);
 				}
 			}
 
@@ -612,7 +612,8 @@ public class Keeper {
 			builder.setDefaultCredentialsProvider(provider);
 		}
 		try (final CloseableHttpClient client = builder.build()) {
-			logger.log(Level.FINE, "Get sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + " ].");
+			logger.log(Level.FINE, "Get sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
+					+ property + " ].");
 			final Date NOW = new Date();
 			final Date from = store.lastAction(sensor);
 			final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
@@ -626,16 +627,19 @@ public class Keeper {
 			final HttpResponse response = client.execute(post);
 			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 				logger.log(Level.SEVERE,
-						"Failed to get sensor data [ status-code: " + response.getStatusLine().getStatusCode() + " ].");
+						"Failed to get sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
+								+ property + ", status-code: " + response.getStatusLine().getStatusCode() + " ].");
 				return;
 			}
 			final String data = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-			logger.log(Level.FINE, "Got sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + " ].");
+			logger.log(Level.FINE, "Got sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
+					+ property + " ].");
 			logger.log(Level.FINER, "Sensor data: " + data + ".");
 			pushSensorDataToDMS(iotsystem, sensor, property, data);
 			store.action(sensor, NOW);
 		} catch (IOException ioe) {
-			logger.log(Level.SEVERE, "Failed to pull.", ioe);
+			logger.log(Level.SEVERE, "Failed to pull [ iot-system: " + iotsystem + ", sensor: " + sensor
+					+ ", property: " + property + " ].", ioe);
 		}
 
 		logger.log(Level.FINE, "Pulled sensor data [ iot-system: " + iotsystem + ", sensor: " + sensor + ", property: "
