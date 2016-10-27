@@ -42,25 +42,16 @@ public class DMS {
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Object status() {
-		// DMSPermission.securityDMSAuth();// Temporary blocked for testing
+		DMSPermission.securityDMSAuth();
 		return Response.status(Response.Status.ACCEPTED)
 				.entity("{\"message\" : \"Welcome to VITAL DMS.\"}").build();
-	}
-
-	@GET
-	@Path("/dmsauth")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Object DMSAuth() {
-		DMSPermission.securityDMSAuth();// Temporary blocked for
-		return Response.status(Response.Status.ACCEPTED)
-				.entity("{\"message\" : \"DMS Re-authenticated.\"}").build();
 	}
 
 	@POST
 	@Path("/frontend")
 	@Produces(MediaType.TEXT_PLAIN)
 	public Object guiAuth(String data) {
-		System.out.println("Data: " + data);
+		//System.out.println("Data: " + data);
 		JSONObject myObj = new JSONObject(data);
 		JSONObject resp = DMSPermission.frontendAuth(myObj.get("name").toString(), myObj.get("password").toString());
 
