@@ -148,7 +148,7 @@ public class Keeper {
 	@Schedule(second = "0", minute = "*/30", hour = "*", persistent = false)
 	public void keep() {
 
-		logger.log(Level.FINE, "Keep.");
+		logger.log(Level.INFO, "Keep.");
 
 		for (final IoTSystem iotsystem : store.read("{\"enabled\": true }")) {
 			final int period = iotsystem.getRefreshPeriod();
@@ -169,7 +169,7 @@ public class Keeper {
 			}
 		}
 
-		logger.log(Level.FINE, "Kept.");
+		logger.log(Level.INFO, "Kept.");
 	}
 
 	/**
@@ -207,7 +207,7 @@ public class Keeper {
 	 */
 	public void keepData(IoTSystem iotsystem) {
 
-		logger.log(Level.FINE, "Keep data [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Keep data [ iot-system: " + iotsystem + " ].");
 
 		if (!iotsystem.isEnabled()) {
 			logger.log(Level.FINE, iotsystem + " is disabled.");
@@ -224,7 +224,7 @@ public class Keeper {
 			logger.log(Level.SEVERE, "Failed to keep data [ iot-system: " + iotsystem + " ].", ioe);
 		}
 
-		logger.log(Level.FINE, "Kept data [ iot-system: " + iotsystem + " ].");
+		logger.log(Level.INFO, "Kept data [ iot-system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -254,8 +254,11 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+				logger.log(Level.SEVERE, "Failed to pull system metadata [ iot-system: " + iotsystem + ", status-code: "
+						+ response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 			metadata = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			logger.log(Level.FINE, "Got system metadata [ iot-system: " + iotsystem + " ].");
 			logger.log(Level.FINER, "System metadata: " + metadata + ".");
@@ -291,8 +294,11 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity(metadata, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_ACCEPTED) {
+				logger.log(Level.SEVERE, "Failed to push system metadata to DMS [ iot-system: " + iotsystem
+						+ ", status-code: " + response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 		}
 		logger.log(Level.FINE, "Pushed system metadata to DMS [ iot-system: " + iotsystem + " ].");
 	}
@@ -324,8 +330,11 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+				logger.log(Level.SEVERE, "Failed to pull service metadata [ iot-system: " + iotsystem
+						+ ", status-code: " + response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 			metadata = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			logger.log(Level.FINE, "Got service metadata [ iot-system: " + iotsystem + " ].");
 			logger.log(Level.FINER, "Service metadata: " + metadata + ".");
@@ -363,8 +372,11 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity(metadata, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_ACCEPTED) {
+				logger.log(Level.SEVERE, "Failed to push service metadata to DMS [ iot-system: " + iotsystem
+						+ ", status-code: " + response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 		}
 		logger.log(Level.FINE, "Pushed service metadata to DMS [ iot-system: " + iotsystem + " ].");
 	}
@@ -397,8 +409,11 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity("{}", StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+				logger.log(Level.SEVERE, "Failed to pull sensor metadata [ iot-system: " + iotsystem + ", status-code: "
+						+ response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 			metadata = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
 			logger.log(Level.FINE, "Got sensor metadata [ iot-system: " + iotsystem + " ].");
 			logger.log(Level.FINER, "Sensor metadata: " + metadata + ".");
@@ -435,8 +450,11 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity(metadata, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_ACCEPTED) {
+				logger.log(Level.SEVERE, "Failed to push sensor metadata to DMS [ iot-system: " + iotsystem
+						+ ", status-code: " + response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 		}
 		logger.log(Level.FINE, "Pushed sensor metadata to DMS [ iot-system: " + iotsystem + " ].");
 	}
@@ -490,7 +508,7 @@ public class Keeper {
 					context.put("@context", s.get("@context"));
 					final JsonLdOptions options = new JsonLdOptions();
 					options.setExpandContext(context);
-					s = (Map<String, Object>) JsonLdProcessor.expand(JsonUtils.fromString(sresponse), options).get(0);
+					s = (Map<String, Object>) JsonLdProcessor.expand(o, options).get(0);
 					final String sensor = (String) s.get("@id");
 					final List<Object> ll = (List<Object>) s.get("http://purl.oclc.org/NET/ssnx/ssn#observes");
 					for (final Object oo : ll) {
@@ -678,8 +696,13 @@ public class Keeper {
 			final HttpEntity entity = new StringEntity(data, StandardCharsets.UTF_8);
 			post.setEntity(entity);
 			final HttpResponse response = client.execute(post);
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_ACCEPTED) {
+				logger.log(Level.SEVERE,
+						"Failed to push sensor data to DMS [ iot-system: " + iotsystem + ", sensor: " + sensor
+								+ ", property: " + property + ", status-code: "
+								+ response.getStatusLine().getStatusCode() + " ].");
 				return;
+			}
 		}
 		logger.log(Level.FINE, "Pushed sensor data to DMS [ iot-system: " + iotsystem + ", sensor: " + sensor
 				+ ", property: " + property + " ].");
