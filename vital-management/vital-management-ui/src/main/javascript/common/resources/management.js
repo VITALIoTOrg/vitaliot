@@ -22,6 +22,8 @@ angular.module('common.resources.management', [])
                             return _.groupBy(response.data, function(metric) {
                                 return metric.type;
                             });
+                        }, function(error) {
+                            return [];
                         });
                 },
 
@@ -32,6 +34,32 @@ angular.module('common.resources.management', [])
 
                     };
                     return $http.post(API_PATH + '/management/monitoring', query)
+                        .then(function(response) {
+                            return response.data;
+                        });
+                },
+
+                fetchSupportedSlaParameterList: function(systemId) {
+                    var query = {
+                        system: systemId
+                    };
+                    return $http.post(API_PATH + '/management/sla/supported', query)
+                        .then(function(response) {
+                            return _.groupBy(response.data, function(metric) {
+                                return metric.type;
+                            });
+                        }, function(error) {
+                            return {};
+                        });
+                },
+
+                fetchSlaParameter: function(systemId, metricList) {
+                    var query = {
+                        system: systemId,
+                        metric: metricList
+
+                    };
+                    return $http.post(API_PATH + '/management/sla', query)
                         .then(function(response) {
                             return response.data;
                         });

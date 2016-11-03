@@ -187,6 +187,52 @@ public class VitalRestService extends RESTService {
 		return Response.ok(result).build();
 	}
 
+	@GET
+	@Path("/sla")
+	public Response getSupportedSLAParameters() throws Exception {
+		JsonNode configuration = configurationDAO.get();
+
+		// Get configuration.orchestrator.performance template
+		JsonNode sla = configuration.get("orchestrator").get("sla");
+
+		// Replace url
+		String url = configuration.get("orchestrator").get("url").asText();
+		String result = sla.toString().replaceAll("<orchestrator.url>", url);
+
+		// Return result
+		return Response.ok(result).build();
+	}
+
+	@POST
+	@Path("/sla")
+	public Response getSLAParameters(JsonNode query) throws Exception {
+		JsonNode configuration = configurationDAO.get();
+		String url = configuration.get("orchestrator").get("url").asText();
+		/*
+		"metric": [
+		 	"http://vital-iot.eu/ontology/ns/SysLoad",
+		 	"http://vital-iot.eu/ontology/ns/SysUptime"
+		]
+		*/
+		ArrayNode metrics = (ArrayNode) query.get("metric");
+
+		ArrayNode observationsArray = objectMapper.createArrayNode();
+
+		for (JsonNode metric : metrics) {
+			String observationType = metric.asText();
+			// Get configuration.orchestrator.performance template
+			ObjectNode observation = generatePerformanceObservation(observationType);
+			// Add to array
+			observationsArray.add(observation);
+		}
+		// Replace url
+		String result = observationsArray.toString().replaceAll("<orchestrator.url>", url);
+
+		// Return result
+		return Response.ok(result).build();
+	}
+
+
 	@POST
 	@Path("/observation")
 	public Response getObservation(JsonNode query) throws Exception {
@@ -237,7 +283,7 @@ public class VitalRestService extends RESTService {
 		observationProperty.put("type", "vital:" + Character.toLowerCase(observationType.charAt(0)) + observationType.substring(1));
 		//3. Value
 		ObjectNode observationValue = (ObjectNode) observation.get("ssn:observationResult").get("ssn:hasValue");
-		observationValue.put("value", 10);
+		observationValue.put("value", (Math.random() * 10 + 1));
 		//4. Date
 		ObjectNode observationTime = (ObjectNode) observation.get("ssn:observationResultTime");
 		observationTime.put("time:inXSDDateTime", sdf.format(new Date()));

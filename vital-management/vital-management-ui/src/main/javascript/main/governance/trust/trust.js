@@ -1,6 +1,7 @@
 'use strict';
 angular.module('main.governance.trust', [
-    'ngRoute'
+    'ngRoute',
+    'main.governance.trust.widgets'
 ])
 
 
@@ -30,9 +31,22 @@ angular.module('main.governance.trust', [
                 controllerAs: 'tCtrl',
                 resolve: {
                     systemList: [
-                        'systemResource',
-                        function(systemResource) {
-                            return systemResource.fetchList();
+                        '$q', 'systemResource', 'managementResource',
+                        function($q, systemResource, managementResource) {
+                            return systemResource.fetchList()
+                                .then(function(systemList) {
+                                    var supportedSlaMetricsPromises = [];
+                                    _.forEach(systemList, function(system) {
+                                        supportedSlaMetricsPromises.push(managementResource.fetchSupportedSlaParameterList(system.id));
+                                    });
+                                    return $q.all(supportedSlaMetricsPromises)
+                                        .then(function(data) {
+                                            _.forEach(systemList, function(system, index) {
+                                                system.slaParameterMap = data[index];
+                                            });
+                                            return systemList;
+                                        });
+                                });
                         }
                     ],
                     trustManager: [
@@ -54,6 +68,13 @@ angular.module('main.governance.trust', [
                         function($route, $filter, systemResource) {
                             var uri = $filter('decodeHistoryComponent')($route.current.params.uri);
                             return systemResource.fetch(uri);
+                        }
+                    ],
+                    supportedMetrics: [
+                        '$route', '$filter', 'managementResource',
+                        function($route, $filter, managementResource) {
+                            var uri = $filter('decodeHistoryComponent')($route.current.params.uri);
+                            return managementResource.fetchSupportedSlaParameterList(uri);
                         }
                     ]
                 }
@@ -86,16 +107,10 @@ angular.module('main.governance.trust', [
             var ctrl = this;
             ctrl.systemList = systemList;
             ctrl.trustManager = trustManager;
-            ctrl.slaParameterList = [
-                "http://vital-iot.eu/ontology/ns/UsedMem",
-                "http://vital-iot.eu/ontology/ns/AvailableMem",
-                "http://vital-iot.eu/ontology/ns/AvailableDisk",
-                "http://vital-iot.eu/ontology/ns/SysLoad",
-                "http://vital-iot.eu/ontology/ns/ServedRequests",
-                "http://vital-iot.eu/ontology/ns/Errors",
-                "Http://vital-iot.eu/ontology/ns/SysUptime",
-                "http://vital-iot.eu/ontology/ns/PendingRequests"
-            ];
+
+            ctrl.supportsSlaParameters = function(system) {
+                return !_.isEmpty(system.slaParameterMap);
+            };
 
             ctrl.submit = function(ngModelCtrl) {
                 trustResource.start(ctrl.trustManager)
@@ -107,10 +122,12 @@ angular.module('main.governance.trust', [
     ])
 
     .controller('TrustSystemController', [
-        '$scope', '$interval', 'trustResource', 'system',
-        function($scope, $interval, trustResource, system) {
+        '$scope', '$interval', 'trustResource', 'system', 'supportedMetrics',
+        function($scope, $interval, trustResource, system, supportedMetrics) {
             var ctrl = this;
             ctrl.system = system;
+            ctrl.supportedMetrics = supportedMetrics;
+
             ctrl.chart = {
                 trustScore: []
             };

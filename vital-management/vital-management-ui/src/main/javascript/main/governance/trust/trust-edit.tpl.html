@@ -21,7 +21,10 @@
                                     <div class="col-md-2">Down Threshold</div>
                                     <div class="col-md-2">Address</div>
                                 </div>
-                                <div class="row" ng-repeat="slaParam in tCtrl.slaParameterList">
+                                <div ng-if="!tCtrl.supportsSlaParameters(system)">
+                                    <p class="help-block">No Supported SLA Parameters</p>
+                                </div>
+                                <div class="row" ng-repeat="(slaParam, slaObject) in system.slaParameterMap">
                                     <div class="col-md-6">
                                         {{slaParam}}
                                     </div>

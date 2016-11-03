@@ -1,28 +1,23 @@
 <div class="row">
 
-
     <div class="col-xs-12">
         <div>
             <widget-info-system system="tsCtrl.system"></widget-info-system>
         </div>
 
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Trust Score : Chart</h3>
-            </div>
-            <div class="box-body">
-                <trust-score data="tsCtrl.chart.trustScore"></trust-score>
-            </div>
-        </div>
+        <!--<div class="box box-primary">-->
+            <!--<div class="box-header with-border">-->
+                <!--<h3 class="box-title">Trust Score : Chart</h3>-->
+            <!--</div>-->
+            <!--<div class="box-body">-->
+                <!--<trust-score data="tsCtrl.chart.trustScore"></trust-score>-->
+            <!--</div>-->
+        <!--</div>-->
 
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">Trust Score : Raw Data</h3>
-            </div>
-            <div class="box-body">
-                <pre>{{tsCtrl.chart.trustScore}}</pre>
-            </div>
+        <div>
+            <widget-sla system="tsCtrl.system" supported-metrics="tsCtrl.supportedMetrics"></widget-sla>
         </div>
 
     </div>
 </div>
+ d
