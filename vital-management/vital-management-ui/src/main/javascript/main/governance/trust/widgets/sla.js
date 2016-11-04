@@ -14,16 +14,6 @@ angular.module('main.governance.trust.widgets.sla', [
                     supportedMetrics: '='
                 },
                 link: function(scope, element, attrs) {
-                    // Validate
-                    var chart = Morris.Bar({
-                        element: element.find('div[data-chart=sla]'),
-                        data: [],
-                        xkey: 'label',
-                        ykeys: ['value'],
-                        labels: ['SLA Parameters']
-                    });
-
-
                     // Init
                     var interval = $interval(function() {
                         refresh();
@@ -43,12 +33,14 @@ angular.module('main.governance.trust.widgets.sla', [
                         ).then(function(data) {
                             scope.metrics = _.map(data, function(d) {
                                 return {
-                                    label: d['http://purl.oclc.org/NET/ssnx/ssn#observationProperty']['@type'].replace('http://vital-iot.eu/ontology/ns/', '').replace(/([a-z])([A-Z])/g, '$1 $2'),
+                                    label: d['http://purl.oclc.org/NET/ssnx/ssn#observationProperty']['@type']
+                                        .replace('http://vital-iot.eu/ontology/ns/', '')
+                                        .replace(/([a-z])([A-Z])/g, '$1 $2')
+                                        .toUpperCase(),
                                     value: d['http://purl.oclc.org/NET/ssnx/ssn#observationResult']['http://purl.oclc.org/NET/ssnx/ssn#hasValue']['http://vital-iot.eu/ontology/ns/value'],
                                     time: d['http://purl.oclc.org/NET/ssnx/ssn#observationResultTime']['http://www.w3.org/2006/time#inXSDDateTime']['@value']
                                 }
                             });
-                            chart.setData(scope.metrics);
                         });
                     }
 

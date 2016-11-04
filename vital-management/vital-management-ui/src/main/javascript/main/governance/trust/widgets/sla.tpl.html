@@ -4,6 +4,27 @@
             System SLA Parameter Values
         </h3>
     </div>
-    <div class="box-body" data-chart="sla" style="height: 360px">
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-4" ng-repeat="metric in metrics">
+                <div class="small-box bg-blue">
+                    <div class="inner">
+                        <h3>
+                            {{metric.value | number}}
+                        </h3>
+
+                        <p>
+                            {{metric.label}}
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-pie-chart"> </i>
+                    </div>
+                    <div class="small-box-footer">
+                        &nbsp;<span>{{metric.time}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
