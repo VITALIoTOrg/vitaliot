@@ -10,6 +10,8 @@ import com.github.jsonldjava.utils.JsonUtils;
 import eu.vital.orchestrator.security.SecurityService;
 import eu.vital.orchestrator.security.VitalUserPrincipal;
 
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
@@ -20,6 +22,7 @@ import javax.ws.rs.core.NewCookie;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @RequestScoped
@@ -38,7 +41,11 @@ public class VitalClient {
 	SecurityService securityService;
 
 	public JsonNode doGet(String url) throws Exception {
-		Client client = ClientBuilder.newClient();
+		Client client = new ResteasyClientBuilder()
+				.establishConnectionTimeout(10, TimeUnit.SECONDS)
+				.socketTimeout(30, TimeUnit.SECONDS)
+				.build();
+
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
 				.accept("*")
@@ -54,7 +61,11 @@ public class VitalClient {
 	}
 
 	public JsonNode doPost(String url, JsonNode data) throws Exception {
-		Client client = ClientBuilder.newClient();
+		Client client = new ResteasyClientBuilder()
+				.establishConnectionTimeout(10, TimeUnit.SECONDS)
+				.socketTimeout(30, TimeUnit.SECONDS)
+				.build();
+
 		JsonNode jsonNode = client.target(url)
 				.request(MediaType.APPLICATION_JSON)
 				.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()))

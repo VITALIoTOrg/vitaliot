@@ -7,115 +7,126 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.jsonldjava.core.JsonLdOptions;
 import com.github.jsonldjava.core.JsonLdProcessor;
 import com.github.jsonldjava.utils.JsonUtils;
+
 import eu.vital.management.security.SecurityService;
 import eu.vital.management.security.VitalUserPrincipal;
+
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
 
 @RequestScoped
 public class VitalClient {
 
-	@Inject
-	Logger logger;
+    @Inject
+    Logger logger;
 
-	@Inject
-	ObjectMapper objectMapper;
+    @Inject
+    ObjectMapper objectMapper;
 
-	@Inject
-	VitalUserPrincipal userPrincipal;
+    @Inject
+    VitalUserPrincipal userPrincipal;
 
-	@Inject
-	SecurityService securityService;
+    @Inject
+    SecurityService securityService;
 
-	public JsonNode doGet(String url) throws Exception {
-		Client client = ClientBuilder.newClient();
-		Invocation.Builder builder = client.target(url)
-				.request(MediaType.APPLICATION_JSON)
-				.accept("*");
-		if (userPrincipal.getToken() != null) {
-			builder = builder.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()));
-		}
-		JsonNode jsonNode = builder.get(JsonNode.class);
-		client.close();
-		if (jsonNode == null) {
-			return null;
-		}
-		jsonNode = expand(jsonNode);
+    public JsonNode doGet(String url) throws Exception {
+        Client client = new ResteasyClientBuilder()
+                .establishConnectionTimeout(10, TimeUnit.SECONDS)
+                .socketTimeout(30, TimeUnit.SECONDS)
+                .build();
 
-		return jsonNode;
-	}
+        Invocation.Builder builder = client.target(url)
+                .request(MediaType.APPLICATION_JSON)
+                .accept("*");
+        if (userPrincipal.getToken() != null) {
+            builder = builder.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()));
+        }
+        JsonNode jsonNode = builder.get(JsonNode.class);
+        client.close();
+        if (jsonNode == null) {
+            return null;
+        }
+        jsonNode = expand(jsonNode);
 
-	public JsonNode doPost(String url, JsonNode data) throws Exception {
-		Client client = ClientBuilder.newClient();
+        return jsonNode;
+    }
 
-		Invocation.Builder builder = client.target(url)
-				.request(MediaType.APPLICATION_JSON)
-				.accept("*");
-		if (userPrincipal.getToken() != null) {
-			builder = builder.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()));
-		}
-		JsonNode jsonNode = builder.post(Entity.json(data), JsonNode.class);
+    public JsonNode doPost(String url, JsonNode data) throws Exception {
+        Client client = new ResteasyClientBuilder()
+                .establishConnectionTimeout(10, TimeUnit.SECONDS)
+                .socketTimeout(30, TimeUnit.SECONDS)
+                .build();
 
-		client.close();
-		if (jsonNode == null) {
-			return null;
-		}
-		jsonNode = expand(jsonNode);
+        Invocation.Builder builder = client.target(url)
+                .request(MediaType.APPLICATION_JSON)
+                .accept("*");
+        if (userPrincipal.getToken() != null) {
+            builder = builder.cookie(new NewCookie(securityService.getCookieName(), userPrincipal.getToken()));
+        }
+        JsonNode jsonNode = builder.post(Entity.json(data), JsonNode.class);
 
-		return jsonNode;
-	}
+        client.close();
+        if (jsonNode == null) {
+            return null;
+        }
+        jsonNode = expand(jsonNode);
 
-	private JsonNode expand(JsonNode jsonLD) throws Exception {
-		boolean isArray = jsonLD.isArray();
-		boolean isObject = jsonLD.isObject();
+        return jsonNode;
+    }
 
-		if (isArray) {
-			return expandArray((ArrayNode) jsonLD);
-		}
-		if (isObject) {
-			return expandObject((ObjectNode) jsonLD);
-		}
-		return jsonLD;
-	}
+    private JsonNode expand(JsonNode jsonLD) throws Exception {
+        boolean isArray = jsonLD.isArray();
+        boolean isObject = jsonLD.isObject();
 
-	private ArrayNode expandArray(ArrayNode jsonLD) throws Exception {
-		ArrayNode arrayNode = objectMapper.createArrayNode();
-		for (JsonNode objectNode : jsonLD) {
-			ObjectNode expandedObjectNode = expandObject((ObjectNode) objectNode);
-			arrayNode.add(expandedObjectNode);
-		}
-		return arrayNode;
-	}
+        if (isArray) {
+            return expandArray((ArrayNode) jsonLD);
+        }
+        if (isObject) {
+            return expandObject((ObjectNode) jsonLD);
+        }
+        return jsonLD;
+    }
 
-	private ObjectNode expandObject(ObjectNode jsonLD) throws Exception {
-		if (!jsonLD.has("@context")) {
-			// It is JSON not JSON-LD
-			return jsonLD;
-		}
+    private ArrayNode expandArray(ArrayNode jsonLD) throws Exception {
+        ArrayNode arrayNode = objectMapper.createArrayNode();
+        for (JsonNode objectNode : jsonLD) {
+            ObjectNode expandedObjectNode = expandObject((ObjectNode) objectNode);
+            arrayNode.add(expandedObjectNode);
+        }
+        return arrayNode;
+    }
 
-		Map context = new HashMap();
-		JsonLdOptions options = new JsonLdOptions();
+    private ObjectNode expandObject(ObjectNode jsonLD) throws Exception {
+        if (!jsonLD.has("@context")) {
+            // It is JSON not JSON-LD
+            return jsonLD;
+        }
 
-		Object jsonObject = JsonUtils.fromString(jsonLD.toString());
-		List<Object> result = JsonLdProcessor.expand(jsonObject, options);
-		Object compactJSON = JsonLdProcessor.compact(result, context, options);
+        Map context = new HashMap();
+        JsonLdOptions options = new JsonLdOptions();
 
-		// Convert expanded
-		String compactJSONString = JsonUtils.toString(compactJSON);
-		ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(compactJSONString);
+        Object jsonObject = JsonUtils.fromString(jsonLD.toString());
+        List<Object> result = JsonLdProcessor.expand(jsonObject, options);
+        Object compactJSON = JsonLdProcessor.compact(result, context, options);
 
-		return jsonNode;
-	}
+        // Convert expanded
+        String compactJSONString = JsonUtils.toString(compactJSON);
+        ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(compactJSONString);
+
+        return jsonNode;
+    }
 
 }
