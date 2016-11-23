@@ -104,10 +104,11 @@ private Cookie readAuthCookie(@Context HttpHeaders hh) {
 		
 		
 		String new_bound="{\"name\":\"http://purl.oclc.org:80/NET/ssnx/ssn#observationProperty|@type$",ii="",groupName="location";
+		String new_bound_meta="{\"name\":\"http://purl.oclc.org:80/NET/ssnx/ssn#observes|@type$";
 		String bound_ob="";
 		String policyNameArea="GlobalAreaBoundaryPolicy",policyNameObservation="GlobalObservationsBoundaryPolicy",mapLimit="";
-		String pre_ang_lat="{http://vital-iot.eu/ontology/ns/hasLastKnownLocation|http://www.w3.org/2003/01/geo/wgs84_pos#lat|@value${\"$gt\" : ";
-		String pre_ang_long="{http://vital-iot.eu/ontology/ns/hasLastKnownLocation|http://www.w3.org/2003/01/geo/wgs84_pos#long|@value${\"$gt\" : ";
+		String pre_ang_lat="{http://vital-iot.eu/ontology/ns/hasLastKnownLocation|http://www.w3.org/2003/01/geo/wgs84_pos#lat|@value${\"$gt\":";
+		String pre_ang_long="{http://vital-iot.eu/ontology/ns/hasLastKnownLocation|http://www.w3.org/2003/01/geo/wgs84_pos#long|@value${\"$gt\":";
 
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> result = mapper.convertValue(boundaries, Map.class);
@@ -117,9 +118,11 @@ private Cookie readAuthCookie(@Context HttpHeaders hh) {
         		Map<String, Object> bound = mapper.convertValue(result.get(key), Map.class);
         		for(String first: bound.keySet()){
         			if( key.indexOf("mapArea")==-1 && bound.get(first).toString().equals("false")){
-    		        bound_ob=bound_ob+ii+new_bound+first+"\"";
+    		        		bound_ob=bound_ob+ii+new_bound+first+"\"";
         				ii="},";
+					bound_ob=bound_ob+ii+new_bound_meta+first+"\"";
         				bound_found=true;
+
 
         			}
         			else if ( key.indexOf("mapArea") == 0 && first.equals("features")){
@@ -141,6 +144,8 @@ private Cookie readAuthCookie(@Context HttpHeaders hh) {
 		
 		JsonNode createServiceNode=boundaries,actualObj=boundaries;
 		bound_ob="{\"resources\" : ["+bound_ob+"}]}";
+
+
 		ObjectMapper mapper2 = new ObjectMapper();
 
 		deletePolicy(hh,policyNameObservation);

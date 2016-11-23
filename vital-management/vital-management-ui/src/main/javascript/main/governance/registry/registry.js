@@ -79,9 +79,9 @@ angular.module('main.governance.registry', [
                         return securityResource.deleteGroup(system.name, $scope);
                     }).then(function () {
                         return securityResource.deletePolicy(system.name, $scope);
-                    }).then(function () {
+                    })/*.then(function () {
                         return securityResource.deletePolicy(system.name + " fine-grained", $scope);
-                    }).then(function () {
+                    })*/.then(function () {
                         $route.reload();
                     });
             };
@@ -130,7 +130,7 @@ angular.module('main.governance.registry', [
                                 policyForm.nores = false;
                                 policyForm.noact = false;
                                 securityResource.updatePolicy(system.name, policyForm, $scope, "sysupd")
-                                    .then(function() {
+                                   /* .then(function() {
                                         // Update fine-grained policy
                                         policyForm.description = "Automatically generated policy regulating access to " + system.name + " data (fine-grained access control)";
                                         policyForm.resources = [ "id$" + system.ppi + ".*"];
@@ -142,7 +142,7 @@ angular.module('main.governance.registry', [
                                         policyForm.nores = false;
                                         policyForm.noact = false;
                                         return securityResource.updatePolicy(system.name + " fine-grained", policyForm, $scope, "sysupd");
-                                    }).then(function() {
+                                    })*/.then(function() {
                                         $location.path("/governance/registry/list");
                                     });
                             }
@@ -171,7 +171,7 @@ angular.module('main.governance.registry', [
                                         policyForm.actions['POST'] = true;
                                         policyForm.groups = [system.name];
                                         return securityResource.createPolicy(policyForm, $scope);
-                                    }).then(function() {
+                                    })/*.then(function() {
                                         // Create fine-grained policy for the PPI and group
                                         policyForm.name = system.name + " fine-grained";
                                         policyForm.description = "Automatically generated policy regulating access to " + system.name + " data (fine-grained access control)";
@@ -181,7 +181,7 @@ angular.module('main.governance.registry', [
                                         policyForm.actions['RETRIEVE'] = true;
                                         policyForm.groups = [system.name];
                                         return securityResource.createPolicy(policyForm, $scope);
-                                    }).then(function() {
+                                    })*/.then(function() {
                                         $location.path("/governance/registry/list");
                                     });
                             }
@@ -205,7 +205,7 @@ angular.module('main.governance.registry', [
                                     policyForm.actions['POST'] = true;
                                     policyForm.groups = [system.name];
                                     return securityResource.createPolicy(policyForm, $scope);
-                                }).then(function() {
+                                })/*.then(function() {
                                     // Create fine-grained policy for the PPI and group
                                     policyForm.name = system.name + " fine-grained";
                                     policyForm.description = "Automatically generated policy regulating access to " + system.name + " data (fine-grained access control)";
@@ -215,7 +215,7 @@ angular.module('main.governance.registry', [
                                     policyForm.actions['RETRIEVE'] = true;
                                     policyForm.groups = [system.name];
                                     return securityResource.createPolicy(policyForm, $scope)
-                                }).then(function() {
+                                })*/.then(function() {
                                     // Go back to list of systems
                                     $location.path("/governance/registry/list");
                                 });
