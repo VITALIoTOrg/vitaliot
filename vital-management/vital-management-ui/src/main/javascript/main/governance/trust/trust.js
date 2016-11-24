@@ -183,8 +183,6 @@ angular.module('main.governance.trust', [
                                 value: score.trustScore
                             };
                         });
-                        console.log(scores[0], data);
-
                         historyChart.setData(data);
                     });
                 }
