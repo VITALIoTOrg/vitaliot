@@ -54,6 +54,44 @@ public class ManagementRestService {
 		return Response.ok(metricsObservations).build();
 	}
 
+
+	@POST
+	@Path("/sla/supported")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSupportedSLAMetrics(JsonNode query) throws Exception {
+		/*
+		{
+            "@context": "http://vital-iot.org/contexts/query.jsonld",
+            "system" :"uri": "http://www.example.com"
+        }
+		*/
+		String systemURI = query.get("system").asText();
+		JsonNode metrics = managementService.getSupportedSlaMetrics(systemURI);
+
+		return Response.ok(metrics).build();
+	}
+
+	@POST
+	@Path("/sla")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getSlaMetrics(JsonNode query) throws Exception {
+		/*
+		{
+            "@context": "http://vital-iot.org/contexts/query.jsonld",
+            "system" : "http://www.example.com",
+  			"metric": [
+    			"http://vital-iot.eu/ontology/ns/SysLoad",
+    			"http://vital-iot.eu/ontology/ns/SysUptime"
+  			]
+        }
+		*/
+		String systemURI = query.get("system").asText();
+		JsonNode metricsObservations = managementService.getSlaMetrics(systemURI, query);
+
+		return Response.ok(metricsObservations).build();
+	}
+
+
 	@POST
 	@Path("/configuration")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -19,7 +19,7 @@ public class PropertyFeeder {
 	private PropertyLoader loader;
 
 	/**
-	 * Injects the value of a property at the specified point.
+	 * Injects the value of a property at the given point.
 	 * 
 	 * @param injectionPoint
 	 *            the injection point.
@@ -33,14 +33,14 @@ public class PropertyFeeder {
 		final String value = loader.getProperty(name);
 
 		if (value == null || name.trim().isEmpty()) {
-			throw new IllegalArgumentException("Unknown property: " + name);
+			throw new IllegalArgumentException("Unknown property " + name + ".");
 		}
 
 		return value;
 	}
 
 	/**
-	 * Injects the value of a property as an integer at the specified point.
+	 * Injects the value of a property as an integer at the given point.
 	 * 
 	 * @param injectionPoint
 	 *            the injection point.

@@ -702,7 +702,7 @@ angular.module('main.security.resource', [])
                 },
 
                 createGroup: function (formData, $scope) {
-                    $http({
+                    return $http({
                         method: 'POST',
                         url: basePath + '/group/create',
                         data: $.param(formData),
@@ -714,6 +714,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             $scope.createdGroup = formData.name;
                             $scope.creating = false;
+                            return response;
                         }, function (response) {
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
@@ -722,11 +723,12 @@ angular.module('main.security.resource', [])
                                 }
                             }
                             $scope.creating = false;
+                            return response;
                         });
                 },
 
                 deleteGroup: function (name, $scope) {
-                    $http({
+                    return $http({
                         method: 'POST',
                         url: basePath + '/group/delete',
                         data: $.param({'name': name}),
@@ -739,6 +741,7 @@ angular.module('main.security.resource', [])
                             $scope.deletedGroup = name;
                             service.getGroups($scope);
                             $scope.deleting = false;
+                            return response;
                         }, function (response) {
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
@@ -747,6 +750,7 @@ angular.module('main.security.resource', [])
                                 }
                             }
                             $scope.deleting = false;
+                            return response;
                         });
                 },
 
@@ -757,7 +761,7 @@ angular.module('main.security.resource', [])
                             index--;
                         }
                     }
-                    $http({
+                    return $http({
                         method: 'POST',
                         url: basePath + '/policy/create',
                         data: $.param(formData),
@@ -769,6 +773,7 @@ angular.module('main.security.resource', [])
                             $scope.response = response;
                             $scope.createdPolicy = formData.name;
                             $scope.creating = false;
+                            return response;
                         }, function (response) {
                             $scope.response = response;
                             if (response.hasOwnProperty('data') && response.data !== null) {
@@ -777,6 +782,7 @@ angular.module('main.security.resource', [])
                                 }
                             }
                             $scope.creating = false;
+                            return response;
                         });
                 },
 
@@ -795,6 +801,7 @@ angular.module('main.security.resource', [])
                             service.getPolicies($scope);
                             $scope.msgEvent = 'deletePolicy';
                             $scope.deleting = false;
+                            return response;
                         }, function (response) {
                             $scope.response = response;
                             $scope.msgEvent = 'deletePolicy';
@@ -804,11 +811,12 @@ angular.module('main.security.resource', [])
                                 }
                             }
                             $scope.deleting = false;
+                            return response;
                         });
                 },
 
                 updatePolicy: function (name, formData, $scope, action) {
-                    $http({
+                    return $http({
                         method: 'POST',
                         url: basePath + '/policy/' + name,
                         data: $.param(formData),
@@ -871,30 +879,32 @@ angular.module('main.security.resource', [])
                                     $scope.policyGroups[index] = $scope.policy.subject.subjectValues[index].match(/id=(.*),ou/g)[0].replace('id=', '').replace(',ou', '');
                                 }
                             }
-                            service.getApplication($scope, $scope.policy.applicationName)
-                                .then(function (responseApp) {
-                                    if ($scope.policy.hasOwnProperty('actionValues')) {
-                                        for (var action1 in responseApp.data.actions) {
-                                            if ($scope.policy.actionValues.hasOwnProperty(action1)) {
-                                                $scope.poldefined[action1] = true;
-                                            }
-                                            else {
-                                                $scope.policy.actionValues[action1] = false;
-                                                $scope.poldefined[action1] = false;
+                            if (action !== 'sysupd')
+                                service.getApplication($scope, $scope.policy.applicationName)
+                                    .then(function (responseApp) {
+                                        if ($scope.policy.hasOwnProperty('actionValues')) {
+                                            for (var action1 in responseApp.data.actions) {
+                                                if ($scope.policy.actionValues.hasOwnProperty(action1)) {
+                                                    $scope.poldefined[action1] = true;
+                                                }
+                                                else {
+                                                    $scope.policy.actionValues[action1] = false;
+                                                    $scope.poldefined[action1] = false;
+                                                }
                                             }
                                         }
-                                    }
-                                    else {
-                                        for (var action2 in responseApp.data.actions) {
-                                            $scope.policy.actionValues[action2] = false;
-                                            $scope.poldefined[action2] = false;
+                                        else {
+                                            for (var action2 in responseApp.data.actions) {
+                                                $scope.policy.actionValues[action2] = false;
+                                                $scope.poldefined[action2] = false;
+                                            }
                                         }
-                                    }
-                                    if (action === 'actionsUpd') {
-                                        $scope.disableActionsEdit();
-                                    }
-                                }, function (responseApp) {
-                                });
+                                        if (action === 'actionsUpd') {
+                                            $scope.disableActionsEdit();
+                                        }
+                                    }, function (responseApp) {
+                                    });
+                            return response;
                         }, function (response) {
                             if (action === 'addGr') {
                                 $scope.msgEvent = 'addGroup';
@@ -926,6 +936,7 @@ angular.module('main.security.resource', [])
                                     authentication.showLogin();
                                 }
                             }
+                            return response;
                         });
                 },
 

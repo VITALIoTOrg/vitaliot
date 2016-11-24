@@ -130,7 +130,10 @@ public class AdminService {
 			if (iotDataAdapterSystems.isArray()) {
 				ArrayNode arrayNode = (ArrayNode) iotDataAdapterSystems;
 				for (int i = 0; i < arrayNode.size(); i++) {
-					systemUrls.add(arrayNode.get(i).get("ppi").asText());
+					JsonNode register = arrayNode.get(i);
+					if (register.get("enabled").asBoolean()) {
+						systemUrls.add(register.get("ppi").asText());
+					}
 				}
 			}
 		} catch (Exception e) {

@@ -61,8 +61,8 @@ angular.module('main.governance.registry', [
      ******************/
 
     .controller('RegistryListController', [
-        '$scope', '$route', 'registryResource', 'systemList',
-        function ($scope, $route, registryResource, systemList) {
+        '$scope', '$route', 'registryResource', 'securityResource', 'systemList',
+        function ($scope, $route, registryResource, securityResource, systemList) {
             var ctrl = this;
             ctrl.systems = systemList;
 
@@ -76,6 +76,12 @@ angular.module('main.governance.registry', [
             ctrl.deregister = function (system) {
                 registryResource.remove(system.id)
                     .then(function () {
+                        return securityResource.deleteGroup(system.name, $scope);
+                    }).then(function () {
+                        return securityResource.deletePolicy(system.name, $scope);
+                    })/*.then(function () {
+                        return securityResource.deletePolicy(system.name + " fine-grained", $scope);
+                    })*/.then(function () {
                         $route.reload();
                     });
             };
@@ -95,9 +101,10 @@ angular.module('main.governance.registry', [
 
 
     .controller('RegistryEditController', [
-        '$scope', '$location', 'registryResource', 'system',
-        function ($scope, $location, registryResource, system) {
+        '$scope', '$location', 'registryResource', 'securityResource', 'system',
+        function ($scope, $location, registryResource, securityResource, system) {
             var ctrl = this;
+            var originalName = system.name;
             ctrl.system = system;
             ctrl.requiresBasicAuth = (!!ctrl.system.authenticationInfo.username) || (!!ctrl.system.authenticationInfo.password);
 
@@ -108,12 +115,110 @@ angular.module('main.governance.registry', [
                 if (system.id != null) {
                     registryResource.update(ctrl.system)
                         .then(function () {
-                            $location.path("/governance/registry/list");
+                            // If the name it's still the same update existing policies
+                            if (system.name == originalName) {
+                                // Update basic policy
+                                var policyForm = {};
+                                policyForm.description = "Automatically generated policy regulating access to " + system.name;
+                                policyForm.resources = [system.ppi + "*", system.ppi + "/*"];
+                                policyForm.actions = {};
+                                policyForm.actions['GET'] = true;
+                                policyForm.actions['POST'] = true;
+                                policyForm.groups = [system.name];
+                                policyForm.active = true;
+                                policyForm.nogr = false;
+                                policyForm.nores = false;
+                                policyForm.noact = false;
+                                securityResource.updatePolicy(system.name, policyForm, $scope, "sysupd")
+                                   /* .then(function() {
+                                        // Update fine-grained policy
+                                        policyForm.description = "Automatically generated policy regulating access to " + system.name + " data (fine-grained access control)";
+                                        policyForm.resources = [ "id$" + system.ppi + ".*"];
+                                        policyForm.actions = {};
+                                        policyForm.actions['RETRIEVE'] = true;
+                                        policyForm.groups = [system.name];
+                                        policyForm.active = true;
+                                        policyForm.nogr = false;
+                                        policyForm.nores = false;
+                                        policyForm.noact = false;
+                                        return securityResource.updatePolicy(system.name + " fine-grained", policyForm, $scope, "sysupd");
+                                    })*/.then(function() {
+                                        $location.path("/governance/registry/list");
+                                    });
+                            }
+                            // Otherwise delete old ones and create new ones
+                            else {
+                                // Delete old group and policies
+                                var groupForm = {};
+                                var policyForm = {};
+                                securityResource.deleteGroup(originalName, $scope)
+                                    .then(function() {
+                                        return securityResource.deletePolicy(originalName, $scope);
+                                    }).then(function() {
+                                        return securityResource.deletePolicy(originalName + " fine-grained", $scope);
+                                    }).then(function() {
+                                        // Create group for the system
+                                        groupForm.name = system.name;
+                                        return securityResource.createGroup(groupForm, $scope);
+                                    }).then(function() {
+                                        // Create policy to give access to the system to just created group
+                                        policyForm.name = system.name;
+                                        policyForm.description = "Automatically generated policy regulating access to " + system.name;
+                                        policyForm.appname = "iPlanetAMWebAgentService";
+                                        policyForm.resources = [system.ppi + "*", system.ppi + "/*"];
+                                        policyForm.actions = {};
+                                        policyForm.actions['GET'] = true;
+                                        policyForm.actions['POST'] = true;
+                                        policyForm.groups = [system.name];
+                                        return securityResource.createPolicy(policyForm, $scope);
+                                    })/*.then(function() {
+                                        // Create fine-grained policy for the PPI and group
+                                        policyForm.name = system.name + " fine-grained";
+                                        policyForm.description = "Automatically generated policy regulating access to " + system.name + " data (fine-grained access control)";
+                                        policyForm.appname = "Data access control";
+                                        policyForm.resources = [ "id$" + system.ppi + ".*"];
+                                        policyForm.actions = {};
+                                        policyForm.actions['RETRIEVE'] = true;
+                                        policyForm.groups = [system.name];
+                                        return securityResource.createPolicy(policyForm, $scope);
+                                    })*/.then(function() {
+                                        $location.path("/governance/registry/list");
+                                    });
+                            }
                         });
                 } else {
                     registryResource.create(ctrl.system)
                         .then(function () {
-                            $location.path("/governance/registry/list");
+                            // Create group for the new system
+                            var groupForm = {};
+                            var policyForm = {};
+                            groupForm.name = system.name;
+                            securityResource.createGroup(groupForm, $scope)
+                                .then(function() {
+                                    // Create policy to give access to the new system to just created group
+                                    policyForm.name = system.name;
+                                    policyForm.description = "Automatically generated policy regulating access to " + system.name;
+                                    policyForm.appname = "iPlanetAMWebAgentService";
+                                    policyForm.resources = [system.ppi + "*", system.ppi + "/*"];
+                                    policyForm.actions = {};
+                                    policyForm.actions['GET'] = true;
+                                    policyForm.actions['POST'] = true;
+                                    policyForm.groups = [system.name];
+                                    return securityResource.createPolicy(policyForm, $scope);
+                                })/*.then(function() {
+                                    // Create fine-grained policy for the PPI and group
+                                    policyForm.name = system.name + " fine-grained";
+                                    policyForm.description = "Automatically generated policy regulating access to " + system.name + " data (fine-grained access control)";
+                                    policyForm.appname = "Data access control";
+                                    policyForm.resources = [ "id$" + system.ppi + ".*"];
+                                    policyForm.actions = {};
+                                    policyForm.actions['RETRIEVE'] = true;
+                                    policyForm.groups = [system.name];
+                                    return securityResource.createPolicy(policyForm, $scope)
+                                })*/.then(function() {
+                                    // Go back to list of systems
+                                    $location.path("/governance/registry/list");
+                                });
                         });
                 }
             };

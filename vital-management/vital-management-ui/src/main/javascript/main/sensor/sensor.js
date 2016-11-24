@@ -136,6 +136,9 @@ angular.module('main.sensor', [
                     sensor
                         ['http://vital-iot.eu/ontology/ns/hasLastKnownLocation']
                         ['http://www.w3.org/2003/01/geo/wgs84_pos#long']);
+                if (!lattitude || !longitude) {
+                    return null;
+                }
                 var id = sensor['@id']
                     .replace('http://', '')
                     .replace(/:/g, '_')
@@ -168,9 +171,14 @@ angular.module('main.sensor', [
                 $scope.sensors.length = 0;
                 $scope.mapOptions.markers = {};
                 angular.forEach(sensorList, function (sensor) {
+                    var marker;
+
                     $scope.sensors.push(sensor);
                     if (angular.isObject(sensor['http://vital-iot.eu/ontology/ns/hasLastKnownLocation'])) {
-                        angular.extend($scope.mapOptions.markers, sensorToMarker(sensor));
+                        marker = sensorToMarker(sensor);
+                        if (marker) {
+                            angular.extend($scope.mapOptions.markers, marker);
+                        }
                     }
                 });
             }
