@@ -114,8 +114,7 @@ public class Store {
 
 		// Search for all IoT systems.
 		final MongoCollection<Document> collection = database.getCollection(IOT_SYSTEM_COLLECTION_NAME);
-		final FindIterable<Document> iterable = StringUtils.isBlank(query) ? collection.find(BsonDocument.parse(query))
-				: collection.find();
+		final FindIterable<Document> iterable = StringUtils.isBlank(query) ? collection.find() : collection.find(BsonDocument.parse(query));
 
 		// JSON -> Java.
 		final List<IoTSystem> iotsystems = new ArrayList<>();
