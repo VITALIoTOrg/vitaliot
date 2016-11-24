@@ -1,5 +1,6 @@
 package eu.vital.TrustManager.manager;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.vital.TrustManager.MongoDriver;
@@ -34,8 +35,8 @@ public class TrustManager {
 	public static TrustManager getNewInstance(String jsonDef)throws Exception{
 	if (tm != null)
 			tm.removeInstance();
-			tm = null;
-			tm = new TrustManager(jsonDef);
+		tm = null;
+		tm = new TrustManager(jsonDef);
 		return tm;
 	}
 	
@@ -59,19 +60,10 @@ public class TrustManager {
 	
 	public boolean initSystem(){
 				
-		//slar.doTask();
-		//TODO
 		metr.doTask();
-		//scorem.doTask();
-		
-		
-		
 		
 		metricSheduler = new Scheduler(metr, 120000);
 		metricSheduler.start();
-		
-		//scoreScheduler =new Scheduler(scorem, 120000);
-		//scoreScheduler.start();
 		
 		return true;
 	}

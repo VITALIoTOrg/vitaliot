@@ -12,7 +12,7 @@ import eu.vital.TrustManager.manager.Value_gen;
  * class to manage the metric of each sla param and the fulfilment, this is needed by the trust engine
  *
  */
-public class SLAparam {
+public class PerformanceMetric {
 	
 	String name;
 	double max;
@@ -38,7 +38,7 @@ public class SLAparam {
 	 * @param variance: this is used to simulate the values of the metrics, this param is specific for each sla type, fixed in SLAContants class
 	 * @param variacion: this is used as modifier of the variance, to get some more uncertainty of the values.
 	 */
-	public SLAparam (String name, int max, int min, String address, int variance, double variacion){
+	public PerformanceMetric (String name, int max, int min, String address){//, int variance, double variacion){
 		this.name = name;
 		this.address = address;
 		
@@ -52,19 +52,13 @@ public class SLAparam {
 		else if (address.equals("d"))
 			this.min = min;
 		
-		this.variance = variance*variacion;
-		
-		valgen = new Value_gen(this.max, this.min, this.variance, this.address);
+//		this.variance = variance*variacion;
+//		
+//		valgen = new Value_gen(this.max, this.min, this.variance, this.address);
 	}
 	
-	
-	/**
-	 * method to generate the numeric value of the metric
-	 * @param error, it is used to introduce error in the value, to be out of thresholds
-	 * @return
-	 */
-	public double genVal (double error){
-		lastValue = valgen.generate(error);
+	public double setValue(Double value){
+		lastValue = value;
 		lastValueTime=dateFormat.format(date);
 		fulfilment =0;
 		if (address.equals("m")){
@@ -81,6 +75,29 @@ public class SLAparam {
 		
 		return lastValue;
 	}
+	/**
+	 * method to generate the numeric value of the metric
+	 * @param error, it is used to introduce error in the value, to be out of thresholds
+	 * @return
+	 */
+//	public double genVal (double error){
+//		lastValue = valgen.generate(error);
+//		lastValueTime=dateFormat.format(date);
+//		fulfilment =0;
+//		if (address.equals("m")){
+//			if (lastValue<=max)
+//				fulfilment = 1;
+//		}
+//		else if (address.equals("d")){
+//			if (lastValue >= min)
+//				fulfilment = 1;
+//		}
+//		else
+//			if ((lastValue>=min)&&(lastValue<=max))
+//				fulfilment=1;
+//		
+//		return lastValue;
+//	}
 	
 	
 	/**

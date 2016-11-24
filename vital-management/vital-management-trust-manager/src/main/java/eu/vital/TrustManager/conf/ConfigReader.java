@@ -19,6 +19,7 @@ public class ConfigReader {
     public static final String MONGO_DB = "vital-core-cep.mongo.db";
     public static final String IOTDA_URL = "vital-core-cep.iotda";
     public static final String DMS_URL = "vital-core-cep.dms";
+    public static final String ORCHESTRATOR_URL = "vital-core-cep.orchestrator";
        
     private ConfigReader() {
         String fileName = System.getProperty("jboss.server.config.dir") + "/vital-properties.xml";

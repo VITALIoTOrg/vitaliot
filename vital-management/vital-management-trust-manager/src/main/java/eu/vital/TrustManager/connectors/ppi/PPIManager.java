@@ -140,7 +140,7 @@ public class PPIManager {
     NoSuchAlgorithmException, KeyStoreException{
 
     	String sbody = body;
-    	String ppi_url = ppi_endpoint+"/system/performance";//  /GetSupportedPerformanceMetrics ";
+    	String ppi_url = ppi_endpoint;//;+"/system/performance";//  /GetSupportedPerformanceMetrics ";
     	String response = query(ppi_url,sbody,"POST");
 
     	if ((response !=null)&&(!response.isEmpty())){
@@ -150,8 +150,39 @@ public class PPIManager {
     	else
     		return null;
     }
+   
+    	
+	 public JSONArray GetSLAParameters (String ppi_endpoint,String body) throws IOException,
+	    UnsupportedEncodingException, KeyManagementException,
+	    NoSuchAlgorithmException, KeyStoreException{
 
+	    	String sbody = body;
+	    	String ppi_url = ppi_endpoint;//+"/ns/GetSLAParameters";//  /GetSLAParameters ";
+	    	String response = query(ppi_url,sbody,"POST");
+
+	    	if ((response !=null)&&(!response.isEmpty())){
+	    		JSONArray jobj = new JSONArray (response);
+	    		return jobj;
+	    	}
+	    	else
+	    		return null;
+	    }
     
+	 public JSONArray GetSupportedSLAParameters (String ppi_endpoint,String body) throws IOException,
+	    UnsupportedEncodingException, KeyManagementException,
+	    NoSuchAlgorithmException, KeyStoreException{
+
+	    	String sbody = body;
+	    	String ppi_url = ppi_endpoint+"/ns/GetSupportedSLAParameters";//  /GetSupportedSLAParameters ";
+	    	String response = query(ppi_url,sbody,"POST");
+
+	    	if ((response !=null)&&(!response.isEmpty())){
+	    		JSONArray jobj = new JSONArray (response);
+	    		return jobj;
+	    	}
+	    	else
+	    		return null;
+	    }
     
     private String query(String ppi_endpoint, String body, String method) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException{
         Cookie ck;

@@ -57,9 +57,10 @@ public class MetricRequester implements Tasker{
 				IoTSystem iots = it.next().getValue();
 
 				///////////////////////////////
-				iots.generateValues(); 
-				//TODO esto deberia ser la consulta a los IoT systems para recuperar las metricas
+				//iots.generateValues(); 
+				//for simulation purposes only
 
+				iots.getSystemMetricValues();
 				StringBuilder sb = new StringBuilder(iots.getDocument());
 
 

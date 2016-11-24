@@ -21,6 +21,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 
+import org.apache.log4j.Logger;
+
 import eu.vital.TrustManager.conf.ConfigReader;
 import eu.vital.TrustManager.connectors.dms.trust.TrustAllX509TrustManager;
 
@@ -30,6 +32,7 @@ import eu.vital.TrustManager.connectors.dms.trust.TrustAllX509TrustManager;
  */
 public class Security {
     
+    Logger logger = Logger.getLogger(this.getClass());
     
     public  Boolean login(String user, String password, boolean testCookie, StringBuilder cookie) {
         
@@ -119,7 +122,7 @@ public class Security {
             }
             return false;
         } catch(Exception e) {
-            //log
+            logger.error(e,e);
         } finally {
             if(connection != null) {
                 connection.disconnect(); 

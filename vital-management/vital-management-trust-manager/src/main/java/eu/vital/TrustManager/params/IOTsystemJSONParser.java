@@ -53,9 +53,13 @@ public class IOTsystemJSONParser {//implements Tasker{
 					String[] slaA = {slaid,slah,slal,sladir};
 					slaHM.put(slaA[0], slaA);
 				}
-				IoTSystem iots = new IoTSystem(iotsName);
-				iots.initSLAs(slaHM);
-				iotshm.put(iots.name, iots);
+				IoTSystem iots = new IoTSystem(iotsName,slaHM);
+				if (iots.init()== false){
+					logger.error("IoTSystem: " + iotsName + " was not found in the DMS. Not added to reputation management.");
+					return false;
+				}
+				else
+					iotshm.put(iots.name, iots);
 				
 			}
 		}catch (JSONException e){
