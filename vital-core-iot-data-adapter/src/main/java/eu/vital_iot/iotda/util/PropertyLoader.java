@@ -49,7 +49,7 @@ public class PropertyLoader {
 
 		final String path = System.getProperty(PROPERTY);
 		if (StringUtils.isBlank(path)) {
-			logger.log(Level.SEVERE, "No value for vital-ppi-camden-footfall.properties.file.");
+			logger.log(Level.SEVERE, "No value for vital.properties.file.");
 			return;
 		}
 		final File file = new File(path);
@@ -65,11 +65,11 @@ public class PropertyLoader {
 	}
 
 	/**
-	 * Gets the value of the property with the specified name.
+	 * Gets the value of the property with the given name.
 	 * 
 	 * @param name
 	 *            the name.
-	 * @return the value of the property with the specified name.
+	 * @return the value of the property with the given name.
 	 */
 	public String getProperty(String name) {
 		return properties.get(name);

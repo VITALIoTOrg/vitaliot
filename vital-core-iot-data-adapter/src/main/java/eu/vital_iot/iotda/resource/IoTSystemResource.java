@@ -111,9 +111,9 @@ public class IoTSystemResource {
 	 * Refreshes the given IoT system.
 	 * 
 	 * @param iotsystem
-	 *            the IoT system to deregister.
+	 *            the IoT system to refresh.
 	 * @throws Exception
-	 *             in case deregistering fails.
+	 *             in case refreshing fails.
 	 */
 	@GET
 	@Path("/{id}/refresh")

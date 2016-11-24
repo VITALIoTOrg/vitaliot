@@ -49,13 +49,12 @@ public class IoTSystem implements Serializable {
 	private boolean enabled = true;
 
 	/**
-	 * The date and time when data from this IoT system were last refreshed.
+	 * The date and time when data from this IoT system was last refreshed.
 	 */
 	private String lastDataRefresh;
 
 	/**
-	 * The date and time when metadata about this IoT system were last
-	 * refreshed.
+	 * The date and time when metadata about this IoT system was last refreshed.
 	 */
 	private String lastMetadataRefresh;
 
@@ -203,10 +202,9 @@ public class IoTSystem implements Serializable {
 	}
 
 	/**
-	 * Gets the date and time when data from this IoT system were last
-	 * refreshed.
+	 * Gets the date and time when data from this IoT system was last refreshed.
 	 * 
-	 * @return the date and time when data from this IoT system were last
+	 * @return the date and time when data from this IoT system was last
 	 *         refreshed.
 	 */
 	public String getLastDataRefresh() {
@@ -214,11 +212,10 @@ public class IoTSystem implements Serializable {
 	}
 
 	/**
-	 * Sets the date and time when data from this IoT system were last
-	 * refreshed.
+	 * Sets the date and time when data from this IoT system was last refreshed.
 	 * 
 	 * @param lastDataRefresh
-	 *            the date and time when data from this IoT system were last
+	 *            the date and time when data from this IoT system was last
 	 *            refreshed.
 	 */
 	public void setLastDataRefresh(String lastDataRefresh) {
@@ -226,22 +223,22 @@ public class IoTSystem implements Serializable {
 	}
 
 	/**
-	 * Gets the date and time when metadata about this IoT system were last
+	 * Gets the date and time when metadata about this IoT system was last
 	 * refreshed.
 	 * 
-	 * @return the date when metadata about this IoT system were last refreshed.
+	 * @return the date when metadata about this IoT system was last refreshed.
 	 */
 	public String getLastMetadataRefresh() {
 		return lastMetadataRefresh;
 	}
 
 	/**
-	 * Sets the date and time when metadata about this IoT system were last
+	 * Sets the date and time when metadata about this IoT system was last
 	 * refreshed.
 	 * 
 	 * @param lastMetadataRefresh
-	 *            the date and time when metadata about this IoT system were
-	 *            last refreshed.
+	 *            the date and time when metadata about this IoT system was last
+	 *            refreshed.
 	 */
 	public void setLastMetadataRefresh(String lastMetadataRefresh) {
 		this.lastMetadataRefresh = lastMetadataRefresh;
@@ -252,7 +249,7 @@ public class IoTSystem implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "iot-system { id: " + id + "}";
+		return "{ id: " + id + " }";
 	}
 
 	/**

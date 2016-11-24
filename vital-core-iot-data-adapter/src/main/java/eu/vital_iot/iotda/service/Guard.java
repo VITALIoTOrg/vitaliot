@@ -1,6 +1,7 @@
 package eu.vital_iot.iotda.service;
 
 import java.net.URI;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,7 +23,7 @@ import eu.vital_iot.iotda.util.Property;
 /**
  * The security guard.
  * 
- * @author katerina
+ * @author k4t3r1n4
  *
  */
 @ApplicationScoped
@@ -31,7 +32,6 @@ public class Guard {
 	/**
 	 * The logger.
 	 */
-	@SuppressWarnings("unused")
 	@Inject
 	private Logger logger;
 
@@ -64,7 +64,7 @@ public class Guard {
 	private String systemPassword;
 
 	/**
-	 * The base URL to Security.
+	 * The base URL to VITAL Security.
 	 */
 	@Inject
 	@Property(name = "vital-core-iot-data-adapter.security")
@@ -85,13 +85,13 @@ public class Guard {
 	 */
 	public boolean isAuthorised(String token, URI uri, String method) {
 
-		final Client client = ClientBuilder.newClient();
 		final String systemToken = systemLogin();
 		final NewCookie cookie = new NewCookie(cookieName, systemToken);
 		final NewCookie alternativeCookie = new NewCookie(alternativeCookieName, token);
 		final Form form = new Form();
 		form.param("resources[]", uri.toString());
 		form.param("testCookie", "true");
+		final Client client = ClientBuilder.newClient();
 		try {
 			final JsonNode evaluation = client.target(security + "/evaluate")
 					.request(MediaType.APPLICATION_FORM_URLENCODED_TYPE).cookie(cookie).cookie(alternativeCookie)
@@ -100,6 +100,8 @@ public class Guard {
 			final JsonNode actions = evaluation.get("responses").get(0).get("actions");
 			return actions.has(method) && actions.get(method).booleanValue();
 		} catch (WebApplicationException wae) {
+			logger.log(Level.SEVERE, "Failed to check whether user is authorised [ token: " + token + ", uri: " + uri
+					+ ", method: " + method + " ].", wae);
 			return false;
 		} finally {
 			client.close();
@@ -125,16 +127,17 @@ public class Guard {
 	 * @return the SSO token for the logged in user.
 	 */
 	public String login(String username, String password) {
-		final Client client = ClientBuilder.newClient();
 		final Form form = new Form();
 		form.param("name", username);
 		form.param("password", password);
+		final Client client = ClientBuilder.newClient();
 		try {
 			final Response response = client.target(security + "/authenticate").request(MediaType.APPLICATION_JSON_TYPE)
 					.post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE), Response.class);
 			final Cookie cookie = response.getCookies().get(cookieName);
 			return cookie == null ? null : cookie.getValue();
 		} catch (WebApplicationException wae) {
+			logger.log(Level.SEVERE, "Failed to log in user [ username: " + username + " ].", wae);
 			return null;
 		} finally {
 			client.close();
@@ -153,6 +156,7 @@ public class Guard {
 			client.target(security + "/logout").request(MediaType.APPLICATION_FORM_URLENCODED)
 					.cookie(new NewCookie(cookieName, token)).get(JsonNode.class);
 		} catch (WebApplicationException wae) {
+			logger.log(Level.SEVERE, "Failed to log out user [ token: " + token + " ].", wae);
 		} finally {
 			client.close();
 		}

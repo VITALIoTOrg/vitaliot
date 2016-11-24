@@ -1,9 +1,12 @@
 package eu.vital_iot.iotda.service;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
+import javax.inject.Inject;
 
 import eu.vital_iot.iotda.common.IoTSystem;
 
@@ -25,6 +28,12 @@ public class Registry {
 	private Keeper keeper;
 
 	/**
+	 * The logger.
+	 */
+	@Inject
+	private Logger logger;
+
+	/**
 	 * The store.
 	 */
 	@EJB
@@ -38,23 +47,15 @@ public class Registry {
 	 */
 	public void register(IoTSystem iotsystem) {
 
-		// Store that IoT system.
+		logger.log(Level.FINE, "Register system [ system: " + iotsystem + " ].");
+
+		// Store that system.
 		store.create(iotsystem);
 
 		// Keep its metadata.
 		keeper.keepMetadata(iotsystem);
-	}
 
-	/**
-	 * Deregisters the given IoT system.
-	 * 
-	 * @param iotsystem
-	 *            the IoT system to deregister.
-	 */
-	public void deregister(IoTSystem iotsystem) {
-
-		// Delete that IoT system.
-		store.delete(iotsystem.getId());
+		logger.log(Level.FINE, "Registered system [ system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -65,8 +66,12 @@ public class Registry {
 	 */
 	public void deregister(String id) {
 
-		// Delete the IoT system with that ID.
+		logger.log(Level.FINE, "Deregister system [ id: " + id + " ].");
+
+		// Delete the system with that ID.
 		store.delete(id);
+
+		logger.log(Level.FINE, "Deregistered system [ id: " + id + " ].");
 	}
 
 	/**
@@ -76,8 +81,14 @@ public class Registry {
 	 */
 	public List<IoTSystem> get() {
 
-		// Read all IoT systems.
-		return store.read();
+		logger.log(Level.FINE, "Get systems.");
+
+		// Read all systems.
+		final List<IoTSystem> iotsystems = store.read(null);
+
+		logger.log(Level.FINE, "Got systems.");
+
+		return iotsystems;
 	}
 
 	/**
@@ -89,23 +100,33 @@ public class Registry {
 	 */
 	public IoTSystem get(String id) {
 
-		// Read the IoT system with that ID.
-		return store.read("{\"_id\": ObjectId(\"" + id + "\") }").get(0);
+		logger.log(Level.FINE, "Get system [ id: " + id + " ].");
+
+		// Read the system with that ID.
+		final IoTSystem iotsystem = store.read("{\"_id\": ObjectId(\"" + id + "\") }").get(0);
+
+		logger.log(Level.FINE, "Got system [ id: " + id + " ].");
+
+		return iotsystem;
 	}
 
 	/**
 	 * Edits the given IoT system.
 	 * 
 	 * @param iotsystem
-	 *            the IoT system to update.
+	 *            the IoT system to edit.
 	 */
 	public void edit(IoTSystem iotsystem) {
 
-		// Update that IoT system.
+		logger.log(Level.FINE, "Edit system [ system: " + iotsystem + " ].");
+
+		// Update that system.
 		final IoTSystem existing = get(iotsystem.getId());
 		iotsystem.setLastDataRefresh(existing.getLastDataRefresh());
 		iotsystem.setLastMetadataRefresh(existing.getLastMetadataRefresh());
 		store.update(iotsystem);
+
+		logger.log(Level.FINE, "Edited system [ system: " + iotsystem + " ].");
 	}
 
 	/**
@@ -116,9 +137,13 @@ public class Registry {
 	 */
 	public void refresh(String id) {
 
+		logger.log(Level.FINE, "Refresh system [ id: " + id + " ].");
+
 		final IoTSystem iotsystem = get(id);
 
-		// Keep its metadata.
+		// Keep the metadata of the system with that ID.
 		keeper.keepMetadata(iotsystem);
+
+		logger.log(Level.FINE, "Refreshed system [ id: " + id + " ].");
 	}
 }
