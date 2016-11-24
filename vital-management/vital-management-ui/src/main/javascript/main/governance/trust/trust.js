@@ -148,7 +148,7 @@ angular.module('main.governance.trust', [
                 trustResource.fetchTrustScore(ctrl.system.id)
                     .then(function(data) {
                         ctrl.chart.trustScore.length = 0;
-                        angular.forEach(data.IoTSystemScore, function(score) {
+                        angular.forEach(data, function(score) {
                             ctrl.chart.trustScore.push(score);
                         });
                     })
@@ -172,11 +172,19 @@ angular.module('main.governance.trust', [
                         data: [],
                         xkey: 'timestamp',
                         ykeys: ['value'],
-                        labels: ['Throughput'],
+                        labels: ['Trust'],
                         hideHover: 'auto'
                     });
                     // Init
-                    scope.$watchCollection('data', function(data) {
+                    scope.$watchCollection('data', function(scores) {
+                        var data = _.map(scores[0], function(score) {
+                            return {
+                                timestamp: score.timeS['$date'],
+                                value: score.trustScore
+                            };
+                        });
+                        console.log(scores[0], data);
+
                         historyChart.setData(data);
                     });
                 }
@@ -222,9 +230,12 @@ angular.module('main.governance.trust', [
                             return {
                                 id: systemId,
                                 sla_params: _.map(systemSLA.sla_params, function(sla_param, id) {
-                                    return angular.extend({
-                                        id: id
-                                    }, sla_param)
+                                    return {
+                                        id: id,
+                                        upthreshold: '' + sla_param.upthreshold,
+                                        downthreshold: '' + sla_param.downthreshold,
+                                        address: '' + sla_param.address
+                                    };
                                 })
                             }
                         });
