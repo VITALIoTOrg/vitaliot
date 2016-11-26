@@ -10,19 +10,20 @@
             <group>VITAL_JOBS</group>
             <description>SyncSystemsJob</description>
             <job-class>eu.vital.management.job.SyncSystemsJob</job-class>
+            <durability>true</durability>
+            <recover>false</recover>
         </job>
 
-
-        <trigger>
-            <cron>
-                <name>SyncSystemsJobCronTrigger</name>
-                <group>VITAL_TRIGGERS</group>
-                <job-name>SyncSystemsJob</job-name>
-                <job-group>VITAL_JOBS</job-group>
-                <!-- trigger every 30 minutes -->
-                <cron-expression>0 0/30 * * * ?</cron-expression>
-            </cron>
-        </trigger>
+        <!--<trigger>-->
+            <!--<cron>-->
+                <!--<name>SyncSystemsJobCronTrigger</name>-->
+                <!--<group>VITAL_TRIGGERS</group>-->
+                <!--<job-name>SyncSystemsJob</job-name>-->
+                <!--<job-group>VITAL_JOBS</job-group>-->
+                <!--&lt;!&ndash; trigger every 30 minutes &ndash;&gt;-->
+                <!--<cron-expression>0 0/30 * * * ?</cron-expression>-->
+            <!--</cron>-->
+        <!--</trigger>-->
 
     </schedule>
 

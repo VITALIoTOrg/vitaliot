@@ -16,44 +16,22 @@ angular.module('common.resources.sensor', [])
             {
                 '@id': 'http://104.131.128.70:8080/istanbul-traffic/sensor/36-F',
                 '@type': 'http://vital-iot.eu/ontology/ns/VitalSensor',
-                'http://www.w3.org/2000/01/rdf-schema#comment': 'A traffic sensor in Istanbul.',
-                'http://www.w3.org/2000/01/rdf-schema#label': 'Yenikapı Sahil Yolu ( Forward Direction )',
-                'http://purl.oclc.org/NET/ssnx/ssn#observes': [
-                    {
-                        '@id': 'http://104.131.128.70:8080/istanbul-traffic/sensor/36-F/speed',
-                        '@type': 'http://vital-iot.eu/ontology/ns/Speed'
-                    }
-                ],
+                'http://www.w3.org/2000/01/rdf-schema#comment': '',
+                'http://www.w3.org/2000/01/rdf-schema#label': '',
+                'http://purl.oclc.org/NET/ssnx/ssn#observes': [],
                 'http://vital-iot.eu/ontology/ns/hasLastKnownLocation': {
                     '@type': 'http://www.w3.org/2003/01/geo/wgs84_pos#Point',
-                    'http://www.w3.org/2003/01/geo/wgs84_pos#lat': 41.00259667,
-                    'http://www.w3.org/2003/01/geo/wgs84_pos#lon': 28.95207211
+                    'http://www.w3.org/2003/01/geo/wgs84_pos#lat': null,
+                    'http://www.w3.org/2003/01/geo/wgs84_pos#lon': null
                 },
                 'http://vital-iot.eu/ontology/ns/status': {
                     '@id': 'http://vital-iot.eu/ontology/ns/Unavailable'
                 },
-                'system': 'http://104.131.128.70:8080/istanbul-traffic',
+                'system': '',
 
                 //These won't be provided from backend at this point
                 'hasMovementPattern': {
-                    'type': 'Stationary', // {Stationary|Mobile|Predicted}
-                    'hasPredictedSpeed': {
-                        'value': '3.1',
-                        'qudt:unit': 'qudt:KilometerPerHour'
-                    },
-                    'hasPredictedDirection': {
-                        'type': 'NormalVector',
-                        'geo:lat': '53.2719',
-                        'geo:long': '-9.0489'
-                    }
-                },
-                'hasLocalizer': { //Optional, only for hasMovementPattern:Predicted
-                    'type': 'GpsService',
-                    'msm:hasOperation': {
-                        'type': 'GetLocation',
-                        'hrest:hasMethod': 'hrest:GET',
-                        'hrest:hasAddress': 'http://www.example.com/vital/sensor/123/location/'
-                    }
+                    'type': 'Stationary' // {Stationary|Mobile|Predicted}
                 },
                 'hasNetworkConnection': {
                     'hasStability': {

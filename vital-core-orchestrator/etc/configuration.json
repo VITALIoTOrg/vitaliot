@@ -3,12 +3,12 @@
     "system_urls": []
   },
   "orchestrator": {
-    "url": "https://local.vital-iot.eu:8443/vital-core-orchestrator-web/rest",
+    "url": "https://vital-integration.atosresearch.eu:8843/vital-core-orchestrator-web/rest",
     "status": {
       "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
-      "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/observation/status/1434443438930",
+      "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/observation/status/1434443438930",
       "type": "ssn:Observation",
-      "ssn:observedBy": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring",
+      "ssn:observedBy": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring",
       "ssn:observationProperty": {
         "type": "vital:OperationalState"
       },
@@ -25,26 +25,26 @@
     },
     "system": {
       "@context": "http://vital-iot.eu/contexts/system.jsonld",
-      "id": "https://local.vital-iot.eu/orchestrator/123456",
+      "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1",
       "type": "vital:IotSystem",
       "name": "Vital Orchestrator",
       "description": "This is a VITAL-compliant IoT system that provides live traffic data for Istanbul.",
       "operator": "orchestrator@dev.null",
       "status": "vital:Running",
       "services": [
-        "https://local.vital-iot.eu/orchestrator/123456/service/configuration",
-        "https://local.vital-iot.eu/orchestrator/123456/service/monitoring",
-        "https://local.vital-iot.eu/orchestrator/123456/service/workflow",
-        "https://local.vital-iot.eu/orchestrator/123456/service/meta"
+        "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/configuration",
+        "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/monitoring",
+        "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/workflow",
+        "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/meta"
       ],
       "sensors": [
-        "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring"
+        "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring"
       ]
     },
     "sensor": [
       {
         "@context": "http://vital-iot.eu/contexts/sensor.jsonld",
-        "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring",
+        "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring",
         "type": "vital:MonitoringSensor",
         "name": "Orchestrator monitoring sensor.",
         "description": "A virtual sensor that monitors the operational state of the system, as well as its services and sensors.",
@@ -52,39 +52,39 @@
         "ssn:observes": [
           {
             "type": "vital:SysLoad",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/sysLoad"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/sysLoad"
           },
           {
             "type": "vital:SysUptime",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/sysUptime"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/sysUptime"
           },
           {
             "type": "vital:MaxRequests",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/maxRequests"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/maxRequests"
           },
           {
             "type": "vital:Errors",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/errors"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/errors"
           },
           {
             "type": "vital:ServedRequests",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/servedRequests"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/servedRequests"
           },
           {
             "type": "vital:AvailableMem",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/availableMem"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/availableMem"
           },
           {
             "type": "vital:UsedMem",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/usedMem"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/usedMem"
           },
           {
             "type": "vital:PendingRequests",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/pendingRequests"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/pendingRequests"
           },
           {
             "type": "vital:OperationalState",
-            "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/operationalState"
+            "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/operationalState"
           }
         ]
       }
@@ -92,7 +92,7 @@
     "service": [
       {
         "@context": "http://vital-iot.eu/contexts/service.jsonld",
-        "id": "https://local.vital-iot.eu/orchestrator/123456/service/configuration",
+        "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/configuration",
         "type": "vital:ConfigurationService",
         "operations": [
           {
@@ -109,7 +109,7 @@
       },
       {
         "@context": "http://vital-iot.eu/contexts/service.jsonld",
-        "id": "https://local.vital-iot.eu/orchestrator/123456/service/observation",
+        "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/observation",
         "type": "vital:ObservationService",
         "operations": [
           {
@@ -121,7 +121,7 @@
       },
       {
         "@context": "http://vital-iot.eu/contexts/service.jsonld",
-        "id": "https://local.vital-iot.eu/orchestrator/123456/service/monitoring",
+        "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/monitoring",
         "type": "vital:MonitoringService",
         "operations": [
           {
@@ -158,7 +158,7 @@
       },
       {
         "@context": "http://vital-iot.eu/contexts/service.jsonld",
-        "id": "https://local.vital-iot.eu/orchestrator/123456/service/operation",
+        "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/service/operation",
         "type": "vital:OrchestratorService",
         "operations": [
           {
@@ -248,35 +248,35 @@
       "metrics": [
         {
           "type": "http://vital-iot.eu/ontology/ns/SysUptime",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/sysUptime"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/sysUptime"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/UsedMem",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/usedMem"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/usedMem"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/AvailableMem",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/availableMem"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/availableMem"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/ServedRequests",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/servedRequests"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/servedRequests"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/Errors",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/errors"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/errors"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/SysLoad",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/sysLoad"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/sysLoad"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/PendingRequests",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/pendingRequests"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/pendingRequests"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/MaxRequests",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/maxRequests"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/maxRequests"
         }
       ]
     },
@@ -284,41 +284,41 @@
       "metrics": [
         {
           "type": "http://vital-iot.eu/ontology/ns/UpTimeAvailability",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/uptime-availability"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/uptime-availability"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/MaxNumberOfRequests",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/max-number-of-requests"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/max-number-of-requests"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/ResponseTime",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/response-time"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/response-time"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/MeanTimeToRestore",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/mean-time-to-restore"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/mean-time-to-restore"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/MaxRequestsPerUser",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/max-requests-per-user"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/max-requests-per-user"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/DatasetsVocabularySyntax",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/datasets-vocabulary-syntax"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/datasets-vocabulary-syntax"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/DataStability",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/data-stability"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/data-stability"
         },
         {
           "type": "http://vital-iot.eu/ontology/ns/DataCorrelation",
-          "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/data-correlation"
+          "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/data-correlation"
         }
       ]
     },
     "observation": {
       "@context": "http://vital-iot.eu/contexts/measurement.jsonld",
-      "id": "https://local.vital-iot.eu/orchestrator/123456/sensor/monitoring/observation/servedRequests/<observation.id>",
+      "id": "https://vital-integration.atosresearch.eu:8843/orchestrator/1/sensor/monitoring/observation/servedRequests/<observation.id>",
       "type": "ssn:Observation",
       "ssn:observationProperty": {
         "type": "vital:servedRequests"

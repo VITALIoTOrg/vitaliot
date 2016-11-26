@@ -177,12 +177,21 @@ angular.module('main.governance.trust', [
                     });
                     // Init
                     scope.$watchCollection('data', function(scores) {
-                        var data = _.map(scores[0], function(score) {
-                            return {
-                                timestamp: score.timeS['$date'],
-                                value: score.trustScore
-                            };
-                        });
+                        var length = scores[0] ? scores[0].length : 0;
+                        var data = _.chain(scores[0])
+                            .map(function(score) {
+                                return {
+                                    timestamp: score.timeS['$date'],
+                                    value: score.trustScore
+                                };
+                            })
+                            .sortBy(function(d) {
+                                return d.timestamp;
+                            })
+                            .slice(Math.max(0, length - 30), length)
+                            .value();
+
+                        console.log(data);
                         historyChart.setData(data);
                     });
                 }
