@@ -55,14 +55,14 @@
     <!--/.vital-core-security-gateway-->
 
     <!--vital-core-discovery-->
-    <entry key="vital-core-discovery.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-core-discovery.endpoint-address">http\://localhost:8080/vital-core-discovery</entry>
+    <entry key="vital-core-discovery.dms">http://vital-integration.atosresearch.eu:8280/vital-core-dms</entry>
+    <entry key="vital-core-discovery.endpoint-address">http\://localhost/vital-core-discovery</entry>
     <entry key="vital-core-discovery.endpoint-port">8080</entry>
     <!--/.vital-core-discovery-->
 
     <!--vital-core-filtering-->
-    <entry key="vital-core-filtering.dms">http://localhost:8080/vital-core-dms</entry>
-    <entry key="vital-core-filtering.endpoint-address">http\://localhost:8080/vital-core-filtering</entry>
+    <entry key="vital-core-filtering.dms">http://vital-integration.atosresearch.eu:8280/vital-core-dms</entry>
+    <entry key="vital-core-filtering.endpoint-address">http\://localhost/vital-core-filtering</entry>
     <entry key="vital-core-filtering.endpoint-port">8080</entry>
     <!--/.vital-core-filtering-->
 
